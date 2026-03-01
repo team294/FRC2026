@@ -44,7 +44,7 @@ public class RobotContainer {
   // Define robot subsystems
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
   // private final Intake intake = new Intake("Intake");
-  private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
+  // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   // private final Feeder feeder = new Feeder("Feeder");
   // private final Shooter shooter = new Shooter("Shooter");
 
@@ -60,7 +60,8 @@ public class RobotContainer {
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
-  private final RepeatCommand repeatedLEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led)).repeatedly();
+  // TODO (LED) uncomment when LEDs are ready on the robot
+  // private final RepeatCommand repeatedLEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led)).repeatedly();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -68,7 +69,8 @@ public class RobotContainer {
     SignalLogger.enableAutoLogging(false);
 
     // Start LEDEventUtil
-    LEDEventUtil.initialize(led, repeatedLEDAnimateRobotDisabled);
+    // TODO (LED) uncomment when LEDs are ready on the robot
+    // LEDEventUtil.initialize(led, repeatedLEDAnimateRobotDisabled);
 
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
@@ -299,8 +301,9 @@ public class RobotContainer {
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
-    CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    // TODO (LED) uncomment when LEDs are ready on the robot
+    // CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
+    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
@@ -326,8 +329,9 @@ public class RobotContainer {
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
-    CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    // TODO (LED) uncomment when LEDs are ready on the robot
+    // CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
+    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     teleopTimer.start();
   }
