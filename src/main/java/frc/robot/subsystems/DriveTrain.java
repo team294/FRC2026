@@ -69,7 +69,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   // Variables for gyro and gyro calibration
   private final Pigeon2 pigeon = new Pigeon2(CANPigeonGyro, Ports.CANbusMain);
   private final StatusSignal<Angle> pigeonYaw = pigeon.getYaw();
-  private final StatusSignal<Angle> pigeonPitch = pigeon.getRoll(); // Pigeon is mounted rotated by 90deg, so robot pitch is pigeon roll
+  private final StatusSignal<Angle> pigeonPitch = pigeon.getPitch();
+  private final StatusSignal<Angle> pigeonRoll = pigeon.getRoll();
   private final StatusSignal<AngularVelocity> pigeonYawVelocity = pigeon.getAngularVelocityZWorld();
   private final StatusSignal<Boolean> pigeonFault = pigeon.getFault_Hardware();
   private double yawZero = 0.0;
@@ -189,7 +190,11 @@ public class DriveTrain extends SubsystemBase implements Loggable {
 	 * @return raw gyro pitch, in degrees, from 180 to -180 (postitive = nose up, negative = nose down)
 	 */
 	private double getGyroPitchRaw() {
-		return pigeonPitch.refresh().getValueAsDouble();
+		double pitch = pigeonPitch.refresh().getValueAsDouble();
+    double roll = pigeonRoll.refresh().getValueAsDouble();
+
+    // TODO apply proper matrix math to account for gyro orientation on the robot
+    return pitch;
   }
 
   /**
@@ -679,18 +684,6 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     useVisionForOdometry = enabled;
   }
 
-  /**
-   * Calculates a pose estimator standard deviation matrix based on the distance to the AprilTag.
-   * Increases the standard deviation when the robot is farther from the AprilTag (because the camera is less accurate).
-   * @param xDist X distance to AprilTag
-   * @param yDist Y distance to AprilTag
-   * @return pose estimator standard deviation matrix
-   */
-  // public Matrix<N3, N1> getVisionMatrix(double xDist, double yDist){
-  //   double distance = Math.hypot(xDist, yDist);
-  //   double mulFactor = Math.max(1, distance / 3.0);
-  //   return VisionConstants.visionCloseMatrix.times(mulFactor);
-  // }
 
   /**
    * Updates odometry based on wheel movement, gyro, and camera/AprilTags.

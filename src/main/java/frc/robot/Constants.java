@@ -114,24 +114,29 @@ public final class Constants {
 
   public static final class RobotDimensions {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
-    private static final double DrivetrainAdjustmentFactor = 0.9911;
+    private static final double DrivetrainAdjustmentFactor = 1.0000;        // TODO CALIBRATE
     // Left-right distance between the drivetrain wheels; should be measured from center to center
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(24.25) * DrivetrainAdjustmentFactor;     // Same as 2025. ETU bot CAD = 24.25".
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(24.25) * DrivetrainAdjustmentFactor;     // TODO CALIBRATE.  ETU bot CAD = 24.25".
     // Front-back distance between the drivetrain wheels; should be measured from center to center
-    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(24.25) * DrivetrainAdjustmentFactor;      // Same as 2025. ETU bot CAD = 24.25".
+    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(24.25) * DrivetrainAdjustmentFactor;      // TODO CALIBRATE.  ETU bot CAD = 24.25".
     
     // Width of robot in meters, + bumpers
-    public static final double robotWidth = Units.inchesToMeters(36.5); //Was 0.9144 (meters)
+    public static final double robotWidth = Units.inchesToMeters(36.5);  // TODO CALIBRATE
+    // Length of robot in meters, + bumpers
+    public static final double robotLength = Units.inchesToMeters(36.5);  // TODO CALIBRATE
     // Diagonal Width of robot in meters
-    public static final double robotDiagonal = Math.sqrt(2.0)*robotWidth;
+    public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + robotLength*robotLength);
   }
 
   public static final class SwerveConstants {
+    // Past kDriveGearRatio: Mk4n = 5.90:1 (L2+).  L3 = 6.12:1. Mk4i = 8.14:1 (L1-std gears), 6.75:1 (L2-fast gears), 5.903 (modified L2 16-tooth gear).
+    // Past kTurningGearRatio: Mk4i = 150 / 7:1.
+
     // Encoder calibration to meters traveled or wheel facing degrees
-    public static final double kEncoderCPR = 1.0;                           // CALIBRATED = 1.0.  Encoder counts per revolution of motor pinion gear.
-    public static final double kDriveGearRatio = (6.12 / 1.0);              // CALIBRATED = L3 = 6.12:1.  Mk4i = 8.14:1 (L1-std gears), 6.75:1 (L2-fast gears), 5.903 (modified L2 16-tooth gear).  
-    public static final double kTurningGearRatio = (150.0 / 7.0 / 1.0);     // CALIBRATED = 150.0/7.0.  Mk4i = 150/7 : 1
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(4) * 0.9739;     // CALIBRATED ON 1/15/2025. ETU wheels are nominal 4"
+    public static final double kEncoderCPR = 1.0;                           // CALIBRATED = 1.0.  Encoder counts per revolution of motor pinion gear
+    public static final double kDriveGearRatio = (5.903 / 1.0);             // TODO CALIBRATE.  Mk4i = 5.903 (modified L2 16-tooth gear)
+    public static final double kTurningGearRatio = (150.0 / 7.0 / 1.0);     // TODO CALIBRATE.  Mk4i = 150/7 : 1
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(4) * 1.0000;     // TODO CALIBRATE.  ETU wheels are nominal 4"
     public static final double kDriveEncoderMetersPerTick = (kWheelDiameterMeters * Math.PI) / kEncoderCPR / kDriveGearRatio;
     public static final double kTurningEncoderDegreesPerTick = 360.0 / kEncoderCPR / kTurningGearRatio;
   
@@ -142,12 +147,12 @@ public final class Constants {
     // and ensures that the robot travels in the requested direction.  So, use min value of all 4 motors,
     // and further derate (initial test by 5%) to account for some battery droop under heavy loads.
 
-    public static final double kMaxSpeedMetersPerSecond = 5.1; // CALIBRATED 1/17/2025 5.1 m/s  (2026: its the same drive base)
+    public static final double kMaxSpeedMetersPerSecond = 4.8;      // TODO CALIBRATE
     public static final double kFullSpeedMetersPerSecond = 0.95 * kMaxSpeedMetersPerSecond;
     public static final double kNominalSpeedMetersPerSecond = 0.5 * kMaxSpeedMetersPerSecond;
 
     // TODO NOT CALIBRATED
-    public static final double kMaxAccelerationMetersPerSecondSquare = 7.5;
+    public static final double kMaxAccelerationMetersPerSecondSquare = 6.0;
     public static final double kFullAccelerationMetersPerSecondSquare = 0.9 * kMaxAccelerationMetersPerSecondSquare;
     public static final double kNominalAccelerationMetersPerSecondSquare = 3.5;
     public static final double kMaxTurningRadiansPerSecond = 11.0;
@@ -155,7 +160,16 @@ public final class Constants {
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 35.0;     // Not used in code currently
     public static final double kNominalAngularAccelerationRadiansPerSecondSquared = Math.PI;
 
-    public static final double kVDriveAvg = 2.350;     // CALIBRATED 1/17/2025 = 2.350.  In voltage per meters per second.
+    public static final double driveMotorkP = 0.30;     // kP = (desired-output-volts) / (error-in-encoder-rps)  TODO CALIBRATE FOR 2026
+		public static final double driveMotorkI = 0.0;
+		public static final double driveMotorkD = 0.000012; // kD = (desired-output-volts) / (error-in-encoder-rps/sec)  TODO CALIBRATE FOR 2026
+
+    public static final double turningMotorkP = 3.4;    // kP = (desired-output-volts) / (error-in-encoder-rotations). ETU2025 calibrated at 4.0 but reduced to 3.4 to minimize jitter TODO CALIBRATE FOR 2026
+		public static final double turningMotorkI = 0.0;
+		public static final double turningMotorkD = 0.072;  // kD = (desired-output-volts) / (error-in-encoder-rps) TODO CALIBRATE FOR 2026
+
+
+    public static final double kVDriveAvg = 2.350;     // TODO CALIBRATE.  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
     // TODO BELOW NOT CALIBRATED
     private static final double kVmFLrel = 1.0;      // kV modifier for FL drive motor
     private static final double kVmFRrel = 1.0;      // kV modifier for FR drive motor
@@ -169,10 +183,10 @@ public final class Constants {
     public static final double kVmBL = kVmBLrel / kVmAvg;
     public static final double kVmBR = kVmBRrel / kVmAvg;
 
-    public static final double dt = 0.02;       // Timestep for discretizing robot motion, in seconds.  Set this to the scheduler time period = 20ms.
-    public static final double kADrive = 0.1203;     // CALIBRATED 1/17/2025 = 0.1203.  In voltage per meters per second squared.
-    public static final double kADriveToPose = 0.1203;     // In time (seconds) TODO NOT CALIBRATED
-    public static final double kSDrive = 0.002;      // CALIBRATED 1/17/2025 = 0.002.  In voltage.
+    public static final double dt = 0.02;               // Timestep for discretizing robot motion, in seconds.  Set this to the scheduler time period = 20ms.
+    public static final double kADrive = 0.2383;        // TODO CALIBRATE.  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
+    public static final double kADriveToPose = 0.050;   // TODO CALIBRATE.  In time (seconds)
+    public static final double kSDrive = 0.141;         // TODO CALIBRATE.  In voltage    2025: LAR was 0.030 (FOC off), AVR was 0.141 (FOC on)
 
     // Minimum abs delta (in m/sec) between actual wheel velocity and desired wheel velocity for kADrive to be applied.
     // If the delta is less than this, then don't use kADrive. This prevents the drive motors from jittering.
@@ -194,38 +208,37 @@ public final class Constants {
       new Translation2d(-RobotDimensions.DRIVETRAIN_WHEELBASE_METERS / 2, -RobotDimensions.DRIVETRAIN_TRACKWIDTH_METERS / 2)
     );
 
-    // Update the offset angles in RobotPreferences (in Elastic), not in this code!
+    // Update the offset angles in RobotPreferences (in Elastic), as well as in this code!
     // After updating in RobotPreferences, you will need to re-start the robot code for the changes to take effect.
     // When calibrating offset, set the wheels to zero degrees with the bevel gear facing to the right
-    public static double offsetAngleFrontLeftMotor = 100.18;
-    public static double offsetAngleFrontRightMotor = -163.04;
-    public static double offsetAngleBackLeftMotor = 19.09;
-    public static double offsetAngleBackRightMotor = 2.96;
+    // TODO CALIBRATE
+    public static double offsetAngleFrontLeftMotor = 0.0;
+    public static double offsetAngleFrontRightMotor = 0.0;
+    public static double offsetAngleBackLeftMotor = 0.0;
+    public static double offsetAngleBackRightMotor = 0.0;
 
     // Theta kp value for joystick in rad/sec
-    public static final double kPJoystickThetaController = 3;
+    public static final double kPJoystickThetaController = 3;         // TODO CALIBRATE
   }
 
   public static class FieldConstants {
-    public static final double length = Units.inchesToMeters(651.22);
-    public static final double width = Units.inchesToMeters(317.69);
+    public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
+    public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
   }
 
   public static class VisionConstants {
-    // CALIBRATED for ETU ~1/31/26
+    // TODO CALIBRATE
+    // These values are for ETU ~1/31/26
     public static final Transform3d robotToCamUp = new Transform3d(
       new Translation3d(Units.inchesToMeters(-12.125), Units.inchesToMeters(-6.25), Units.inchesToMeters(17.0 + (9.0/16.0))),
       new Rotation3d(0, -0.695, 0));  // in radians!!
 
     public static final String upCameraName = "UpCamera"; // this has to match the camera name in PhotonVision
 
-    // The standard deviations of our vision estimated poses, which affect correction rate
-    public static final Matrix<N3, N1> visionCloseMatrix = VecBuilder.fill(1, 1, Math.PI);
-    public static final Matrix<N3, N1> visionFarMatrix = VecBuilder.fill(2, 2, 2 * Math.PI);
-
-    // TODO (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
+    // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    public static final double kTagDistanceConst = 0.033;
   }
   
   public static final class IntakeConstants {

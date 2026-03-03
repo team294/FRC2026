@@ -82,11 +82,13 @@ public class RobotContainer {
     // All trajectories should be defined based on the Blue alliance perspective.
     ChoreoAllianceFlipUtil.setYear(2026);
 
-    configureButtonBindings();
+    configureXboxButtons();     // configure Xbox controller
+    configureJoystickButtons(); // configure joysticks
+    configureCopanel();         // configure copanel
+    configureTriggers();
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
-    // driveTrain.setDefaultCommand(new DriveWithJoysticks(leftJoystick, rightJoystick, allianceSelection, driveTrain));
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
@@ -143,13 +145,6 @@ public class RobotContainer {
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
   }
  
-   private void configureButtonBindings() {
-    configureXboxButtons();     // configure Xbox controller
-    configureJoystickButtons(); // configure joysticks
-    configureCopanel();         // configure copanel
-    configureTriggers();
-  }
-
   /**
    * Define Xbox buttons and controls.
    */
@@ -189,7 +184,7 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
     // left[1].onTrue(new IntakeStop(intake));
-    left[2].onTrue(new DriveResetPose(driveTrain));
+    left[2].onTrue(new DriveResetDriverAngle(driveTrain));
 
     // set intake to 100% (in) if not set to 
     // 100% and stop intake if it is set to 100%

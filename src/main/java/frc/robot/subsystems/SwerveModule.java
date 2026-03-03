@@ -173,9 +173,9 @@ public class SwerveModule {
     // NOTE: In Phoenix 6, slots are selected in the ControlRequest (ex. PositionVoltage.Slot)
     driveVelocityControl.Slot = 0;
     driveVelocityControl.OverrideBrakeDurNeutral = true;
-    driveMotorConfig.Slot0.kP = 0.4;     // kP = (desired-output-volts) / (error-in-encoder-rps)
-		driveMotorConfig.Slot0.kI = 0.3;
-		driveMotorConfig.Slot0.kD = 0.0; // kD = (desired-output-volts) / (error-in-encoder-rps/sec)
+    driveMotorConfig.Slot0.kP = SwerveConstants.driveMotorkP;
+		driveMotorConfig.Slot0.kI = SwerveConstants.driveMotorkI;
+		driveMotorConfig.Slot0.kD = SwerveConstants.driveMotorkD;
 		// driveMotorConfig.Slot0.kS = 0.0;
 		// driveMotorConfig.Slot0.kV = 0.0;
 		// driveMotorConfig.Slot0.kA = 0.0;
@@ -203,9 +203,9 @@ public class SwerveModule {
     // NOTE: In Phoenix 6, slots are selected in the ControlRequest (ex. PositionVoltage.Slot)
     turningPositionControl.Slot = 0;
     turningPositionControl.OverrideBrakeDurNeutral = true;
-    turningMotorConfig.Slot0.kP = 4.0;    // kP = (desired-output-volts) / (error-in-encoder-rotations). ETU calibrated at 4.0 but reduced to 3.4 to minimize jitter TODO CALIBRATE FOR 2026
-		turningMotorConfig.Slot0.kI = 0.0;
-		turningMotorConfig.Slot0.kD = 0.072;  // kD = (desired-output-volts) / (error-in-encoder-rps) TODO CALIBRATE FOR 2026
+    turningMotorConfig.Slot0.kP = SwerveConstants.turningMotorkP;
+		turningMotorConfig.Slot0.kI = SwerveConstants.turningMotorkI;
+		turningMotorConfig.Slot0.kD = SwerveConstants.turningMotorkD;
 		// turningMotorConfig.Slot0.kS = 0.0;
 		// turningMotorConfig.Slot0.kV = 0.0;
 		// turningMotorConfig.Slot0.kA = 0.0;

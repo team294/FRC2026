@@ -108,7 +108,7 @@ public class DriveResetPose extends Command {
   }
 
   /**
-   * Resets the pose, gyro, and encoders on the driveRrain, gettnig values from Shuffleboard.
+   * Resets the pose, gyro, and encoders on the driveRrain, getting values from Shuffleboard.
    * <p><b>NOTE:</b>  This command can run while the robot is disabled.
    * @param driveTrain DriveTrain subystem
    */
