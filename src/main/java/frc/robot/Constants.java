@@ -251,7 +251,7 @@ public final class Constants {
     public static final double rollerIntakePercent = 0.2;   // TODO calibrate intake
     public static final double rollerOuttakePercent = -0.2; // TODO calibrate intake
 
-    public static final double deployGearRatio = 0.0216;                  // Updated 2/18: (12/52) * (18/36) * (24/64) * (18/36) = (9/416) TODO calibrate intake
+    public static final double deployGearRatio = (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0);    // CALIBRATED: (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0)
     public static final double deployDegreesPerRotation = 360.0;
     public static final double deployCompensationVoltage = 12.0;
     public static final double deployMaxUncalibratedPercentOutput = 0.1;  // TODO calibrate intake
@@ -262,7 +262,7 @@ public final class Constants {
     public static double deployCANcoderOffsetAngle = 0.0; // TODO calibrate intake
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
-    public static double deployCANcoderDiscontinuityPoint = 0.50; // TODO calibrate intake
+    public static final double deployCANcoderDiscontinuityPoint = 0.50; // TODO calibrate intake
 
     public static final double kP = 0.0;  // TODO calibrate intake
     public static final double kI = 0.0;  // TODO calibrate intake
