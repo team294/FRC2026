@@ -124,11 +124,12 @@ public final class Constants {
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(22.75) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 22.75".
     
     // Width of robot in meters, + bumpers
-    public static final double robotWidth = Units.inchesToMeters(36.5);  // TODO CALIBRATE
+    public static final double robotWidth = Units.inchesToMeters(13.0);  // TODO CALIBRATE
     // Length of robot in meters, + bumpers
-    public static final double robotLength = Units.inchesToMeters(36.5);  // TODO CALIBRATE
+    public static final double robotCenterToFront = Units.inchesToMeters(12);  // TODO CALIBRATE
+    public static final double robotCenterToBack = Units.inchesToMeters(16);  // TODO CALIBRATE
     // Diagonal Width of robot in meters
-    public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + robotLength*robotLength);
+    public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + (robotCenterToFront+robotCenterToBack)*(robotCenterToFront+robotCenterToBack));
   }
 
   public static final class SwerveConstants {
