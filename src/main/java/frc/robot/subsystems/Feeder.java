@@ -179,7 +179,7 @@ public class Feeder extends SubsystemBase implements Loggable {
 
     // Configure the uptake motor
     uptakeConfig = new TalonFXConfiguration();
-    uptakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive; // TODO determine inversion
+    uptakeConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     uptakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     uptakeConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
     uptakeConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
@@ -188,7 +188,7 @@ public class Feeder extends SubsystemBase implements Loggable {
 
     // Configure the spindexer motor
     spindexerConfig = new TalonFXConfiguration();
-    spindexerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
+    spindexerConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     spindexerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     spindexerConfig.Voltage.PeakForwardVoltage = SpindexerConstants.compensationVoltage;
     spindexerConfig.Voltage.PeakReverseVoltage = -SpindexerConstants.compensationVoltage;
