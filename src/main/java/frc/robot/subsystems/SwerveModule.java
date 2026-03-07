@@ -126,7 +126,7 @@ public class SwerveModule {
     driveFeedforward = new SimpleMotorFeedforward(SwerveConstants.kSDrive, SwerveConstants.kVDriveAvg*kVm, SwerveConstants.kADrive);
     
     // Create motor, encoder, signal, and sensor objects for drive motor
-    driveMotor = new TalonFX(driveMotorAddress, Ports.CANbusMain);
+    driveMotor = new TalonFX(driveMotorAddress, Ports.CANbusCANivore);
     driveMotorConfigurator = driveMotor.getConfigurator();
     driveMotorSupplyVoltage = driveMotor.getSupplyVoltage();
 	  driveMotorTemp = driveMotor.getDeviceTemp();
@@ -136,7 +136,7 @@ public class SwerveModule {
 	  driveEncoderVelocity = driveMotor.getVelocity();
 
     // Create motor, encoder, signal, and sensor objects for turning motor
-    turningMotor = new TalonFX(turningMotorAddress, Ports.CANbusMain);
+    turningMotor = new TalonFX(turningMotorAddress, Ports.CANbusCANivore);
     turningMotorConfigurator = turningMotor.getConfigurator();
 	  turningMotorTemp = turningMotor.getDeviceTemp();
 	  turningDutyCycle = turningMotor.getDutyCycle();
@@ -145,7 +145,7 @@ public class SwerveModule {
 	  turningEncoderVelocity = turningMotor.getVelocity();
 
     // Create CANcoder
-    turningCanCoder = new CANcoder(cancoderAddress, Ports.CANbusMain);
+    turningCanCoder = new CANcoder(cancoderAddress, Ports.CANbusCANivore);
     turningCanCoderConfigurator = turningCanCoder.getConfigurator();
     turningCanCoderPosition = turningCanCoder.getPosition();
     turningCanCoderVelocity = turningCanCoder.getVelocity();

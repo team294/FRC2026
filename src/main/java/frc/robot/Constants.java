@@ -55,6 +55,9 @@ public final class Constants {
     public static final String CANbusMainName = "rio";
     public static final CANBus CANbusMain = new CANBus(CANbusMainName);
 
+    public static final String CANbusCANivoreName = "CANivore";
+    public static final CANBus CANbusCANivore = new CANBus(CANbusCANivoreName);
+
     // Define CAN IDs
     public static final int CANDriveFrontLeftMotor = 1;
     public static final int CANDriveFrontRightMotor = 2;
@@ -114,30 +117,31 @@ public final class Constants {
 
   public static final class RobotDimensions {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
-    private static final double DrivetrainAdjustmentFactor = 1.0000;        // TODO CALIBRATE
+    private static final double DrivetrainAdjustmentFactor = 1.0153;        // CALIBRATED = 1.0153
     // Left-right distance between the drivetrain wheels; should be measured from center to center
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.25) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 20.25".
     // Front-back distance between the drivetrain wheels; should be measured from center to center
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(22.75) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 22.75".
     
     // Width of robot in meters, + bumpers
-    public static final double robotWidth = Units.inchesToMeters(36.5);  // TODO CALIBRATE
+    public static final double robotWidth = Units.inchesToMeters(13.0);  // TODO CALIBRATE
     // Length of robot in meters, + bumpers
-    public static final double robotLength = Units.inchesToMeters(36.5);  // TODO CALIBRATE
+    public static final double robotCenterToFront = Units.inchesToMeters(12);  // TODO CALIBRATE
+    public static final double robotCenterToBack = Units.inchesToMeters(16);  // TODO CALIBRATE
     // Diagonal Width of robot in meters
-    public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + robotLength*robotLength);
+    public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + (robotCenterToFront+robotCenterToBack)*(robotCenterToFront+robotCenterToBack));
   }
 
   public static final class SwerveConstants {
-    // Past kDriveGearRatio: FRC2026 = (14.0/57.0)*(32.0/25.0)*(15.0/30.0).
+    // Past kDriveGearRatio: FRC2026 = (54.0 / 14.0) * (25.0 / 32.0) * (30.0 / 15.0).
     //      Mk4n = 5.90:1 (L2+).  L3 = 6.12:1. Mk4i = 8.14:1 (L1-std gears), 6.75:1 (L2-fast gears), 5.903 (modified L2 16-tooth gear).
     // Past kTurningGearRatio: FRC2026 = 287/11 : 1.  Mk4i = 150 / 7:1.
 
     // Encoder calibration to meters traveled or wheel facing degrees
     public static final double kEncoderCPR = 1.0;                           // CALIBRATED = 1.0.  Encoder counts per revolution of motor pinion gear
-    public static final double kDriveGearRatio = (14.0/57.0)*(32.0/25.0)*(15.0/30.0);       // CALIBRATED.  FRC2026 = (14.0/57.0)*(32.0/25.0)*(15.0/30.0)
+    public static final double kDriveGearRatio = (54.0 / 14.0) * (25.0 / 32.0) * (30.0 / 15.0);       // CALIBRATED.  FRC2026 = (54.0 / 14.0) * (25.0 / 32.0) * (30.0 / 15.0)
     public static final double kTurningGearRatio = (287.0 / 11.0);                          // CALIBRATED.  FRC2026 = 287/11
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(4) * 1.0000;     // TODO CALIBRATE.  FRC2026 wheels are nominal 4"
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(4) * 1.0042;     // CALIBRATED 1.0042.  FRC2026 wheels are nominal 4"
     public static final double kDriveEncoderMetersPerTick = (kWheelDiameterMeters * Math.PI) / kEncoderCPR / kDriveGearRatio;
     public static final double kTurningEncoderDegreesPerTick = 360.0 / kEncoderCPR / kTurningGearRatio;
   
@@ -165,9 +169,9 @@ public final class Constants {
 		public static final double driveMotorkI = 0.0;
 		public static final double driveMotorkD = 0.000012; // kD = (desired-output-volts) / (error-in-encoder-rps/sec)  TODO CALIBRATE FOR 2026
 
-    public static final double turningMotorkP = 3.4;    // kP = (desired-output-volts) / (error-in-encoder-rotations). ETU2025 calibrated at 4.0 but reduced to 3.4 to minimize jitter TODO CALIBRATE FOR 2026
+    public static final double turningMotorkP = 4.3;    // kP = (desired-output-volts) / (error-in-encoder-rotations). CALIBRATED 2026: 4.3
 		public static final double turningMotorkI = 0.0;
-		public static final double turningMotorkD = 0.072;  // kD = (desired-output-volts) / (error-in-encoder-rps) TODO CALIBRATE FOR 2026
+		public static final double turningMotorkD = 0.1;  // kD = (desired-output-volts) / (error-in-encoder-rps) CALIBRATED 2026: 0.1
 
 
     public static final double kVDriveAvg = 2.350;     // TODO CALIBRATE.  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
@@ -212,11 +216,11 @@ public final class Constants {
     // Update the offset angles in RobotPreferences (in Elastic), as well as in this code!
     // After updating in RobotPreferences, you will need to re-start the robot code for the changes to take effect.
     // When calibrating offset, set the wheels to zero degrees with the bevel gear facing to the right
-    // TODO CALIBRATE
-    public static double offsetAngleFrontLeftMotor = 0.0;
-    public static double offsetAngleFrontRightMotor = 0.0;
-    public static double offsetAngleBackLeftMotor = 0.0;
-    public static double offsetAngleBackRightMotor = 0.0;
+    // CALIBRATED 2026
+    public static double offsetAngleFrontLeftMotor = -5.712;
+    public static double offsetAngleFrontRightMotor = 7.294;
+    public static double offsetAngleBackLeftMotor = 0.175;
+    public static double offsetAngleBackRightMotor = 151.611;
 
     // Theta kp value for joystick in rad/sec
     public static final double kPJoystickThetaController = 3;         // TODO CALIBRATE
