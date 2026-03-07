@@ -534,26 +534,25 @@ public class Feeder extends SubsystemBase implements Loggable {
     uptakeRPM = getUptakeMotorVelocity();
     spindexerRPM = getSpindexerVelocity();
 
-    if (!fastLogging || !DataLogUtil.isMyLogRotation(logRotationKey)) return;
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
+      checkForFaultConditions();
+      updateLog(false);
+      
+      SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());
+      SmartDashboard.putNumber(UPTAKE_TARGET_RPM.value, uptakeSetpointRPM);
+      SmartDashboard.putNumber(UPTAKE_TEMP.value, uptakeTemp.refresh().getValueAsDouble());
 
+      SmartDashboard.putNumber(SPINDEXER_RPM.value, getSpindexerVelocity());
+      SmartDashboard.putNumber(SPINDEXER_TARGET_RPM.value, spindexerSetpointRPM);
+      SmartDashboard.putNumber(SPINDEXER_TEMP.value, spindexerTemp.refresh().getValueAsDouble());
 
-    checkForFaultConditions();
-    updateLog(false);
-    
-    SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());
-    SmartDashboard.putNumber(UPTAKE_TARGET_RPM.value, uptakeSetpointRPM);
-    SmartDashboard.putNumber(UPTAKE_TEMP.value, uptakeTemp.refresh().getValueAsDouble());
-
-    SmartDashboard.putNumber(SPINDEXER_RPM.value, getSpindexerVelocity());
-    SmartDashboard.putNumber(SPINDEXER_TARGET_RPM.value, spindexerSetpointRPM);
-    SmartDashboard.putNumber(SPINDEXER_TEMP.value, spindexerTemp.refresh().getValueAsDouble());
-
-    SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Entry"), getAmbientSignal(1));
-    SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Entry"), getDistance(1));
-    SmartDashboard.putBoolean(buildString(subsystemName, " Object Detected Entry"), isDetected(1));
-    SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Exit"), getAmbientSignal(0));
-    SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Exit"), getDistance(0));
-    SmartDashboard.putBoolean(buildString(subsystemName, " Object Detected Exit"), isDetected(0));
-    SmartDashboard.putNumber(buildString(subsystemName, " Num Balls Shot"), ballsShot);
+      SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Entry"), getAmbientSignal(1));
+      SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Entry"), getDistance(1));
+      SmartDashboard.putBoolean(buildString(subsystemName, " Object Detected Entry"), isDetected(1));
+      SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Exit"), getAmbientSignal(0));
+      SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Exit"), getDistance(0));
+      SmartDashboard.putBoolean(buildString(subsystemName, " Object Detected Exit"), isDetected(0));
+      SmartDashboard.putNumber(buildString(subsystemName, " Num Balls Shot"), ballsShot);
+    }    
   }
 }

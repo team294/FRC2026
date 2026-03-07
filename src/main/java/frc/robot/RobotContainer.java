@@ -140,14 +140,16 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
 
     // Feeder
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeedShooter(feeder));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_FORWARDS.value, new FeedShooter(false, feeder));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_REVERSE.value, new FeedShooter(true, feeder));
+
     SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
-    SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT_INPUT.value, new SpindexerSetPercent(false, feeder));
-    SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY_INPUT.value, new SpindexerSetVelocity(feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
 
     SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
-    SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT_INPUT.value, new UptakeSetPercent(false, feeder));
-    SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY_INPUT.value, new UptakeSetVelocity(feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
     
     // Shooter
     // SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercent(shooter));
@@ -171,7 +173,7 @@ public class RobotContainer {
     // Trigger xbB = xboxController.b();
     // Trigger xbY = xboxController.y();
     // Trigger xbX = xboxController.x();
-    // Trigger xbLB = xboxController.leftBumper();
+    Trigger xbLB = xboxController.leftBumper();
     // Trigger xbRB = xboxController.rightBumper();
     // Trigger xbBack = xboxController.back();
     // Trigger xbStart = xboxController.start();
@@ -183,6 +185,8 @@ public class RobotContainer {
     // Trigger xbLJoystickTrigger = xboxController.leftStick();
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
+    xbLB.onTrue(new StopAllMotors(driveTrain, feeder));
+    
   }
 
   /**
@@ -244,6 +248,15 @@ public class RobotContainer {
       new DriveResetPose(180, false, driveTrain), 
       new DriveResetPose(0, false, driveTrain), 
       () -> allianceSelection.getAlliance() == Alliance.Red));
+
+
+    // Spin uptake then spindexer to feed shooter
+    coP[5].onTrue(new FeedShooter(false, feeder));
+    coP[5].onFalse(new FeederStop(feeder));
+
+    // Spin uptake then spindexer away from shooter
+    coP[6].onTrue(new FeedShooter(true, feeder));
+    coP[6].onFalse(new FeederStop(feeder));
   }
 
   private void configureTriggers() {
@@ -278,7 +291,8 @@ public class RobotContainer {
 
     driveTrain.stopMotors();             // SAFETY: Turn off any closed loop control that may be running, so the robot does not move when re-enabled
     // intake.stopIntakeMotor();
-    // feeder.stopFeederMotor();
+    feeder.stopUptake();
+    feeder.stopSpindexer();
     // shooter.stopShooterMotor();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode
     driveTrain.setVisionForOdometryState(true);

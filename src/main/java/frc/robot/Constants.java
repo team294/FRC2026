@@ -257,7 +257,8 @@ public final class Constants {
 
   public static final class FeederConstants {
     public enum FeederElasticKey {
-      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence");
+      FEED_SHOOTER_CMD_SEQUENCE_FORWARDS("Feed Shooter Sequence Normal"),
+      FEED_SHOOTER_CMD_SEQUENCE_REVERSE("Feed Shooter Sequence Reverse");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
@@ -272,11 +273,11 @@ public final class Constants {
       public static final double spindexerReversePercent = -0.2;
       public static final double spindexerShootRPM = 2500; // TODO: Calibrate
 
-      public static final double kP = 0.0;
+      public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kS = 0.0;
-      public static final double kV = 0.0;
+      public static final double kS = 0.26;  // CALIBRATED 3/7/26: 0.26
+      public static final double kV = 0.12;  // CALIBRATED 3/7/26: 0.12
       public static final double kA = 0.0;
 
       public enum SpindexerElasticKey {
