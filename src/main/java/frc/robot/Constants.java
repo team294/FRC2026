@@ -275,6 +275,7 @@ public final class Constants {
     public static final double spindexerGearRatio = 1.0;
     public static final double spindexerForwardPercent = 0.2; 
     public static final double spindexerReversePercent = -0.2;
+    public static final double spindexerShootRPM = 2500; // TODO: Calibrate
 
     public static final double kP = 0.0;
     public static final double kI = 0.0;
@@ -306,6 +307,7 @@ public final class Constants {
     public static final double uptakeGearRatio = 1.0;
     public static final double uptakeForwardPercent = 0.2;
     public static final double uptakeReversePercent = 0.2;
+    public static final double uptakeShootRPM = 3000; // TODO: Calibrate
 
     public static final double kP = 0.0;
     public static final double kI = 0.0;
