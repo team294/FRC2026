@@ -6,9 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.UptakeConstants.UptakeElasticKey;
 import frc.robot.subsystems.Feeder;
 import frc.robot.utilities.DataLogUtil;
+
+import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
 
 public class UptakeSetPercent extends Command {
   private final Feeder feeder;
@@ -26,8 +27,8 @@ public class UptakeSetPercent extends Command {
     fromElastic = true;
     addRequirements(feeder);
 
-    if (SmartDashboard.getNumber(UptakeElasticKey.CMD_SET_PERCENT_INPUT.value, -9999.9) == -9999.9) {
-      SmartDashboard.putNumber(UptakeElasticKey.CMD_SET_PERCENT_INPUT.value, 0.0);
+    if (SmartDashboard.getNumber(UPTAKE_CMD_SET_PERCENT_INPUT.value, -9999.9) == -9999.9) {
+      SmartDashboard.putNumber(UPTAKE_CMD_SET_PERCENT_INPUT.value, 0.0);
     }
   }
 
@@ -48,7 +49,7 @@ public class UptakeSetPercent extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) percent = SmartDashboard.getNumber(UptakeElasticKey.CMD_SET_PERCENT_INPUT.value, 0.0);
+    if (fromElastic) percent = SmartDashboard.getNumber(UPTAKE_CMD_SET_PERCENT_INPUT.value, 0.0);
     feeder.setUptakePercentOutput(percent);
     DataLogUtil.writeMessage("UptakeSetPercent: Init, Percent =", percent);
   }

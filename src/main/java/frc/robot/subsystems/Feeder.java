@@ -32,15 +32,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANRangeConstants;
 import frc.robot.Constants.Ports;
-import frc.robot.Constants.SpindexerConstants;
-import frc.robot.Constants.SpindexerConstants.SpindexerElasticKey;
-import frc.robot.Constants.UptakeConstants;
-import frc.robot.Constants.UptakeConstants.UptakeElasticKey;
+import frc.robot.Constants.FeederConstants.SpindexerConstants;
+import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 import frc.robot.utilities.Wait;
+
+import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
+import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
 
 public class Feeder extends SubsystemBase implements Loggable {
   private int logRotationKey;           // Key to identify the log rotation
@@ -539,13 +540,13 @@ public class Feeder extends SubsystemBase implements Loggable {
     checkForFaultConditions();
     updateLog(false);
     
-    SmartDashboard.putNumber(UptakeElasticKey.RPM.value, getUptakeMotorVelocity());
-    SmartDashboard.putNumber(UptakeElasticKey.TARGET_RPM.value, uptakeSetpointRPM);
-    SmartDashboard.putNumber(UptakeElasticKey.TEMP.value, uptakeTemp.refresh().getValueAsDouble());
+    SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());
+    SmartDashboard.putNumber(UPTAKE_TARGET_RPM.value, uptakeSetpointRPM);
+    SmartDashboard.putNumber(UPTAKE_TEMP.value, uptakeTemp.refresh().getValueAsDouble());
 
-    SmartDashboard.putNumber(SpindexerElasticKey.RPM.value, getSpindexerVelocity());
-    SmartDashboard.putNumber(SpindexerElasticKey.TARGET_RPM.value, spindexerSetpointRPM);
-    SmartDashboard.putNumber(SpindexerElasticKey.TEMP.value, spindexerTemp.refresh().getValueAsDouble());
+    SmartDashboard.putNumber(SPINDEXER_RPM.value, getSpindexerVelocity());
+    SmartDashboard.putNumber(SPINDEXER_TARGET_RPM.value, spindexerSetpointRPM);
+    SmartDashboard.putNumber(SPINDEXER_TEMP.value, spindexerTemp.refresh().getValueAsDouble());
 
     SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Entry"), getAmbientSignal(1));
     SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Entry"), getDistance(1));

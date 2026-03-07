@@ -8,12 +8,15 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.robot.Constants.*;
-import frc.robot.Constants.SpindexerConstants.SpindexerElasticKey;
-import frc.robot.Constants.UptakeConstants.UptakeElasticKey;
 import frc.robot.commands.*;
+import frc.robot.commands.sequences.FeedShooter;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
+
+import static frc.robot.Constants.FeederConstants.FeederElasticKey.*;
+import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
+import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
 
 import com.ctre.phoenix6.SignalLogger;
 
@@ -137,13 +140,14 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
 
     // Feeder
-    SmartDashboard.putData(SpindexerElasticKey.CMD_STOP.value, new SpindexerStop(feeder));
-    SmartDashboard.putData(SpindexerElasticKey.CMD_SET_PERCENT_INPUT.value, new SpindexerSetPercent(false, feeder));
-    SmartDashboard.putData(SpindexerElasticKey.CMD_SET_VELOCITY_INPUT.value, new SpindexerSetVelocity(feeder));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeedShooter(feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT_INPUT.value, new SpindexerSetPercent(false, feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY_INPUT.value, new SpindexerSetVelocity(feeder));
 
-    SmartDashboard.putData(UptakeElasticKey.CMD_STOP.value, new UptakeStop(feeder));
-    SmartDashboard.putData(UptakeElasticKey.CMD_SET_PERCENT_INPUT.value, new UptakeSetPercent(false, feeder));
-    SmartDashboard.putData(UptakeElasticKey.CMD_SET_VELOCITY_INPUT.value, new UptakeSetVelocity(feeder));
+    SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT_INPUT.value, new UptakeSetPercent(false, feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY_INPUT.value, new UptakeSetVelocity(feeder));
     
     // Shooter
     // SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercent(shooter));

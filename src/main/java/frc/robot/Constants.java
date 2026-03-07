@@ -256,80 +256,76 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double compensationVoltage = 12.0;
-    public static final double feederGearRatio = 1.0;
-    public static final double feedPercent = 0.2; // TODO find a good setpoint if using pctOut
-    public static final double kP = 0.45;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.249;
-    public static final double kV = 0.082;
-    public static final double kA = 0.0;
-    public static final double velocityErrorTolerance = 100.0; // TODO tune if necessary
-
-  }
-
-  // TODO calibrate spindexer
-  public static final class SpindexerConstants {
-    public static final double compensationVoltage = 12.0;
-    public static final double spindexerGearRatio = 1.0;
-    public static final double spindexerForwardPercent = 0.2; 
-    public static final double spindexerReversePercent = -0.2;
-    public static final double spindexerShootRPM = 2500; // TODO: Calibrate
-
-    public static final double kP = 0.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
-
-    public enum SpindexerElasticKey {
-      CMD_STOP("Spindexer Stop"),
-      CMD_SET_PERCENT("Spindexer Set Percent"),
-      CMD_SET_PERCENT_INPUT(SpindexerElasticKey.CMD_SET_PERCENT.value + " Input"),
-      CMD_SET_VELOCITY("Spindexer Set Velocity"),
-      CMD_SET_VELOCITY_INPUT(SpindexerElasticKey.CMD_SET_VELOCITY.value + " Input"),
-
-      RPM("Spindexer RPM"),
-      TARGET_RPM("Spindexer Target RPM"),
-      TEMP("Spindexer Temp");
+    public enum FeederElasticKey {
+      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
-      SpindexerElasticKey(String value) { this.value = value; }
+      FeederElasticKey(String value) { this.value = value; }
     }
-  }
 
-  // TODO calibrate uptake
-  public static final class UptakeConstants {
-    public static final double compensationVoltage = 12.0;
-    public static final double uptakeGearRatio = 1.0;
-    public static final double uptakeForwardPercent = 0.2;
-    public static final double uptakeReversePercent = 0.2;
-    public static final double uptakeShootRPM = 3000; // TODO: Calibrate
+    // TODO calibrate spindexer
+    public static final class SpindexerConstants {
+      public static final double compensationVoltage = 12.0;
+      public static final double spindexerGearRatio = 1.0;
+      public static final double spindexerForwardPercent = 0.2; 
+      public static final double spindexerReversePercent = -0.2;
+      public static final double spindexerShootRPM = 2500; // TODO: Calibrate
 
-    public static final double kP = 0.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
+      public static final double kP = 0.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kS = 0.0;
+      public static final double kV = 0.0;
+      public static final double kA = 0.0;
 
-    public enum UptakeElasticKey {
-      CMD_STOP("Uptake Stop"),
-      CMD_SET_PERCENT("Uptake Set Percent"),
-      CMD_SET_PERCENT_INPUT(UptakeElasticKey.CMD_SET_PERCENT.value + " Input"),
-      CMD_SET_VELOCITY("Uptake Set Velocity Input"),
-      CMD_SET_VELOCITY_INPUT(UptakeElasticKey.CMD_SET_VELOCITY.value + " Input"),
+      public enum SpindexerElasticKey {
+        SPINDEXER_CMD_STOP("Spindexer Stop"),
+        SPINDEXER_CMD_SET_PERCENT("Spindexer Set Percent"),
+        SPINDEXER_CMD_SET_PERCENT_INPUT(SpindexerElasticKey.SPINDEXER_CMD_SET_PERCENT.value + " Input"),
+        SPINDEXER_CMD_SET_VELOCITY("Spindexer Set Velocity"),
+        SPINDEXER_CMD_SET_VELOCITY_INPUT(SpindexerElasticKey.SPINDEXER_CMD_SET_VELOCITY.value + " Input"),
 
-      RPM("Uptake RPM"),
-      TARGET_RPM("Uptake Target RPM"),
-      TEMP("Uptake Temp");
+        SPINDEXER_RPM("Spindexer RPM"),
+        SPINDEXER_TARGET_RPM("Spindexer Target RPM"),
+        SPINDEXER_TEMP("Spindexer Temp");
 
-      @SuppressWarnings({"MemberName", "PMD.SingularField"})
-      public final String value;
-      UptakeElasticKey(String value) { this.value = value; }
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
+        public final String value;
+        SpindexerElasticKey(String value) { this.value = value; }
+      }
+    }
+
+    // TODO calibrate uptake
+    public static final class UptakeConstants {
+      public static final double compensationVoltage = 12.0;
+      public static final double uptakeGearRatio = 1.0;
+      public static final double uptakeForwardPercent = 0.2;
+      public static final double uptakeReversePercent = 0.2;
+      public static final double uptakeShootRPM = 3000; // TODO: Calibrate
+
+      public static final double kP = 0.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kS = 0.0;
+      public static final double kV = 0.0;
+      public static final double kA = 0.0;
+
+      public enum UptakeElasticKey {
+        UPTAKE_CMD_STOP("Uptake Stop"),
+        UPTAKE_CMD_SET_PERCENT("Uptake Set Percent"),
+        UPTAKE_CMD_SET_PERCENT_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_PERCENT.value + " Input"),
+        UPTAKE_CMD_SET_VELOCITY("Uptake Set Velocity Input"),
+        UPTAKE_CMD_SET_VELOCITY_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_VELOCITY.value + " Input"),
+
+        UPTAKE_RPM("Uptake RPM"),
+        UPTAKE_TARGET_RPM("Uptake Target RPM"),
+        UPTAKE_TEMP("Uptake Temp");
+
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
+        public final String value;
+        UptakeElasticKey(String value) { this.value = value; }
+      }
     }
   }
   
