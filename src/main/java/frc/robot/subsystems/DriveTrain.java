@@ -67,7 +67,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private final SwerveModule swerveBackRight;
     
   // Variables for gyro and gyro calibration
-  private final Pigeon2 pigeon = new Pigeon2(CANPigeonGyro, Ports.CANbusMain);
+  private final Pigeon2 pigeon = new Pigeon2(CANPigeonGyro, Ports.CANbusCANivore);
   private final StatusSignal<Angle> pigeonYaw = pigeon.getYaw();
   private final StatusSignal<Angle> pigeonPitch = pigeon.getPitch();
   private final StatusSignal<Angle> pigeonRoll = pigeon.getRoll();
@@ -133,16 +133,16 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     // Create swerve modules
     swerveFrontLeft = new SwerveModule("FL",
       CANDriveFrontLeftMotor, CANDriveTurnFrontLeftMotor, CANDriveTurnFrontLeftEncoder, 
-      false, true, false, offsetAngleFrontLeftMotor, SwerveConstants.kVmFL);
+      false, false, false, offsetAngleFrontLeftMotor, SwerveConstants.kVmFL);
     swerveFrontRight = new SwerveModule("FR",
       CANDriveFrontRightMotor, CANDriveTurnFrontRightMotor, CANDriveTurnFrontRightEncoder, 
-      false, true, false, offsetAngleFrontRightMotor, SwerveConstants.kVmFR);
+      false, false, false, offsetAngleFrontRightMotor, SwerveConstants.kVmFR);
     swerveBackLeft = new SwerveModule("BL",
       CANDriveBackLeftMotor, CANDriveTurnBackLeftMotor, CANDriveTurnBackLeftEncoder, 
-      false, true, false, offsetAngleBackLeftMotor, SwerveConstants.kVmBL);
+      false, false, false, offsetAngleBackLeftMotor, SwerveConstants.kVmBL);
     swerveBackRight = new SwerveModule("BR",
       CANDriveBackRightMotor, CANDriveTurnBackRightMotor, CANDriveTurnBackRightEncoder, 
-      false, true, false, offsetAngleBackRightMotor, SwerveConstants.kVmBR);
+      false, false, false, offsetAngleBackRightMotor, SwerveConstants.kVmBR);
     
     // Put drive mode on Elastic
     setDriveModeCoast(false);

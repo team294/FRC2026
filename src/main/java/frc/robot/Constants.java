@@ -55,6 +55,9 @@ public final class Constants {
     public static final String CANbusMainName = "rio";
     public static final CANBus CANbusMain = new CANBus(CANbusMainName);
 
+    public static final String CANbusCANivoreName = "CANivore";
+    public static final CANBus CANbusCANivore = new CANBus(CANbusCANivoreName);
+
     // Define CAN IDs
     public static final int CANDriveFrontLeftMotor = 1;
     public static final int CANDriveFrontRightMotor = 2;
@@ -165,9 +168,9 @@ public final class Constants {
 		public static final double driveMotorkI = 0.0;
 		public static final double driveMotorkD = 0.000012; // kD = (desired-output-volts) / (error-in-encoder-rps/sec)  TODO CALIBRATE FOR 2026
 
-    public static final double turningMotorkP = 3.4;    // kP = (desired-output-volts) / (error-in-encoder-rotations). ETU2025 calibrated at 4.0 but reduced to 3.4 to minimize jitter TODO CALIBRATE FOR 2026
+    public static final double turningMotorkP = 4.3;    // kP = (desired-output-volts) / (error-in-encoder-rotations). CALIBRATED 2026: 4.3
 		public static final double turningMotorkI = 0.0;
-		public static final double turningMotorkD = 0.072;  // kD = (desired-output-volts) / (error-in-encoder-rps) TODO CALIBRATE FOR 2026
+		public static final double turningMotorkD = 0.1;  // kD = (desired-output-volts) / (error-in-encoder-rps) CALIBRATED 2026: 0.1
 
 
     public static final double kVDriveAvg = 2.350;     // TODO CALIBRATE.  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
@@ -212,11 +215,11 @@ public final class Constants {
     // Update the offset angles in RobotPreferences (in Elastic), as well as in this code!
     // After updating in RobotPreferences, you will need to re-start the robot code for the changes to take effect.
     // When calibrating offset, set the wheels to zero degrees with the bevel gear facing to the right
-    // TODO CALIBRATE
-    public static double offsetAngleFrontLeftMotor = 0.0;
-    public static double offsetAngleFrontRightMotor = 0.0;
-    public static double offsetAngleBackLeftMotor = 0.0;
-    public static double offsetAngleBackRightMotor = 0.0;
+    // CALIBRATED 2026
+    public static double offsetAngleFrontLeftMotor = -5.712;
+    public static double offsetAngleFrontRightMotor = 7.294;
+    public static double offsetAngleBackLeftMotor = 0.175;
+    public static double offsetAngleBackRightMotor = 151.611;
 
     // Theta kp value for joystick in rad/sec
     public static final double kPJoystickThetaController = 3;         // TODO CALIBRATE
