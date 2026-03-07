@@ -38,6 +38,7 @@ import frc.robot.Constants.UptakeConstants;
 import frc.robot.Constants.UptakeConstants.UptakeElasticKey;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
+import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 import frc.robot.utilities.Wait;
 
@@ -130,6 +131,13 @@ public class Feeder extends SubsystemBase implements Loggable {
 
   private double uptakeRPM = 0.0;     // Measured velocity, in RPM
   private double spindexerRPM = 0.0;  // Measured velocity, in RPM
+
+  // Sticky Faults
+  private boolean uptakeMissingStickyFault;
+  private boolean spindexerMissingStickyFault;
+  private boolean CANRangeEntryMissingStickyFault;
+  private boolean CANRangeExitMissingStickyFault;
+  
   
   public Feeder(String subsystemName) {
     this.subsystemName = subsystemName;
@@ -483,6 +491,43 @@ public class Feeder extends SubsystemBase implements Loggable {
     dLogSpindexerSetpointRPM.append(spindexerSetpointRPM, timeNow);
   }
 
+  private void checkForFaultConditions() {
+     // Reset recordedStickyFault booleans if the Sticky Faults were cleared
+   uptakeMissingStickyFault = uptakeMissingStickyFault && RobotPreferences.isStickyFaultActive();
+   spindexerMissingStickyFault = spindexerMissingStickyFault && RobotPreferences.isStickyFaultActive();
+   CANRangeEntryMissingStickyFault = CANRangeEntryMissingStickyFault && RobotPreferences.isStickyFaultActive();
+   CANRangeExitMissingStickyFault = CANRangeExitMissingStickyFault  && RobotPreferences.isStickyFaultActive();
+
+  // If we haven't recorded the sticky fault yet, then check fault condition
+  // Uptake motor
+    if(!uptakeMissingStickyFault && !uptakeMotor.isConnected()) {
+      RobotPreferences.recordStickyFaults("Feeder");
+      DataLogUtil.writeMessageEcho("STICKY FAULT Uptake motor disconnected");
+      uptakeMissingStickyFault = true;
+    }
+    // Spindexer motor
+    if(!spindexerMissingStickyFault && !spindexerMotor.isConnected()) {
+      RobotPreferences.recordStickyFaults("Feeder");
+      DataLogUtil.writeMessageEcho("STICKY FAULT Spindexer motor disconnected");
+      spindexerMissingStickyFault = true;
+    }
+
+    if(!CANRangeEntryMissingStickyFault && !CANRangeEntry.isConnected()) {
+      RobotPreferences.recordStickyFaults("Feeder");
+      DataLogUtil.writeMessageEcho("STICKY FAULT CANRange1 (Entry) motor disconnected");
+      CANRangeEntryMissingStickyFault = true;
+    }
+
+    if(!CANRangeExitMissingStickyFault && !CANRangeExit.isConnected()) {
+      RobotPreferences.recordStickyFaults("Feeder");
+      DataLogUtil.writeMessageEcho("STICKY FAULT CANRange2 (Exit) motor disconnected");
+      CANRangeExitMissingStickyFault = true;
+    }
+
+    
+
+  }
+
   @Override
   public void periodic() {
     uptakeRPM = getUptakeMotorVelocity();
@@ -490,6 +535,8 @@ public class Feeder extends SubsystemBase implements Loggable {
 
     if (!fastLogging || !DataLogUtil.isMyLogRotation(logRotationKey)) return;
 
+
+    checkForFaultConditions();
     updateLog(false);
     
     SmartDashboard.putNumber(UptakeElasticKey.RPM.value, getUptakeMotorVelocity());
