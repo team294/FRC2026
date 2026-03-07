@@ -8,6 +8,8 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.robot.Constants.*;
+import frc.robot.Constants.SpindexerConstants.SpindexerElasticKey;
+import frc.robot.Constants.UptakeConstants.UptakeElasticKey;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
@@ -45,7 +47,7 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
   // private final Intake intake = new Intake("Intake");
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
-  // private final Feeder feeder = new Feeder("Feeder");
+  private final Feeder feeder = new Feeder("Feeder");
   // private final Shooter shooter = new Shooter("Shooter");
 
   // Define controllers
@@ -133,6 +135,15 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder Set Velocity", new FeederSetVelocity(FeederSetVelocity.VelocityType.runForever, feeder));
     // SmartDashboard.putData("Feeder Set Velocity 500 RPM", new FeederSetVelocity(500.0, FeederSetVelocity.VelocityType.runForever, feeder));
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
+
+    // Feeder
+    SmartDashboard.putData(SpindexerElasticKey.CMD_STOP.value, new SpindexerStop(feeder));
+    SmartDashboard.putData(SpindexerElasticKey.CMD_SET_PERCENT_INPUT.value, new SpindexerSetPercent(false, feeder));
+    SmartDashboard.putData(SpindexerElasticKey.CMD_SET_VELOCITY_INPUT.value, new SpindexerSetVelocity(feeder));
+
+    SmartDashboard.putData(UptakeElasticKey.CMD_STOP.value, new UptakeStop(feeder));
+    SmartDashboard.putData(UptakeElasticKey.CMD_SET_PERCENT_INPUT.value, new UptakeSetPercent(false, feeder));
+    SmartDashboard.putData(UptakeElasticKey.CMD_SET_VELOCITY_INPUT.value, new UptakeSetVelocity(feeder));
     
     // Shooter
     // SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercent(shooter));

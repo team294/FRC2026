@@ -79,6 +79,9 @@ public final class Constants {
     public static final int CANTurretEncoder1 = 14;
     public static final int CANTurretEncoder2 = 15;
 
+    public static final int CANRangeEntry = 16;
+    public static final int CANRangeExit = 17;
+
     public static final int CANPigeonGyro = 22;
 
     public static final int CANdle = 25;
@@ -265,6 +268,68 @@ public final class Constants {
     public static final double velocityErrorTolerance = 100.0; // TODO tune if necessary
 
   }
+
+  // TODO calibrate spindexer
+  public static final class SpindexerConstants {
+    public static final double compensationVoltage = 12.0;
+    public static final double spindexerGearRatio = 1.0;
+    public static final double spindexerForwardPercent = 0.2; 
+    public static final double spindexerReversePercent = -0.2;
+
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+
+    public enum SpindexerElasticKey {
+      CMD_STOP("Spindexer Stop"),
+      CMD_SET_PERCENT("Spindexer Set Percent"),
+      CMD_SET_PERCENT_INPUT(SpindexerElasticKey.CMD_SET_PERCENT.value + " Input"),
+      CMD_SET_VELOCITY("Spindexer Set Velocity"),
+      CMD_SET_VELOCITY_INPUT(SpindexerElasticKey.CMD_SET_VELOCITY.value + " Input"),
+
+      RPM("Spindexer RPM"),
+      TARGET_RPM("Spindexer Target RPM"),
+      TEMP("Spindexer Temp");
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final String value;
+      SpindexerElasticKey(String value) { this.value = value; }
+    }
+  }
+
+  // TODO calibrate uptake
+  public static final class UptakeConstants {
+    public static final double compensationVoltage = 12.0;
+    public static final double uptakeGearRatio = 1.0;
+    public static final double uptakeForwardPercent = 0.2;
+    public static final double uptakeReversePercent = 0.2;
+
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+
+    public enum UptakeElasticKey {
+      CMD_STOP("Uptake Stop"),
+      CMD_SET_PERCENT("Uptake Set Percent"),
+      CMD_SET_PERCENT_INPUT(UptakeElasticKey.CMD_SET_PERCENT.value + " Input"),
+      CMD_SET_VELOCITY("Uptake Set Velocity Input"),
+      CMD_SET_VELOCITY_INPUT(UptakeElasticKey.CMD_SET_VELOCITY.value + " Input"),
+
+      RPM("Uptake RPM"),
+      TARGET_RPM("Uptake Target RPM"),
+      TEMP("Uptake Temp");
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final String value;
+      UptakeElasticKey(String value) { this.value = value; }
+    }
+  }
   
   public static final class ShooterConstants {
     public static final double compensationVoltage = 12.0;
@@ -323,6 +388,11 @@ public final class Constants {
     public static final TrapezoidProfileBCR.Constraints kDriveProfileConstraints =
     new TrapezoidProfileBCR.Constraints(
           SwerveConstants.kNominalSpeedMetersPerSecond, SwerveConstants.kNominalAccelerationMetersPerSecondSquare);
+  }
+
+  public static final class CANRangeConstants {
+    public static final double proximityThreshold = 0.3;
+    public static final double maxDistanceError = 0.01;
   }
 
   // Colors for the LEDs based on different robot states
