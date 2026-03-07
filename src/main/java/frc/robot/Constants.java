@@ -117,7 +117,7 @@ public final class Constants {
 
   public static final class RobotDimensions {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
-    private static final double DrivetrainAdjustmentFactor = 1.0000;        // TODO CALIBRATE
+    private static final double DrivetrainAdjustmentFactor = 1.0153;        // CALIBRATED = 1.0153
     // Left-right distance between the drivetrain wheels; should be measured from center to center
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.25) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 20.25".
     // Front-back distance between the drivetrain wheels; should be measured from center to center
