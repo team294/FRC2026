@@ -116,9 +116,9 @@ public final class Constants {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
     private static final double DrivetrainAdjustmentFactor = 1.0000;        // TODO CALIBRATE
     // Left-right distance between the drivetrain wheels; should be measured from center to center
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(24.25) * DrivetrainAdjustmentFactor;     // TODO CALIBRATE.  ETU bot CAD = 24.25".
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.25) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 20.25".
     // Front-back distance between the drivetrain wheels; should be measured from center to center
-    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(24.25) * DrivetrainAdjustmentFactor;      // TODO CALIBRATE.  ETU bot CAD = 24.25".
+    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(22.75) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 22.75".
     
     // Width of robot in meters, + bumpers
     public static final double robotWidth = Units.inchesToMeters(36.5);  // TODO CALIBRATE
@@ -129,14 +129,15 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
-    // Past kDriveGearRatio: Mk4n = 5.90:1 (L2+).  L3 = 6.12:1. Mk4i = 8.14:1 (L1-std gears), 6.75:1 (L2-fast gears), 5.903 (modified L2 16-tooth gear).
-    // Past kTurningGearRatio: Mk4i = 150 / 7:1.
+    // Past kDriveGearRatio: FRC2026 = (14.0/57.0)*(32.0/25.0)*(15.0/30.0).
+    //      Mk4n = 5.90:1 (L2+).  L3 = 6.12:1. Mk4i = 8.14:1 (L1-std gears), 6.75:1 (L2-fast gears), 5.903 (modified L2 16-tooth gear).
+    // Past kTurningGearRatio: FRC2026 = 287/11 : 1.  Mk4i = 150 / 7:1.
 
     // Encoder calibration to meters traveled or wheel facing degrees
     public static final double kEncoderCPR = 1.0;                           // CALIBRATED = 1.0.  Encoder counts per revolution of motor pinion gear
-    public static final double kDriveGearRatio = (5.903 / 1.0);             // TODO CALIBRATE.  Mk4i = 5.903 (modified L2 16-tooth gear)
-    public static final double kTurningGearRatio = (150.0 / 7.0 / 1.0);     // TODO CALIBRATE.  Mk4i = 150/7 : 1
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(4) * 1.0000;     // TODO CALIBRATE.  ETU wheels are nominal 4"
+    public static final double kDriveGearRatio = (14.0/57.0)*(32.0/25.0)*(15.0/30.0);       // CALIBRATED.  FRC2026 = (14.0/57.0)*(32.0/25.0)*(15.0/30.0)
+    public static final double kTurningGearRatio = (287.0 / 11.0);                          // CALIBRATED.  FRC2026 = 287/11
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(4) * 1.0000;     // TODO CALIBRATE.  FRC2026 wheels are nominal 4"
     public static final double kDriveEncoderMetersPerTick = (kWheelDiameterMeters * Math.PI) / kEncoderCPR / kDriveGearRatio;
     public static final double kTurningEncoderDegreesPerTick = 360.0 / kEncoderCPR / kTurningGearRatio;
   
