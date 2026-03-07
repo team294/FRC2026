@@ -58,6 +58,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
 
   private int logRotationKey;
   private boolean fastLogging = false;    // true = enabled to run every cycle, false = follow normal logging cycles
+  private boolean recordedStickyFault = false; // true = recorded a sticky fault in this subsystem
   private final AllianceSelection allianceSelection;
 
   // Variables for swerve modules
@@ -574,8 +575,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
       updateDriveLog(false);
+    }
 
-      if(!isGyroReading()) RobotPreferences.recordStickyFaults("Gyro");
+    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+      checkForFaultConditions();
 
       ChassisSpeeds robotSpeeds = getRobotSpeeds();
 
@@ -673,6 +676,34 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     dLogChoreoBLDriveOutput.append(swerveBackLeft.getDriveOutputPercent(), timeNow);
     dLogChoreoBRDriveOutput.append(swerveBackRight.getDriveOutputPercent(), timeNow);
   }
+
+  /**
+   * Checks for fault conditions and records stick faults if any exist.
+   */
+  private void checkForFaultConditions() {
+      // Resest recordedStickyFault if the Sticky Faults were cleared
+      recordedStickyFault = recordedStickyFault && RobotPreferences.isStickyFaultActive();
+
+      // If we haven't recorded a sticky fault yet, then check for fault conditions
+      if (!recordedStickyFault) {
+        if(!isGyroReading()) {
+          RobotPreferences.recordStickyFaults("DriveTrain-Gyro");
+          DataLogUtil.writeMessageEcho("STICKY FAULT DriveTrain:  Gyro not reading");
+          recordedStickyFault = true;
+        }
+
+        recordedStickyFault = recordedStickyFault ||
+          swerveFrontLeft.checkForFaultConditions() ||
+          swerveFrontRight.checkForFaultConditions() ||
+          swerveBackLeft.checkForFaultConditions() ||
+          swerveBackRight.checkForFaultConditions();
+
+        // Note that the cameras will record their own stick faults if they are not
+        // connected when calling camera.getEstimatedGlobalPose, which happens
+        // when DriveTrain.periodic() calls updateOdometery().
+      }
+  }
+
 
   // ************ Camera methods
 

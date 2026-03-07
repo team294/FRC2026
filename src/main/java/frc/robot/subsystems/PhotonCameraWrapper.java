@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utilities.DataLogUtil;
+import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 
 import java.util.List;
@@ -65,9 +66,14 @@ public class PhotonCameraWrapper extends SubsystemBase {
     // Prime the DataLog to reduce delay when first enabling the robot
     long timeNow = RobotController.getFPGATime();
     dLogEstPose2D.append(Pose2d.kZero, timeNow);
+
     priorConnected = photonCamera.isConnected();
     dLogConnected.append(priorConnected, timeNow);
     SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), priorConnected);
+    if (!priorConnected) {
+      RobotPreferences.recordStickyFaults(cameraName);
+      DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
+    }
     priorTagPresent = false;
     dLogTagPresent.append(priorTagPresent, timeNow);
 
@@ -109,6 +115,10 @@ public class PhotonCameraWrapper extends SubsystemBase {
       dLogConnected.append(isConnected, timeNow);
       SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), isConnected);
       priorConnected = isConnected;
+      if (!isConnected) {
+        RobotPreferences.recordStickyFaults(cameraName);
+        DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
+      }
     }
 
     // New for 2026:

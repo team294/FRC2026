@@ -601,6 +601,32 @@ public class SwerveModule {
   }
 
   /**
+   * Returns true if there is a hardware error, and logs the hardware error to a
+   * Sticky Fault, to the log file, and to the console.  Multiple errors result
+   * in a concatenation of values.
+   * <p> "Drive" = drive motor not connected to CANbus
+   * <p> "Turn" = turning motor not connected to CANbus
+   * <p> "Cancoder" = turning Cancoder not connected to CANbus
+   * @return false = no hardware errors, true = one or more hardware errors
+   */
+  public boolean checkForFaultConditions() {
+    String s = "";
+    if (!driveMotor.isConnected()) s = StringUtil.buildString(s, "-Drive");
+    if (!turningMotor.isConnected()) s = StringUtil.buildString(s, "-Turn");
+    if (!turningCanCoder.isConnected()) s = StringUtil.buildString(s, "-Cancoder");
+
+    if (s.isEmpty()) {
+      return false;
+    }
+
+    s = StringUtil.buildString("SweveModule-", swName, s);
+    RobotPreferences.recordStickyFaults(s);
+    DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", s));
+
+    return true;
+  }
+  
+  /**
    * Updates relevant variables on Elastic.
    */
   public void updateElastic() {
