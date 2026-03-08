@@ -130,7 +130,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the roller motor
     intakeRollerMotorConfig = new TalonFXConfiguration();
-    intakeRollerMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive; // TODO determine inversion
+    intakeRollerMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     intakeRollerMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeRollerMotorConfig.Voltage.PeakForwardVoltage = IntakeConstants.rollerCompensationVoltage;
     intakeRollerMotorConfig.Voltage.PeakReverseVoltage = -IntakeConstants.rollerCompensationVoltage;
@@ -139,7 +139,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor when using the rotor encoder
     intakeDeployMotorRotorConfig = new TalonFXConfiguration();
-    intakeDeployMotorRotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
+    intakeDeployMotorRotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;  // TODO determine inversion
     intakeDeployMotorRotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeDeployMotorRotorConfig.Voltage.PeakForwardVoltage = IntakeConstants.deployCompensationVoltage;
     intakeDeployMotorRotorConfig.Voltage.PeakReverseVoltage = -IntakeConstants.deployCompensationVoltage;
@@ -148,7 +148,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor when using the CANcoder
     intakeDeployMotorCANcoderConfig = new TalonFXConfiguration();
-    intakeDeployMotorCANcoderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
+    intakeDeployMotorCANcoderConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;  // TODO determine inversion
     intakeDeployMotorCANcoderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeDeployMotorCANcoderConfig.Voltage.PeakForwardVoltage = IntakeConstants.deployCompensationVoltage;
     intakeDeployMotorCANcoderConfig.Voltage.PeakReverseVoltage = -IntakeConstants.deployCompensationVoltage;
@@ -190,11 +190,11 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorRotorConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     // Configure the CANcoder as a feedback source for the deploy motor
-    // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio
+    // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio TODO how is the sensor:mechanism 1?
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackRemoteSensorID = Ports.CANIntakeDeployEncoder;
-    intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = 1.0; // TODO there is an 18/36 gear ratio on competition robot
-    intakeDeployMotorCANcoderConfig.Feedback.RotorToSensorRatio = IntakeConstants.deployGearRatio;
+    intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = 18.0 / 36.0; // 18 : 36 gear ratio on competition robot (reduction)
+    intakeDeployMotorCANcoderConfig.Feedback.RotorToSensorRatio = IntakeConstants.deployGearRatio * (18.0 / 36.0);
     intakeDeployMotorCANcoderConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     // Assign a slot for the deploy motor position control
@@ -370,6 +370,14 @@ public class Intake extends SubsystemBase implements Loggable{
   }
 
   /**
+   * 
+   * @return
+   */
+  public double getIntakeDeployCANcoderDegrees() {
+    return getIntakeDeployCANcoderRotationsRaw() * IntakeConstants.deployDegreesPerRotation - intakeDeployEncoderZero;
+  }
+
+  /**
    * Gets the raw number of rotations from the rotor encoder.
    * @return raw encoder reading, in pinion rotations
    */
@@ -467,7 +475,8 @@ public class Intake extends SubsystemBase implements Loggable{
    */
   public double getIntakeDeployAngle() {
     if (!isIntakeDeployCalibrated) return IntakeDeployAngle.LOWER_LIMIT.value;
-    return getIntakeDeployRotorEncoderDegrees();
+    // return getIntakeDeployRotorEncoderDegrees();
+    return getIntakeDeployCANcoderDegrees();
   }
 
   /**
@@ -583,5 +592,10 @@ public class Intake extends SubsystemBase implements Loggable{
     SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
     SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_ANGLE.value, getIntakeDeployAngle());
     SmartDashboard.putNumber(IntakeElasticKey.ROLLER_VELOCITY.value, getIntakeRollerVelocity());
+
+    SmartDashboard.putNumber("Intake Deploy CC Rot Raw", getIntakeDeployCANcoderRotationsRaw());
+    SmartDashboard.putNumber("Intake Deploy CC Deg", getIntakeDeployCANcoderDegrees());
+    SmartDashboard.putNumber("Intake Deploy Rotor Encoder Rot Raw", getIntakeDeployRotorEncoderRotationsRaw());
+    SmartDashboard.putNumber("Intake Deploy Rotor Encoder Deg", getIntakeDeployRotorEncoderDegrees());
   }
 }
