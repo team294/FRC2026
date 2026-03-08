@@ -139,7 +139,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor when using the rotor encoder
     intakeDeployMotorRotorConfig = new TalonFXConfiguration();
-    intakeDeployMotorRotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;  // TODO determine inversion
+    intakeDeployMotorRotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
     intakeDeployMotorRotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeDeployMotorRotorConfig.Voltage.PeakForwardVoltage = IntakeConstants.deployCompensationVoltage;
     intakeDeployMotorRotorConfig.Voltage.PeakReverseVoltage = -IntakeConstants.deployCompensationVoltage;
@@ -148,7 +148,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor when using the CANcoder
     intakeDeployMotorCANcoderConfig = new TalonFXConfiguration();
-    intakeDeployMotorCANcoderConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;  // TODO determine inversion
+    intakeDeployMotorCANcoderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
     intakeDeployMotorCANcoderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeDeployMotorCANcoderConfig.Voltage.PeakForwardVoltage = IntakeConstants.deployCompensationVoltage;
     intakeDeployMotorCANcoderConfig.Voltage.PeakReverseVoltage = -IntakeConstants.deployCompensationVoltage;
@@ -171,7 +171,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor CANcoder
     intakeDeployCANcoderConfig = new CANcoderConfiguration();
-    intakeDeployCANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;  // TODO determine inversion
+    intakeDeployCANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;  // TODO determine inversion
     intakeDeployCANcoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = IntakeConstants.deployCANcoderDiscontinuityPoint;
 
     // Configure Magic Motion for position control with the deploy motor
@@ -193,8 +193,8 @@ public class Intake extends SubsystemBase implements Loggable{
     // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio TODO how is the sensor:mechanism 1?
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackRemoteSensorID = Ports.CANIntakeDeployEncoder;
-    intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = 18.0 / 36.0; // 18 : 36 gear ratio on competition robot (reduction)
-    intakeDeployMotorCANcoderConfig.Feedback.RotorToSensorRatio = IntakeConstants.deployGearRatio * (18.0 / 36.0);
+    intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = IntakeConstants.deploySensorToRotorRatio; // 18 : 36 gear ratio on competition robot (reduction)
+    intakeDeployMotorCANcoderConfig.Feedback.RotorToSensorRatio = IntakeConstants.deployGearRatio * (1.0 / IntakeConstants.deploySensorToRotorRatio);
     intakeDeployMotorCANcoderConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     // Assign a slot for the deploy motor position control
@@ -374,7 +374,7 @@ public class Intake extends SubsystemBase implements Loggable{
    * @return
    */
   public double getIntakeDeployCANcoderDegrees() {
-    return getIntakeDeployCANcoderRotationsRaw() * IntakeConstants.deployDegreesPerRotation - intakeDeployEncoderZero;
+    return ((getIntakeDeployCANcoderRotationsRaw() * IntakeConstants.deployDegreesPerRotation / IntakeConstants.deploySensorToRotorRatio) - intakeDeployEncoderZero) ;
   }
 
   /**
@@ -485,6 +485,9 @@ public class Intake extends SubsystemBase implements Loggable{
    * @return angle, in rotations
    */
   private double convertIntakeDeployDegreesToEncoderRotations(double degrees) {
+    if (isIntakeDeployUsingCANcoder) {
+      return (degrees + intakeDeployEncoderZero) / IntakeConstants.deployDegreesPerRotation * IntakeConstants.deploySensorToRotorRatio;
+    }
     return (degrees + intakeDeployEncoderZero) / IntakeConstants.deployDegreesPerRotation;
   }
 
