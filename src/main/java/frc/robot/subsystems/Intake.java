@@ -309,12 +309,12 @@ public class Intake extends SubsystemBase implements Loggable{
    * Stops the intakeDeployMotor.
    */
   public void stopIntakeDeploy() {
-    setIntakeRollerPercentOutput(0);
+    setIntakeDeployPercentOutput(0);
   }
 
   /**
    * Sets the angle of the intakeDeployMotor encoder, constrained by calibration and interlocks.
-   * @param angle target angle, in degrees (0 = horizontal in front of robot, positive = up, negative = down)
+   * @param angle target angle, in degrees (0 = front plate level with bubble, positive = in, negative = out)
    */
   public void setIntakeDeployAngle(double angle) {
     if (!isIntakeDeployCalibrated) {
@@ -586,7 +586,7 @@ public class Intake extends SubsystemBase implements Loggable{
   public void periodic() {
     if (!fastLogging && !DataLogUtil.isMyLogRotation(logRotationKey)) return;
 
-    updateLog(false);
+    updateLog(true);
 
     // TODO add necessary readings to Elastic
     SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());

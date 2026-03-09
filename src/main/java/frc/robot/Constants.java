@@ -260,16 +260,16 @@ public final class Constants {
     public static final double deployMaxPercentOutput = 0.2;              // TODO calibrate intake
 
     // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
-    public static double deployCANcoderOffsetAngle = -67.38; // TODO CALIBRATE, 0 degrees is when front intake plate is level (use bubble level)
+    public static double deployCANcoderOffsetAngle = -51.76; // TODO CALIBRATE, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.50; // TODO calibrate intake
 
-    public static final double kP = 0.5;  // TODO calibrate intake
+    public static final double kP = 0.0;  // TODO calibrate intake
     public static final double kI = 0.0;  // TODO calibrate intake
     public static final double kD = 0.0;  // TODO calibrate intake
-    public static final double kG = 0.3;  // TODO calibrate intake
-    public static final double kS = 0.819;  // TODO calibrate intake
+    public static final double kG = 0.0;  // TODO calibrate intake
+    public static final double kS = 0.0; // TODO calibrate intake
     public static final double kV = 0.0;  // TODO calibrate intake
 
     public static final double MMCruiseVelocity = 0.80;                   // Max velocity in mechanism rotations / second TODO calibrate intake 
@@ -277,10 +277,10 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration) TODO calibrate intake
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-78.26),   // CALIBRATED 3/7/26: -80.64
-      INTAKE(-76.0),        // TODO CALIBRATE
-      START_CONFIG(80.0),  // TODO CALIBRATE? probably upper limit
-      UPPER_LIMIT(80.64);   // CALIBRATED 3/7/26: 78.26
+      LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86
+      INTAKE(-84.0),        // TODO CALIBRATE
+      START_CONFIG(73.0),  // TODO CALIBRATE? probably upper limit
+      UPPER_LIMIT(73.0);   // CALIBRATED 3/7/26: 73.0
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
