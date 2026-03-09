@@ -152,13 +152,13 @@ public final class Constants {
     // and ensures that the robot travels in the requested direction.  So, use min value of all 4 motors,
     // and further derate (initial test by 5%) to account for some battery droop under heavy loads.
 
-    public static final double kMaxSpeedMetersPerSecond = 4.8;      // TODO CALIBRATE
+    public static final double kMaxSpeedMetersPerSecond = 5.0;      // CALIBRATED
     public static final double kFullSpeedMetersPerSecond = 0.95 * kMaxSpeedMetersPerSecond;
     public static final double kNominalSpeedMetersPerSecond = 0.5 * kMaxSpeedMetersPerSecond;
 
-    // TODO NOT CALIBRATED
-    public static final double kMaxAccelerationMetersPerSecondSquare = 6.0;
+    public static final double kMaxAccelerationMetersPerSecondSquare = 6.0;       // CALIBRATED 2026.  At slow speeds, robot can accel 20 m/s^2.  At high speeds, battery limits accel to 3 m/s^2
     public static final double kFullAccelerationMetersPerSecondSquare = 0.9 * kMaxAccelerationMetersPerSecondSquare;
+    // TODO NOT CALIBRATED
     public static final double kNominalAccelerationMetersPerSecondSquare = 3.5;
     public static final double kMaxTurningRadiansPerSecond = 11.0;
     public static final double kNominalTurningRadiansPerSecond = Math.PI;
@@ -174,7 +174,7 @@ public final class Constants {
 		public static final double turningMotorkD = 0.1;  // kD = (desired-output-volts) / (error-in-encoder-rps) CALIBRATED 2026: 0.1
 
 
-    public static final double kVDriveAvg = 2.350;     // TODO CALIBRATE.  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
+    public static final double kVDriveAvg = 2.230;     // CALIBRATED (FOC off, 2.230).  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
     // TODO BELOW NOT CALIBRATED
     private static final double kVmFLrel = 1.0;      // kV modifier for FL drive motor
     private static final double kVmFRrel = 1.0;      // kV modifier for FR drive motor
@@ -189,9 +189,9 @@ public final class Constants {
     public static final double kVmBR = kVmBRrel / kVmAvg;
 
     public static final double dt = 0.02;               // Timestep for discretizing robot motion, in seconds.  Set this to the scheduler time period = 20ms.
-    public static final double kADrive = 0.2383;        // TODO CALIBRATE.  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
-    public static final double kADriveToPose = 0.050;   // TODO CALIBRATE.  In time (seconds)
-    public static final double kSDrive = 0.141;         // TODO CALIBRATE.  In voltage    2025: LAR was 0.030 (FOC off), AVR was 0.141 (FOC on)
+    public static final double kADrive = 0.3112;        // CALIBRATED (FOC off, robot 150xx lbs, 0.3112).  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
+    public static final double kADriveToPose = 0.050;   // CALIBRATED.  In time (seconds)
+    public static final double kSDrive = 0.081;         // CALIBRATED (FOC off, 0.081).  In voltage    2025: LAR was 0.030 (FOC off), AVR was 0.141 (FOC on)
 
     // Minimum abs delta (in m/sec) between actual wheel velocity and desired wheel velocity for kADrive to be applied.
     // If the delta is less than this, then don't use kADrive. This prevents the drive motors from jittering.
