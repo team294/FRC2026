@@ -8,6 +8,7 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.robot.Constants.*;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
@@ -159,13 +160,13 @@ public class RobotContainer {
    */
   private void configureXboxButtons() {
     // Triggers for all Xbox buttons
-    // Trigger xbLT = xboxController.leftTrigger();
+    Trigger xbLT = xboxController.leftTrigger();
     // Trigger xbRT = xboxController.rightTrigger();
     // Trigger xbA = xboxController.a();
     // Trigger xbB = xboxController.b();
     // Trigger xbY = xboxController.y();
     // Trigger xbX = xboxController.x();
-    // Trigger xbLB = xboxController.leftBumper();
+    Trigger xbLB = xboxController.leftBumper();
     // Trigger xbRB = xboxController.rightBumper();
     // Trigger xbBack = xboxController.back();
     // Trigger xbStart = xboxController.start();
@@ -173,10 +174,14 @@ public class RobotContainer {
     // Trigger xbPOVRight = xboxController.povRight();
     // Trigger xbPOVLeft = xboxController.povLeft();
     // Trigger xbPOVDown = xboxController.povDown();
+    Trigger xbLJoystickTrigger = xboxController.leftStick();
     // Trigger xbRJoystickTrigger = xboxController.rightStick();
-    // Trigger xbLJoystickTrigger = xboxController.leftStick();
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
+
+    xbLT.onTrue(new DeployAndIntake(intake));
+    xbLB.onTrue(new IntakeRollerSetPercent(0, true, intake));
+    xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
   }
 
   /**
@@ -192,24 +197,10 @@ public class RobotContainer {
     }
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
-    // left[1].onTrue(new IntakeStop(intake));
+
+    left[1].onTrue(new DeployAndIntake(intake));
+
     left[2].onTrue(new DriveResetDriverAngle(driveTrain));
-
-    // set intake to 100% (in) if not set to 
-    // 100% and stop intake if it is set to 100%
-    // right[1].onTrue(either(
-    //   new IntakeSetPercent(IntakeConstants.intakePercent, intake),
-    //   new IntakeStop(intake),
-    //   () -> (intake.getTargetPercentOutput() != 1)
-    // ));
-
-    // set intake to -100% (out) if not set to
-    // -100% and stop intake if it is set to -100%
-    // right[2].onTrue(either(
-    //   new IntakeSetPercent(IntakeConstants.reverseIntakePercent, intake),
-    //   new IntakeStop(intake),
-    //   () -> (intake.getTargetPercentOutput() != -1)
-    // ));
   }
 
   /**
@@ -232,7 +223,14 @@ public class RobotContainer {
     }
 
     // ex: coP[1].onTrue(new command(param1, param2, etc));
-    
+
+    coP[1].onTrue(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
+    coP[2].onTrue(new IntakeDeploySetAngle(IntakeDeployAngle.START_CONFIG, intake));
+
+    coP[3].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake));
+    coP[4].onTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, true, intake));
+
+
     // Reset Pose
     coP[7].onTrue(either(
       new DriveResetPose(180, false, driveTrain), 

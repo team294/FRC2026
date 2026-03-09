@@ -269,8 +269,8 @@ public final class Constants {
     public static final double kI = 0.0;  // TODO calibrate intake
     public static final double kD = 0.0;  // TODO calibrate intake
     public static final double kG = 0.0;  // TODO calibrate intake
-    public static final double kS = 0.0; // TODO calibrate intake
-    public static final double kV = 0.0;  // TODO calibrate intake
+    public static final double kS = 0.1767; // TODO calibrate intake
+    public static final double kV = 0.0858;  // TODO calibrate intake
 
     public static final double MMCruiseVelocity = 0.80;                   // Max velocity in mechanism rotations / second TODO calibrate intake 
     public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity) TODO calibrate intake
