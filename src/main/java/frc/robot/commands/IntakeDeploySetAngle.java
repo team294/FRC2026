@@ -6,22 +6,21 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
-import frc.robot.Constants.IntakeConstants.IntakeElasticKey;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.IntakeConstants.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
 
 public class IntakeDeploySetAngle extends Command {
   private final Intake intake;
   private double targetAngle;
-  private final double angleTolerance = 3.0;
   private boolean fromElastic;
 
   /**
-   * Sets the target angle for the intakeDeployMotor and attempts to move it to that angle. It is constrained by
+   * Sets the target angle for the Intake Deploy and attempts to move it to that angle. It is constrained by
    * calibration and interlocks. This command ends when the position is within the tolerance degrees of the target,
-   * or if uncalibrated, immediately.
-   * @param angle target angle, in degrees (0 = horizontal in front of robot, positive = up, negative = down)
+   * or immediately if uncalibrated.
+   * @param angle target angle, in degrees (0 = orange arrow straight up, positive = in, negative = out)
    * @param intake Intake subsystem
    */
   public IntakeDeploySetAngle(double angle, Intake intake) {
@@ -32,10 +31,10 @@ public class IntakeDeploySetAngle extends Command {
   }
 
   /**
-   * Sets the target angle for the intakeDeployMotor and attempts to move it to that angle. It is constrained by
+   * Sets the target angle for the Intake Deploy and attempts to move it to that angle. It is constrained by
    * calibration and interlocks. This command ends when the position is within the tolerance degrees of the target,
-   * or if uncalibrated, immediately.
-   * @param position target angle, in degrees (see IntakeConstants.IntakeDeployAngle)
+   * or immediately if uncalibrated.
+   * @param angle target angle, in degrees (see IntakeConstants.IntakeDeployAngle)
    * @param intake Intake subsystem
    */
   public IntakeDeploySetAngle(IntakeDeployAngle angle, Intake intake) {
@@ -46,9 +45,9 @@ public class IntakeDeploySetAngle extends Command {
   }
 
   /**
-   * Sets the target angle for the intakeDeployMotor FROM ELASTIC and attempts to move it to that angle. It is
-   * constrained by calibration and interlocks. This command ends when the position is within the tolerance degrees
-   * of the target, or if uncalibrated, immediately.
+   * Sets the target angle for the Intake Deploy FROM ELASTIC and attempts to move it to that angle. It is constrained by
+   * calibration and interlocks. This command ends when the position is within the tolerance degrees of the target,
+   * or immediately if uncalibrated.
    * @param intake Intake subsystem
    */
   public IntakeDeploySetAngle(Intake intake) {
@@ -83,6 +82,6 @@ public class IntakeDeploySetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !intake.isIntakeDeployCalibrated() || Math.abs(intake.getIntakeDeployAngle() - intake.getIntakeDeployTargetAngle()) < angleTolerance;
+    return !intake.isIntakeDeployCalibrated() || Math.abs(intake.getIntakeDeployAngle() - intake.getIntakeDeployTargetAngle()) < IntakeConstants.deploySetAngleTolerance;
   }
 }

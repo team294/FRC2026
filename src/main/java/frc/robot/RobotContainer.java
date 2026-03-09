@@ -135,7 +135,7 @@ public class RobotContainer {
     // Intake
     SmartDashboard.putData(DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
     SmartDashboard.putData(ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
-    SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new DeployAndIntake(intake));
+    SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
 
     // Feeder
     // SmartDashboard.putData("Feeder Set Percent", new FeederSetPercent(feeder));
@@ -179,7 +179,7 @@ public class RobotContainer {
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
-    xbLT.onTrue(new DeployAndIntake(intake));
+    xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerSetPercent(0, true, intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
   }
@@ -198,7 +198,7 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
-    left[1].onTrue(new DeployAndIntake(intake));
+    left[1].onTrue(new IntakeSequence(intake));
 
     left[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
@@ -224,11 +224,21 @@ public class RobotContainer {
 
     // ex: coP[1].onTrue(new command(param1, param2, etc));
 
-    coP[1].onTrue(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
-    coP[2].onTrue(new IntakeDeploySetAngle(IntakeDeployAngle.START_CONFIG, intake));
+    // Send intake deploy out manually while held, stop when released
+    coP[1].onTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, true, intake));
+    coP[1].onFalse(new IntakeDeploySetPercent(0, true, intake));
 
+    // Bring intake deploy in manually while held, stop when released
+    coP[2].onTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, true, intake));
+    coP[2].onFalse(new IntakeDeploySetPercent(0, true, intake));
+
+    // Spin rollers inwards while held, stop when released
     coP[3].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake));
+    coP[3].onFalse(new IntakeRollerSetPercent(0, true, intake));
+
+    // Spin rollers outwards while held, stop when released
     coP[4].onTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, true, intake));
+    coP[4].onFalse(new IntakeRollerSetPercent(0, true, intake));
 
 
     // Reset Pose

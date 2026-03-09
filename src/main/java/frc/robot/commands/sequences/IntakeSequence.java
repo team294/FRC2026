@@ -9,12 +9,12 @@ import frc.robot.commands.*;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
-public class DeployAndIntake extends SequentialCommandGroup {
+public class IntakeSequence extends SequentialCommandGroup {
   /**
    * Deploys intake and spins rollers to start intaking pieces
    * @param intake intake subsystem
    */
-  public DeployAndIntake(Intake intake) {
+  public IntakeSequence(Intake intake) {
     addCommands(
       new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
       new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake)

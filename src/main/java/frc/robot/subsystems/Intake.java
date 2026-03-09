@@ -370,8 +370,8 @@ public class Intake extends SubsystemBase implements Loggable{
   }
 
   /**
-   * 
-   * @return
+   * Gets the rotation reading from the deploy CANcoder.
+   * @return encoder reading, in intake deploy degrees
    */
   public double getIntakeDeployCANcoderDegrees() {
     return ((getIntakeDeployCANcoderRotationsRaw() * IntakeConstants.deployDegreesPerRotation / IntakeConstants.deploySensorToRotorRatio) - intakeDeployEncoderZero) ;
@@ -463,8 +463,7 @@ public class Intake extends SubsystemBase implements Loggable{
    * @return current rotor encoder angle, in degrees (based on raw encoder ticks offset by the encoder zero)
    */
   private double getIntakeDeployRotorEncoderDegrees() {
-    // TODO determine if it is true that the mechanism cannot cross the -180/+180 degree point
-    // NOTE: Do not normalize thhis angle. It should not wrap, since the mechanism cannot cross the -180/+180 degree point.
+    // NOTE: Do not normalize this angle. It should not wrap, since the mechanism cannot cross the -180/+180 degree point.
     return getIntakeDeployRotorEncoderRotationsRaw() * IntakeConstants.deployDegreesPerRotation - intakeDeployEncoderZero;
   }
 
