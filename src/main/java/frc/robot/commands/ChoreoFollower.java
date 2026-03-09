@@ -88,7 +88,7 @@ public class ChoreoFollower extends Command {
 
     // Prime data logging at boot time
     long timeNow = RobotController.getFPGATime();
-    Pose2d poseCurr = poseSupplier.get();
+    Pose2d poseCurr = new Pose2d();  //2025 code -> poseSupplier.get();  TODO using poseSupplier.get() instead of new Pose2d() causes crashes in 2026 code.  Why?
     ChassisSpeeds robotSpeeds = driveTrain.getRobotSpeeds();
     dLogCurPose2D.append(poseCurr, timeNow);
     dLogTrajPose2D.append(poseCurr, timeNow);

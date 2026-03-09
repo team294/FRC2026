@@ -116,9 +116,16 @@ public class RobotContainer {
       TrajectoryConstants.maxPositionErrorMeters, TrajectoryConstants.maxThetaErrorDegrees, 
       true, true, driveTrain));
     SmartDashboard.putData("Drive Calibration", new DriveCalibration(0.0, 0.5, 5.0, 0.1, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.1", new DriveCalibration(0.0, 0.1, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.25", new DriveCalibration(0.0, 0.25, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.4", new DriveCalibration(0.0, 0.4, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.55", new DriveCalibration(0.0, 0.55, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.7", new DriveCalibration(0.0, 0.7, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.85", new DriveCalibration(0.0, 0.85, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 1.0", new DriveCalibration(0.0, 1.0, 5.0, 100000, driveTrain));
     SmartDashboard.putData("Drive Turn Calibration", new DriveTurnCalibration(0.2, 5.0, 0.2 / 5.0, driveTrain));
     SmartDashboard.putData("Drive Percent Speed", new DrivePercentSpeed(driveTrain));
-    SmartDashboard.putData("Drive Straight", new DriveStraight(false, false, false, driveTrain));
+    SmartDashboard.putData("Drive Straight", new DriveStraight(false, false, true, driveTrain));
 
     // Vision
     SmartDashboard.putData("Vision Enable Odometry Updates", new VisionOdometryStateSet(true, driveTrain));
