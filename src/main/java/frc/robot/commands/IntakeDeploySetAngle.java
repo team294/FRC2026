@@ -65,6 +65,8 @@ public class IntakeDeploySetAngle extends Command {
   public void initialize() {
     if (fromElastic) this.targetAngle = SmartDashboard.getNumber(IntakeElasticKey.DEPLOY_CMD_SET_ANGLE_INPUT.value, IntakeDeployAngle.START_CONFIG.value);
     intake.setIntakeDeployAngle(targetAngle);
+
+    intake.enableFastLogging(true);
     DataLogUtil.writeMessage("IntakeDeploySetAngle: Init, Target =", targetAngle);
   }
 
@@ -75,6 +77,7 @@ public class IntakeDeploySetAngle extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intake.enableFastLogging(false);
     if (interrupted) DataLogUtil.writeMessage("IntakeDeploySetAngle: Interrupted, Target =", targetAngle, ", Current =", intake.getIntakeDeployAngle());
     else DataLogUtil.writeMessage("IntakeDeploySetAngle: End, Target =", targetAngle, ", Current =", intake.getIntakeDeployAngle());
   }
@@ -82,6 +85,7 @@ public class IntakeDeploySetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println(intake.getIntakeDeployAngle() + " " + intake.getIntakeDeployTargetAngle());
     return !intake.isIntakeDeployCalibrated() || Math.abs(intake.getIntakeDeployAngle() - intake.getIntakeDeployTargetAngle()) < IntakeConstants.deploySetAngleTolerance;
   }
 }

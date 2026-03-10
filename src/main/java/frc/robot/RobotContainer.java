@@ -136,6 +136,7 @@ public class RobotContainer {
     SmartDashboard.putData(DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
     SmartDashboard.putData(ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
+    SmartDashboard.putData("Intake Deploy Set Percernt", new IntakeDeploySetPercent(false, intake));
 
     // Feeder
     // SmartDashboard.putData("Feeder Set Percent", new FeederSetPercent(feeder));
@@ -279,7 +280,8 @@ public class RobotContainer {
     DataLogUtil.writeMessageEcho("Disabled: Robot disabled");
 
     driveTrain.stopMotors();             // SAFETY: Turn off any closed loop control that may be running, so the robot does not move when re-enabled
-    // intake.stopIntakeMotor();
+    intake.stopIntakeDeploy();
+    intake.stopIntakeRoller();
     // feeder.stopFeederMotor();
     // shooter.stopShooterMotor();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode

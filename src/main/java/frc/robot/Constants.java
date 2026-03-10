@@ -248,8 +248,8 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double rollerCompensationVoltage = 12.0;
-    public static final double rollerIntakePercent = 0.2;   // TODO calibrate intake
-    public static final double rollerOuttakePercent = -0.2; // TODO calibrate intake
+    public static final double rollerIntakePercent = 0.8;   // TODO calibrate intake
+    public static final double rollerOuttakePercent = -0.8; // TODO calibrate intake
 
     public static final double deployGearRatio = (52.0 / 12.0) * (36.0 / 18.0) * (64.0 / 24.0) * (36.0 / 18.0);    // CALIBRATED: (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0)
     public static final double deployDegreesPerRotation = 360.0;
@@ -264,24 +264,24 @@ public final class Constants {
     public static double deployCANcoderOffsetAngle = -51.76; // CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
-    public static final double deployCANcoderDiscontinuityPoint = 0.5; // CALIBRATED: 0.5
+    public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
 
-    public static final double kP = 0.0;  // TODO calibrate intake
+    public static final double kP = 80.0;  //3.6;  // TODO calibrate intake  0.1V/10deg   kP, in Volts/(intake-rotations-error)
     public static final double kI = 0.0;  // TODO calibrate intake
     public static final double kD = 0.0;  // TODO calibrate intake
-    public static final double kG = 0.0;  // TODO calibrate intake
-    public static final double kS = 0.1767; // TODO calibrate intake
-    public static final double kV = 0.0858;  // TODO calibrate intake
+    public static final double kG = 0.26;  // TODO calibrate intake
+    public static final double kS = 0.185; // was 0.1767 // TODO calibrate intake   kS, in Volts
+    public static final double kV = 0.0903*60.0;  // TODO calibrate intake  kV, in Volts/(intake-rotations/sec)
 
-    public static final double MMCruiseVelocity = 0.80;                   // TODO calibrate intake, Max velocity in mechanism rotations / second
+    public static final double MMCruiseVelocity = 1.20;                   // TODO calibrate intake, Max velocity in mechanism rotations / second
     public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // TODO calibrate intake, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
     public static final double MMJerk = MMAcceleration / 0.05;            // TODO calibrate intake, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
+      LOWER_LIMIT(-85.6),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // TODO TEST VALUE
-      START_CONFIG(73.0),  // TODO TEST VALUE
-      UPPER_LIMIT(73.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
+      START_CONFIG(73.9),  // TODO TEST VALUE
+      UPPER_LIMIT(79.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
@@ -309,6 +309,7 @@ public final class Constants {
       DEPLOY_IS_CALIBRATED("Intake Deploy Calibrated?"),
       DEPLOY_TARGET_ANGLE("Intake Deploy Target Angle"),
       DEPLOY_ANGLE("Intake Deploy Angle"),
+      DEPLOY_RAW_ROTATIONS("Intake Deploy Raw Rotations"),
 
       INTAKING_CMD_SEQUENCE("Intake Sequence");
 
