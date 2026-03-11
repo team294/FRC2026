@@ -537,6 +537,9 @@ public class Feeder extends SubsystemBase implements Loggable {
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
       checkForFaultConditions();
       updateLog(false);
+
+      // System.out.println(getSpindexerAmps());
+      System.out.println(isDetected(0));
       
       SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());
       SmartDashboard.putNumber(UPTAKE_TARGET_RPM.value, uptakeSetpointRPM);

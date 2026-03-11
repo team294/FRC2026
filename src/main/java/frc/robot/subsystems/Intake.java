@@ -597,8 +597,6 @@ public class Intake extends SubsystemBase implements Loggable{
 
     updateLog(false);
 
-    System.out.println("isUsingPositionControl " + isIntakeDeployMotorUsingPositionControl());
-
     // TODO add necessary readings to Elastic
     SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
     SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());

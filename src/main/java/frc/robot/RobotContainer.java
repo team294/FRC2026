@@ -150,8 +150,8 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
 
     // Feeder
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_FORWARDS.value, new FeedShooter(false, feeder));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_REVERSE.value, new FeedShooter(true, feeder));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_FORWARDS.value, new FeedShooter(false, feeder, intake));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_REVERSE.value, new FeedShooter(true, feeder, intake));
 
     SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
     SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
@@ -266,11 +266,11 @@ public class RobotContainer {
 
 
     // Spin uptake then spindexer to feed shooter
-    coP[5].onTrue(new FeedShooter(false, feeder));
+    coP[5].onTrue(new FeedShooter(false, feeder, intake));
     coP[5].onFalse(new FeederStop(feeder));
 
     // Spin uptake then spindexer away from shooter
-    coP[6].onTrue(new FeedShooter(true, feeder));
+    coP[6].onTrue(new FeedShooter(true, feeder, intake));
     coP[6].onFalse(new FeederStop(feeder));
   }
 

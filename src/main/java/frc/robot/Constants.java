@@ -283,6 +283,8 @@ public final class Constants {
     public enum IntakeDeployAngle {
       LOWER_LIMIT(-85.6),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // TODO TEST VALUE
+      AGITATE_LOWER(-70.0),
+      AGITATE_UPPER(-40.0),
       START_CONFIG(73.9),  // TODO TEST VALUE
       UPPER_LIMIT(79.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
 
@@ -335,10 +337,10 @@ public final class Constants {
     // TODO calibrate spindexer
     public static final class SpindexerConstants {
       public static final double compensationVoltage = 12.0;
-      public static final double spindexerGearRatio = 1.0;
+      public static final double spindexerGearRatio = 1.00;
       public static final double spindexerForwardPercent = 0.2; 
       public static final double spindexerReversePercent = -0.2;
-      public static final double spindexerShootRPM = 2500; // TODO: Calibrate
+      public static final double spindexerShootRPM = 2946;  // CALIBRATED 3/10: 2946
 
       public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
       public static final double kI = 0.0;
@@ -370,13 +372,13 @@ public final class Constants {
       public static final double uptakeGearRatio = 1.0;
       public static final double uptakeForwardPercent = 0.2;
       public static final double uptakeReversePercent = 0.2;
-      public static final double uptakeShootRPM = 3000; // TODO: Calibrate
+      public static final double uptakeShootRPM = 7500; // CALIBRATED 3/10: 7500
 
-      public static final double kP = 0.0;
+      public static final double kP = 1.5;    // CALIBRATED 3/10: 1.5
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kS = 0.0;
-      public static final double kV = 0.0;
+      public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
+      public static final double kV = 0.092;  // CALIBRATED 3/10: 0.092
       public static final double kA = 0.0;
 
       public enum UptakeElasticKey {
@@ -457,7 +459,7 @@ public final class Constants {
   }
 
   public static final class CANRangeConstants {
-    public static final double proximityThreshold = 0.3;
+    public static final double proximityThreshold = 0.15; // CALIBRATED 3/10: 0.15
     public static final double maxDistanceError = 0.01;
   }
 
