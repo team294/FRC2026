@@ -8,8 +8,9 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.robot.Constants.*;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.commands.*;
-import frc.robot.commands.sequences.FeedShooter;
+import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
@@ -19,7 +20,7 @@ import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticK
 import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
 
 import com.ctre.phoenix6.SignalLogger;
-
+import static frc.robot.Constants.IntakeConstants.IntakeElasticKey.*;
 import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -48,7 +49,7 @@ public class RobotContainer {
 
   // Define robot subsystems
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
-  // private final Intake intake = new Intake("Intake");
+  private final Intake intake = new Intake("Intake");
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
   // private final Shooter shooter = new Shooter("Shooter");
@@ -120,17 +121,26 @@ public class RobotContainer {
       TrajectoryConstants.maxPositionErrorMeters, TrajectoryConstants.maxThetaErrorDegrees, 
       true, true, driveTrain));
     SmartDashboard.putData("Drive Calibration", new DriveCalibration(0.0, 0.5, 5.0, 0.1, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.1", new DriveCalibration(0.0, 0.1, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.25", new DriveCalibration(0.0, 0.25, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.4", new DriveCalibration(0.0, 0.4, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.55", new DriveCalibration(0.0, 0.55, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.7", new DriveCalibration(0.0, 0.7, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 0.85", new DriveCalibration(0.0, 0.85, 5.0, 100000, driveTrain));
+    SmartDashboard.putData("Drive Calibration 1.0", new DriveCalibration(0.0, 1.0, 5.0, 100000, driveTrain));
     SmartDashboard.putData("Drive Turn Calibration", new DriveTurnCalibration(0.2, 5.0, 0.2 / 5.0, driveTrain));
     SmartDashboard.putData("Drive Percent Speed", new DrivePercentSpeed(driveTrain));
-    SmartDashboard.putData("Drive Straight", new DriveStraight(false, false, false, driveTrain));
+    SmartDashboard.putData("Drive Straight", new DriveStraight(false, false, true, driveTrain));
 
     // Vision
     SmartDashboard.putData("Vision Enable Odometry Updates", new VisionOdometryStateSet(true, driveTrain));
     SmartDashboard.putData("Vision Disable Odometry Updates", new VisionOdometryStateSet(false, driveTrain));
 
     // Intake
-    // SmartDashboard.putData("Intake Set Percent", new IntakeSetPercent(intake));
-    // SmartDashboard.putData("Intake Stop", new IntakeStop(intake));
+    SmartDashboard.putData(DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
+    SmartDashboard.putData(ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
+    SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
+    SmartDashboard.putData("Intake Deploy Set Percernt", new IntakeDeploySetPercent(false, intake));
 
     // Feeder
     // SmartDashboard.putData("Feeder Set Percent", new FeederSetPercent(feeder));
@@ -167,7 +177,7 @@ public class RobotContainer {
    */
   private void configureXboxButtons() {
     // Triggers for all Xbox buttons
-    // Trigger xbLT = xboxController.leftTrigger();
+    Trigger xbLT = xboxController.leftTrigger();
     // Trigger xbRT = xboxController.rightTrigger();
     // Trigger xbA = xboxController.a();
     // Trigger xbB = xboxController.b();
@@ -181,12 +191,14 @@ public class RobotContainer {
     // Trigger xbPOVRight = xboxController.povRight();
     // Trigger xbPOVLeft = xboxController.povLeft();
     // Trigger xbPOVDown = xboxController.povDown();
+    Trigger xbLJoystickTrigger = xboxController.leftStick();
     // Trigger xbRJoystickTrigger = xboxController.rightStick();
-    // Trigger xbLJoystickTrigger = xboxController.leftStick();
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
-    xbLB.onTrue(new StopAllMotors(driveTrain, feeder));
-    
+
+    xbLT.onTrue(new IntakeSequence(intake));
+    xbLB.onTrue(new IntakeRollerStop(intake));
+    xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
   }
 
   /**
@@ -202,24 +214,10 @@ public class RobotContainer {
     }
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
-    // left[1].onTrue(new IntakeStop(intake));
+
+    left[1].onTrue(new IntakeSequence(intake));
+
     left[2].onTrue(new DriveResetDriverAngle(driveTrain));
-
-    // set intake to 100% (in) if not set to 
-    // 100% and stop intake if it is set to 100%
-    // right[1].onTrue(either(
-    //   new IntakeSetPercent(IntakeConstants.intakePercent, intake),
-    //   new IntakeStop(intake),
-    //   () -> (intake.getTargetPercentOutput() != 1)
-    // ));
-
-    // set intake to -100% (out) if not set to
-    // -100% and stop intake if it is set to -100%
-    // right[2].onTrue(either(
-    //   new IntakeSetPercent(IntakeConstants.reverseIntakePercent, intake),
-    //   new IntakeStop(intake),
-    //   () -> (intake.getTargetPercentOutput() != -1)
-    // ));
   }
 
   /**
@@ -242,7 +240,24 @@ public class RobotContainer {
     }
 
     // ex: coP[1].onTrue(new command(param1, param2, etc));
-    
+
+    // Send intake deploy out manually while held, stop when released
+    coP[1].onTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, true, intake));
+    coP[1].onFalse(new IntakeDeploySetPercent(0, true, intake));
+
+    // Bring intake deploy in manually while held, stop when released
+    coP[2].onTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, true, intake));
+    coP[2].onFalse(new IntakeDeploySetPercent(0, true, intake));
+
+    // Spin rollers inwards while held, stop when released
+    coP[3].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake));
+    coP[3].onFalse(new IntakeRollerSetPercent(0, true, intake));
+
+    // Spin rollers outwards while held, stop when released
+    coP[4].onTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, true, intake));
+    coP[4].onFalse(new IntakeRollerSetPercent(0, true, intake));
+
+
     // Reset Pose
     coP[7].onTrue(either(
       new DriveResetPose(180, false, driveTrain), 
@@ -290,10 +305,10 @@ public class RobotContainer {
     DataLogUtil.writeMessageEcho("Disabled: Robot disabled");
 
     driveTrain.stopMotors();             // SAFETY: Turn off any closed loop control that may be running, so the robot does not move when re-enabled
-    // intake.stopIntakeMotor();
     feeder.stopUptake();
     feeder.stopSpindexer();
-    // shooter.stopShooterMotor();
+    intake.stopIntakeDeploy();
+    intake.stopIntakeRoller();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode
     driveTrain.setVisionForOdometryState(true);
 

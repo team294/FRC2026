@@ -155,13 +155,13 @@ public final class Constants {
     // and ensures that the robot travels in the requested direction.  So, use min value of all 4 motors,
     // and further derate (initial test by 5%) to account for some battery droop under heavy loads.
 
-    public static final double kMaxSpeedMetersPerSecond = 4.8;      // TODO CALIBRATE
+    public static final double kMaxSpeedMetersPerSecond = 5.0;      // CALIBRATED
     public static final double kFullSpeedMetersPerSecond = 0.95 * kMaxSpeedMetersPerSecond;
     public static final double kNominalSpeedMetersPerSecond = 0.5 * kMaxSpeedMetersPerSecond;
 
-    // TODO NOT CALIBRATED
-    public static final double kMaxAccelerationMetersPerSecondSquare = 6.0;
+    public static final double kMaxAccelerationMetersPerSecondSquare = 6.0;       // CALIBRATED 2026.  At slow speeds, robot can accel 20 m/s^2.  At high speeds, battery limits accel to 3 m/s^2
     public static final double kFullAccelerationMetersPerSecondSquare = 0.9 * kMaxAccelerationMetersPerSecondSquare;
+    // TODO NOT CALIBRATED
     public static final double kNominalAccelerationMetersPerSecondSquare = 3.5;
     public static final double kMaxTurningRadiansPerSecond = 11.0;
     public static final double kNominalTurningRadiansPerSecond = Math.PI;
@@ -177,7 +177,7 @@ public final class Constants {
 		public static final double turningMotorkD = 0.1;  // kD = (desired-output-volts) / (error-in-encoder-rps) CALIBRATED 2026: 0.1
 
 
-    public static final double kVDriveAvg = 2.350;     // TODO CALIBRATE.  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
+    public static final double kVDriveAvg = 2.230;     // CALIBRATED (FOC off, 2.230).  In voltage per meters/second    2025: LAR was 2.251 (FOC off), AVR was 2.344 (FOC on)
     // TODO BELOW NOT CALIBRATED
     private static final double kVmFLrel = 1.0;      // kV modifier for FL drive motor
     private static final double kVmFRrel = 1.0;      // kV modifier for FR drive motor
@@ -192,9 +192,9 @@ public final class Constants {
     public static final double kVmBR = kVmBRrel / kVmAvg;
 
     public static final double dt = 0.02;               // Timestep for discretizing robot motion, in seconds.  Set this to the scheduler time period = 20ms.
-    public static final double kADrive = 0.2383;        // TODO CALIBRATE.  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
-    public static final double kADriveToPose = 0.050;   // TODO CALIBRATE.  In time (seconds)
-    public static final double kSDrive = 0.141;         // TODO CALIBRATE.  In voltage    2025: LAR was 0.030 (FOC off), AVR was 0.141 (FOC on)
+    public static final double kADrive = 0.3112;        // CALIBRATED (FOC off, robot 150xx lbs, 0.3112).  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
+    public static final double kADriveToPose = 0.050;   // CALIBRATED.  In time (seconds)
+    public static final double kSDrive = 0.081;         // CALIBRATED (FOC off, 0.081).  In voltage    2025: LAR was 0.030 (FOC off), AVR was 0.141 (FOC on)
 
     // Minimum abs delta (in m/sec) between actual wheel velocity and desired wheel velocity for kADrive to be applied.
     // If the delta is less than this, then don't use kADrive. This prevents the drive motors from jittering.
@@ -248,11 +248,78 @@ public final class Constants {
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     public static final double kTagDistanceConst = 0.033;
   }
-  
+
   public static final class IntakeConstants {
-    public static final double compensationVoltage = 12.0;
-    public static final double intakePercent = 0.5; 
-    public static final double reverseIntakePercent = -intakePercent;
+    public static final double rollerCompensationVoltage = 12.0;
+    public static final double rollerIntakePercent = 0.8;   // TODO calibrate intake
+    public static final double rollerOuttakePercent = -0.8; // TODO calibrate intake
+
+    public static final double deployGearRatio = (52.0 / 12.0) * (36.0 / 18.0) * (64.0 / 24.0) * (36.0 / 18.0);    // CALIBRATED: (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0)
+    public static final double deployDegreesPerRotation = 360.0;
+    public static final double deploySensorToRotorRatio = 36.0 / 18.0;
+    public static final double deployCompensationVoltage = 12.0;
+    public static final double deployMaxUncalibratedPercentOutput = 0.1;  // TODO calibrate intake
+    public static final double deployMaxManualPercentOutput = 0.05;       // TODO calibrate intake
+    public static final double deployMaxPercentOutput = 0.2;              // TODO calibrate intake
+    public static final double deploySetAngleTolerance = 3.0;             // TODO calibrate intake
+
+    // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
+    public static double deployCANcoderOffsetAngle = -51.76; // CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
+
+    // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
+    public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
+
+    public static final double kP = 80.0;  //3.6;  // TODO calibrate intake  0.1V/10deg   kP, in Volts/(intake-rotations-error)
+    public static final double kI = 0.0;  // TODO calibrate intake
+    public static final double kD = 0.0;  // TODO calibrate intake
+    public static final double kG = 0.26;  // TODO calibrate intake
+    public static final double kS = 0.185; // was 0.1767 // TODO calibrate intake   kS, in Volts
+    public static final double kV = 0.0903*60.0;  // TODO calibrate intake  kV, in Volts/(intake-rotations/sec)
+
+    public static final double MMCruiseVelocity = 1.20;                   // TODO calibrate intake, Max velocity in mechanism rotations / second
+    public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // TODO calibrate intake, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
+    public static final double MMJerk = MMAcceleration / 0.05;            // TODO calibrate intake, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
+
+    public enum IntakeDeployAngle {
+      LOWER_LIMIT(-85.6),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-84.0),        // TODO TEST VALUE
+      START_CONFIG(73.9),  // TODO TEST VALUE
+      UPPER_LIMIT(79.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final double value;
+      IntakeDeployAngle(double value) { this.value = value; }
+    }
+
+    public enum IntakeElasticKey {
+      ROLLER_CMD_SET_PERCENT("Intake Roller Set Percent"),
+      ROLLER_CMD_SET_PERCENT_INPUT("Intake Roller Set Percent Input"),
+      ROLLER_CMD_STOP("Intake Roller Stop"),
+
+      ROLLER_VELOCITY("Intake Roller Velocity"),
+
+      DEPLOY_CMD_SET_PERCENT("Intake Deploy Set Percent"),
+      DEPLOY_CMD_SET_PERCENT_INPUT("Intake Deploy Set Percent Input"),
+      DEPLOY_CMD_STOP("Intake Deploy Stop"),
+      DEPLOY_CMD_SET_ANGLE("Intake Deploy Set Angle"),
+      DEPLOY_CMD_SET_ANGLE_INPUT("Intake Deploy Set Angle Input"),
+      DEPLOY_CMD_CALIBRATE_MANUAL("Intake Deploy Calibrate Manual"),
+      DEPLOY_CMD_CALIBRATE_MANUAL_INPUT("Intake Deploy Calibrate Manual Input Angle"),
+      DEPLOY_CMD_CALIBRATION_RAMP("Intake Deploy Calibration Ramp"),
+
+      DEPLOY_VELOCITY("Intake Deploy Velocity"),
+      DEPLOY_IS_CANCODER_CONNECTED("Intake Deploy CANcoder Connected?"),
+      DEPLOY_IS_CALIBRATED("Intake Deploy Calibrated?"),
+      DEPLOY_TARGET_ANGLE("Intake Deploy Target Angle"),
+      DEPLOY_ANGLE("Intake Deploy Angle"),
+      DEPLOY_RAW_ROTATIONS("Intake Deploy Raw Rotations"),
+
+      INTAKING_CMD_SEQUENCE("Intake Sequence");
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final String value;
+      IntakeElasticKey(String value) { this.value = value; }
+    }
   }
 
   public static final class FeederConstants {
