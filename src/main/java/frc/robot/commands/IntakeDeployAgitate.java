@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
@@ -32,9 +31,9 @@ public class IntakeDeployAgitate extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (counter == 0) CommandScheduler.getInstance().schedule(new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.AGITATE_UPPER, intake));
-    else if (counter == 15) CommandScheduler.getInstance().schedule(new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.AGITATE_LOWER, intake));
-    else if (counter == 29) counter = -1;
+    if (counter == 0) intake.setIntakeDeployAngle(IntakeConstants.IntakeDeployAngle.AGITATE_UPPER.value);
+    else if (counter == 15) intake.setIntakeDeployAngle(IntakeConstants.IntakeDeployAngle.AGITATE_LOWER.value);
+    else if (counter >= 29) counter = -1;
 
     counter++;
   }
@@ -42,7 +41,7 @@ public class IntakeDeployAgitate extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    CommandScheduler.getInstance().schedule(new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake));
+    intake.setIntakeDeployAngle(IntakeConstants.IntakeDeployAngle.INTAKE.value);
   }
 
   // Returns true when the command should end.

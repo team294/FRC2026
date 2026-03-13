@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -217,7 +218,11 @@ public class RobotContainer {
 
     left[1].onTrue(new IntakeSequence(intake));
 
-    left[2].whileTrue(new FeedShooter(intake, feeder));
+    // left[2].whileTrue(new FeedShooter(intake, feeder));
+    left[2].whileTrue(new ParallelCommandGroup(
+      new FeedShooter2(feeder),
+      new IntakeDeployAgitate(intake)
+    ));
   }
 
   /**
