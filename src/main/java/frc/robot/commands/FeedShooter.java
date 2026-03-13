@@ -4,88 +4,76 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.wpilibj2.command.Commands.sequence;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Intake;
 
 public class FeedShooter extends Command {
-  private final Intake intake;
   private final Feeder feeder;
-  private final Timer timer;
-  private boolean currentlyReversed;
+  private final Timer timer;        // track time without Fuel
+  private final Timer reverseTimer; // track time spinning in reverse
+  private boolean reversed; // track if spindexer reversed so we don't update the setpoint every loop
+  private boolean uptakeWithinTolerance; // don't start spindexer until uptake is ready
   
   /**
-   * Spins the uptake and spindexer motor (sequentially in that order), then agitates the intake repeatedly to feed shooter until interrupted.
-   * If the command goes a set amount of time without detecting a ball, briefly spins the spindeer in reverse then resets it to normal.
-   * When interrupted, stops the uptake and spindexer motors (sequentially in that order) and the Intake is moved to its intaking position
-   * @param intake Intake subsystem
+   * Spins uptake then spindexer to feed Fuel into shooter, reversing spindexer temporarily
+   * if no Fuel is detected for a certain amount of time specified in Constants
    * @param feeder Feeder subsystem
-  */
-  public FeedShooter(Intake intake, Feeder feeder) {
-    this.intake = intake;
+   */
+  public FeedShooter(Feeder feeder) {
     this.feeder = feeder;
+    this.timer = new Timer();
+    this.reverseTimer = new Timer();
 
-    timer = new Timer();
-    currentlyReversed = false;
-
-    addRequirements(intake, feeder);
+    addRequirements(feeder);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    CommandScheduler.getInstance().schedule(
-      sequence(
-        new UptakeSetVelocity(UptakeConstants.uptakeShootRPM, feeder),
-        new SpindexerSetVelocity(SpindexerConstants.spindexerShootRPM, feeder),
-        new IntakeDeployAgitate(intake)
-      )
-    );
+    timer.restart();  // start fuel tracking timer (should be running while command is running)
+    reversed = false;  // guaranteed to start normal direction
 
-    timer.reset();
-    timer.start();
+    uptakeWithinTolerance = false;
+    feeder.setUptakeVelocity(UptakeConstants.uptakeShootRPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!currentlyReversed && (feeder.isDetected(0) || feeder.isDetected(1))) timer.reset();
+    if (!uptakeWithinTolerance && Math.abs(feeder.getUptakeVelocityPIDError()) < 50.0) {
+      uptakeWithinTolerance = true;
+      feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
+    } else if (uptakeWithinTolerance) {
 
-    if (timer.get() >= FeederConstants.noFuelSeconds) {
-      currentlyReversed = true;
-      CommandScheduler.getInstance().schedule(
-        new SpindexerSetVelocity(SpindexerConstants.spindexerReverseRPM, feeder)
-      );
+      // time without Fuel is 0 if we have Fuel, so reset
+      if (feeder.isDetected(0)) {  // check exit sensor b/c entry could have a Fuel while jammed 
+        timer.reset();  
+      } 
 
-      timer.reset();
-    }
+      // forwards but no fuel? spin in reverse
+      else if (!reversed && timer.get() >= FeederConstants.noFuelSeconds) {
+        feeder.setSpindexerPercentOutput(SpindexerConstants.spindexerReversePercent);
+        reversed = true;
+        reverseTimer.restart();  // start tracking time spent in reverse 
+      }
 
-    if (currentlyReversed && timer.get() >= FeederConstants.reverseSpindexerSeconds) {
-      CommandScheduler.getInstance().schedule(
-        new SpindexerSetVelocity(SpindexerConstants.spindexerShootRPM, feeder)
-      );
-      
-      currentlyReversed = false;
-      timer.reset();
+      // reversed for long enough, time to start moving forwards again
+      else if (reversed && reverseTimer.get() >= FeederConstants.reverseSpindexerSeconds) {
+        feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
+        reversed = false;
+      }
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    CommandScheduler.getInstance().schedule(
-      sequence(
-        new UptakeSetPercent(0.0, true, feeder),
-        new SpindexerSetPercent(0.0, true, feeder)
-      )
-    );
+    feeder.stopSpindexer();
+    feeder.stopUptake();
   }
 
   // Returns true when the command should end.

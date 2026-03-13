@@ -152,8 +152,6 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
 
     // Feeder
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_FORWARDS.value, new FeedShooter(intake, feeder));
-
     SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
     SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
     SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
@@ -171,6 +169,9 @@ public class RobotContainer {
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
+
+    //  ---  Sequences  ---
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
   }
  
   /**
@@ -220,7 +221,7 @@ public class RobotContainer {
 
     // left[2].whileTrue(new FeedShooter(intake, feeder));
     left[2].whileTrue(new ParallelCommandGroup(
-      new FeedShooter2(feeder),
+      new FeedShooter(feeder),
       new IntakeDeployAgitate(intake)
     ));
   }

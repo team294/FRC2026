@@ -326,7 +326,7 @@ public final class Constants {
 
   public static final class FeederConstants {
     public enum FeederElasticKey {
-      FEED_SHOOTER_CMD_SEQUENCE_FORWARDS("Feed Shooter Sequence");
+      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
