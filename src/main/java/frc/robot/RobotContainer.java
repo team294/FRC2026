@@ -16,12 +16,9 @@ import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 
-import static frc.robot.Constants.FeederConstants.FeederElasticKey.*;
-import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
-import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import com.ctre.phoenix6.SignalLogger;
-import static frc.robot.Constants.IntakeConstants.IntakeElasticKey.*;
 import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -139,8 +136,8 @@ public class RobotContainer {
     SmartDashboard.putData("Vision Disable Odometry Updates", new VisionOdometryStateSet(false, driveTrain));
 
     // Intake
-    SmartDashboard.putData(DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
-    SmartDashboard.putData(ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
+    SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData("Intake Deploy Set Percernt", new IntakeDeploySetPercent(false, intake));
 

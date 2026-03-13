@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants.IntakeElasticKey;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
 
@@ -26,8 +26,8 @@ public class IntakeRollerSetPercent extends Command {
     this.fromElastic = true;
     addRequirements(intake);
 
-    if (SmartDashboard.getNumber(IntakeElasticKey.ROLLER_CMD_SET_PERCENT_INPUT.value, -9999.9) == -9999.9) {
-      SmartDashboard.putNumber(IntakeElasticKey.ROLLER_CMD_SET_PERCENT_INPUT.value, 0);
+    if (SmartDashboard.getNumber(INTAKE_ROLLER_CMD_SET_PERCENT_INPUT.value, -9999.9) == -9999.9) {
+      SmartDashboard.putNumber(INTAKE_ROLLER_CMD_SET_PERCENT_INPUT.value, 0);
     }
   }
 
@@ -48,7 +48,7 @@ public class IntakeRollerSetPercent extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) this.percent = SmartDashboard.getNumber(IntakeElasticKey.ROLLER_CMD_SET_PERCENT_INPUT.value, 0.0);
+    if (fromElastic) this.percent = SmartDashboard.getNumber(INTAKE_ROLLER_CMD_SET_PERCENT_INPUT.value, 0.0);
     intake.setIntakeRollerPercentOutput(percent);
     DataLogUtil.writeMessage("IntakeRollerSetPercent: Init, Percent =", percent);
   }

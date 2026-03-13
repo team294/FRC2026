@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
-import frc.robot.Constants.IntakeConstants.IntakeElasticKey;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
 
@@ -37,15 +37,15 @@ public class IntakeDeployCalibrateManual extends InstantCommand {
     this.fromElastic = true;
     addRequirements(intake);
 
-    if (SmartDashboard.getNumber(IntakeElasticKey.DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, -9999) == -9999) {
-      SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, IntakeDeployAngle.UPPER_LIMIT.value);
+    if (SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, -9999) == -9999) {
+      SmartDashboard.putNumber(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, IntakeDeployAngle.UPPER_LIMIT.value);
     }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) this.angle = SmartDashboard.getNumber(IntakeElasticKey.DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, IntakeDeployAngle.UPPER_LIMIT.value);
+    if (fromElastic) this.angle = SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, IntakeDeployAngle.UPPER_LIMIT.value);
     intake.calibrateIntakeDeployEncoder(angle);
     DataLogUtil.writeMessage("IntakeDeployCalibrateManual: Init, Angle =", angle);
   }

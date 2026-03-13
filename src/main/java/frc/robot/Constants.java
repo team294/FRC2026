@@ -118,6 +118,69 @@ public final class Constants {
     public static final double controllerDeadband = 0.05;
   }
 
+  public static final class ElasticKeyConstants {
+    private static final String setPercentCmdString = "Set Percent";
+    private static final String setPercentInputString = "Set Percent Input";
+    private static final String setVelocityCmdString = "Set Velocity";
+    private static final String setVelocityInputString = "Set Velocity Input";
+
+    private static final String intakeRollerString = "Intake Roller";
+    private static final String intakeDeployString = "Intake Deploy";
+    private static final String feederSpindexerString = "Spindexer";
+    private static final String feederUptakeString = "Uptake";
+
+    public enum ElasticKey {
+      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
+      INTAKING_CMD_SEQUENCE("Intake Sequence"),
+
+      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + " " + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + " " + ElasticKeyConstants.setPercentInputString),
+      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + " Stop"),
+
+      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + " Velocity"),
+
+      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentInputString),
+      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + " Stop"),
+      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + " Set Angle"),
+      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + " Set Angle Input"),
+      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.intakeDeployString + " Calibrate Manual"),
+      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(ElasticKeyConstants.intakeDeployString + " Calibrate Manual Input Angle"),
+      INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(ElasticKeyConstants.intakeDeployString + " Calibration Ramp"),
+
+      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + " Velocity"),
+      INTAKE_DEPLOY_IS_CANCODER_CONNECTED(ElasticKeyConstants.intakeDeployString + " CANcoder Connected?"),
+      INTAKE_DEPLOY_IS_CALIBRATED(ElasticKeyConstants.intakeDeployString + " Calibrated?"),
+      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + " Target Angle"),
+      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + " Angle"),
+      INTAKE_DEPLOY_RAW_ROTATIONS(ElasticKeyConstants.intakeDeployString + " Raw Rotations"),
+
+      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + " Stop"),
+      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentCmdString),
+      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentInputString),
+      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityCmdString),
+      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityInputString),
+
+      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + " RPM"),
+      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + " Target RPM"),
+      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + " Temp"),
+
+      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + " Stop"),
+      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentCmdString),
+      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentInputString),
+      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityCmdString),
+      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityInputString),
+
+      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
+      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
+      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp");
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final String value;
+      private ElasticKey(String value) { this.value = value; }
+    }
+  }
+
   public static final class RobotDimensions {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
     private static final double DrivetrainAdjustmentFactor = 1.0153;        // CALIBRATED = 1.0153
@@ -292,47 +355,9 @@ public final class Constants {
       public final double value;
       IntakeDeployAngle(double value) { this.value = value; }
     }
-
-    public enum IntakeElasticKey {
-      ROLLER_CMD_SET_PERCENT("Intake Roller Set Percent"),
-      ROLLER_CMD_SET_PERCENT_INPUT("Intake Roller Set Percent Input"),
-      ROLLER_CMD_STOP("Intake Roller Stop"),
-
-      ROLLER_VELOCITY("Intake Roller Velocity"),
-
-      DEPLOY_CMD_SET_PERCENT("Intake Deploy Set Percent"),
-      DEPLOY_CMD_SET_PERCENT_INPUT("Intake Deploy Set Percent Input"),
-      DEPLOY_CMD_STOP("Intake Deploy Stop"),
-      DEPLOY_CMD_SET_ANGLE("Intake Deploy Set Angle"),
-      DEPLOY_CMD_SET_ANGLE_INPUT("Intake Deploy Set Angle Input"),
-      DEPLOY_CMD_CALIBRATE_MANUAL("Intake Deploy Calibrate Manual"),
-      DEPLOY_CMD_CALIBRATE_MANUAL_INPUT("Intake Deploy Calibrate Manual Input Angle"),
-      DEPLOY_CMD_CALIBRATION_RAMP("Intake Deploy Calibration Ramp"),
-
-      DEPLOY_VELOCITY("Intake Deploy Velocity"),
-      DEPLOY_IS_CANCODER_CONNECTED("Intake Deploy CANcoder Connected?"),
-      DEPLOY_IS_CALIBRATED("Intake Deploy Calibrated?"),
-      DEPLOY_TARGET_ANGLE("Intake Deploy Target Angle"),
-      DEPLOY_ANGLE("Intake Deploy Angle"),
-      DEPLOY_RAW_ROTATIONS("Intake Deploy Raw Rotations"),
-
-      INTAKING_CMD_SEQUENCE("Intake Sequence");
-
-      @SuppressWarnings({"MemberName", "PMD.SingularField"})
-      public final String value;
-      IntakeElasticKey(String value) { this.value = value; }
-    }
   }
 
   public static final class FeederConstants {
-    public enum FeederElasticKey {
-      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence");
-
-      @SuppressWarnings({"MemberName", "PMD.SingularField"})
-      public final String value;
-      FeederElasticKey(String value) { this.value = value; }
-    }
-
     public static final double reverseSpindexerSeconds = 0.5;
     public static final double noFuelSeconds = 1.0;
 
@@ -350,22 +375,6 @@ public final class Constants {
       public static final double kS = 0.26;  // CALIBRATED 3/7/26: 0.26
       public static final double kV = 0.12;  // CALIBRATED 3/7/26: 0.12
       public static final double kA = 0.0;
-
-      public enum SpindexerElasticKey {
-        SPINDEXER_CMD_STOP("Spindexer Stop"),
-        SPINDEXER_CMD_SET_PERCENT("Spindexer Set Percent"),
-        SPINDEXER_CMD_SET_PERCENT_INPUT(SpindexerElasticKey.SPINDEXER_CMD_SET_PERCENT.value + " Input"),
-        SPINDEXER_CMD_SET_VELOCITY("Spindexer Set Velocity"),
-        SPINDEXER_CMD_SET_VELOCITY_INPUT(SpindexerElasticKey.SPINDEXER_CMD_SET_VELOCITY.value + " Input"),
-
-        SPINDEXER_RPM("Spindexer RPM"),
-        SPINDEXER_TARGET_RPM("Spindexer Target RPM"),
-        SPINDEXER_TEMP("Spindexer Temp");
-
-        @SuppressWarnings({"MemberName", "PMD.SingularField"})
-        public final String value;
-        SpindexerElasticKey(String value) { this.value = value; }
-      }
     }
 
     // TODO calibrate uptake
@@ -382,22 +391,6 @@ public final class Constants {
       public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
       public static final double kV = 0.092;  // CALIBRATED 3/10: 0.092
       public static final double kA = 0.0;
-
-      public enum UptakeElasticKey {
-        UPTAKE_CMD_STOP("Uptake Stop"),
-        UPTAKE_CMD_SET_PERCENT("Uptake Set Percent"),
-        UPTAKE_CMD_SET_PERCENT_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_PERCENT.value + " Input"),
-        UPTAKE_CMD_SET_VELOCITY("Uptake Set Velocity"),
-        UPTAKE_CMD_SET_VELOCITY_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_VELOCITY.value + " Input"),
-
-        UPTAKE_RPM("Uptake RPM"),
-        UPTAKE_TARGET_RPM("Uptake Target RPM"),
-        UPTAKE_TEMP("Uptake Temp");
-
-        @SuppressWarnings({"MemberName", "PMD.SingularField"})
-        public final String value;
-        UptakeElasticKey(String value) { this.value = value; }
-      }
     }
   }
   
