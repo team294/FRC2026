@@ -14,7 +14,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MagnetHealthValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -139,7 +138,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor when using the rotor encoder
     intakeDeployMotorRotorConfig = new TalonFXConfiguration();
-    intakeDeployMotorRotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
+    intakeDeployMotorRotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     intakeDeployMotorRotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeDeployMotorRotorConfig.Voltage.PeakForwardVoltage = IntakeConstants.deployCompensationVoltage;
     intakeDeployMotorRotorConfig.Voltage.PeakReverseVoltage = -IntakeConstants.deployCompensationVoltage;
@@ -148,7 +147,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor when using the CANcoder
     intakeDeployMotorCANcoderConfig = new TalonFXConfiguration();
-    intakeDeployMotorCANcoderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;  // TODO determine inversion
+    intakeDeployMotorCANcoderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     intakeDeployMotorCANcoderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeDeployMotorCANcoderConfig.Voltage.PeakForwardVoltage = IntakeConstants.deployCompensationVoltage;
     intakeDeployMotorCANcoderConfig.Voltage.PeakReverseVoltage = -IntakeConstants.deployCompensationVoltage;
@@ -171,7 +170,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the deploy motor CANcoder
     intakeDeployCANcoderConfig = new CANcoderConfiguration();
-    intakeDeployCANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;  // TODO determine inversion
+    intakeDeployCANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     intakeDeployCANcoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = IntakeConstants.deployCANcoderDiscontinuityPoint;
     intakeDeployCANcoderConfig.MagnetSensor.MagnetOffset = 0.0;
 
@@ -206,7 +205,7 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorRotorConfig.Slot0.kV = IntakeConstants.kV;
 
     // Configure the CANcoder as a feedback source for the deploy motor
-    // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio TODO how is the sensor:mechanism 1?
+    // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackRemoteSensorID = Ports.CANIntakeDeployEncoder;
     intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = IntakeConstants.deploySensorToRotorRatio; // 18 : 36 gear ratio on competition robot (reduction)
@@ -597,7 +596,6 @@ public class Intake extends SubsystemBase implements Loggable{
 
     updateLog(false);
 
-    // TODO add necessary readings to Elastic
     SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
     SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
     SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_VELOCITY.value, getIntakeDeployVelocity());
@@ -605,6 +603,5 @@ public class Intake extends SubsystemBase implements Loggable{
     SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_ANGLE.value, getIntakeDeployAngle());
     SmartDashboard.putNumber(IntakeElasticKey.ROLLER_VELOCITY.value, getIntakeRollerVelocity());
     SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
-    SmartDashboard.putNumber("Intake CANCoder Position Raw", getIntakeDeployCANcoderRotationsRaw());
   }
 }

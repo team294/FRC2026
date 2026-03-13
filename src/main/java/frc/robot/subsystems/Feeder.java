@@ -480,7 +480,7 @@ public class Feeder extends SubsystemBase implements Loggable {
     long timeNow = RobotController.getFPGATime();
 
     dLogUptakeTemp.append(uptakeTemp.refresh().getValueAsDouble(), timeNow);
-    dLogUptakeVoltage.append(uptakeTemp.refresh().getValueAsDouble(), timeNow);
+    dLogUptakeVoltage.append(uptakeVoltage.refresh().getValueAsDouble(), timeNow);
     dLogUptakeCurrent.append(getUptakeAmps(), timeNow);
     dLogUptakeVelocity.append(getUptakeMotorVelocity(), timeNow);
     dLogUptakeSetpointRPM.append(uptakeSetpointRPM, timeNow);
@@ -490,6 +490,14 @@ public class Feeder extends SubsystemBase implements Loggable {
     dLogSpindexerCurrent.append(getSpindexerAmps(), timeNow);
     dLogSpindexerVelocity.append(getSpindexerVelocity(), timeNow);
     dLogSpindexerSetpointRPM.append(spindexerSetpointRPM, timeNow);
+
+    dLogAmbientSignalEntry.append(getAmbientSignal(1), timeNow);
+    dLogDistanceEntry.append(getDistance(1), timeNow);
+    dLogIsDetectedEntry.append(isDetected(1), timeNow);
+
+    dLogAmbientSignalExit.append(getAmbientSignal(0), timeNow);
+    dLogDistanceExit.append(getDistance(0), timeNow);
+    dLogIsDetectedExit.append(isDetected(0), timeNow);
   }
 
   private void checkForFaultConditions() {
@@ -538,9 +546,6 @@ public class Feeder extends SubsystemBase implements Loggable {
       checkForFaultConditions();
       updateLog(false);
 
-      // System.out.println(getSpindexerAmps());
-      System.out.println(isDetected(0));
-      
       SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());
       SmartDashboard.putNumber(UPTAKE_TARGET_RPM.value, uptakeSetpointRPM);
       SmartDashboard.putNumber(UPTAKE_TEMP.value, uptakeTemp.refresh().getValueAsDouble());

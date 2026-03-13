@@ -326,21 +326,23 @@ public final class Constants {
 
   public static final class FeederConstants {
     public enum FeederElasticKey {
-      FEED_SHOOTER_CMD_SEQUENCE_FORWARDS("Feed Shooter Sequence Normal"),
-      FEED_SHOOTER_CMD_SEQUENCE_REVERSE("Feed Shooter Sequence Reverse");
+      FEED_SHOOTER_CMD_SEQUENCE_FORWARDS("Feed Shooter Sequence");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
       FeederElasticKey(String value) { this.value = value; }
     }
 
-    // TODO calibrate spindexer
+    public static final double reverseSpindexerSeconds = 0.5;
+    public static final double noFuelSeconds = 1.0;
+
     public static final class SpindexerConstants {
       public static final double compensationVoltage = 12.0;
       public static final double spindexerGearRatio = 1.00;
       public static final double spindexerForwardPercent = 0.2; 
       public static final double spindexerReversePercent = -0.2;
       public static final double spindexerShootRPM = 2946;  // CALIBRATED 3/10: 2946
+      public static final double spindexerReverseRPM = -2946;  // TODO CALIBRATE
 
       public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
       public static final double kI = 0.0;
@@ -374,7 +376,7 @@ public final class Constants {
       public static final double uptakeReversePercent = 0.2;
       public static final double uptakeShootRPM = 7500; // CALIBRATED 3/10: 7500
 
-      public static final double kP = 1.5;    // CALIBRATED 3/10: 1.5
+      public static final double kP = 1.5;    // CALIBRATED 3/10: 1.5   TODO tune to try to make it keep its speed
       public static final double kI = 0.0;
       public static final double kD = 0.0;
       public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
@@ -385,7 +387,7 @@ public final class Constants {
         UPTAKE_CMD_STOP("Uptake Stop"),
         UPTAKE_CMD_SET_PERCENT("Uptake Set Percent"),
         UPTAKE_CMD_SET_PERCENT_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_PERCENT.value + " Input"),
-        UPTAKE_CMD_SET_VELOCITY("Uptake Set Velocity Input"),
+        UPTAKE_CMD_SET_VELOCITY("Uptake Set Velocity"),
         UPTAKE_CMD_SET_VELOCITY_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_VELOCITY.value + " Input"),
 
         UPTAKE_RPM("Uptake RPM"),

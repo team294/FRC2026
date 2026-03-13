@@ -8,7 +8,8 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.robot.Constants.*;
-import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
+import frc.robot.Constants.FeederConstants.SpindexerConstants;
+import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
@@ -150,8 +151,7 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
 
     // Feeder
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_FORWARDS.value, new FeedShooter(false, feeder, intake));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_REVERSE.value, new FeedShooter(true, feeder, intake));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE_FORWARDS.value, new FeedShooter(intake, feeder));
 
     SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
     SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
@@ -217,7 +217,7 @@ public class RobotContainer {
 
     left[1].onTrue(new IntakeSequence(intake));
 
-    left[2].onTrue(new DriveResetDriverAngle(driveTrain));
+    left[2].whileTrue(new FeedShooter(intake, feeder));
   }
 
   /**
@@ -265,12 +265,22 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
 
-    // Spin uptake then spindexer to feed shooter
-    coP[5].onTrue(new FeedShooter(false, feeder, intake));
+    // Spin uptake then spindexer to feed shooter, stop when released
+    coP[5].onTrue(
+      sequence(
+        new UptakeSetVelocity(UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
     coP[5].onFalse(new FeederStop(feeder));
 
     // Spin uptake then spindexer away from shooter
-    coP[6].onTrue(new FeedShooter(true, feeder, intake));
+    coP[6].onTrue(
+      sequence(
+        new UptakeSetVelocity(-UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(-SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
     coP[6].onFalse(new FeederStop(feeder));
   }
 
