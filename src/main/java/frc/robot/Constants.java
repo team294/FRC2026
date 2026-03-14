@@ -311,14 +311,20 @@ public final class Constants {
     public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
   }
 
+  // TODO CALIBRATE camera positions
   public static class VisionConstants {
-    // TODO CALIBRATE
-    // These values are for ETU ~1/31/26
-    public static final Transform3d robotToCamUp = new Transform3d(
-      new Translation3d(Units.inchesToMeters(-12.125), Units.inchesToMeters(-6.25), Units.inchesToMeters(17.0 + (9.0/16.0))),
-      new Rotation3d(0, -0.695, 0));  // in radians!!
+    public static final Transform3d robotToCamLeft = new Transform3d(
+      new Translation3d(Units.inchesToMeters(-6.534), Units.inchesToMeters(11.910), Units.inchesToMeters(17.080)),  // towards back of robot (-x), left of robot (+y), up (+z)
+      new Rotation3d(0, -Math.toRadians(23.0), Math.toRadians(28.0)) // pos. outwards (yaw), neg. upwards (pitch)
+    );
 
-    public static final String upCameraName = "UpCamera"; // this has to match the camera name in PhotonVision
+    public static final Transform3d robotToCamRight = new Transform3d(
+      new Translation3d(Units.inchesToMeters(-6.534), Units.inchesToMeters(-11.910), Units.inchesToMeters(17.080)),  // towards back of robot (-x), right of robot (-y), up (+z)
+      new Rotation3d(0, -Math.toRadians(23.0), -Math.toRadians(28.0)) // neg. outwards (yaw), neg. upwards (pitch)
+    );
+
+    public static final String leftCameraName = "LeftCamera"; // this has to match the camera name in PhotonVision
+    public static final String rightCameraName = "RightCamera"; // this has to match the camera name in PhotonVision
 
     // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
