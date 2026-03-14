@@ -100,6 +100,9 @@ public final class Constants {
     public static final int CANClimberMotor1 = 37;
     public static final int CANClimberMotor2 = 38;
 
+    public static final int CANHoodMotor1 = 39;
+    public static final int CANHoodMotor2 = 40;
+
     // DIO Ports (add sensors if needed)
 
     // PWM Ports
@@ -119,6 +122,7 @@ public final class Constants {
   }
 
   public static final class ElasticKeyConstants {
+    // Common commands
     private static final String setPercentCmdString = " Set Percent";
     private static final String setPercentInputString = " Set Percent Input";
     private static final String setVelocityCmdString = " Set Velocity";
@@ -134,14 +138,17 @@ public final class Constants {
     private static final String angleString = " Angle";
     private static final String targetAngleString = " Target Angle";
 
+    // Subsystem names
     private static final String intakeRollerString = "Intake Roller";
     private static final String intakeDeployString = "Intake Deploy";
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
+    private static final String shooterString = "Shooter";
 
     public enum ElasticKey {
-      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
+      PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
+      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
 
       INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
       INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
@@ -181,9 +188,15 @@ public final class Constants {
       UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdString),
       UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityInputString),
 
-      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.rpmString),
-      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.targetRpmString),
-      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.tempString);
+      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
+      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
+      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
+
+      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentInputString),
+      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityInputString),
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopCmdString);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
@@ -370,14 +383,15 @@ public final class Constants {
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
     public static final double noFuelSeconds = 1.0;
+    public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
 
     public static final class SpindexerConstants {
       public static final double compensationVoltage = 12.0;
       public static final double spindexerGearRatio = 1.00;
       public static final double spindexerForwardPercent = 0.2; 
       public static final double spindexerReversePercent = -0.2;
-      public static final double spindexerShootRPM = 2946;  // CALIBRATED 3/10: 2946
-      public static final double spindexerReverseRPM = -2946;  // TODO CALIBRATE
+      public static final double spindexerShootRPM = 2612.0;  // CALIBRATED 3/10: 2612
+      public static final double spindexerReverseRPM = -spindexerShootRPM;  // TODO CALIBRATE
 
       public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
       public static final double kI = 0.0;
@@ -390,16 +404,16 @@ public final class Constants {
     // TODO calibrate uptake
     public static final class UptakeConstants {
       public static final double compensationVoltage = 12.0;
-      public static final double uptakeGearRatio = 1.0;
+      public static final double uptakeGearRatio = 1.0; // doesn't matter b/c we use motor's max output instead of relying on mechanism
       public static final double uptakeForwardPercent = 0.2;
       public static final double uptakeReversePercent = 0.2;
-      public static final double uptakeShootRPM = 7500; // CALIBRATED 3/10: 7500
+      public static final double uptakeShootRPM = 6650; // CALIBRATED 3/10: 6650
 
-      public static final double kP = 1.5;    // CALIBRATED 3/10: 1.5   TODO tune to try to make it keep its speed
+      public static final double kP = 4.0;    // CALIBRATED 3/13: 4.0
       public static final double kI = 0.0;
       public static final double kD = 0.0;
       public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
-      public static final double kV = 0.092;  // CALIBRATED 3/10: 0.092
+      public static final double kV = 0.17;   // CALIBRATED 3/13: 0.17
       public static final double kA = 0.0;
     }
   }
@@ -408,15 +422,17 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
     public static final double shooterPercent = 0.2; 
     public static final double reverseShooterPercent = -0.1;
+    public static final double shootRPM = 2500;
+    public static final double reverseShootRPM = -shootRPM;
 
-    public static final double gearRatio = 1.0; // Turn ratio from the motor pinion to the shooter wheel
+    public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
-    public static final double ShooterkP = 0.4;    // volts / error in motor rps
-    public static final double ShooterkI = 0.0;
-    public static final double ShooterkD = 0.0;
-    public static final double ShooterkS = 0.1944;   // volts to overcome static friction
-    public static final double ShooterkV = 0.1146; // volts / desired motor rps
-    public static final double ShooterkA = 0.0;
+    public static final double ShooterkP = 0.35;   // CALIBRATED 3/13: 0.35 - volts / error in motor rps
+    public static final double ShooterkI = 0;
+    public static final double ShooterkD = 0;
+    public static final double ShooterkS = 0.224;  // CALIBRATED 3/13: 0.224 - volts to overcome static friction
+    public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
+    public static final double ShooterkA = 0;
 
     public static final double velocityErrorTolerance = 100;
   }

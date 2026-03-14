@@ -11,6 +11,7 @@ import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.ShooterSetVelocity.VelocityType;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
@@ -51,7 +52,7 @@ public class RobotContainer {
   private final Intake intake = new Intake("Intake");
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
-  // private final Shooter shooter = new Shooter("Shooter");
+  private final Shooter shooter = new Shooter("Shooter");
 
   // Define controllers
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
@@ -158,11 +159,9 @@ public class RobotContainer {
     SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
     
     // Shooter
-    // SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercent(shooter));
-    // SmartDashboard.putData("Shooter Set Velocity 500 rpm", new ShooterSetVelocity(500, VelocityType.runForever, shooter));
-    // SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(VelocityType.runForever, shooter));
-    // SmartDashboard.putData("Shooter Stop", new ShooterStop(shooter));
-    // SmartDashboard.putData("Shooter set PIDSVA", new ShooterSetPIDSVA(shooter));
+    SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
+    SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
+    SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
@@ -219,8 +218,15 @@ public class RobotContainer {
     // left[2].whileTrue(new FeedShooter(intake, feeder));
     left[2].whileTrue(new ParallelCommandGroup(
       new FeedShooter(feeder),
-      new IntakeDeployAgitate(intake)
+      sequence(
+        waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
+        new IntakeDeployAgitate(intake)
+      )
     ));
+
+    right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+
+    right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
 
   /**
@@ -245,20 +251,16 @@ public class RobotContainer {
     // ex: coP[1].onTrue(new command(param1, param2, etc));
 
     // Send intake deploy out manually while held, stop when released
-    coP[1].onTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, true, intake));
-    coP[1].onFalse(new IntakeDeploySetPercent(0, true, intake));
+    coP[1].whileTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
     // Bring intake deploy in manually while held, stop when released
-    coP[2].onTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, true, intake));
-    coP[2].onFalse(new IntakeDeploySetPercent(0, true, intake));
+    coP[2].whileTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
     // Spin rollers inwards while held, stop when released
-    coP[3].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake));
-    coP[3].onFalse(new IntakeRollerSetPercent(0, true, intake));
+    coP[3].whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
 
     // Spin rollers outwards while held, stop when released
-    coP[4].onTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, true, intake));
-    coP[4].onFalse(new IntakeRollerSetPercent(0, true, intake));
+    coP[4].whileTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, false, intake));
 
 
     // Reset Pose
@@ -285,6 +287,10 @@ public class RobotContainer {
       )
     );
     coP[6].onFalse(new FeederStop(feeder));
+
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shooterPercent, VelocityType.runForever, shooter));
+
+    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShooterPercent, VelocityType.runForever, shooter));
   }
 
   private void configureTriggers() {
