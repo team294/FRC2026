@@ -53,6 +53,7 @@ public class RobotContainer {
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
+  private final Climber climber = new Climber("Climber");
 
   // Define controllers
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
@@ -163,6 +164,15 @@ public class RobotContainer {
     SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
 
+    // Climber
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_SLOW_UP.value, new ClimberSetPercent(0.1, true, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_LOWER_LIMIT.value, new ClimberSetPosition(ClimberConstants.ClimberPosition.LOWER_LIMIT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_SLOW_DOWN.value, new ClimberSetPercent(-0.1, true, climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberSetPercent(0, true, climber));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATION_ROUTINE. value, new ClimberCalibration(5, climber));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_IF_LOWER_LIMIT.value, new ClimberCalibrateIfAtLowerLimit(climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_INPUT.value, new ClimberSetPercent(true, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_INPUT.value, new ClimberSetPosition(climber));
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
 

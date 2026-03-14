@@ -108,6 +108,8 @@ public final class Constants {
     // PWM Ports
     public static final int PWMHoodServo1 = 0;
     public static final int PWMHoodServo2 = 1;
+    public static final int DIOClimberLowerLimitSensor1 = 2;
+    public static final int DIOClimberLowerLimitSensor2 = 3;
   }
 
   public static final class OIConstants {
@@ -135,6 +137,7 @@ public final class Constants {
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
     private static final String shooterString = "Shooter";
+    private static final String climberString = "Climber";
 
     public enum ElasticKey {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
@@ -143,13 +146,13 @@ public final class Constants {
 
       INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
       INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
-      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + " Stop"),
+      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.stopString),
 
       INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + " Velocity"),
 
-      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentInputString),
-      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + " Stop"),
+      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentInputString),
+      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.stopString),
       INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + " Set Angle"),
       INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + " Set Angle Input"),
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.intakeDeployString + " Calibrate Manual"),
@@ -163,31 +166,55 @@ public final class Constants {
       INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + " Angle"),
       INTAKE_DEPLOY_RAW_ROTATIONS(ElasticKeyConstants.intakeDeployString + " Raw Rotations"),
 
-      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + " Stop"),
-      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentCmdString),
-      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentInputString),
-      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityCmdString),
-      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityInputString),
+      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.stopString),
+      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentCmdString),
+      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentInputString),
+      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityCmdString),
+      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityInputString),
 
       SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + " RPM"),
       SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + " Target RPM"),
       SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + " Temp"),
 
-      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + " Stop"),
-      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentCmdString),
-      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentInputString),
-      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityCmdString),
-      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityInputString),
+      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.stopString),
+      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString  + ElasticKeyConstants.setPercentCmdString),
+      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentInputString),
+      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdString),
+      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityInputString),
 
       UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
       UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
 
-      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentCmdString),
-      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentInputString),
-      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityCmdString),
-      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityInputString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopString);
+      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + ElasticKeyConstants.setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + ElasticKeyConstants.setPercentInputString),
+      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + ElasticKeyConstants.setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + ElasticKeyConstants.setVelocityInputString),
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopString),
+
+      CLIMBER_CMD_SET_PERCENT_SLOW_UP(ElasticKeyConstants.climberString + " Set 10% Up"),
+      CLIMBER_CMD_SET_PERCENT_SLOW_DOWN(ElasticKeyConstants.climberString+ " Set 10% Down"),
+      CLIMBER_CMD_SET_POSITION_LOWER_LIMIT(ElasticKeyConstants.climberString + " Set Position - Lower Limit"),
+      CLIMBER_CMD_STOP(ElasticKeyConstants.climberString + ElasticKeyConstants.stopString),
+      CLIMBER_CMD_CALIBRATION_ROUTINE(ElasticKeyConstants.climberString + " Calibration Routine - 5%/s Ramp Rate"),
+      CLIMBER_CMD_CALIBRATE_IF_LOWER_LIMIT(ElasticKeyConstants.climberString + " Calibrate If At Lower Limit"),
+      CLIMBER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.climberString + " Set Percent Input"),
+      CLIMBER_CMD_SET_POSITION_INPUT(ElasticKeyConstants.climberString + " Set Position Input"),
+
+      CLIMBER_PERCENT_SETPOINT(ElasticKeyConstants.climberString + " Percent Setpoint"),
+      CLIMBER_POSITION_SETPOINT(ElasticKeyConstants.climberString + " Position Setpoint"),
+
+
+      CLIMBER_IS_CALIBRATED(ElasticKeyConstants.climberString + " Calibrated"),
+      CLIMBER_IS_IN_POSITION_CONTROL(ElasticKeyConstants.climberString + " Position Control"),
+      CLIMBER_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Lower Limit"),
+      CLIMBER_MOTOR_ONE_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Motor 1 Lower Limit"),
+      CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Motor 2 Lower Limit"),
+      CLIMBER_POSITION(ElasticKeyConstants.climberString + " Position"),
+      CLIMBER_TARGET(ElasticKeyConstants.climberString + " Target Position"),
+      CLIMBER_VELOCITY(ElasticKeyConstants.climberString + " Velocity"),
+      CLIMBER_MOTOR_ONE_ROTATIONS(ElasticKeyConstants.climberString + " Motor 1 Rotations"),
+      CLIMBER_MOTOR_TWO_ROTATIONS(ElasticKeyConstants.climberString + " Motor 2 Rotations");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
@@ -406,6 +433,30 @@ public final class Constants {
       public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
       public static final double kV = 0.17;   // CALIBRATED 3/13: 0.17
       public static final double kA = 0.0;
+    }
+  }
+
+  public static final class ClimberConstants {
+    public static final double kEncoderCPR = 0.0;                 // Encoder counts per revolution of the motor pinion gear
+    public static final double kClimberGearRatio = 0.0;      // Gear reduction ratio between Kraken and gear driving the climber TODO CALIBRATE
+    public static final double kClimberPulleyDiameterInches = 0.0; // Diameter of the pulley driving the climber in inches TODO CALIBRATE
+    public static final double kClimberEncoderInchesPerTick = (kClimberPulleyDiameterInches * Math.PI) / kEncoderCPR / kClimberGearRatio;  // TODO CALIBRATE
+    
+    public static final double compensationVoltage = 12.0;
+
+    // TODO CALIBRATE
+    public static final double maxUncalibratedPercentOutput = 0.05;
+    public static final double maxManualPercentOutput = 0.1;  // Max climber speed when driven using Xbox controller
+    public static final double maxPercentOutput = 1.0;        // Absolute max output to climber motors
+
+    // TODO CALIBRATE
+    public enum ClimberPosition {
+      LOWER_LIMIT(0.0),
+      UPPER_LIMIT(0.0);
+ 
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final double value;
+      ClimberPosition(double value) { this.value = value; }
     }
   }
   
