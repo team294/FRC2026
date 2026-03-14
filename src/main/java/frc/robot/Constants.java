@@ -413,6 +413,8 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
     public static final double shooterPercent = 0.2; 
     public static final double reverseShooterPercent = -0.1;
+    public static final double shootRPM = 2500;
+    public static final double reverseShootRPM = -shootRPM;
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
