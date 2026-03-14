@@ -119,22 +119,27 @@ public final class Constants {
   }
 
   public static final class ElasticKeyConstants {
-    private static final String setPercentCmdString = "Set Percent";
-    private static final String setPercentInputString = "Set Percent Input";
-    private static final String setVelocityCmdString = "Set Velocity";
-    private static final String setVelocityInputString = "Set Velocity Input";
+    // Common commands
+    private static final String setPercentCmdString = " Set Percent";
+    private static final String setPercentInputString = " Set Percent Input";
+    private static final String setVelocityCmdString = " Set Velocity";
+    private static final String setVelocityInputString = " Set Velocity Input";
+    private static final String stopString = " Stop";
 
+    // Subsystem names
     private static final String intakeRollerString = "Intake Roller";
     private static final String intakeDeployString = "Intake Deploy";
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
+    private static final String shooterString = "Shooter";
 
     public enum ElasticKey {
-      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
+      PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
+      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
 
-      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + " " + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + " " + ElasticKeyConstants.setPercentInputString),
+      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
       INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + " Stop"),
 
       INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + " Velocity"),
@@ -173,7 +178,13 @@ public final class Constants {
 
       UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
-      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp");
+      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
+
+      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentInputString),
+      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityInputString),
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopString);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
