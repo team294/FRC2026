@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Feeder;
 import frc.robot.utilities.DataLogUtil;
 
-import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 public class SpindexerSetVelocity extends Command {
   private final Feeder feeder;

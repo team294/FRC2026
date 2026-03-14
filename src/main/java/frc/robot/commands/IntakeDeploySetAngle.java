@@ -7,7 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.IntakeConstants.*;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
 
@@ -55,15 +56,15 @@ public class IntakeDeploySetAngle extends Command {
     this.fromElastic = true;
     addRequirements(intake);
 
-    if (SmartDashboard.getNumber(IntakeElasticKey.DEPLOY_CMD_SET_ANGLE_INPUT.value, -9999) == -9999) {
-      SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_CMD_SET_ANGLE_INPUT.value, IntakeDeployAngle.START_CONFIG.value);
+    if (SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT.value, -9999) == -9999) {
+      SmartDashboard.putNumber(INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT.value, IntakeDeployAngle.START_CONFIG.value);
     }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) this.targetAngle = SmartDashboard.getNumber(IntakeElasticKey.DEPLOY_CMD_SET_ANGLE_INPUT.value, IntakeDeployAngle.START_CONFIG.value);
+    if (fromElastic) this.targetAngle = SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT.value, IntakeDeployAngle.START_CONFIG.value);
     intake.setIntakeDeployAngle(targetAngle);
 
     intake.enableFastLogging(true);

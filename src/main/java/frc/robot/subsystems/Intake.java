@@ -34,13 +34,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
-import frc.robot.Constants.IntakeConstants.IntakeElasticKey;
 import frc.robot.Constants.Ports;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.LEDEventUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
+
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 public class Intake extends SubsystemBase implements Loggable{
   private int logRotationKey;           // Key to identify the log rotation
@@ -596,12 +597,12 @@ public class Intake extends SubsystemBase implements Loggable{
 
     updateLog(false);
 
-    SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
-    SmartDashboard.putBoolean(IntakeElasticKey.DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
-    SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_VELOCITY.value, getIntakeDeployVelocity());
-    SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
-    SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_ANGLE.value, getIntakeDeployAngle());
-    SmartDashboard.putNumber(IntakeElasticKey.ROLLER_VELOCITY.value, getIntakeRollerVelocity());
-    SmartDashboard.putNumber(IntakeElasticKey.DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
+    SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
+    SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_VELOCITY.value, getIntakeDeployVelocity());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
+    SmartDashboard.putNumber(INTAKE_ROLLER_VELOCITY.value, getIntakeRollerVelocity());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
   }
 }

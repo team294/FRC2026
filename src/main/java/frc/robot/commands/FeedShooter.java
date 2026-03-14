@@ -34,7 +34,6 @@ public class FeedShooter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.restart();  // start fuel tracking timer (should be running while command is running)
     reversed = false;  // guaranteed to start normal direction
 
     uptakeWithinTolerance = false;
@@ -44,9 +43,10 @@ public class FeedShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!uptakeWithinTolerance && Math.abs(feeder.getUptakeVelocityPIDError()) < 50.0) {
+    if (!uptakeWithinTolerance && Math.abs(feeder.getUptakeVelocityPIDError()) < FeederConstants.uptakeVelocityToleranceToStartSpindexer) {
       uptakeWithinTolerance = true;
       feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
+      timer.restart();  // start fuel tracking timer (should be running while spindexer is running)
     } else if (uptakeWithinTolerance) {
 
       // time without Fuel is 0 if we have Fuel, so reset

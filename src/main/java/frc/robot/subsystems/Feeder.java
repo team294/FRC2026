@@ -40,8 +40,7 @@ import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 import frc.robot.utilities.Wait;
 
-import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
-import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 public class Feeder extends SubsystemBase implements Loggable {
   private int logRotationKey;           // Key to identify the log rotation

@@ -16,12 +16,9 @@ import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 
-import static frc.robot.Constants.FeederConstants.FeederElasticKey.*;
-import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
-import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import com.ctre.phoenix6.SignalLogger;
-import static frc.robot.Constants.IntakeConstants.IntakeElasticKey.*;
 import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -54,7 +51,7 @@ public class RobotContainer {
   private final Intake intake = new Intake("Intake");
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
-  // private final Shooter shooter = new Shooter("Shooter");
+  private final Shooter shooter = new Shooter("Shooter");
 
   // Define controllers
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
@@ -139,8 +136,8 @@ public class RobotContainer {
     SmartDashboard.putData("Vision Disable Odometry Updates", new VisionOdometryStateSet(false, driveTrain));
 
     // Intake
-    SmartDashboard.putData(DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
-    SmartDashboard.putData(ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
+    SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData("Intake Deploy Set Percernt", new IntakeDeploySetPercent(false, intake));
 
@@ -161,11 +158,9 @@ public class RobotContainer {
     SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
     
     // Shooter
-    // SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercent(shooter));
-    // SmartDashboard.putData("Shooter Set Velocity 500 rpm", new ShooterSetVelocity(500, VelocityType.runForever, shooter));
-    // SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(VelocityType.runForever, shooter));
-    // SmartDashboard.putData("Shooter Stop", new ShooterStop(shooter));
-    // SmartDashboard.putData("Shooter set PIDSVA", new ShooterSetPIDSVA(shooter));
+    SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
+    SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
+    SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
