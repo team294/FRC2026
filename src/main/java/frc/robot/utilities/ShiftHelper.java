@@ -29,7 +29,7 @@ public class ShiftHelper {
      * @return If blue won auto or not depending on FMC game specific message  
      */
     public boolean blueWonAuto() {
-        return DriverStation.getGameSpecificMessage().equals("B");
+        return DriverStation.getGameSpecificMessage().equals("B"); // TODO Test Blue won auto function 
     }
 
     /**
