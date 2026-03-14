@@ -23,7 +23,16 @@ import frc.robot.Constants.FieldConstants;
    
     public enum TrajectoryName {
         // Add Choreo trajectories here.  Syntax:
-        //   TrajectoryConstantName("Trajectory file name (without extension)"),
+        //   TrajectoryConstantName("Trajectory file name"),
+        CollectThroughCenter("CollectThroughCenter"),
+        CollectThroughSide("CollectThroughSide"),
+        CollectEndToShootBump("CollectEndToShootBump"),
+        CollectEndToShootTrench("CollectEndToShootTrench"),
+        //StartBumpToCollectStart("StartBumpToCollectStart"),
+        StartTrenchToCollectStart("StartTrenchToCollectStart"),
+        ShootTrenchToOutpost("ShootTrenchToOutpost"),
+        ShootTrenchToDepot("ShootTrenchToDepot"),
+    
         Relative4mRotate180("Relative4mRotate180"),
         RelativeArcLeft("RelativeArcLeft"),
         RelativeStraight4m("RelativeStraight4m"),
@@ -37,7 +46,10 @@ import frc.robot.Constants.FieldConstants;
     }
 
     private static int trajectoryCount = TrajectoryName.values().length;
-    private HashMap<TrajectoryName, Trajectory<SwerveSample>> cache = new HashMap<TrajectoryName,Trajectory<SwerveSample>>(trajectoryCount);    // HashMap of Choreo Trajectories
+
+    // HashMap of Choreo Trajectories, generally  on the right side from driver perspective (2026)
+    private HashMap<TrajectoryName, Trajectory<SwerveSample>> cache = new HashMap<TrajectoryName,Trajectory<SwerveSample>>(trajectoryCount);  
+    
 
     /**
      * Load all trajectories when the robot starts up into a cache for trajectory-following commands.
@@ -69,12 +81,23 @@ import frc.robot.Constants.FieldConstants;
 
     /**
      * Getter to get the choreo trajectory from the trajectory cache
-     * @param key Key in the HashMap corresponding to the loaded trajectory
+     * @param key TrajectoryName key in the HashMap corresponding to the loaded trajectory
      * @return the Choreo trajectory in the trajectory cache.  Null if the requested trajectory
      * was not loaded successfully.
      */
     public Trajectory<SwerveSample> getTrajectory(TrajectoryName key){
         return cache.get(key);
+    }
+
+    /**
+     * Getter to get the choreo trajectory from the trajectory cache 
+     * @param leftside boolean; whether the needed trajectory is on the left side (return mirrored trajectory), or on the right side (return default trajectory) TODO handle side-specific trajectories (outpost/depot)
+     * @param key TrajectoryName key in the HashMap corresponding to the loaded trajectory
+     * @return the Choreo trajectory in the trajectory cache.  Null if the requested trajectory
+     * was not loaded successfully.
+     */
+    public Trajectory<SwerveSample> getTrajectory(boolean leftSide, TrajectoryName key){
+        return leftSide ? mirrorVertically(cache.get(key), "mirrored " + key) : cache.get(key);
     }
 
     /**
