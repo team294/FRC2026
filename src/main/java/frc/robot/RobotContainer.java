@@ -167,10 +167,6 @@ public class RobotContainer {
 
     //  ---  Sequences  ---
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
-
-
-
-    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
   }
  
   /**
