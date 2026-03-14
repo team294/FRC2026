@@ -183,11 +183,50 @@ public final class Constants {
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
       UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
 
-      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentCmdString),
-      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentInputString),
-      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityCmdString),
-      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityInputString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopString);
+      SHOOTER_1_VOLTAGE("Shooter 1 Voltage"),
+      SHOOTER_1_POSITION_REV("Shooter 1 Position Rev"),
+      SHOOTER_1_RPM("Shooter 1 RPM"),
+      SHOOTER_1_TEMP_C("Shooter 1 Temp C"),
+
+      SHOOTER_2_VOLTAGE("Shooter 2 Voltage"),
+      SHOOTER_2_POSITION_REV("Shooter 2 Position Rev"),
+      SHOOTER_2_RPM("Shooter 2 RPM"),
+      SHOOTER_2_TEMP_C("Shooter 2 Temp C"),
+
+      SHOOTER_AVG_RPM("Shooter Avg RPM"),
+      SHOOTER_TARGET_RPM("Shooter Target RPM"),
+
+      SHOOTER_PERCENT_SETPOINT("Shooter Percent Setpoint"),
+      SHOOTER_RPM_SETPOINT("Shooter RPM Setpoint"),
+
+      SHOOTER_CMD_SET_PERCENT("Shooter Set Percent"),
+      SHOOTER_CMD_SET_VELOCITY_500_RPM("Shooter Set Velocity 500 rpm"),
+      SHOOTER_CMD_SET_VELOCITY("Shooter Set Velocity"),
+      SHOOTER_CMD_STOP("Shooter Stop"),
+      SHOOTER_CMD_SET_PIDSVA("Shooter set PIDSVA"),
+
+      SHOOTER_VELOCITY_CONTROL_ON("Shooter Velocity Control On"),
+
+      HOOD_1_VOLTAGE("Hood 1 Voltage"),
+      HOOD_2_VOLTAGE("Hood 2 Voltage"),
+      HOOD_1_ANALOG_VOLTAGE("Hood 1 Analog Voltage"),
+      HOOD_2_ANALOG_VOLTAGE("Hood 2 Analog Voltage"),
+      HOOD_1_ANGLE("Hood 1 Angle Deg"),
+      HOOD_2_ANGLE("Hood 2 Angle Deg"),
+      HOOD_1_LENGTH("Hood 1 Extension Length"),
+      HOOD_2_LENGTH("Hood 2 Extension Length"),
+      HOOD_1_CURRENT("Hood 1 Current"),
+      HOOD_2_CURRENT("Hood 2 Current"),
+      HOOD_ANGLE_CURRENT_SETPOINT("Current Hood Angle Setpoint"),
+
+      HOOD_ANGLE_SETPOINT("Hood Angle Setpoint"),
+      HOOD_VOLTAGE_SETPOINT("Hood Motor Voltage"),
+
+      HOOD_CMD_SET_ANGLE_ADV("Hood Set Angle Adv"),
+      HOOD_CMD_SET_ANGLE_BASIC("Hood Set Angle Basic"),
+      HOOD_CMD_SET_PERCENT("Hood Set Percent Output"),
+      HOOD_CMD_SET_VOLTAGE("Hood Set Voltage"),
+      HOOD_CMD_STOP("Hood Stop");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
@@ -426,6 +465,37 @@ public final class Constants {
     public static final double ShooterkA = 0;
 
     public static final double velocityErrorTolerance = 100;
+
+     // Hood Constants
+    public static final double hoodVoltage = 4;
+    public static final double hoodErrorTolerance = 0.2; // for the PID control (deg error)
+
+    public static final double hoodMinimumAngle = 8.637; // in degrees
+    public static final double hoodMaximumAngle = 45.0; // in degrees 
+
+    public static final double hoodMinimumAnalogVoltage = 0;
+    public static final double hoodMaximumAnalogVoltage = 4.92;
+
+    public static final double hoodMinimumAnalogVoltageCutoff = 0.005;
+    public static final double hoodMaximumAnalogVoltageCutoff = 4.915;
+
+    public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle)
+    public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
+
+    public static final double radius1 = 7.678; // the length of one side of the triangle formed with the linear actuator for the hood angle
+    public static final double radius2 = 6.361; // the length of the other side of the triangle 
+
+    public static final double hoodVoltageToExtensionLengthSlope = (hoodActuatorMaxExtensionLength - hoodActuatorMinExtensionLength) / (hoodMaximumAnalogVoltage - hoodMinimumAnalogVoltage);
+
+    public static final double hoodkP = 0.165;    // volts / error in motor rps
+    public static final double hoodkI = 0.0;
+    public static final double hoodkD = 0.00;
+    public static final double hoodkS = 0.0;   // percent output to overcome static friction (constant added to basic PID control to overcome static friction from having to move the hood)
+    public static final double hoodkV = 0.0; // volts / desired motor rps
+    public static final double hoodkA = 0.0;
+
+    public static final double hoodMaxVelocity = 1.0;
+    public static final double hoodMaxAcceleration = 1.0;
   }
 
   public static final class TrajectoryConstants {

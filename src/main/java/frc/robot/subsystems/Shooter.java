@@ -7,14 +7,21 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.configs.TalonFXSConfigurator;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.BrushedMotorWiringValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -33,7 +40,8 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
-import frc.robot.utilities.StringUtil;
+
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 public class Shooter extends SubsystemBase implements Loggable {
   private final int logRotationKey;     // Key to identify the log rotation
@@ -46,6 +54,13 @@ public class Shooter extends SubsystemBase implements Loggable {
   private final TalonFXConfigurator shooterMotor1Configurator;
   private final TalonFXConfigurator shooterMotor2Configurator;
   private TalonFXConfiguration shooterMotorConfiguration;
+
+   // Hood Linear Actuator Servo
+  private final TalonFXS hoodMotor1 = new TalonFXS(Ports.CANHoodMotor1);
+  private final TalonFXS hoodMotor2 = new TalonFXS(Ports.CANHoodMotor2);
+  private final TalonFXSConfigurator hoodMotor1Configurator;
+  private final TalonFXSConfigurator hoodMotor2Configurator;
+  private TalonFXSConfiguration hoodMotorConfiguration;
 
   // Live data reported by the motor controller
   private final StatusSignal<Temperature> shooter1Temperature;         // Temperature, in degrees Celsius
@@ -60,35 +75,66 @@ public class Shooter extends SubsystemBase implements Loggable {
   private final StatusSignal<Angle> shooter2EncoderPosition;           // Encoder position, in rotations
   private final StatusSignal<AngularVelocity> shooter2EncoderVelocity; // Encoder velocity, in rotations/second
   private final StatusSignal<Voltage> shooter2SupplyVoltage;           // Incoming bus voltage in volts
+  
+  private final StatusSignal<Voltage> hood1PositionVoltage;
+  private final StatusSignal<Voltage> hood1MotorVoltage;
+  private final StatusSignal<Voltage> hood1SupplyVoltage;
+  private final StatusSignal<Current> hood1Current;
+  private final StatusSignal<Voltage> hood2PositionVoltage;
+  private final StatusSignal<Voltage> hood2MotorVoltage;
+  private final StatusSignal<Voltage> hood2SupplyVoltage;
+  private final StatusSignal<Current> hood2Current;
 
   // Voltage and velocity controls
   private VoltageOut shooterVoltageControl = new VoltageOut(0.0);
   private VelocityVoltage shooterVelocityControl = new VelocityVoltage(0).withSlot(0);
 
-  private boolean velocityControlOn = false;  // true = velocity control is on, false = velocity control is off (e.g. percent output, position)
+  private boolean shooterVelocityControlOn = false;  // true = velocity control is on, false = velocity control is off (e.g. percent output, position)
   private double setpointRPM;                 // Target velocity, in RPM (positive = forward, negative = reverse)
-
+  
+  private VoltageOut hoodVoltageControl = new VoltageOut(0.0).withEnableFOC(true);
+  private double hoodAngleSetpoint;
+  private double hoodVoltageSetpoint;
+  private boolean hoodPositionControlOn = false;
+  
+  private PIDController hoodPidController = new PIDController(ShooterConstants.hoodkP, ShooterConstants.hoodkI, ShooterConstants.hoodkD);
+  
   // DataLog entries
   private final DataLog log = DataLogManager.getLog();
-  private final DoubleLogEntry dLogTemp1 = new DoubleLogEntry(log, "/Shooter/Temperature1");
-  private final DoubleLogEntry dLogCurrent1 = new DoubleLogEntry(log, "/Shooter/Current1");
-  private final DoubleLogEntry dLogVelocity1 = new DoubleLogEntry(log, "/Shooter/Velocity1");
-  private final DoubleLogEntry dLogPosition1 = new DoubleLogEntry(log, "/Shooter/Position1");
-  private final DoubleLogEntry dLogVoltage1 = new DoubleLogEntry(log, "/Shooter/Voltage1");
-  private final DoubleLogEntry dLogSupplyVoltage1 = new DoubleLogEntry(log, "/Shooter/SupplyVoltage1");
-  private final DoubleLogEntry dLogTemp2 = new DoubleLogEntry(log, "/Shooter/Temperature2");
-  private final DoubleLogEntry dLogCurrent2 = new DoubleLogEntry(log, "/Shooter/Current2");
-  private final DoubleLogEntry dLogVelocity2 = new DoubleLogEntry(log, "/Shooter/Velocity2");
-  private final DoubleLogEntry dLogPosition2 = new DoubleLogEntry(log, "/Shooter/Position2");
-  private final DoubleLogEntry dLogVoltage2 = new DoubleLogEntry(log, "/Shooter/Voltage2");
-  private final DoubleLogEntry dLogSupplyVoltage2 = new DoubleLogEntry(log, "/Shooter/SupplyVoltage2");
-  private final DoubleLogEntry dLogVelocitySet = new DoubleLogEntry(log, "/Shooter/VelocitySet");
+  private final DoubleLogEntry dLogShooter1Temp = new DoubleLogEntry(log, "/Shooter/Temperature1");
+  private final DoubleLogEntry dLogShooter1Current = new DoubleLogEntry(log, "/Shooter/Current1");
+  private final DoubleLogEntry dLogShooter1Velocity = new DoubleLogEntry(log, "/Shooter/Velocity1");
+  private final DoubleLogEntry dLogShooter1Position = new DoubleLogEntry(log, "/Shooter/Position1");
+  private final DoubleLogEntry dLogShooter1Voltage = new DoubleLogEntry(log, "/Shooter/Voltage1");
+  private final DoubleLogEntry dLogShooter1SupplyVoltage = new DoubleLogEntry(log, "/Shooter/SupplyVoltage1");
+  private final DoubleLogEntry dLogShooter2Temp = new DoubleLogEntry(log, "/Shooter/Temperature2");
+  private final DoubleLogEntry dLogShooter2Current = new DoubleLogEntry(log, "/Shooter/Current2");
+  private final DoubleLogEntry dLogShooter2Velocity = new DoubleLogEntry(log, "/Shooter/Velocity2");
+  private final DoubleLogEntry dLogShooter2Position = new DoubleLogEntry(log, "/Shooter/Position2");
+  private final DoubleLogEntry dLogShooter2Voltage = new DoubleLogEntry(log, "/Shooter/Voltage2");
+  private final DoubleLogEntry dLogShooter2SupplyVoltage = new DoubleLogEntry(log, "/Shooter/SupplyVoltage2");
+  private final DoubleLogEntry dLogShooterVelocitySet = new DoubleLogEntry(log, "/Shooter/VelocitySet");
+  private final BooleanLogEntry dLogShooterVelocityControl = new BooleanLogEntry(log, "/Shooter/VelocityControlOn");
 
-  private final BooleanLogEntry dLogVelocityControl = new BooleanLogEntry(log, "/Shooter/VelocityControlOn");
+  private final DoubleLogEntry dLogHood1AnalogVoltage = new DoubleLogEntry(log, "/Hood/AnalogVoltage1");
+  private final DoubleLogEntry dLogHood1Voltage = new DoubleLogEntry(log, "/Hood/Voltage1");
+  private final DoubleLogEntry dLogHood1SupplyVoltage = new DoubleLogEntry(log, "/Hood/SupplyVoltage1");
+  private final DoubleLogEntry dLogHood1Current = new DoubleLogEntry(log, "/Hood/Current1");
+  private final DoubleLogEntry dLogHood2AnalogVoltage = new DoubleLogEntry(log, "/Hood/AnalogVoltage2");
+  private final DoubleLogEntry dLogHood2Voltage = new DoubleLogEntry(log, "/Hood/Voltage2");
+  private final DoubleLogEntry dLogHood2SupplyVoltage = new DoubleLogEntry(log, "/Hood/SupplyVoltage2");
+  private final DoubleLogEntry dLogHood2Current = new DoubleLogEntry(log, "/Hood/Current2");
+  private final DoubleLogEntry dLogHoodAngleSetpoint = new DoubleLogEntry(log, "/Hood/AngleSetpoint");
+  private final DoubleLogEntry dLogHoodVoltageSetpoint = new DoubleLogEntry(log, "/Hood/VoltageSetpoint");
+  private final BooleanLogEntry dLogHoodPositionControlOn = new BooleanLogEntry(log, "/Hood/PositionControlOn");
+ 
 
   // Sticky Faults
-  private boolean recordedMotor1MissingStickyFault;
-  private boolean recordedMotor2MissingStickyFault;
+  private boolean recordedShooterMotor1MissingStickyFault;
+  private boolean recordedShooterMotor2MissingStickyFault;
+
+  private boolean recordedHoodMotor1MissingStickyFault;
+  private boolean recordedHoodMotor2MissingStickyFault;
 
   public Shooter(String subsystemName) {
     // Set the subsystem name
@@ -114,6 +160,15 @@ public class Shooter extends SubsystemBase implements Loggable {
     shooter2EncoderPosition = shooterMotor2.getPosition();
     shooter2Voltage = shooterMotor2.getMotorVoltage();
     shooter2SupplyVoltage = shooterMotor2.getSupplyVoltage();
+
+    hood1PositionVoltage = hoodMotor1.getAnalogVoltage();
+    hood1MotorVoltage = hoodMotor1.getMotorVoltage();
+    hood1SupplyVoltage = hoodMotor1.getSupplyVoltage();
+    hood1Current = hoodMotor1.getStatorCurrent();
+    hood2PositionVoltage = hoodMotor2.getAnalogVoltage();
+    hood2MotorVoltage = hoodMotor2.getMotorVoltage();
+    hood2SupplyVoltage = hoodMotor2.getSupplyVoltage();
+    hood2Current = hoodMotor2.getStatorCurrent();
 
     // Configure the motor
     shooterMotorConfiguration = new TalonFXConfiguration();
@@ -144,7 +199,30 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     // Create the simple feedforward model
     //shooterMotorFeedforward = new SimpleMotorFeedforward(ShooterConstants.ShooterkS, ShooterConstants.ShooterkV, ShooterConstants.ShooterkA);
+    
+    hoodMotor1Configurator = hoodMotor1.getConfigurator();
+    hoodMotor2Configurator = hoodMotor2.getConfigurator();
+    hoodPidController.reset();
+    hoodPidController.setTolerance(ShooterConstants.hoodErrorTolerance);
 
+    hoodMotorConfiguration = new TalonFXSConfiguration();
+    hoodMotorConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Brushed_DC;
+    hoodMotorConfiguration.Commutation.BrushedMotorWiring = BrushedMotorWiringValue.Leads_A_and_B;
+    hoodMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    hoodMotorConfiguration.Voltage.PeakForwardVoltage = ShooterConstants.compensationVoltage;
+    hoodMotorConfiguration.Voltage.PeakReverseVoltage = -ShooterConstants.compensationVoltage;
+    hoodMotorConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;      // Time from 0 to full power in open loop, in seconds
+    hoodMotorConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;  // Time from 0 to full power in closed loop, in seconds
+    // hoodMotorConfiguration.SoftwareLimitSwitch.
+
+    // If the current is above the supply current limit for the threshold time, the current is limited.
+    // This is configured to prevent the breakers from tripping.
+    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
+    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
+    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
+    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+       
     // Apply the configurations to the motor.
     // This is a blocking call and will wait up to 200ms to apply.
     shooterMotor1Configurator.apply(shooterMotorConfiguration);
@@ -152,11 +230,26 @@ public class Shooter extends SubsystemBase implements Loggable {
     // If motor 2 isn't being used as a follower, it will require a separate motor configuration
     shooterMotor2Configurator.apply(shooterMotorConfiguration);
 
+    hoodMotor1Configurator.apply(hoodMotorConfiguration);
+    hoodMotor2Configurator.apply(hoodMotorConfiguration);
+
+    // Apply the configurations to the motor.
+    // This is a blocking call and will wait up to 200ms to apply.
+    shooterMotor1Configurator.apply(shooterMotorConfiguration);
+    // Inversion configuration inverted by setControl for the follower motor
+    // If motor 2 isn't being used as a follower, it will require a separate motor configuration
+    shooterMotor2Configurator.apply(shooterMotorConfiguration);
+    
+    hoodMotor1Configurator.apply(hoodMotorConfiguration);
+    hoodMotor2Configurator.apply(hoodMotorConfiguration);
+
     // Make motor2 follow motor1
     shooterMotor2.setControl(new Follower(shooterMotor1.getDeviceID(),  MotorAlignmentValue.Opposed)); 
-
+    hoodMotor2.setControl(new Follower(hoodMotor1.getDeviceID(), MotorAlignmentValue.Aligned));
+    
     // Stop the motor
     stopShooterMotor();
+    setHoodVoltage(0);
 
     // Prime the DataLog to reduce delay when first enabling the robot
     DataLogUtil.writeMessage(subsystemName, ": Constructed");
@@ -168,7 +261,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param percent output percent, -1.0 to 1.0 (positive = shoot direction, negative = reverse)
    */
   public void setShooterPercentOutput(double percent) {
-    velocityControlOn = false;
+    shooterVelocityControlOn = false;
     setpointRPM = 0.0;
     shooterMotor1.setControl(shooterVoltageControl.withOutput(percent * ShooterConstants.compensationVoltage));
   }
@@ -178,7 +271,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param velocityRPM the velocity, in rpm, to set the wheel to (positive = shoot, negative = reverse)
    */
   public void setShooterVelocity(double velocityRPM) {
-    velocityControlOn = true;
+    shooterVelocityControlOn = true;
     setpointRPM = velocityRPM;
     double motorRPS = (velocityRPM / 60.0) / ShooterConstants.gearRatio;
 
@@ -246,8 +339,8 @@ public class Shooter extends SubsystemBase implements Loggable {
    * Returns whether velocity control is on
    * @return true if velocity control is on. false if motor stopped or motor under percent control
    */
-  public boolean isVelocityControlOn(){
-    return velocityControlOn;
+  public boolean isShooterVelocityControlOn(){
+    return shooterVelocityControlOn;
   }
 
   /**
@@ -257,32 +350,103 @@ public class Shooter extends SubsystemBase implements Loggable {
   public double getShooterSetpointRPM() {
     return setpointRPM;
   }
-
+ 
   /**
-   * Sets PIDSVA feedforward and feedback parameters for the shooter motor.
-   * <p><b> This is a blocking call and will wait up to 200ms to apply. </b>
-   * @param kP volts / error in motor rps
-   * @param kI
-   * @param kD
-   * @param kS volts to overcome static friction
-   * @param kV volts / desired motor rps
-   * @param kA
+   * Reads the hood analog voltage
+   * @param motorNumber int which motor, 1 or 2, to get analog voltage for
+   * @return hood analog voltage 
+   * <p> The voltage of the analog pin (pin 3) of the Talon FXS data port. The analog pin reads a nominal voltage of 0-5V.
    */
-  public void setPIDSVA(double kP, double kI, double kD, double kS, double kV, double kA) {
-    shooterMotorConfiguration.Slot0.kP = kP;
-    shooterMotorConfiguration.Slot0.kI = kI;
-    shooterMotorConfiguration.Slot0.kD = kD;
-    shooterMotorConfiguration.Slot0.kS = kS;
-    shooterMotorConfiguration.Slot0.kV = kV;
-    shooterMotorConfiguration.Slot0.kA = kA;
-
-    shooterMotor1Configurator.apply(shooterMotorConfiguration);
-
-    String s = StringUtil.buildString("kP: " + kP + ", kI: " + kI + ", kD: " + kD + ", kS: " + kS + ", kV: " + kV + ", kA:" + kA);
-    SmartDashboard.putString("Shooter Applied PID", s);
-    DataLogUtil.writeMessage(subsystemName, ".setPIDSVA:  ", s);
+  public double getHoodAnalogVoltage(int motorNumber) {
+    return motorNumber == 1 ? hood1PositionVoltage.refresh().getValueAsDouble() : hood2PositionVoltage.refresh().getValueAsDouble();
   }
 
+  /**
+   * Reads the average analog voltage of both hood motors
+   * @return hood analog voltage 
+   * <p> The voltage of the analog pin (pin 3) of the Talon FXS data port. The analog pin reads a nominal voltage of 0-5V.
+   */
+  public double getHoodAnalogVoltage() {
+    return (getHoodAnalogVoltage(1) + getHoodAnalogVoltage(2)) / 2.0;
+  }
+
+  /**
+   * Set the hood voltage 
+   * @param voltage in volts [-12, 12]; positive is up and negative is down
+   */
+  public void setHoodVoltage(double voltage) {
+    hoodVoltageSetpoint = voltage;
+    hoodPositionControlOn = false;
+    hoodMotor1.setControl(hoodVoltageControl.withOutput(voltage));
+  }
+
+  public void setHoodAngleSetpoint(double angle) {
+    double safeAngle = MathUtil.clamp(angle, ShooterConstants.hoodMinimumAngle, ShooterConstants.hoodMaximumAngle);
+    hoodAngleSetpoint = safeAngle;
+    hoodPositionControlOn = true;
+  }
+  
+  /**
+   * Get estimated linear actuator length based on one hood motor's analog voltage, INCLUDING BASE OF ACTUATOR.
+   * @param motorNumber hood # to estimate
+   * @return estimated specified hood motor extension length, in inches
+   */
+  public double getHoodExtensionLength(int motorNumber) {
+    return ShooterConstants.hoodVoltageToExtensionLengthSlope * getHoodAnalogVoltage(motorNumber) + ShooterConstants.hoodActuatorMinExtensionLength;
+  }
+
+  /**
+   * Get estimated hood extension length based on both hood motors' analog voltage.
+   * @return average estimated hood motor extension length, in inches
+   */
+  public double getHoodExtensionLength() {
+    return (getHoodExtensionLength(1) + getHoodExtensionLength(2)) / 2.0;
+  }
+
+  /**
+   * Estimate current hood angle based on one hood motor's current length.
+   * @param motorNumber hood # to estimate
+   * @return estimated hood angle from specified motor's reading, in degrees
+   */
+  public double getHoodAngle(int motorNumber) {
+    return Math.toDegrees(
+      Math.acos(
+        ((ShooterConstants.radius1 * ShooterConstants.radius1) + (ShooterConstants.radius2 * ShooterConstants.radius2)
+          - (getHoodExtensionLength(motorNumber) * getHoodExtensionLength(motorNumber)))
+          / (2.0 * ShooterConstants.radius1 * ShooterConstants.radius2)
+      )
+    ) - (54.8122837191 - ShooterConstants.hoodMinimumAngle);
+  }
+
+  /**
+   * Converts a hood angle (deg) to a linear actuator extension (in)
+   * @param double hood angle, degrees
+   * @return double linear extension of the linear actuator, in inches
+   */
+  public double getHoodAngleToExtension(double angle) {
+    return Math.sqrt(
+      (ShooterConstants.radius2 * ShooterConstants.radius2) + (ShooterConstants.radius1 * ShooterConstants.radius1)
+        - Math.cos(Math.toRadians(angle)) * (2 * ShooterConstants.radius1 * ShooterConstants.radius2)
+    ) + ShooterConstants.hoodActuatorMinExtensionLength;
+  }
+
+  /**
+   * Estimate current hood angle based on both hood motors' current length.
+   * @return estimated hood angle, in degrees
+   */
+  public double getHoodAngle() {
+    return (getHoodAngle(1) + getHoodAngle(2)) / 2.0;
+  }
+
+
+  /**
+   * Returns the hood angle setpoint in degrees
+   * @return the hood angle setpoint in degrees
+   */
+  public double getHoodAngleSetpoint() {
+    return hoodAngleSetpoint;
+  }
+  
   /**
    * Gets the name of the subsystem.
    * @return the subsystem name
@@ -308,21 +472,32 @@ public class Shooter extends SubsystemBase implements Loggable {
     if (logWhenDisabled || !DriverStation.isDisabled()) {
       long timeNow = RobotController.getFPGATime();
 
-      dLogTemp1.append(getShooterTemp(1), timeNow);
-      dLogVoltage1.append(getShooterVoltage(1), timeNow);
-      dLogCurrent1.append(getShooterAmps(1), timeNow);
-      dLogVelocity1.append(getShooterVelocity(1), timeNow);
-      dLogPosition1.append(getShooterEncoderPosition(1), timeNow);
-      dLogSupplyVoltage1.append(shooter1SupplyVoltage.refresh().getValueAsDouble(), timeNow);
-      dLogTemp2.append(getShooterTemp(2), timeNow);
-      dLogVoltage2.append(getShooterVoltage(2), timeNow);
-      dLogCurrent2.append(getShooterAmps(2), timeNow);
-      dLogVelocity2.append(getShooterVelocity(2), timeNow);
-      dLogPosition2.append(getShooterEncoderPosition(2), timeNow);
-      dLogSupplyVoltage2.append(shooter2SupplyVoltage.refresh().getValueAsDouble(), timeNow);
-      dLogVelocitySet.append(getShooterSetpointRPM(), timeNow);
+      dLogShooter1Temp.append(getShooterTemp(1), timeNow);
+      dLogShooter1Voltage.append(getShooterVoltage(1), timeNow);
+      dLogShooter1Current.append(getShooterAmps(1), timeNow);
+      dLogShooter1Velocity.append(getShooterVelocity(1), timeNow);
+      dLogShooter1Position.append(getShooterEncoderPosition(1), timeNow);
+      dLogShooter1SupplyVoltage.append(shooter1SupplyVoltage.refresh().getValueAsDouble(), timeNow);
+      dLogShooter2Temp.append(getShooterTemp(2), timeNow);
+      dLogShooter2Voltage.append(getShooterVoltage(2), timeNow);
+      dLogShooter2Current.append(getShooterAmps(2), timeNow);
+      dLogShooter2Velocity.append(getShooterVelocity(2), timeNow);
+      dLogShooter2Position.append(getShooterEncoderPosition(2), timeNow);
+      dLogShooter2SupplyVoltage.append(shooter2SupplyVoltage.refresh().getValueAsDouble(), timeNow);
+      dLogShooterVelocitySet.append(getShooterSetpointRPM(), timeNow);
+      dLogShooterVelocityControl.append(shooterVelocityControlOn, timeNow);
 
-      dLogVelocityControl.append(velocityControlOn, timeNow);
+      dLogHood1AnalogVoltage.append(getHoodAnalogVoltage(1), timeNow);
+      dLogHood1Voltage.append(hood1MotorVoltage.refresh().getValueAsDouble(), timeNow);
+      dLogHood1SupplyVoltage.append(hood1SupplyVoltage.refresh().getValueAsDouble(), timeNow);
+      dLogHood1Current.append(hood1Current.refresh().getValueAsDouble(), timeNow);
+      dLogHood2AnalogVoltage.append(getHoodAnalogVoltage(2), timeNow);
+      dLogHood2Voltage.append(hood2MotorVoltage.refresh().getValueAsDouble(), timeNow);
+      dLogHood2SupplyVoltage.append(hood2SupplyVoltage.refresh().getValueAsDouble(), timeNow);
+      dLogHood2Current.append(hood2Current.refresh().getValueAsDouble(), timeNow);
+      dLogHoodAngleSetpoint.append(hoodAngleSetpoint, timeNow);
+      dLogHoodVoltageSetpoint.append(hoodVoltageSetpoint, timeNow);
+      dLogHoodPositionControlOn.append(hoodPositionControlOn, timeNow);
     }
   }
 
@@ -331,20 +506,35 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   private void checkForFaultConditions() {
     // Reset recordedStickyFault booleans if the Sticky Faults were cleared
-    recordedMotor1MissingStickyFault = recordedMotor1MissingStickyFault && RobotPreferences.isStickyFaultActive();
-    recordedMotor2MissingStickyFault = recordedMotor2MissingStickyFault && RobotPreferences.isStickyFaultActive();
+    recordedShooterMotor1MissingStickyFault = recordedShooterMotor1MissingStickyFault && RobotPreferences.isStickyFaultActive();
+    recordedShooterMotor2MissingStickyFault = recordedShooterMotor2MissingStickyFault && RobotPreferences.isStickyFaultActive();
+    
+    recordedHoodMotor1MissingStickyFault = recordedHoodMotor1MissingStickyFault && RobotPreferences.isStickyFaultActive();
+    recordedHoodMotor2MissingStickyFault = recordedHoodMotor2MissingStickyFault && RobotPreferences.isStickyFaultActive();
 
     // If we haven't recorded the sticky fault yet, then check fault condition
-    if(!recordedMotor1MissingStickyFault && !shooterMotor1.isConnected()) {
+    if(!recordedShooterMotor1MissingStickyFault && !shooterMotor1.isConnected()) {
       RobotPreferences.recordStickyFaults("Shooter-Motor1");
-      DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Motor 1 Missing");
-      recordedMotor1MissingStickyFault = true;
+      DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Shooter Motor 1 Missing");
+      recordedShooterMotor1MissingStickyFault = true;
     }
 
-    if(!recordedMotor2MissingStickyFault && !shooterMotor2.isConnected()) {
+    if(!recordedShooterMotor2MissingStickyFault && !shooterMotor2.isConnected()) {
       RobotPreferences.recordStickyFaults("Shooter-Motor2");
-      DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Motor 2 Missing");
-      recordedMotor2MissingStickyFault = true;
+      DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Shooter Motor 2 Missing");
+      recordedShooterMotor2MissingStickyFault = true;
+    }
+
+    if(!recordedHoodMotor1MissingStickyFault && !hoodMotor1.isConnected()) {
+      RobotPreferences.recordStickyFaults("Hood-Motor1");
+      DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Hood Motor 1 Missing");
+      recordedHoodMotor1MissingStickyFault = true;
+    }
+
+    if(!recordedHoodMotor2MissingStickyFault && !hoodMotor2.isConnected()) {
+      RobotPreferences.recordStickyFaults("Hood-Motor2");
+      DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Hood Motor 2 Missing");
+      recordedHoodMotor2MissingStickyFault = true;
     }
   }
 
@@ -355,20 +545,50 @@ public class Shooter extends SubsystemBase implements Loggable {
       updateLog(false);
     }
 
+    // Set hood angle with simple PID control 
+    if (hoodPositionControlOn) {
+      hoodMotor1.set(hoodPidController.calculate(getHoodAngle(), hoodAngleSetpoint));
+    }
+
+    // Stopping hood motion when at min/max extensions to prevent motor from dying
+    if (hoodPositionControlOn) {
+      if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle) 
+          || (getHoodAnalogVoltage(1) > ShooterConstants.hoodMaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)) {
+
+        setHoodVoltage(0);
+      }
+    } else {
+      if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodVoltageSetpoint < 0) 
+          || (getHoodAnalogVoltage(1) > ShooterConstants.hoodMaximumAnalogVoltageCutoff && hoodVoltageSetpoint > 0)) {
+
+        setHoodVoltage(0);
+      }
+    }
+
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 Voltage"), getShooterVoltage(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 Position Rev"), getShooterEncoderPosition(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 RPM"), getShooterVelocity(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 Temp C"), getShooterTemp(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 Voltage"), getShooterVoltage(2));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 Position Rev"), getShooterEncoderPosition(2));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 RPM"), getShooterVelocity(2));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 Temp C"), getShooterTemp(2));
+      SmartDashboard.putNumber(SHOOTER_1_VOLTAGE.value, getShooterVoltage(1));
+      SmartDashboard.putNumber(SHOOTER_1_POSITION_REV.value, getShooterEncoderPosition(1));
+      SmartDashboard.putNumber(SHOOTER_1_RPM.value, getShooterVelocity(1));
+      SmartDashboard.putNumber(SHOOTER_1_TEMP_C.value, getShooterTemp(1));
+      SmartDashboard.putNumber(SHOOTER_2_VOLTAGE.value, getShooterVoltage(2));
+      SmartDashboard.putNumber(SHOOTER_2_POSITION_REV.value, getShooterEncoderPosition(2));
+      SmartDashboard.putNumber(SHOOTER_2_RPM.value, getShooterVelocity(2));
+      SmartDashboard.putNumber(SHOOTER_2_TEMP_C.value, getShooterTemp(2));
 
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " Avg RPM"), (getShooterVelocity(1) + getShooterVelocity(2)) / 2.0);
+      SmartDashboard.putNumber(SHOOTER_AVG_RPM.value, (getShooterVelocity(1) + getShooterVelocity(2)) / 2.0);
 
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " Target RPM"), getShooterSetpointRPM());
-      SmartDashboard.putBoolean(StringUtil.buildString(subsystemName, " Velocity Control On"), isVelocityControlOn());
+      SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, getShooterSetpointRPM());
+      SmartDashboard.putBoolean(SHOOTER_VELOCITY_CONTROL_ON.value, isShooterVelocityControlOn());
+
+      SmartDashboard.putNumber(HOOD_1_VOLTAGE.value, hoodMotor1.getMotorVoltage(true).getValueAsDouble());
+      SmartDashboard.putNumber(HOOD_2_VOLTAGE.value, hoodMotor2.getMotorVoltage(true).getValueAsDouble());
+      SmartDashboard.putNumber(HOOD_1_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(1));
+      SmartDashboard.putNumber(HOOD_2_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(2));
+      SmartDashboard.putNumber(HOOD_1_LENGTH.value, getHoodExtensionLength(1));
+      SmartDashboard.putNumber(HOOD_2_LENGTH.value, getHoodExtensionLength(2));
+      SmartDashboard.putNumber(HOOD_1_ANGLE.value, getHoodAngle(1));
+      SmartDashboard.putNumber(HOOD_2_ANGLE.value, getHoodAngle(2));
+      SmartDashboard.putNumber(HOOD_ANGLE_CURRENT_SETPOINT.value, hoodAngleSetpoint);
     }
   }
 }
