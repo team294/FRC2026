@@ -374,14 +374,15 @@ public final class Constants {
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
     public static final double noFuelSeconds = 1.0;
+    public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
 
     public static final class SpindexerConstants {
       public static final double compensationVoltage = 12.0;
       public static final double spindexerGearRatio = 1.00;
       public static final double spindexerForwardPercent = 0.2; 
       public static final double spindexerReversePercent = -0.2;
-      public static final double spindexerShootRPM = 2946;  // CALIBRATED 3/10: 2946
-      public static final double spindexerReverseRPM = -2946;  // TODO CALIBRATE
+      public static final double spindexerShootRPM = 2612.0;  // CALIBRATED 3/10: 2612
+      public static final double spindexerReverseRPM = -spindexerShootRPM;  // TODO CALIBRATE
 
       public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
       public static final double kI = 0.0;
@@ -394,16 +395,16 @@ public final class Constants {
     // TODO calibrate uptake
     public static final class UptakeConstants {
       public static final double compensationVoltage = 12.0;
-      public static final double uptakeGearRatio = 1.0;
+      public static final double uptakeGearRatio = 1.0; // doesn't matter b/c we use motor's max output instead of relying on mechanism
       public static final double uptakeForwardPercent = 0.2;
       public static final double uptakeReversePercent = 0.2;
-      public static final double uptakeShootRPM = 7500; // CALIBRATED 3/10: 7500
+      public static final double uptakeShootRPM = 6650; // CALIBRATED 3/10: 6650
 
-      public static final double kP = 1.5;    // CALIBRATED 3/10: 1.5   TODO tune to try to make it keep its speed
+      public static final double kP = 4.0;    // CALIBRATED 3/13: 4.0
       public static final double kI = 0.0;
       public static final double kD = 0.0;
       public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
-      public static final double kV = 0.092;  // CALIBRATED 3/10: 0.092
+      public static final double kV = 0.17;   // CALIBRATED 3/13: 0.17
       public static final double kA = 0.0;
     }
   }
@@ -415,11 +416,11 @@ public final class Constants {
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
-    public static final double ShooterkP = 0.17;    // volts / error in motor rps
+    public static final double ShooterkP = 0.35;   // CALIBRATED 3/13: 0.35 - volts / error in motor rps
     public static final double ShooterkI = 0;
     public static final double ShooterkD = 0;
-    public static final double ShooterkS = 0.224;   // CALIBRATED 3/13: 0.224 - volts to overcome static friction
-    public static final double ShooterkV = 0.118; // CALIBRATED 3/13: 0.118 volts / desired motor rps
+    public static final double ShooterkS = 0.224;  // CALIBRATED 3/13: 0.224 - volts to overcome static friction
+    public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
     public static final double ShooterkA = 0;
 
     public static final double velocityErrorTolerance = 100;
