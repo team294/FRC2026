@@ -137,6 +137,9 @@ public final class Constants {
     private static final String shooterString = "Shooter";
 
     public enum ElasticKey {
+
+      STOP_ALL_MOTORS("Stop All Motors"),
+
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
