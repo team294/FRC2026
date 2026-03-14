@@ -119,10 +119,20 @@ public final class Constants {
   }
 
   public static final class ElasticKeyConstants {
-    private static final String setPercentCmdString = "Set Percent";
-    private static final String setPercentInputString = "Set Percent Input";
-    private static final String setVelocityCmdString = "Set Velocity";
-    private static final String setVelocityInputString = "Set Velocity Input";
+    private static final String setPercentCmdString = " Set Percent";
+    private static final String setPercentInputString = " Set Percent Input";
+    private static final String setVelocityCmdString = " Set Velocity";
+    private static final String setVelocityInputString = " Set Velocity Input";
+    private static final String setAngleCmdString = " Set Angle";
+    private static final String setAngleInputString = " Set Angle Input";
+    private static final String stopCmdString = " Stop";
+
+    private static final String velocityString = " Velocity";
+    private static final String rpmString = " RPM";
+    private static final String targetRpmString = " Target RPM";
+    private static final String tempString = " Temp";
+    private static final String angleString = " Angle";
+    private static final String targetAngleString = " Target Angle";
 
     private static final String intakeRollerString = "Intake Roller";
     private static final String intakeDeployString = "Intake Deploy";
@@ -133,47 +143,47 @@ public final class Constants {
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
 
-      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + " " + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + " " + ElasticKeyConstants.setPercentInputString),
-      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + " Stop"),
+      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
+      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.stopCmdString),
 
-      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + " Velocity"),
+      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.velocityString),
 
-      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentInputString),
-      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + " Stop"),
-      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + " Set Angle"),
-      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + " Set Angle Input"),
+      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentInputString),
+      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.stopCmdString),
+      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleCmdString),
+      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleInputString),
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.intakeDeployString + " Calibrate Manual"),
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(ElasticKeyConstants.intakeDeployString + " Calibrate Manual Input Angle"),
       INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(ElasticKeyConstants.intakeDeployString + " Calibration Ramp"),
 
-      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + " Velocity"),
+      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.velocityString),
       INTAKE_DEPLOY_IS_CANCODER_CONNECTED(ElasticKeyConstants.intakeDeployString + " CANcoder Connected?"),
       INTAKE_DEPLOY_IS_CALIBRATED(ElasticKeyConstants.intakeDeployString + " Calibrated?"),
-      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + " Target Angle"),
-      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + " Angle"),
+      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.targetAngleString),
+      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.angleString),
       INTAKE_DEPLOY_RAW_ROTATIONS(ElasticKeyConstants.intakeDeployString + " Raw Rotations"),
 
-      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + " Stop"),
-      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentCmdString),
-      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentInputString),
-      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityCmdString),
-      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityInputString),
+      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.stopCmdString),
+      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentCmdString),
+      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentInputString),
+      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityCmdString),
+      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityInputString),
 
-      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + " RPM"),
-      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + " Target RPM"),
-      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + " Temp"),
+      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.rpmString),
+      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.targetRpmString),
+      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.tempString),
 
-      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + " Stop"),
-      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentCmdString),
-      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentInputString),
-      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityCmdString),
-      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityInputString),
+      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.stopCmdString),
+      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentCmdString),
+      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentInputString),
+      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdString),
+      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityInputString),
 
-      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
-      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
-      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp");
+      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.rpmString),
+      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.targetRpmString),
+      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.tempString);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
