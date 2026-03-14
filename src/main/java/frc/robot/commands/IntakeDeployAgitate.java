@@ -19,6 +19,7 @@ public class IntakeDeployAgitate extends Command {
    */
   public IntakeDeployAgitate(Intake intake) {
     this.intake = intake;
+
     addRequirements(intake);
   }
 
@@ -26,6 +27,7 @@ public class IntakeDeployAgitate extends Command {
   @Override
   public void initialize() {
     counter = 0;
+    intake.stopIntakeRoller();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -11,6 +11,7 @@ import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.ShooterSetVelocity.VelocityType;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
@@ -217,8 +218,15 @@ public class RobotContainer {
     // left[2].whileTrue(new FeedShooter(intake, feeder));
     left[2].whileTrue(new ParallelCommandGroup(
       new FeedShooter(feeder),
-      new IntakeDeployAgitate(intake)
+      sequence(
+        waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
+        new IntakeDeployAgitate(intake)
+      )
     ));
+
+    right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+
+    right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
 
   /**
@@ -243,20 +251,16 @@ public class RobotContainer {
     // ex: coP[1].onTrue(new command(param1, param2, etc));
 
     // Send intake deploy out manually while held, stop when released
-    coP[1].onTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, true, intake));
-    coP[1].onFalse(new IntakeDeploySetPercent(0, true, intake));
+    coP[1].whileTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
     // Bring intake deploy in manually while held, stop when released
-    coP[2].onTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, true, intake));
-    coP[2].onFalse(new IntakeDeploySetPercent(0, true, intake));
+    coP[2].whileTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
     // Spin rollers inwards while held, stop when released
-    coP[3].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake));
-    coP[3].onFalse(new IntakeRollerSetPercent(0, true, intake));
+    coP[3].whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
 
     // Spin rollers outwards while held, stop when released
-    coP[4].onTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, true, intake));
-    coP[4].onFalse(new IntakeRollerSetPercent(0, true, intake));
+    coP[4].whileTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, false, intake));
 
 
     // Reset Pose
@@ -283,6 +287,10 @@ public class RobotContainer {
       )
     );
     coP[6].onFalse(new FeederStop(feeder));
+
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shooterPercent, VelocityType.runForever, shooter));
+
+    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShooterPercent, VelocityType.runForever, shooter));
   }
 
   private void configureTriggers() {
