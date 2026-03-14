@@ -8,12 +8,17 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.robot.Constants.*;
-import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
+import frc.robot.Constants.FeederConstants.SpindexerConstants;
+import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
+
+import static frc.robot.Constants.FeederConstants.FeederElasticKey.*;
+import static frc.robot.Constants.FeederConstants.UptakeConstants.UptakeElasticKey.*;
+import static frc.robot.Constants.FeederConstants.SpindexerConstants.SpindexerElasticKey.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import static frc.robot.Constants.IntakeConstants.IntakeElasticKey.*;
@@ -26,6 +31,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -47,7 +53,7 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
   private final Intake intake = new Intake("Intake");
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
-  // private final Feeder feeder = new Feeder("Feeder");
+  private final Feeder feeder = new Feeder("Feeder");
   // private final Shooter shooter = new Shooter("Shooter");
 
   // Define controllers
@@ -144,6 +150,15 @@ public class RobotContainer {
     // SmartDashboard.putData("Feeder Set Velocity", new FeederSetVelocity(FeederSetVelocity.VelocityType.runForever, feeder));
     // SmartDashboard.putData("Feeder Set Velocity 500 RPM", new FeederSetVelocity(500.0, FeederSetVelocity.VelocityType.runForever, feeder));
     // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
+
+    // Feeder
+    SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
+
+    SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
     
     // Shooter
     // SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercent(shooter));
@@ -154,6 +169,9 @@ public class RobotContainer {
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
+
+    //  ---  Sequences  ---
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
   }
  
   /**
@@ -181,7 +199,7 @@ public class RobotContainer {
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
     xbLT.onTrue(new IntakeSequence(intake));
-    xbLB.onTrue(new IntakeRollerSetPercent(0, true, intake));
+    xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
   }
 
@@ -201,7 +219,11 @@ public class RobotContainer {
 
     left[1].onTrue(new IntakeSequence(intake));
 
-    left[2].onTrue(new DriveResetDriverAngle(driveTrain));
+    // left[2].whileTrue(new FeedShooter(intake, feeder));
+    left[2].whileTrue(new ParallelCommandGroup(
+      new FeedShooter(feeder),
+      new IntakeDeployAgitate(intake)
+    ));
   }
 
   /**
@@ -247,6 +269,25 @@ public class RobotContainer {
       new DriveResetPose(180, false, driveTrain), 
       new DriveResetPose(0, false, driveTrain), 
       () -> allianceSelection.getAlliance() == Alliance.Red));
+
+
+    // Spin uptake then spindexer to feed shooter, stop when released
+    coP[5].onTrue(
+      sequence(
+        new UptakeSetVelocity(UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
+    coP[5].onFalse(new FeederStop(feeder));
+
+    // Spin uptake then spindexer away from shooter
+    coP[6].onTrue(
+      sequence(
+        new UptakeSetVelocity(-UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(-SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
+    coP[6].onFalse(new FeederStop(feeder));
   }
 
   private void configureTriggers() {
@@ -280,10 +321,10 @@ public class RobotContainer {
     DataLogUtil.writeMessageEcho("Disabled: Robot disabled");
 
     driveTrain.stopMotors();             // SAFETY: Turn off any closed loop control that may be running, so the robot does not move when re-enabled
+    feeder.stopUptake();
+    feeder.stopSpindexer();
     intake.stopIntakeDeploy();
     intake.stopIntakeRoller();
-    // feeder.stopFeederMotor();
-    // shooter.stopShooterMotor();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode
     driveTrain.setVisionForOdometryState(true);
 

@@ -85,7 +85,6 @@ public class IntakeDeploySetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println(intake.getIntakeDeployAngle() + " " + intake.getIntakeDeployTargetAngle());
     return !intake.isIntakeDeployCalibrated() || Math.abs(intake.getIntakeDeployAngle() - intake.getIntakeDeployTargetAngle()) < IntakeConstants.deploySetAngleTolerance;
   }
 }

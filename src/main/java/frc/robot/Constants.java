@@ -79,6 +79,9 @@ public final class Constants {
     public static final int CANTurretEncoder1 = 14;
     public static final int CANTurretEncoder2 = 15;
 
+    public static final int CANRangeEntry = 16;
+    public static final int CANRangeExit = 17;
+
     public static final int CANPigeonGyro = 22;
 
     public static final int CANdle = 25;
@@ -280,6 +283,8 @@ public final class Constants {
     public enum IntakeDeployAngle {
       LOWER_LIMIT(-85.6),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // TODO TEST VALUE
+      AGITATE_LOWER(-70.0),
+      AGITATE_UPPER(-40.0),
       START_CONFIG(73.9),  // TODO TEST VALUE
       UPPER_LIMIT(79.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
 
@@ -320,17 +325,80 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double compensationVoltage = 12.0;
-    public static final double feederGearRatio = 1.0;
-    public static final double feedPercent = 0.2; // TODO find a good setpoint if using pctOut
-    public static final double kP = 0.45;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.249;
-    public static final double kV = 0.082;
-    public static final double kA = 0.0;
-    public static final double velocityErrorTolerance = 100.0; // TODO tune if necessary
+    public enum FeederElasticKey {
+      FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence");
 
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final String value;
+      FeederElasticKey(String value) { this.value = value; }
+    }
+
+    public static final double reverseSpindexerSeconds = 0.5;
+    public static final double noFuelSeconds = 1.0;
+
+    public static final class SpindexerConstants {
+      public static final double compensationVoltage = 12.0;
+      public static final double spindexerGearRatio = 1.00;
+      public static final double spindexerForwardPercent = 0.2; 
+      public static final double spindexerReversePercent = -0.2;
+      public static final double spindexerShootRPM = 2946;  // CALIBRATED 3/10: 2946
+      public static final double spindexerReverseRPM = -2946;  // TODO CALIBRATE
+
+      public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kS = 0.26;  // CALIBRATED 3/7/26: 0.26
+      public static final double kV = 0.12;  // CALIBRATED 3/7/26: 0.12
+      public static final double kA = 0.0;
+
+      public enum SpindexerElasticKey {
+        SPINDEXER_CMD_STOP("Spindexer Stop"),
+        SPINDEXER_CMD_SET_PERCENT("Spindexer Set Percent"),
+        SPINDEXER_CMD_SET_PERCENT_INPUT(SpindexerElasticKey.SPINDEXER_CMD_SET_PERCENT.value + " Input"),
+        SPINDEXER_CMD_SET_VELOCITY("Spindexer Set Velocity"),
+        SPINDEXER_CMD_SET_VELOCITY_INPUT(SpindexerElasticKey.SPINDEXER_CMD_SET_VELOCITY.value + " Input"),
+
+        SPINDEXER_RPM("Spindexer RPM"),
+        SPINDEXER_TARGET_RPM("Spindexer Target RPM"),
+        SPINDEXER_TEMP("Spindexer Temp");
+
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
+        public final String value;
+        SpindexerElasticKey(String value) { this.value = value; }
+      }
+    }
+
+    // TODO calibrate uptake
+    public static final class UptakeConstants {
+      public static final double compensationVoltage = 12.0;
+      public static final double uptakeGearRatio = 1.0;
+      public static final double uptakeForwardPercent = 0.2;
+      public static final double uptakeReversePercent = 0.2;
+      public static final double uptakeShootRPM = 7500; // CALIBRATED 3/10: 7500
+
+      public static final double kP = 1.5;    // CALIBRATED 3/10: 1.5   TODO tune to try to make it keep its speed
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
+      public static final double kV = 0.092;  // CALIBRATED 3/10: 0.092
+      public static final double kA = 0.0;
+
+      public enum UptakeElasticKey {
+        UPTAKE_CMD_STOP("Uptake Stop"),
+        UPTAKE_CMD_SET_PERCENT("Uptake Set Percent"),
+        UPTAKE_CMD_SET_PERCENT_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_PERCENT.value + " Input"),
+        UPTAKE_CMD_SET_VELOCITY("Uptake Set Velocity"),
+        UPTAKE_CMD_SET_VELOCITY_INPUT(UptakeElasticKey.UPTAKE_CMD_SET_VELOCITY.value + " Input"),
+
+        UPTAKE_RPM("Uptake RPM"),
+        UPTAKE_TARGET_RPM("Uptake Target RPM"),
+        UPTAKE_TEMP("Uptake Temp");
+
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
+        public final String value;
+        UptakeElasticKey(String value) { this.value = value; }
+      }
+    }
   }
   
   public static final class ShooterConstants {
@@ -390,6 +458,11 @@ public final class Constants {
     public static final TrapezoidProfileBCR.Constraints kDriveProfileConstraints =
     new TrapezoidProfileBCR.Constraints(
           SwerveConstants.kNominalSpeedMetersPerSecond, SwerveConstants.kNominalAccelerationMetersPerSecondSquare);
+  }
+
+  public static final class CANRangeConstants {
+    public static final double proximityThreshold = 0.15; // CALIBRATED 3/10: 0.15
+    public static final double maxDistanceError = 0.01;
   }
 
   // Colors for the LEDs based on different robot states
