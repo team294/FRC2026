@@ -146,9 +146,14 @@ public final class Constants {
     private static final String shooterString = "Shooter";
 
     public enum ElasticKey {
+
+      STOP_ALL_MOTORS("Stop All Motors"),
+
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
+      
+      INTAKE_STOP("Intake Stop"),
 
       INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
       INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
@@ -192,11 +197,18 @@ public final class Constants {
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
       UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
 
+      UPTAKE_STOP("Feeder Stop"),
+
       SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentCmdString),
       SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentInputString),
       SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityCmdString),
       SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityInputString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopCmdString);
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopCmdString),
+
+      MATCH_TIMER("Match Timer"),
+      SHIFT_TIMER("Shift Timer"),
+      IS_BLUE_SHIFT("Is Blue Shift"),
+      IS_YOUR_SHIFT("Is Your Shift");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
