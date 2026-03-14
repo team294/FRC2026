@@ -100,6 +100,9 @@ public final class Constants {
     public static final int CANClimberMotor1 = 37;
     public static final int CANClimberMotor2 = 38;
 
+    public static final int CANHoodMotor1 = 39;
+    public static final int CANHoodMotor2 = 40;
+
     // DIO Ports (add sensors if needed)
 
     // PWM Ports
@@ -410,7 +413,7 @@ public final class Constants {
     public static final double shooterPercent = 0.2; 
     public static final double reverseShooterPercent = -0.1;
 
-    public static final double gearRatio = 1.0; // Turn ratio from the motor pinion to the shooter wheel
+    public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
     public static final double ShooterkP = 0.4;    // volts / error in motor rps
     public static final double ShooterkI = 0.0;
