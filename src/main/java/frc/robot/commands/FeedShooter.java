@@ -51,11 +51,11 @@ public class FeedShooter extends Command {
 
       // time without Fuel is 0 if we have Fuel, so reset
       if (feeder.isDetected(0)) {  // check exit sensor b/c entry could have a Fuel while jammed 
-        timer.reset();  
+        timer.reset();
       } 
 
       // forwards but no fuel? spin in reverse
-      else if (!reversed && timer.get() >= FeederConstants.noFuelSeconds) {
+      if (!reversed && timer.get() >= FeederConstants.noFuelSeconds) {
         feeder.setSpindexerPercentOutput(SpindexerConstants.spindexerReversePercent);
         reversed = true;
         reverseTimer.restart();  // start tracking time spent in reverse 
@@ -64,6 +64,7 @@ public class FeedShooter extends Command {
       // reversed for long enough, time to start moving forwards again
       else if (reversed && reverseTimer.get() >= FeederConstants.reverseSpindexerSeconds) {
         feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
+        timer.reset();  // give it time to spin up before we start caring about Fuel again
         reversed = false;
       }
     }
