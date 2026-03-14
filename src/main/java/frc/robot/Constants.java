@@ -415,12 +415,12 @@ public final class Constants {
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
-    public static final double ShooterkP = 0.4;    // volts / error in motor rps
-    public static final double ShooterkI = 0.0;
-    public static final double ShooterkD = 0.0;
-    public static final double ShooterkS = 0.1944;   // volts to overcome static friction
-    public static final double ShooterkV = 0.1146; // volts / desired motor rps
-    public static final double ShooterkA = 0.0;
+    public static final double ShooterkP = 0.17;    // volts / error in motor rps
+    public static final double ShooterkI = 0;
+    public static final double ShooterkD = 0;
+    public static final double ShooterkS = 0.224;   // CALIBRATED 3/13: 0.224 - volts to overcome static friction
+    public static final double ShooterkV = 0.118; // CALIBRATED 3/13: 0.118 volts / desired motor rps
+    public static final double ShooterkA = 0;
 
     public static final double velocityErrorTolerance = 100;
   }
