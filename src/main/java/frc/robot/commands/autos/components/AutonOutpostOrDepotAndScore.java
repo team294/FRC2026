@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants.RoutineSideType;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.StopType;
+import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.utilities.AllianceSelection;
@@ -26,6 +27,7 @@ public class AutonOutpostOrDepotAndScore extends SequentialCommandGroup {
    */
   public AutonOutpostOrDepotAndScore(RoutineSideType routineSide, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
     addCommands(
+      new DataLogMessage(false, "AutonOutpostOrDepotAndScore: start"),
       // If we are on the right side, we go to the outpost. Otherwise, we are on the left side and we go to the depot
       either(
         sequence(
@@ -36,7 +38,8 @@ public class AutonOutpostOrDepotAndScore extends SequentialCommandGroup {
           new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(TrajectoryName.ShootTrenchToDepot), driveTrain, alliance)
           // shoot
         ),
-        () -> routineSide == RoutineSideType.kRightSide)
+        () -> routineSide == RoutineSideType.kRightSide),
+      new DataLogMessage(false, "AutonOutpostOrDepotAndScore: end")
     );
   }
 }

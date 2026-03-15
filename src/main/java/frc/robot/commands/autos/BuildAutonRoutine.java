@@ -17,6 +17,7 @@ import frc.robot.Constants.AutoConstants.BallPickupTrajType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.Constants.AutoConstants.RoutineSideType;
 import frc.robot.Constants.AutoConstants.ShootPreloadType;
+import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveResetPose;
 import frc.robot.commands.autos.components.AutonCollectBalls;
 import frc.robot.commands.autos.components.AutonDriveAndShoot;
@@ -42,12 +43,15 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
     // Initial pose: if shooting preload = inital pose of first trajectory - robot length + front bumper thickness
     //           if not shooting preload = inital pose of first trajectory
     Pose2d initialTrajectoryPose = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchToCollectStart).getInitialPose(alliance.getAlliance() == Alliance.Red).get();
-    Pose2d initalRobotStartPose = shootPreload == ShootPreloadType.kShootPreload ?  initialTrajectoryPose.transformBy(new Transform2d(-RobotDimensions.robotLength + RobotDimensions.frontBumperThickness, 0, Rotation2d.kZero)): initialTrajectoryPose;
+    Pose2d initalRobotStartPose = shootPreload == ShootPreloadType.kShootPreload ?  
+                                initialTrajectoryPose.transformBy(new Transform2d(-RobotDimensions.robotLength + RobotDimensions.frontBumperThickness, 0, Rotation2d.kZero)) : 
+                                initialTrajectoryPose;
     
     // If we are ending auto by going to the outpost/depot, don't shoot until at the outpost/depot (minimize time wasted)
     boolean shoot = autoEnd != AutoEndType.kOutpostOrDepot;
 
     addCommands(
+      new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
       // First cycle
       new DriveResetPose(initalRobotStartPose, false, driveTrain),
       new AutonDriveToNeutralZone(shootPreload, leftSide, driveTrain, alliance, cache),

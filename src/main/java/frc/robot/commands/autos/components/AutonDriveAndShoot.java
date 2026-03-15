@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.StopType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
+import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -26,6 +27,7 @@ public class AutonDriveAndShoot extends SequentialCommandGroup {
   /** Creates a new AutonDriveAndShoot. */
   public AutonDriveAndShoot(ReturnToAllianceType returnToAllianceZone, boolean leftSide, boolean shoot, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
     addCommands(
+      new DataLogMessage(false, "AutonDriveAndShoot: start"),
       // intake off
       either( // TODO replace diff trajectory with enhanced if statement?
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootBump), driveTrain, alliance), 
@@ -39,7 +41,8 @@ public class AutonDriveAndShoot extends SequentialCommandGroup {
       either(
         none(), // shoot
         none(), // don't shoot
-        () -> shoot)
+        () -> shoot),
+      new DataLogMessage(false, "AutonDriveAndShoot: start")
     );
   }
 }
