@@ -1849,30 +1849,6 @@
             ]
           },
           {
-            "title": "Left Vision",
-            "x": 1536.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": []
-          },
-          {
-            "title": "Right Vision",
-            "x": 1664.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": []
-          },
-          {
             "title": "Front Swerve Modules",
             "x": 0.0,
             "y": 0.0,
@@ -2250,10 +2226,10 @@
         "containers": [
           {
             "title": "Stop All Motors",
-            "x": 0.0,
-            "y": 384.0,
-            "width": 1024.0,
-            "height": 384.0,
+            "x": 128.0,
+            "y": 512.0,
+            "width": 512.0,
+            "height": 256.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Stop All Motors",
