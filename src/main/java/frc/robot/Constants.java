@@ -134,7 +134,12 @@ public final class Constants {
     private static final String intakeDeployString = "Intake Deploy";
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
-    private static final String shooterString = "Shooter";
+    private static final String shooter1String = "Shooter 1";
+    private static final String shooter2String = "Shooter 2";
+    private static final String hood1String = "Hood 1";
+    private static final String hood2String = "Hood 2";
+    private static final String shooterWholeString = "Shooter";
+    private static final String hoodWholeString = "Hood";
 
     public enum ElasticKey {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
@@ -183,50 +188,48 @@ public final class Constants {
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
       UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
 
-      SHOOTER_1_VOLTAGE("Shooter 1 Voltage"),
-      SHOOTER_1_POSITION_REV("Shooter 1 Position Rev"),
-      SHOOTER_1_RPM("Shooter 1 RPM"),
-      SHOOTER_1_TEMP_C("Shooter 1 Temp C"),
+      SHOOTER_1_VOLTAGE(ElasticKeyConstants.shooter1String + " Voltage"),
+      SHOOTER_1_POSITION_REV(ElasticKeyConstants.shooter1String + " Position Rev"),
+      SHOOTER_1_RPM(ElasticKeyConstants.shooter1String + " RPM"),
+      SHOOTER_1_TEMP_C(ElasticKeyConstants.shooter1String + " Temp C"),
 
-      SHOOTER_2_VOLTAGE("Shooter 2 Voltage"),
-      SHOOTER_2_POSITION_REV("Shooter 2 Position Rev"),
-      SHOOTER_2_RPM("Shooter 2 RPM"),
-      SHOOTER_2_TEMP_C("Shooter 2 Temp C"),
+      SHOOTER_2_VOLTAGE(ElasticKeyConstants.shooter2String + " Voltage"),
+      SHOOTER_2_POSITION_REV(ElasticKeyConstants.shooter2String + " Position Rev"),
+      SHOOTER_2_RPM(ElasticKeyConstants.shooter2String + " RPM"),
+      SHOOTER_2_TEMP_C(ElasticKeyConstants.shooter2String + " Temp C"),
 
-      SHOOTER_AVG_RPM("Shooter Avg RPM"),
-      SHOOTER_TARGET_RPM("Shooter Target RPM"),
+      SHOOTER_AVG_RPM(ElasticKeyConstants.shooterWholeString + " Avg RPM"),
+      SHOOTER_TARGET_RPM(ElasticKeyConstants.shooterWholeString + " Target RPM"),
 
-      SHOOTER_PERCENT_SETPOINT("Shooter Percent Setpoint"),
-      SHOOTER_RPM_SETPOINT("Shooter RPM Setpoint"),
+      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setPercentInputString),
+      SHOOTER_CMD_SET_VELOCITY_500_RPM(ElasticKeyConstants.shooterWholeString + " Set Velocity 500 rpm"),
+      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setVelocityInputString),
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.stopString),
 
-      SHOOTER_CMD_SET_PERCENT("Shooter Set Percent"),
-      SHOOTER_CMD_SET_VELOCITY_500_RPM("Shooter Set Velocity 500 rpm"),
-      SHOOTER_CMD_SET_VELOCITY("Shooter Set Velocity"),
-      SHOOTER_CMD_STOP("Shooter Stop"),
-      SHOOTER_CMD_SET_PIDSVA("Shooter set PIDSVA"),
+      SHOOTER_VELOCITY_CONTROL_ON(ElasticKeyConstants.shooterWholeString + " Velocity Control On"),
 
-      SHOOTER_VELOCITY_CONTROL_ON("Shooter Velocity Control On"),
-
-      HOOD_1_VOLTAGE("Hood 1 Voltage"),
-      HOOD_2_VOLTAGE("Hood 2 Voltage"),
-      HOOD_1_ANALOG_VOLTAGE("Hood 1 Analog Voltage"),
-      HOOD_2_ANALOG_VOLTAGE("Hood 2 Analog Voltage"),
-      HOOD_1_ANGLE("Hood 1 Angle Deg"),
-      HOOD_2_ANGLE("Hood 2 Angle Deg"),
-      HOOD_1_LENGTH("Hood 1 Extension Length"),
-      HOOD_2_LENGTH("Hood 2 Extension Length"),
-      HOOD_1_CURRENT("Hood 1 Current"),
-      HOOD_2_CURRENT("Hood 2 Current"),
+      HOOD_1_VOLTAGE(ElasticKeyConstants.hood1String + " Voltage"),
+      HOOD_2_VOLTAGE(ElasticKeyConstants.hood2String + " Voltage"),
+      HOOD_1_ANALOG_VOLTAGE(ElasticKeyConstants.hood1String + " Analog Voltage"),
+      HOOD_2_ANALOG_VOLTAGE(ElasticKeyConstants.hood2String + " Analog Voltage"),
+      HOOD_1_ANGLE(ElasticKeyConstants.hood1String + " Angle Deg"),
+      HOOD_2_ANGLE(ElasticKeyConstants.hood2String + " Angle Deg"),
+      HOOD_1_LENGTH(ElasticKeyConstants.hood1String + " Extension Length"),
+      HOOD_2_LENGTH(ElasticKeyConstants.hood2String + " Extension Length"),
+      HOOD_1_CURRENT(ElasticKeyConstants.hood1String + " Current"),
+      HOOD_2_CURRENT(ElasticKeyConstants.hood2String + " Current"),
       HOOD_ANGLE_CURRENT_SETPOINT("Current Hood Angle Setpoint"),
 
-      HOOD_ANGLE_SETPOINT("Hood Angle Setpoint"),
-      HOOD_VOLTAGE_SETPOINT("Hood Motor Voltage"),
+      HOOD_ANGLE_SETPOINT(ElasticKeyConstants.hoodWholeString + " Angle Setpoint"),
+      HOOD_VOLTAGE_SETPOINT(ElasticKeyConstants.hoodWholeString + " Motor Voltage"),
 
-      HOOD_CMD_SET_ANGLE_ADV("Hood Set Angle Adv"),
-      HOOD_CMD_SET_ANGLE_BASIC("Hood Set Angle Basic"),
-      HOOD_CMD_SET_PERCENT("Hood Set Percent Output"),
-      HOOD_CMD_SET_VOLTAGE("Hood Set Voltage"),
-      HOOD_CMD_STOP("Hood Stop");
+      HOOD_CMD_SET_ANGLE_ADV(ElasticKeyConstants.hoodWholeString + " Set Angle Adv"),
+      HOOD_CMD_SET_ANGLE_BASIC(ElasticKeyConstants.hoodWholeString + " Set Angle Basic"),
+      HOOD_CMD_SET_PERCENT(ElasticKeyConstants.hoodWholeString + " Set Percent Output"),
+      HOOD_CMD_SET_VOLTAGE(ElasticKeyConstants.hoodWholeString + " Set Voltage"),
+      HOOD_CMD_STOP(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.stopString);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
