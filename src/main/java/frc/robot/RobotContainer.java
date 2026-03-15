@@ -11,6 +11,7 @@ import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.HoodSetAngle.EndType;
 import frc.robot.commands.ShooterSetVelocity.VelocityType;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
@@ -140,7 +141,7 @@ public class RobotContainer {
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
     SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData("Intake Deploy Set Percernt", new IntakeDeploySetPercent(false, intake));
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_PERCENT.value, new IntakeDeploySetPercent(false, intake));
 
     // Feeder
     // SmartDashboard.putData("Feeder Set Percent", new FeederSetPercent(feeder));
@@ -162,6 +163,11 @@ public class RobotContainer {
     SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
     SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
+
+    SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE.value, new HoodSetVoltage(shooter));
+    SmartDashboard.putData(HOOD_CMD_SET_PERCENT.value, new HoodSetPercent(true, shooter));
+    SmartDashboard.putData(HOOD_CMD_SET_ANGLE.value, new HoodSetAngle(EndType.runForever, shooter));
+    SmartDashboard.putData(HOOD_CMD_STOP.value, new HoodSetVoltage(shooter, 0));
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());

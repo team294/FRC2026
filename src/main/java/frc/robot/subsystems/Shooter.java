@@ -392,7 +392,8 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return estimated specified hood motor extension length, in inches
    */
   public double getHoodExtensionLength(int motorNumber) {
-    return ShooterConstants.hoodVoltageToExtensionLengthSlope * getHoodAnalogVoltage(motorNumber) + ShooterConstants.hoodActuatorMinExtensionLength;
+    return (motorNumber == 1) ? ShooterConstants.hood1VoltageToExtensionLengthSlope * getHoodAnalogVoltage(1) + ShooterConstants.hoodActuatorMinExtensionLength
+    : ShooterConstants.hood2VoltageToExtensionLengthSlope * getHoodAnalogVoltage(2) + ShooterConstants.hoodActuatorMinExtensionLength;
   }
 
   /**
@@ -553,13 +554,17 @@ public class Shooter extends SubsystemBase implements Loggable {
     // Stopping hood motion when at min/max extensions to prevent motor from dying
     if (hoodPositionControlOn) {
       if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle) 
-          || (getHoodAnalogVoltage(1) > ShooterConstants.hoodMaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)) {
+          || (getHoodAnalogVoltage(1) > ShooterConstants.hood1MaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)
+          || (getHoodAnalogVoltage(2) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle)
+          || (getHoodAnalogVoltage(2) > ShooterConstants.hood2MaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)) {
 
         setHoodVoltage(0);
       }
     } else {
       if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodVoltageSetpoint < 0) 
-          || (getHoodAnalogVoltage(1) > ShooterConstants.hoodMaximumAnalogVoltageCutoff && hoodVoltageSetpoint > 0)) {
+          || (getHoodAnalogVoltage(1) > ShooterConstants.hood1MaximumAnalogVoltageCutoff && hoodVoltageSetpoint > 0)
+          || (getHoodAnalogVoltage(2) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodVoltageSetpoint < 0) 
+          || (getHoodAnalogVoltage(2) > ShooterConstants.hood2MaximumAnalogVoltageCutoff && hoodVoltageSetpoint > 0)) {
 
         setHoodVoltage(0);
       }

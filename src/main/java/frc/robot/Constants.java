@@ -222,13 +222,13 @@ public final class Constants {
       HOOD_2_CURRENT(ElasticKeyConstants.hood2String + " Current"),
       HOOD_ANGLE_CURRENT_SETPOINT("Current Hood Angle Setpoint"),
 
-      HOOD_ANGLE_SETPOINT(ElasticKeyConstants.hoodWholeString + " Angle Setpoint"),
-      HOOD_VOLTAGE_SETPOINT(ElasticKeyConstants.hoodWholeString + " Motor Voltage"),
 
-      HOOD_CMD_SET_ANGLE_ADV(ElasticKeyConstants.hoodWholeString + " Set Angle Adv"),
-      HOOD_CMD_SET_ANGLE_BASIC(ElasticKeyConstants.hoodWholeString + " Set Angle Basic"),
-      HOOD_CMD_SET_PERCENT(ElasticKeyConstants.hoodWholeString + " Set Percent Output"),
+      HOOD_CMD_SET_ANGLE(ElasticKeyConstants.hoodWholeString + " Set Angle"),
+      HOOD_CMD_SET_ANGLE_INPUT(ElasticKey.HOOD_CMD_SET_ANGLE.value + " Input"),
+      HOOD_CMD_SET_PERCENT(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.setPercentCmdString),
+      HOOD_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.setPercentInputString),
       HOOD_CMD_SET_VOLTAGE(ElasticKeyConstants.hoodWholeString + " Set Voltage"),
+      HOOD_CMD_SET_VOLTAGE_INPUT(ElasticKey.HOOD_CMD_SET_VOLTAGE.value + " Input"),
       HOOD_CMD_STOP(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.stopString);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
@@ -474,18 +474,20 @@ public final class Constants {
 
     public static final double velocityErrorTolerance = 100;
 
-     // Hood Constants
-    public static final double hoodVoltage = 4;
+    // Hood Constants
+    public static final double hoodVoltage = 12;
     public static final double hoodErrorTolerance = 0.2; // for the PID control (deg error)
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     public static final double hoodMaximumAngle = 45.0; // in degrees 
 
     public static final double hoodMinimumAnalogVoltage = 0;
-    public static final double hoodMaximumAnalogVoltage = 4.92;
+    public static final double hood1MaximumAnalogVoltage = 4.92;
+    public static final double hood2MaximumAnalogVoltage = 4.81;
 
-    public static final double hoodMinimumAnalogVoltageCutoff = 0.005;
-    public static final double hoodMaximumAnalogVoltageCutoff = 4.915;
+    public static final double hoodMinimumAnalogVoltageCutoff = hoodMinimumAnalogVoltage + 0.005;
+    public static final double hood1MaximumAnalogVoltageCutoff = hood1MaximumAnalogVoltage - 0.005;
+    public static final double hood2MaximumAnalogVoltageCutoff = hood2MaximumAnalogVoltage - 0.005;
 
     public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle)
     public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
@@ -493,12 +495,13 @@ public final class Constants {
     public static final double radius1 = 7.678; // the length of one side of the triangle formed with the linear actuator for the hood angle
     public static final double radius2 = 6.361; // the length of the other side of the triangle 
 
-    public static final double hoodVoltageToExtensionLengthSlope = (hoodActuatorMaxExtensionLength - hoodActuatorMinExtensionLength) / (hoodMaximumAnalogVoltage - hoodMinimumAnalogVoltage);
+    public static final double hood1VoltageToExtensionLengthSlope = (hoodActuatorMaxExtensionLength - hoodActuatorMinExtensionLength) / (hood1MaximumAnalogVoltage - hoodMinimumAnalogVoltage);
+    public static final double hood2VoltageToExtensionLengthSlope = (hoodActuatorMaxExtensionLength - hoodActuatorMinExtensionLength) / (hood2MaximumAnalogVoltage - hoodMinimumAnalogVoltage);
 
     public static final double hoodkP = 0.165;    // volts / error in motor rps
     public static final double hoodkI = 0.0;
-    public static final double hoodkD = 0.00;
-    public static final double hoodkS = 0.0;   // percent output to overcome static friction (constant added to basic PID control to overcome static friction from having to move the hood)
+    public static final double hoodkD = 0.0;
+    public static final double hoodkS = 0.0;   // voltage output to overcome static friction (constant added to basic PID control to overcome static friction from having to move the hood)
     public static final double hoodkV = 0.0; // volts / desired motor rps
     public static final double hoodkA = 0.0;
 
