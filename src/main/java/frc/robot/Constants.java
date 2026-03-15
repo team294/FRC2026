@@ -311,17 +311,17 @@ public final class Constants {
     public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
   }
 
-  // TODO CALIBRATE camera positions
   public static class VisionConstants {
     public static final Transform3d robotToCamLeft = new Transform3d(
       new Translation3d(Units.inchesToMeters(-6.534), Units.inchesToMeters(11.910), Units.inchesToMeters(17.080)),  // towards back of robot (-x), left of robot (+y), up (+z)
-      new Rotation3d(0, -Math.toRadians(23.0), Math.toRadians(180.0 - 28.0 + 45.0)) // pos. outwards (yaw), neg. upwards (pitch)
-      // new Rotation3d(0, -Math.toRadians(23.0 - 45.0), Math.toRadians(28.0 - 45.0)) // pos. outwards (yaw), neg. upwards (pitch)
+      // new Rotation3d(Math.toRadians(12.3), Math.toRadians(-20.3), Math.toRadians(180.0 - 30.0)) // pos. outwards (yaw), neg. upwards (pitch)
+      new Rotation3d(0.0, Math.toRadians(-23.0), Math.toRadians(180.0 - 16.5)) //28.0
     );
 
     public static final Transform3d robotToCamRight = new Transform3d(
       new Translation3d(Units.inchesToMeters(-6.534), Units.inchesToMeters(-11.910), Units.inchesToMeters(17.080)),  // towards back of robot (-x), right of robot (-y), up (+z)
-      new Rotation3d(0, -Math.toRadians(23.0), -Math.toRadians(-(180.0 - 28.0 + 45.0))) // neg. outwards (yaw), neg. upwards (pitch)
+      // new Rotation3d(Math.toRadians(-12.3), Math.toRadians(-20.3), Math.toRadians(-180.0 + 30.0)) // neg. outwards (yaw), neg. upwards (pitch)
+      new Rotation3d(0.0, Math.toRadians(-23.0), Math.toRadians(-(180.0 - 16.5)))
     );
 
     public static final String leftCameraName = "LeftCamera"; // this has to match the camera name in PhotonVision
