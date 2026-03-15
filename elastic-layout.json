@@ -603,7 +603,515 @@
             ]
           }
         ],
-        "containers": []
+        "containers": [
+          {
+            "title": "Turret Corrected Estimation",
+            "x": 768.0,
+            "y": 256.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Corrected Estimation",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Turret CANcoder1 raw",
+            "x": 1280.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret CANcoder1 raw",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Turret CANcoder2 raw",
+            "x": 1536.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret CANcoder2 raw",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Turret Basic Estimation",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Basic Estimation",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Turret Pulse On Off (Debug)",
+            "x": 640.0,
+            "y": 768.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Pulse On Off (Debug)",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Turret encoder raw",
+            "x": 384.0,
+            "y": 768.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret encoder raw",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Turret Set Angle",
+            "x": 1152.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Set Angle",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Turret target angle",
+            "x": 1664.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret target angle",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Turret CANcoder connected",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Turret CANcoder connected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Turret Recalibrate Manual",
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Recalibrate Manual",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Turret Recalibrate Calculated",
+            "x": 1536.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Recalibrate Calculated",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Turret calibrated",
+            "x": 512.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Turret calibrated",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Turret Using CANcoder",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Using CANcoder",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Turret Angle Setpoint",
+            "x": 1408.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Angle Setpoint",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Turret 10% CounterClockwise",
+            "x": 512.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret 10% CounterClockwise",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Turret 10% Clockwise",
+            "x": 768.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret 10% Clockwise",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Turret Set Percent",
+            "x": 512.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Set Percent",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Turret Percent Setpoint",
+            "x": 768.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Percent Setpoint",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Turret Stop",
+            "x": 1024.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Stop",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hood",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Hood Set Angle",
+            "x": 128.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Angle",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Hood Set Percent",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Percent",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Hood Set Voltage",
+            "x": 128.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Voltage",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Hood Stop",
+            "x": 128.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Stop",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Current Hood Angle Setpoint",
+            "x": 1280.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Current Hood Angle Setpoint",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 1 Analog Voltage",
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 1 Analog Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 1 Angle Deg",
+            "x": 1152.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 1 Angle Deg",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 1 Extension Length",
+            "x": 1152.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 1 Extension Length",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 1 Voltage",
+            "x": 1152.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 1 Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 2 Analog Voltage",
+            "x": 1408.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 2 Analog Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 2 Angle Deg",
+            "x": 1408.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 2 Angle Deg",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 2 Extension Length",
+            "x": 1408.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 2 Extension Length",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood 2 Voltage",
+            "x": 1408.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood 2 Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Hood Set Percent Input",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Percent Input",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Hood Set Angle Input",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Angle Input",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Hood Set Voltage Input",
+            "x": 384.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Voltage Input",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          }
+        ]
       }
     }
   ]
