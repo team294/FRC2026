@@ -251,16 +251,16 @@ public class RobotContainer {
     // ex: coP[1].onTrue(new command(param1, param2, etc));
 
     // Send intake deploy out manually while held, stop when released
-    coP[1].whileTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, false, intake));
+    coP[1].whileTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
     // Bring intake deploy in manually while held, stop when released
-    coP[2].whileTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, false, intake));
+    coP[2].whileTrue(new IntakeDeploySetPercent(-IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
     // Spin rollers inwards while held, stop when released
     coP[3].whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
 
     // Spin rollers outwards while held, stop when released
-    coP[4].whileTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, false, intake));
+    coP[4].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
 
     // Reset Pose
@@ -288,9 +288,9 @@ public class RobotContainer {
     );
     coP[6].onFalse(new FeederStop(feeder));
 
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shooterPercent, VelocityType.runForever, shooter));
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
 
-    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShooterPercent, VelocityType.runForever, shooter));
+    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShootRPM, VelocityType.runForever, shooter));
   }
 
   private void configureTriggers() {
