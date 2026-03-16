@@ -586,21 +586,6 @@ public class Shooter extends SubsystemBase implements Loggable {
       updateLog(false);
     }
 
-    // Set hood angle with simple PID control 
-    if (hood1PositionControlOn && hood2PositionControlOn) {
-      if (Math.abs(hoodAngleSetpoint - getHoodAngle(1)) < ShooterConstants.hoodErrorTolerance) {
-        setHoodVoltageOneMotor(0, 1);
-      } else {
-        hoodMotor1.set(hood1PidController.calculate(getHoodAngle(1), hoodAngleSetpoint)); 
-      }
-
-      if (Math.abs(hoodAngleSetpoint - getHoodAngle(2)) < ShooterConstants.hoodErrorTolerance) {
-        setHoodVoltageOneMotor(0, 2);
-      } else {
-        hoodMotor2.set(hood2PidController.calculate(getHoodAngle(2), hoodAngleSetpoint));
-      }
-    }
-
     // Stopping hood motion when at min/max extensions to prevent motor from dying
     if (hood1PositionControlOn) {
       if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle) 
