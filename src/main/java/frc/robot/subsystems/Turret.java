@@ -14,15 +14,12 @@ import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,7 +54,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private PositionVoltage turretPositionControl = new PositionVoltage(0.0).withEnableFOC(true);
   private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(true);
 
-  private boolean turretAutoAimEnabled = false;
+  private boolean turretAutoAimEnabled = false;   // TODO: true when calibrated
 
   // Create variables for the turret Kraken motor
   private final StatusSignal<Voltage> turretSupplyVoltage; // Incoming bus voltage to motor, in volts
@@ -680,7 +677,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param robotPose2d Pose2d object for robot's current position.
    * @return Turret absolute field position, as a Pose2d object.
    */
-  private Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
+  public Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
     double robotRotRadians = robotPose2d.getRotation().getRadians();
     double xOffsetAbsolute;
     double yOffsetAbsolute;
@@ -709,47 +706,23 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Get turret target angle for aiming to the hub based on current alliance, robot position/rotation, and turret rotation.
-   * @param alliance Current Alliance
+   * Get turret target angle for aiming to the hub based on current alliance and robot position/velocity.
    * @param robotPose2d Pose2d object for robot's current position
+   * @param targetPose2d Pose2d object for aiming target
    * @return goal auto-targeting angle based on current turret position, in degrees
    */
-  private double getAutoTargetAngleAbsolute(Alliance alliance, Pose2d robotPose2d) {
-    double ret;
-
-    if (alliance == Alliance.Blue) {
-      if (robotPose2d.getX() < FieldConstants.hubPositionBlue.getX()) {
-        ret = MathUtil.angleModulus(Math.atan((getTurretAbsolutePose(robotPose2d).getY() - FieldConstants.hubPositionBlue.getY()) / (getTurretAbsolutePose(robotPose2d).getX() - FieldConstants.hubPositionBlue.getX())));
-      } else {
-        if (robotPose2d.getY() > FieldConstants.width / 2.0) {
-          ret = Math.PI + MathUtil.angleModulus(Math.atan((getTurretAbsolutePose(robotPose2d).getY() - FieldConstants.leftPassBlue.getY()) / (getTurretAbsolutePose(robotPose2d).getX() - FieldConstants.leftPassBlue.getX())));
-        } else {
-          ret = Math.PI + MathUtil.angleModulus(Math.atan((getTurretAbsolutePose(robotPose2d).getY() - FieldConstants.rightPassBlue.getY()) / (getTurretAbsolutePose(robotPose2d).getX() - FieldConstants.rightPassBlue.getX())));
-        }
-      }
-    } else {
-      if (robotPose2d.getX() > FieldConstants.hubPositionRed.getX()) {
-        ret = Math.PI + MathUtil.angleModulus(Math.atan((getTurretAbsolutePose(robotPose2d).getY() - FieldConstants.hubPositionRed.getY()) / (getTurretAbsolutePose(robotPose2d).getX() - FieldConstants.hubPositionRed.getX())));
-      } else {
-        if (robotPose2d.getY() > FieldConstants.width / 2.0) {
-          ret = -MathUtil.angleModulus(Math.atan((getTurretAbsolutePose(robotPose2d).getY() - FieldConstants.rightPassRed.getY()) / (getTurretAbsolutePose(robotPose2d).getX() - FieldConstants.rightPassRed.getX())));
-        } else {
-          ret = -MathUtil.angleModulus(Math.atan((getTurretAbsolutePose(robotPose2d).getY() - FieldConstants.leftPassRed.getY()) / (getTurretAbsolutePose(robotPose2d).getX() - FieldConstants.leftPassRed.getX())));
-        }
-      }
-    }
-
-    return Math.toDegrees(ret);
+  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Pose2d targetPose2d) {
+    return Math.toDegrees(Math.atan2(getTurretAbsolutePose(robotPose2d).getY() - targetPose2d.getY(), getTurretAbsolutePose(robotPose2d).getX() - targetPose2d.getX()));
   }
 
   /**
    * Get target angle for turret to turn to relative to turret's absolute zero.
-   * @param alliance Current Alliance
    * @param robotPose2d Current Pose2d of robot on field
+   * @param targetPose2d Pose2d object for aiming target
    * @return target angle for turret to turn to
    */
-  public double getAutoTargetAngleTurretRelative(Alliance alliance, Pose2d robotPose2d) {
-    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(alliance, robotPose2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
+  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Pose2d targetPose2d) {
+    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
   }
 
   /**

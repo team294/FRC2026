@@ -96,7 +96,7 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
-    // turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, allianceSelection)); TODO Uncomment, calibrate
+    // turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, allianceSelection.getAlliance()));  TODO uncomment when tested sufficiently
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
@@ -223,9 +223,10 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
+    // Deploy intake and start rollers
     left[1].onTrue(new IntakeSequence(intake));
 
-    // left[2].whileTrue(new FeedShooter(intake, feeder));
+    // Spin uptake, then spin spindexer & agitate intake (WHILE HELD) (STOP ALL ON RELEASE)
     left[2].whileTrue(new ParallelCommandGroup(
       new FeedShooter(feeder),
       sequence(
@@ -234,8 +235,10 @@ public class RobotContainer {
       )
     ));
 
+    // Temporary until command created to adjust hood angle & shooter RPM goes on Xbox
     right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
 
+    // direction facing = new forward for joystick movement
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
 

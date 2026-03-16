@@ -489,8 +489,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = encoder1ToTurretRatio  /  (encoder1GearTeeth / encoder2GearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoder1 = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of encoder 1 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoder2 = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of encoder 2 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoder1 = 0.1052;  // CALIBRATED: 0.1052  - (1) set this value to 0.0.  (2) Read value of encoder 1 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoder2 = -0.4818; // CALIBRATED: -0.4818 - (1) set this value to 0.0.  (2) Read value of encoder 2 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 1.0;               // TODO CALIBRATE      // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.5; // TODO CALIBRATE              // Max percent out allowed for manual turret movement when calibrated
