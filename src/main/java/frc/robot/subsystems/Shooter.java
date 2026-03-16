@@ -92,12 +92,16 @@ public class Shooter extends SubsystemBase implements Loggable {
   private boolean shooterVelocityControlOn = false;  // true = velocity control is on, false = velocity control is off (e.g. percent output, position)
   private double setpointRPM;                 // Target velocity, in RPM (positive = forward, negative = reverse)
   
-  private VoltageOut hoodVoltageControl = new VoltageOut(0.0).withEnableFOC(true);
+  private VoltageOut hood1VoltageControl = new VoltageOut(0.0).withEnableFOC(true);
+  private VoltageOut hood2VoltageControl = new VoltageOut(0.0).withEnableFOC(true);
   private double hoodAngleSetpoint;
-  private double hoodVoltageSetpoint;
-  private boolean hoodPositionControlOn = false;
+  private double hood1VoltageSetpoint;
+  private double hood2VoltageSetpoint;
+  private boolean hood1PositionControlOn = false;
+  private boolean hood2PositionControlOn = false;
   
-  private PIDController hoodPidController = new PIDController(ShooterConstants.hoodkP, ShooterConstants.hoodkI, ShooterConstants.hoodkD);
+  private PIDController hood1PidController = new PIDController(ShooterConstants.hood1kP, ShooterConstants.hood1kI, ShooterConstants.hood1kD);
+  private PIDController hood2PidController = new PIDController(ShooterConstants.hood2kP, ShooterConstants.hood2kI, ShooterConstants.hood2kD);
   
   // DataLog entries
   private final DataLog log = DataLogManager.getLog();
@@ -202,8 +206,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     
     hoodMotor1Configurator = hoodMotor1.getConfigurator();
     hoodMotor2Configurator = hoodMotor2.getConfigurator();
-    hoodPidController.reset();
-    hoodPidController.setTolerance(ShooterConstants.hoodErrorTolerance);
+    hood1PidController.reset();
+    hood2PidController.reset();
+    hood1PidController.setTolerance(ShooterConstants.hoodPIDErrorTolerance);
+    hood2PidController.setTolerance(ShooterConstants.hoodPIDErrorTolerance);
 
     hoodMotorConfiguration = new TalonFXSConfiguration();
     hoodMotorConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Brushed_DC;
@@ -245,12 +251,12 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     // Make motor2 follow motor1
     shooterMotor2.setControl(new Follower(shooterMotor1.getDeviceID(),  MotorAlignmentValue.Opposed)); 
-    hoodMotor2.setControl(new Follower(hoodMotor1.getDeviceID(), MotorAlignmentValue.Aligned));
+    // hoodMotor2.setControl(new Follower(hoodMotor1.getDeviceID(), MotorAlignmentValue.Aligned)); controlling both separately
     
     // Stop the motor
     stopShooterMotor();
-    setHoodVoltage(0);
-
+    setHoodVoltageBothMotors(0);
+    
     // Prime the DataLog to reduce delay when first enabling the robot
     DataLogUtil.writeMessage(subsystemName, ": Constructed");
     updateLog(true);
@@ -371,19 +377,52 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Set the hood voltage 
+   * Set the hood voltage to BOTH linear actuators 
    * @param voltage in volts [-12, 12]; positive is up and negative is down
    */
-  public void setHoodVoltage(double voltage) {
-    hoodVoltageSetpoint = voltage;
-    hoodPositionControlOn = false;
-    hoodMotor1.setControl(hoodVoltageControl.withOutput(voltage));
+  public void setHoodVoltageBothMotors(double voltage) {
+    hood1VoltageSetpoint = voltage;
+    hood2VoltageSetpoint = voltage;
+    hood1PositionControlOn = false;
+    hood2PositionControlOn = false;
+    hoodMotor1.setControl(hood1VoltageControl.withOutput(voltage));
+    hoodMotor2.setControl(hood2VoltageControl.withOutput(voltage));
   }
 
-  public void setHoodAngleSetpoint(double angle) {
+  /**
+   * Set the hood voltage to ONE linear actuator 
+   * @param voltage in volts [-12, 12]; positive is up and negative is down
+   */
+  public void setHoodVoltageOneMotor(double voltage, int motorNumber) {
+    if (motorNumber == 1) {
+      hoodMotor1.setControl(hood1VoltageControl.withOutput(voltage));
+      hood1VoltageSetpoint = voltage;
+    } else {
+      hoodMotor2.setControl(hood2VoltageControl.withOutput(voltage));
+      hood2VoltageSetpoint = voltage;
+      hood2PositionControlOn = false;
+    }
+  }
+
+  // public void setHoodAngleSetpoint(double angle) {
+  //   double safeAngle = MathUtil.clamp(angle, ShooterConstants.hoodMinimumAngle, ShooterConstants.hoodMaximumAngle);
+  //   hoodAngleSetpoint = safeAngle;
+  //   hood1PositionControlOn = true;
+  //   hood2PositionControlOn = true;
+  // }
+
+  /**
+   * Move both motors with simple PID controller
+   * @param angle angle to set in degrees
+   */
+  public void setHoodAnglePID(double angle) {
     double safeAngle = MathUtil.clamp(angle, ShooterConstants.hoodMinimumAngle, ShooterConstants.hoodMaximumAngle);
     hoodAngleSetpoint = safeAngle;
-    hoodPositionControlOn = true;
+    hood1PositionControlOn = true;
+    hood2PositionControlOn = true;
+
+    hoodMotor1.set(hood1PidController.calculate(getHoodAngle(1), hoodAngleSetpoint)); 
+    hoodMotor2.set(hood1PidController.calculate(getHoodAngle(2), hoodAngleSetpoint)); 
   }
   
   /**
@@ -438,7 +477,6 @@ public class Shooter extends SubsystemBase implements Loggable {
   public double getHoodAngle() {
     return (getHoodAngle(1) + getHoodAngle(2)) / 2.0;
   }
-
 
   /**
    * Returns the hood angle setpoint in degrees
@@ -497,8 +535,10 @@ public class Shooter extends SubsystemBase implements Loggable {
       dLogHood2SupplyVoltage.append(hood2SupplyVoltage.refresh().getValueAsDouble(), timeNow);
       dLogHood2Current.append(hood2Current.refresh().getValueAsDouble(), timeNow);
       dLogHoodAngleSetpoint.append(hoodAngleSetpoint, timeNow);
-      dLogHoodVoltageSetpoint.append(hoodVoltageSetpoint, timeNow);
-      dLogHoodPositionControlOn.append(hoodPositionControlOn, timeNow);
+      dLogHoodVoltageSetpoint.append(hood1VoltageSetpoint, timeNow);
+      dLogHoodVoltageSetpoint.append(hood2VoltageSetpoint, timeNow);
+      dLogHoodPositionControlOn.append(hood2PositionControlOn, timeNow);
+      dLogHoodPositionControlOn.append(hood2PositionControlOn, timeNow);
     }
   }
 
@@ -547,28 +587,52 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
 
     // Set hood angle with simple PID control 
-    if (hoodPositionControlOn) {
-      hoodMotor1.set(hoodPidController.calculate(getHoodAngle(), hoodAngleSetpoint));
+    if (hood1PositionControlOn && hood2PositionControlOn) {
+      if (Math.abs(hoodAngleSetpoint - getHoodAngle(1)) < ShooterConstants.hoodErrorTolerance) {
+        setHoodVoltageOneMotor(0, 1);
+      } else {
+        hoodMotor1.set(hood1PidController.calculate(getHoodAngle(1), hoodAngleSetpoint)); 
+      }
+
+      if (Math.abs(hoodAngleSetpoint - getHoodAngle(2)) < ShooterConstants.hoodErrorTolerance) {
+        setHoodVoltageOneMotor(0, 2);
+      } else {
+        hoodMotor2.set(hood2PidController.calculate(getHoodAngle(2), hoodAngleSetpoint));
+      }
     }
 
     // Stopping hood motion when at min/max extensions to prevent motor from dying
-    if (hoodPositionControlOn) {
+    if (hood1PositionControlOn) {
       if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle) 
-          || (getHoodAnalogVoltage(1) > ShooterConstants.hood1MaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)
-          || (getHoodAnalogVoltage(2) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle)
-          || (getHoodAnalogVoltage(2) > ShooterConstants.hood2MaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)) {
+          || (getHoodAnalogVoltage(1) > ShooterConstants.hood1MaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)) {
 
-        setHoodVoltage(0);
+        setHoodVoltageOneMotor(0, 1);
       }
-    } else {
-      if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodVoltageSetpoint < 0) 
-          || (getHoodAnalogVoltage(1) > ShooterConstants.hood1MaximumAnalogVoltageCutoff && hoodVoltageSetpoint > 0)
-          || (getHoodAnalogVoltage(2) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodVoltageSetpoint < 0) 
-          || (getHoodAnalogVoltage(2) > ShooterConstants.hood2MaximumAnalogVoltageCutoff && hoodVoltageSetpoint > 0)) {
 
-        setHoodVoltage(0);
+    } else {
+      if ((getHoodAnalogVoltage(1) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hood1VoltageSetpoint < 0) 
+          || (getHoodAnalogVoltage(1) > ShooterConstants.hood1MaximumAnalogVoltageCutoff && hood1VoltageSetpoint > 0)) {
+
+        setHoodVoltageOneMotor(0, 1);
       }
     }
+
+
+    if (hood2PositionControlOn) {
+      if ((getHoodAnalogVoltage(2) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMinimumAngle)
+          || (getHoodAnalogVoltage(2) > ShooterConstants.hood2MaximumAnalogVoltageCutoff && hoodAngleSetpoint == ShooterConstants.hoodMaximumAngle)) {
+
+        setHoodVoltageOneMotor(0, 2);
+      }
+    } else {
+      if ((getHoodAnalogVoltage(2) < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hood2VoltageSetpoint < 0) 
+          || (getHoodAnalogVoltage(2) > ShooterConstants.hood2MaximumAnalogVoltageCutoff && hood2VoltageSetpoint > 0)) {
+
+        setHoodVoltageOneMotor(0, 2);
+      }
+    }
+
+    
 
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
       SmartDashboard.putNumber(SHOOTER_1_VOLTAGE.value, getShooterVoltage(1));

@@ -95,7 +95,7 @@ public class HoodSetAngle extends Command {
 
     if (useGetter) targetAngle = angleGetter.getAsDouble();
 
-    shooter.setHoodAngleSetpoint(targetAngle);
+    shooter.setHoodAnglePID(targetAngle);
 
     counter = 0;
     DataLogUtil.writeMessage("HoodSetAngle: Initialize, Angle Setpoint =", targetAngle, ", type =", type);
@@ -110,14 +110,14 @@ public class HoodSetAngle extends Command {
       // change the angle a little and never settle on a value. Then the PID controller would
       // try to track and maybe never get in tolerance, and then this command would never end.
       targetAngle = angleGetter.getAsDouble();
-      shooter.setHoodAngleSetpoint(targetAngle);
+      shooter.setHoodAnglePID(targetAngle);
     }
 
     if (fromElastic) {
       if (type == EndType.runForever) {
         targetAngle = SmartDashboard.getNumber(HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
       }
-      shooter.setHoodAngleSetpoint(targetAngle);
+      shooter.setHoodAnglePID(targetAngle);
     }
   }
 
@@ -127,7 +127,7 @@ public class HoodSetAngle extends Command {
     shooter.enableFastLogging(false);
 
     if (type == EndType.runForever || type == EndType.waitForAngle) {
-      shooter.setHoodVoltage(0);
+      shooter.setHoodVoltageBothMotors(0);
     }
 
     DataLogUtil.writeMessage("HoodSetAngle: End");

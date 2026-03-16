@@ -17,14 +17,18 @@ public class HoodSetPercent extends Command {
 
   private final boolean endImmediately, fromElastic;
   private double percent;
+  private int motorNumber;
 
   /**
    * Set percent for hood motors to move at [0.0, 1.0] with input from Elastic
+   * @param endImmediately boolean
    * @param shooter Shooter subsystem
+   * @param motorNumber int motorNumber to set, use 0 for both motors
    */
-  public HoodSetPercent(boolean endImmediately, Shooter shooter) {
+  public HoodSetPercent(boolean endImmediately, Shooter shooter, int motorNumber) {
     this.shooter = shooter;
     this.endImmediately = endImmediately;
+    this.motorNumber = motorNumber;
     fromElastic = true;
 
     addRequirements(shooter);
@@ -36,13 +40,16 @@ public class HoodSetPercent extends Command {
 
   /**
    * Set percent for hood motors to move at [0.0, 1.0] with input
+   * @param endImmediately boolean
    * @param shooter Shooter subsystem
    * @param percent percent of max speed to move at [0.0, 1.0]
+   * @param motorNumber int motorNumber to set, use 0 for both motors
    */
-  public HoodSetPercent(boolean endImmediately, double percent, Shooter shooter) {
+  public HoodSetPercent(boolean endImmediately, double percent, Shooter shooter, int motorNumber) {
     this.shooter = shooter;
     this.endImmediately = endImmediately;
     this.percent = percent;
+    this.motorNumber = motorNumber;
     fromElastic = false;
 
     addRequirements(shooter);
@@ -52,7 +59,12 @@ public class HoodSetPercent extends Command {
   @Override
   public void initialize() {
     if (fromElastic) percent = SmartDashboard.getNumber(HOOD_CMD_SET_PERCENT_INPUT.value, 0.0);
-    shooter.setHoodVoltage(percent * ShooterConstants.hoodVoltage);
+    
+    if (motorNumber == 0) {
+      shooter.setHoodVoltageBothMotors(percent * ShooterConstants.hoodVoltage);
+    } else {
+      shooter.setHoodVoltageOneMotor(percent * ShooterConstants.hoodVoltage, motorNumber);
+    }
 
     DataLogUtil.writeMessage("Hood Set Percent: Init, Percent =", percent);
   }
@@ -63,7 +75,11 @@ public class HoodSetPercent extends Command {
     if (endImmediately) {
       DataLogUtil.writeMessage("IntakeDeploySetPercent: End");
     } else {
-      shooter.setHoodVoltage(0.0);
+      if (motorNumber == 0) {
+        shooter.setHoodVoltageBothMotors(0.0);
+      } else {
+        shooter.setHoodVoltageOneMotor(0.0, motorNumber);
+      }
       DataLogUtil.writeMessage("IntakeDeploySetPercent: End, Percent =", 0);
     }
   }

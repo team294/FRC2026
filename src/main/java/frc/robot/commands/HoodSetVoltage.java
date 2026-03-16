@@ -17,13 +17,16 @@ public class HoodSetVoltage extends Command {
 
   private boolean fromElastic;
   private double voltage;
+  private int motorNumber;
 
   /**
    * Set voltage for hood motors to move at [0.0, 4.92] with input from Elastic
    * @param shooter Shooter subsystem
+   * @param motorNumber int motorNumber to set, use 0 for both motors
    */
-  public HoodSetVoltage(Shooter shooter) {
+  public HoodSetVoltage(Shooter shooter, int motorNumber) {
     this.shooter = shooter;
+    this.motorNumber = motorNumber;
     fromElastic = true;
     addRequirements(shooter);
 
@@ -33,13 +36,15 @@ public class HoodSetVoltage extends Command {
   }
 
   /**
-   * Set voltage for hood motors to move at [0.0, 4.92] with input
+   * Set voltage for hood motors to move at [-12, 12] with input
    * @param shooter Shooter subsystem
-   * @param voltage voltage to move at [0.0, 4.92]
+   * @param voltage voltage to move at [-12, 12]
+   * @param motorNumber int motorNumber to set, use 0 for both motors
    */
-  public HoodSetVoltage(Shooter shooter, double voltage) {
+  public HoodSetVoltage(Shooter shooter, double voltage, int motorNumber) {
     this.shooter = shooter;
     this.voltage = voltage;
+    this.motorNumber = motorNumber;
     fromElastic = false;
     addRequirements(shooter);
   }
@@ -48,9 +53,15 @@ public class HoodSetVoltage extends Command {
   @Override
   public void initialize() {
     if (fromElastic) voltage = SmartDashboard.getNumber(HOOD_CMD_SET_VOLTAGE_INPUT.value, 0.0);
-    shooter.setHoodVoltage(voltage);
 
-    DataLogUtil.writeMessage("Hood Set Voltage: Init, Voltage =", voltage);
+    if (motorNumber == 0) {
+      shooter.setHoodVoltageBothMotors(voltage);
+    } else {
+      shooter.setHoodVoltageOneMotor(voltage, motorNumber);
+    }
+    
+
+    DataLogUtil.writeMessage("Hood Set Voltage: Init, Voltage =", voltage + "motorNumber = " + motorNumber);
   }
 
   // Returns true when the command should end.
