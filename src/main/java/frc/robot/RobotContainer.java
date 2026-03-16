@@ -53,6 +53,7 @@ public class RobotContainer {
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
+  private final Turret turret = new Turret("Turret");
 
   // Define controllers
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
@@ -95,6 +96,7 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
+    // turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, allianceSelection)); TODO Uncomment, calibrate
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
@@ -184,7 +186,7 @@ public class RobotContainer {
     Trigger xbLB = xboxController.leftBumper();
     // Trigger xbRB = xboxController.rightBumper();
     // Trigger xbBack = xboxController.back();
-    // Trigger xbStart = xboxController.start();
+    Trigger xbStart = xboxController.start();
     // Trigger xbPOVUp = xboxController.povUp();
     // Trigger xbPOVRight = xboxController.povRight();
     // Trigger xbPOVLeft = xboxController.povLeft();
@@ -197,6 +199,14 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
+    xbStart.onTrue(parallel(
+      new TurretToggleAutoAim(turret),
+      either (
+        new XboxControllerRumble(0.5, xboxController),
+        none(),
+        () -> turret.getAutoAimEnabled()
+      )
+    ));
   }
 
   /**

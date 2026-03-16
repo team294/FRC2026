@@ -13,6 +13,8 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -135,6 +137,8 @@ public final class Constants {
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
     private static final String shooterString = "Shooter";
+    private static final String turretString = "Turret";
+
 
     public enum ElasticKey {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
@@ -147,8 +151,8 @@ public final class Constants {
 
       INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + " Velocity"),
 
-      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentInputString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentInputString),
       INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + " Stop"),
       INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + " Set Angle"),
       INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + " Set Angle Input"),
@@ -187,7 +191,38 @@ public final class Constants {
       SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setPercentInputString),
       SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityCmdString),
       SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + " " + ElasticKeyConstants.setVelocityInputString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopString);
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopString),
+
+      TURRET_ANGLE(ElasticKeyConstants.turretString + " Angle"),
+      TURRET_TARGET_ANGLE(ElasticKeyConstants.turretString + " Target Angle"),
+      TURRET_OUTPUT(ElasticKeyConstants.turretString + " Output"),
+      TURRET_TEMP(ElasticKeyConstants.turretString + " Temp"),
+      TURRET_CURRENT(ElasticKeyConstants.turretString + " Current"),
+
+      TURRET_CANCODER1_RAW(ElasticKeyConstants.turretString + " CANcoder 1 Raw"),
+      TURRET_CANCODER1_ABS(ElasticKeyConstants.turretString + " CANcoder 1 ABS"),
+      TURRET_CANCODER2_RAW(ElasticKeyConstants.turretString + " CANcoder 2 Raw"),
+      TURRET_CANCODER2_ABS(ElasticKeyConstants.turretString + " CANcoder 2 ABS"),
+      TURRET_ENCODER_RAW(ElasticKeyConstants.turretString + " Encoder Raw"),
+
+      TURRET_BASIC_ESTIMATION(ElasticKeyConstants.turretString + " Basic Estimation"),
+      TURRET_ADVANCED_ESTIMATION(ElasticKeyConstants.turretString + " Advanced Estimation"),
+
+
+      TURRET_IS_CANCODER_CONNECTED(ElasticKeyConstants.turretString + " CANcoder Connected"),
+      TURRET_IS_CALIBRATED(ElasticKeyConstants.turretString + " Calibrated"),
+      TURRET_IS_USING_CANCODER(ElasticKeyConstants.turretString + " Using CANcoder"),
+
+      TURRET_CMD_PULSE_ON_OFF(ElasticKeyConstants.turretString + " Pulse On Off (Debug)"),
+      TURRET_CMD_SET_ANGLE(ElasticKeyConstants.turretString + " Set Angle"),
+      TURRET_CMD_SET_ANGLE_INPUT(TURRET_CMD_SET_ANGLE.value + " Input"),
+      TURRET_CMD_RECALIBRATE_MANUAL(ElasticKeyConstants.turretString + " Recalibrate Manual"),
+      TURRET_CMD_RECALIBRATE_AUTOMATIC(ElasticKeyConstants.turretString + " Recalibrate Automatic"),
+      TURRET_CMD_SLOW_CW(ElasticKeyConstants.turretString + " 10% Clockwise"),
+      TURRET_CMD_SLOW_CCW(ElasticKeyConstants.turretString + " 10% Counterclockwise"),
+      TURRET_CMD_SET_PERCENT(ElasticKeyConstants.turretString + ElasticKeyConstants.setPercentCmdString),
+      TURRET_CMD_SET_PERCENT_INPUT(TURRET_CMD_SET_PERCENT.value + " Input"),
+      TURRET_CMD_STOP(ElasticKeyConstants.turretString + ElasticKeyConstants.stopString);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
@@ -309,6 +344,14 @@ public final class Constants {
   public static class FieldConstants {
     public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
     public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
+    
+    public static final Pose2d hubPositionBlue = new Pose2d(Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+    public static final Pose2d hubPositionRed = new Pose2d(length - Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+
+    public static final Pose2d leftPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0, new Rotation2d(0));
+    public static final Pose2d rightPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0, new Rotation2d(0));
+    public static final Pose2d leftPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0, new Rotation2d(0));
+    public static final Pose2d rightPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0, new Rotation2d(0));
   }
 
   public static class VisionConstants {
@@ -431,6 +474,52 @@ public final class Constants {
     public static final double ShooterkA = 0;
 
     public static final double velocityErrorTolerance = 100;
+  }
+
+  public static final class TurretConstants {
+    public static final double compensationVoltage = 12.0;
+
+    public static final double turretToMotorGearRatio = 52.5/1.0;    // For gear reduction from motor to turret, value should be greater than 1
+    public static final double turretBeltTeeth = 135.0;
+    public static final double encoder1BeltTeeth = 24.0;
+    public static final double encoder1GearTeeth = 30.0;
+    public static final double encoder2GearTeeth = 26.0;
+
+    public static final double encoder1ToTurretRatio = TurretConstants.encoder1BeltTeeth / TurretConstants.turretBeltTeeth;
+    public static final double encoderCalculationCoefficient = encoder1ToTurretRatio  /  (encoder1GearTeeth / encoder2GearTeeth - 1);
+    public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
+
+    public static final double offsetAngleCANcoder1 = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of encoder 1 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoder2 = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of encoder 2 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+
+    public static final double maxPercentOutput = 1.0;               // TODO CALIBRATE      // Absolute max percent out allowed for turret
+    public static final double maxManualPercentOutput = 0.5; // TODO CALIBRATE              // Max percent out allowed for manual turret movement when calibrated
+    public static final double maxUncalibratedPercentOutput = 0.1;   // TODO CALIBRATE      // Max percent out allowed for any turrent movement when uncalibrated
+
+    public static final double angleTolerance = 0.5;        // Angle tolerance for setting the turret angle, in degrees
+
+    public static final double kP = 0.0;  // TODO CALIBRATE
+    public static final double kI = 0.0;  // TODO CALIBRATE
+    public static final double kD = 0.0;  // TODO CALIBRATE
+    public static final double kS = 0.275; // CALIBRATED 3/15/2026: 0.275
+    public static final double kV = 0.0;  // TODO CALIBRATE
+    public static final double kA = 0.0;  // TODO CALIBRATE
+
+    public static final double MMCruiseVelocity = 8.0; // TODO CALIBRATE
+    public static final double MMAcceleration = 2.0;   // TODO CALIBRATE
+    public static final double MMJerk = 1.0;           // TODO CALIBRATE
+
+    public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
+    
+    public enum TurretAngle {
+      LOWER_LIMIT(-180.0),
+      UPPER_LIMIT(180.0);
+
+      public final double value;
+      TurretAngle(double angle) {
+        this.value = angle;
+      }
+    }
   }
 
   public static final class TrajectoryConstants {
