@@ -5,18 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.*;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class StopAllMotors extends ParallelCommandGroup {
   /** Creates a new StopAllMotors. */
-  public StopAllMotors(DriveTrain driveTrain, Feeder feeder) {
+  public StopAllMotors(DriveTrain driveTrain, Intake intake, Feeder feeder, Shooter shooter) {
     addCommands(
       new DriveStop(driveTrain),
-      new FeederStop(feeder)
+      new IntakeStop(intake),
+      new FeederStop(feeder),
+      new ShooterStop(shooter)
     );
   }
 }
