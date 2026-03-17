@@ -139,7 +139,6 @@ public final class Constants {
     private static final String stopCmdString = " Stop";
 
     // Readings
-    private static final String velocityString = " Velocity";
     private static final String rpmString = " RPM";
     private static final String targetRpmString = " Target RPM";
     private static final String tempString = " Temp";
