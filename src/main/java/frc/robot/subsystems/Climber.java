@@ -614,18 +614,13 @@ public class Climber extends SubsystemBase implements Loggable {
   public void periodic() {
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
       SmartDashboard.putBoolean(ElasticKey.CLIMBER_IS_CALIBRATED.value, isClimberCalibrated());
-      SmartDashboard.putBoolean(ElasticKey.CLIMBER_IS_IN_POSITION_CONTROL.value, isClimberInPositionControl());
 
       SmartDashboard.putNumber(ElasticKey.CLIMBER_POSITION.value, getClimberPosition());
       SmartDashboard.putNumber(ElasticKey.CLIMBER_TARGET.value, getCurrentClimberTarget());
-      SmartDashboard.putNumber(ElasticKey.CLIMBER_VELOCITY.value, getClimberVelocity());
 
       SmartDashboard.putBoolean(ElasticKey.CLIMBER_IS_AT_LOWER_LIMIT.value, isClimberAtLowerLimit());
       SmartDashboard.putBoolean(ElasticKey.CLIMBER_MOTOR_ONE_IS_AT_LOWER_LIMIT.value, isClimberAtLowerLimit(1));
       SmartDashboard.putBoolean(ElasticKey.CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT.value, isClimberAtLowerLimit(2));
-
-      SmartDashboard.putNumber(ElasticKey.CLIMBER_MOTOR_ONE_ROTATIONS.value, getClimberEncoderRotations(1));
-      SmartDashboard.putNumber(ElasticKey.CLIMBER_MOTOR_TWO_ROTATIONS.value, getClimberEncoderRotations(2));
     }
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {

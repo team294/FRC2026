@@ -42,15 +42,15 @@ public class ClimberSetPercent extends Command {
     this.fromElastic = true;
     addRequirements(climber);
 
-    if (SmartDashboard.getNumber(ElasticKey.CLIMBER_PERCENT_SETPOINT.value, -9999.9) == -9999.9) {
-      SmartDashboard.putNumber(ElasticKey.CLIMBER_PERCENT_SETPOINT.value, 0);
+    if (SmartDashboard.getNumber(ElasticKey.CLIMBER_CMD_SET_PERCENT_INPUT.value, -9999.9) == -9999.9) {
+      SmartDashboard.putNumber(ElasticKey.CLIMBER_CMD_SET_PERCENT_INPUT.value, 0);
     }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) percent = SmartDashboard.getNumber(ElasticKey.CLIMBER_PERCENT_SETPOINT.value, 0.0);
+    if (fromElastic) percent = SmartDashboard.getNumber(ElasticKey.CLIMBER_CMD_SET_PERCENT_INPUT.value, 0.0);
     climber.setClimberPercentOutput(percent);
 
     DataLogUtil.writeMessage("ClimberSetPercent: Init, Percent =", percent);

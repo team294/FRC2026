@@ -55,15 +55,15 @@ public class ClimberSetPosition extends Command {
     fromElastic = true;
     addRequirements(climber);
 
-    if (SmartDashboard.getNumber(ElasticKey.CLIMBER_POSITION_SETPOINT.value, -9999.9) == -9999.9) {
-      SmartDashboard.putNumber(ElasticKey.CLIMBER_POSITION_SETPOINT.value, 0);
+    if (SmartDashboard.getNumber(ElasticKey.CLIMBER_CMD_SET_POSITION_INPUT.value, -9999.9) == -9999.9) {
+      SmartDashboard.putNumber(ElasticKey.CLIMBER_CMD_SET_POSITION_INPUT.value, 0);
     }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) target = SmartDashboard.getNumber(ElasticKey.CLIMBER_POSITION_SETPOINT.value, 0.0);
+    if (fromElastic) target = SmartDashboard.getNumber(ElasticKey.CLIMBER_CMD_SET_POSITION_INPUT.value, 0.0);
 
     climber.setClimberProfileTarget(target);
     toleranceCount = 0;

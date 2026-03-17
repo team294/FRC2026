@@ -145,24 +145,16 @@ public class RobotContainer {
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData("Intake Deploy Set Percent", new IntakeDeploySetPercent(false, intake));
     SmartDashboard.putData("Intake Deploy Calibrate", new IntakeDeployCalibrateManual(intake));
-    SmartDashboard.putData(INTAKE_STOP.value, new IntakeStop(intake));
-
-    // Feeder
-    // SmartDashboard.putData("Feeder Set Percent", new FeederSetPercent(feeder));
-    // SmartDashboard.putData("Feeder Stop", new FeederStop(feeder));
-    // SmartDashboard.putData("Feeder Set Velocity", new FeederSetVelocity(FeederSetVelocity.VelocityType.runForever, feeder));
-    // SmartDashboard.putData("Feeder Set Velocity 500 RPM", new FeederSetVelocity(500.0, FeederSetVelocity.VelocityType.runForever, feeder));
-    // SmartDashboard.putData("Feeder set PIDSVA", new FeederSetPIDSVA(feeder));
+    SmartDashboard.putData(INTAKE_ROLLER_CMD_STOP.value, new IntakeStop(intake));
 
     // Feeder
     SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
     SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
     SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
-
     SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
     SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
     SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
-    SmartDashboard.putData(UPTAKE_STOP.value, new FeederStop(feeder));
+    SmartDashboard.putData(UPTAKE_CMD_STOP.value, new FeederStop(feeder));
     
     // Shooter
     SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
@@ -170,14 +162,11 @@ public class RobotContainer {
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
 
     // Climber
-    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_SLOW_UP.value, new ClimberSetPercent(0.1, true, climber));
-    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_LOWER_LIMIT.value, new ClimberSetPosition(ClimberConstants.ClimberPosition.LOWER_LIMIT, climber));
-    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_SLOW_DOWN.value, new ClimberSetPercent(-0.1, true, climber));
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberSetPercent(0, true, climber));
-    SmartDashboard.putData(CLIMBER_CMD_CALIBRATION_ROUTINE. value, new ClimberCalibration(5, climber));
-    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_IF_LOWER_LIMIT.value, new ClimberCalibrateIfAtLowerLimit(climber));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATION_RAMP. value, new ClimberCalibration(5, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_INPUT.value, new ClimberSetPercent(true, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_INPUT.value, new ClimberSetPosition(climber));
+
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
 
