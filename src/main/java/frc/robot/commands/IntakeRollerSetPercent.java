@@ -6,9 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
+
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 public class IntakeRollerSetPercent extends Command {
   private final Intake intake;
