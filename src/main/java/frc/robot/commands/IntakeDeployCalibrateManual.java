@@ -7,9 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
+
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 public class IntakeDeployCalibrateManual extends InstantCommand {
   private final Intake intake;
