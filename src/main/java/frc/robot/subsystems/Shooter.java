@@ -35,6 +35,8 @@ import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
+
 public class Shooter extends SubsystemBase implements Loggable {
   private final int logRotationKey;     // Key to identify the log rotation
   private boolean fastLogging = true;  // true = log every cycle, false = log every 10 cycles
@@ -206,6 +208,14 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Gets the velocity of the shooter wheel, averaging the two motors.
+   * @return wheel velocity, in RPM
+   */
+  public double getShooterVelocity() {
+    return (getShooterVelocity(1) + getShooterVelocity(2)) / 2.0;
+  }
+
+  /**
    * Returns the shooter wheel position
    * @param motorNumber int which motor, 1 or 2, to get position for
    * @return position of shooter in wheel rotations
@@ -356,19 +366,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
 
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 Voltage"), getShooterVoltage(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 Position Rev"), getShooterEncoderPosition(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 RPM"), getShooterVelocity(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 1 Temp C"), getShooterTemp(1));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 Voltage"), getShooterVoltage(2));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 Position Rev"), getShooterEncoderPosition(2));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 RPM"), getShooterVelocity(2));
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " 2 Temp C"), getShooterTemp(2));
-
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " Avg RPM"), (getShooterVelocity(1) + getShooterVelocity(2)) / 2.0);
-
-      SmartDashboard.putNumber(StringUtil.buildString(subsystemName, " Target RPM"), getShooterSetpointRPM());
-      SmartDashboard.putBoolean(StringUtil.buildString(subsystemName, " Velocity Control On"), isVelocityControlOn());
+      SmartDashboard.putNumber(SHOOTER_LEFT_TEMP.value, shooter1Temperature.refresh().getValueAsDouble());
+      SmartDashboard.putNumber(SHOOTER_RIGHT_TEMP.value, shooter2Temperature.refresh().getValueAsDouble());
+      SmartDashboard.putNumber(SHOOTER_RPM.value, getShooterVelocity());
+      SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, setpointRPM);
     }
   }
 }

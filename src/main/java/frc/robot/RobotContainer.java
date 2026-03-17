@@ -6,6 +6,7 @@ package frc.robot;
 
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
@@ -17,8 +18,6 @@ import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
-
 import com.ctre.phoenix6.SignalLogger;
 import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,9 +27,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -139,47 +136,51 @@ public class RobotContainer {
     SmartDashboard.putData("Vision Enable Odometry Updates", new VisionOdometryStateSet(true, driveTrain));
     SmartDashboard.putData("Vision Disable Odometry Updates", new VisionOdometryStateSet(false, driveTrain));
 
-    // Intake
-    SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
-    SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
-    SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData("Intake Deploy Set Percent", new IntakeDeploySetPercent(false, intake));
-    SmartDashboard.putData("Intake Deploy Calibrate", new IntakeDeployCalibrateManual(intake));
-    SmartDashboard.putData(INTAKE_ROLLER_CMD_STOP.value, new IntakeStop(intake));
-
-    // Feeder
+    // Stop
+    SmartDashboard.putData(INTAKE_ROLLER_CMD_STOP.value, new IntakeRollerStop(intake));
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_STOP.value, new IntakeDeployStop(intake));
+    SmartDashboard.putData(INTAKE_CMD_STOP.value, new IntakeStop(intake));
     SmartDashboard.putData(SPINDEXER_CMD_STOP.value, new SpindexerStop(feeder));
-    SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
-    SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
     SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
-    SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
-    SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
-    SmartDashboard.putData(UPTAKE_CMD_STOP.value, new FeederStop(feeder));
-    
-    // Shooter
-    SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
-    SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
+    SmartDashboard.putData(FEEDER_CMD_STOP.value, new FeederStop(feeder));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
+    SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
+    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
 
-    // Climber
-    SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberSetPercent(0, true, climber));
+    // Set Percent
+    SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(false, intake));
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_PERCENT.value, new IntakeDeploySetPercent(false, intake));
+    SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
+    SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT.value, new ClimberSetPercent(false, climber));
+
+    // Set Velocity
+    SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
+    SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
+    SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
+
+    // Set Angle
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
+
+    // Set Position
+    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION.value, new ClimberSetPosition(climber));
+
+    // Calibration Ramp
     SmartDashboard.putData(CLIMBER_CMD_CALIBRATION_RAMP. value, new ClimberCalibration(5, climber));
-    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_INPUT.value, new ClimberSetPercent(true, climber));
-    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_INPUT.value, new ClimberSetPosition(climber));
+
+    // Calibrate Manual
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL.value, new IntakeDeployCalibrateManual(intake));
+
+    // Sequences
+    SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
 
-    //  ---  Sequences  ---
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
-
-    // Stop All Motors
-    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
-
-    // Match Timer
+    // Match TODO update timers
     SmartDashboard.putNumber(MATCH_TIMER.value, 0);
-
-    // Shift Timer
     SmartDashboard.putNumber(SHIFT_TIMER.value, 0);
     SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, true);
   }

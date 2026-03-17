@@ -149,6 +149,7 @@ public final class Constants {
     private static final String targetPositionString = " Target Position";
 
     // Subsystems
+    private static final String intakeString = "Intake";
     private static final String intakeRollerString = "Intake Roller";
     private static final String intakeDeployString = "Intake Deploy";
     private static final String feederSpindexerString = "Spindexer";
@@ -163,6 +164,7 @@ public final class Constants {
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
 
       // Stop Command
+      INTAKE_CMD_STOP(ElasticKeyConstants.intakeString + ElasticKeyConstants.stopCmdString),
       INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.stopCmdString),
       INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.stopCmdString),
       SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.stopCmdString),
@@ -226,18 +228,18 @@ public final class Constants {
       INTAKE_ROLLER_TEMP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.tempString),
       SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.tempString),
       UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.tempString),
+      SHOOTER_LEFT_TEMP(ElasticKeyConstants.shooterString + " L" + ElasticKeyConstants.tempString),
+      SHOOTER_RIGHT_TEMP(ElasticKeyConstants.shooterString + " R" + ElasticKeyConstants.tempString),
 
       // RPM
       SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.rpmString),
       UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.rpmString),
+      SHOOTER_RPM(ElasticKeyConstants.shooterString + ElasticKeyConstants.rpmString),
 
       // Target RPM
       SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.targetRpmString),
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.targetRpmString),
-
-      // Velocity
-      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.velocityString),
-      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.velocityString),
+      SHOOTER_TARGET_RPM(ElasticKeyConstants.shooterString + ElasticKeyConstants.targetRpmString),
 
       // Angle
       INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.angleString),
