@@ -198,7 +198,7 @@ public class RobotContainer {
     // Trigger xbBack = xboxController.back();
     // Trigger xbStart = xboxController.start();
     // Trigger xbPOVUp = xboxController.povUp();
-    // Trigger xbPOVRight = xboxController.povRight();
+    Trigger xbPOVRight = xboxController.povRight();
     // Trigger xbPOVLeft = xboxController.povLeft();
     // Trigger xbPOVDown = xboxController.povDown();
     Trigger xbLJoystickTrigger = xboxController.leftStick();
@@ -209,6 +209,8 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
+
+    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
   }
 
   /**
@@ -282,7 +284,7 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
 
-    // Spin uptake then spindexer to feed shooter, stop when released
+    // Spin uptake then spindexer to feed shooter while held, stop when released
     coP[5].onTrue(
       sequence(
         new UptakeSetVelocity(UptakeConstants.uptakeShootRPM, feeder),
@@ -291,7 +293,7 @@ public class RobotContainer {
     );
     coP[5].onFalse(new FeederStop(feeder));
 
-    // Spin uptake then spindexer away from shooter
+    // Spin uptake then spindexer away from shooter while held, stop when released
     coP[6].onTrue(
       sequence(
         new UptakeSetVelocity(-UptakeConstants.uptakeShootRPM, feeder),
@@ -300,8 +302,12 @@ public class RobotContainer {
     );
     coP[6].onFalse(new FeederStop(feeder));
 
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    // Manually move hood up or down while held, stop when released
+    coP[11].whileTrue(new HoodSetPercent(false, ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
+    coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
+    // Manually spin shooter outwards or inwards while held, stop when released
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
     coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShootRPM, VelocityType.runForever, shooter));
   }
 

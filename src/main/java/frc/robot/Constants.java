@@ -489,6 +489,8 @@ public final class Constants {
     //public static final double hoodMaximumAngle = 45.0; // in degrees 
     public static final double hoodMaximumAngle = 39.4; // in degrees Natalie Test
 
+    public static final double hoodMaximumPercentOutput = 0.5;
+
     public static final double hoodMinimumAnalogVoltage = 0;
     //public static final double hood1MaximumAnalogVoltage = 4.92;
     //public static final double hood2MaximumAnalogVoltage = 4.92;
