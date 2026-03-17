@@ -13,6 +13,8 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -376,6 +378,9 @@ public final class Constants {
   public static class FieldConstants {
     public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
     public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
+
+    public static final Pose2d hubPositionBlue = new Pose2d(Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+    public static final Pose2d hubPositionRed = new Pose2d(length - Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
   }
 
   public static class VisionConstants {
@@ -499,7 +504,14 @@ public final class Constants {
 
     public static final double velocityErrorTolerance = 100;
 
+    // a, b, and c coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
+    public static final double shooterScoreA0 = 0;
+    public static final double shooterScoreA1 = 0;
+    public static final double shooterScoreA2 = 0;
+
     // Hood Constants
+    public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
+
     public static final double hoodVoltage = 12;
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
     public static final double hoodErrorTolerance = 0.2; // to monitor for when to stop moving the hood actuators (deg error)
