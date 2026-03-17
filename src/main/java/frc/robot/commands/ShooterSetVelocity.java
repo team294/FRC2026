@@ -140,7 +140,7 @@ public class ShooterSetVelocity extends Command {
       case runForever:
         return false;
       case waitForVelocity:
-        if( (Math.abs(((shooter.getShooterVelocity(1) + shooter.getShooterVelocity(2)) / 2) - velocity) < ShooterConstants.velocityErrorTolerance) ) {
+        if( (Math.abs(shooter.getShooterVelocity() - velocity) < ShooterConstants.velocityErrorTolerance) ) {
           counter++;
         }else{
           counter = 0;
