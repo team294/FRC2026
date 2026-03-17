@@ -3,669 +3,6 @@
   "grid_size": 128,
   "tabs": [
     {
-      "name": "Drive Train Test",
-      "grid_layout": {
-        "layouts": [
-          {
-            "title": "List Layout",
-            "x": 384.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 640.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Shooter set PIDSVA",
-                "x": 1536.0,
-                "y": 128.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter set PIDSVA",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
-              {
-                "title": "Shooter Setpoint kP",
-                "x": 1536.0,
-                "y": 128.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Setpoint kP",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter Setpoint kI",
-                "x": 1664.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Setpoint kI",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter Setpoint kD",
-                "x": 1536.0,
-                "y": 256.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Setpoint kD",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter Setpoint kS",
-                "x": 1536.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Setpoint kS",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter Setpoint kV",
-                "x": 1664.0,
-                "y": 512.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Setpoint kV",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter Setpoint kA",
-                "x": 1664.0,
-                "y": 512.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Setpoint kA",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter Applied PID",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Applied PID",
-                  "period": 0.06,
-                  "data_type": "string",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          },
-          {
-            "title": "List Layout",
-            "x": 768.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 640.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Feeder set PIDSVA",
-                "x": 768.0,
-                "y": 512.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder set PIDSVA",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
-              {
-                "title": "Feeder Setpoint kP",
-                "x": 896.0,
-                "y": 256.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Setpoint kP",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Feeder Setpoint kI",
-                "x": 1024.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Setpoint kI",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Feeder Setpoint kD",
-                "x": 1024.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Setpoint kD",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Feeder Setpoint kS",
-                "x": 1024.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Setpoint kS",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Feeder Setpoint kV",
-                "x": 896.0,
-                "y": 256.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Setpoint kV",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Feeder Setpoint kA",
-                "x": 1024.0,
-                "y": 512.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Setpoint kA",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Feeder Applied PID",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Applied PID",
-                  "period": 0.06,
-                  "data_type": "string",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          }
-        ],
-        "containers": [
-          {
-            "title": "Shooter 2 RPM",
-            "x": 1408.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 2 RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Shooter 1 RPM",
-            "x": 1664.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 1 RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Shooter Set Velocity",
-            "x": 384.0,
-            "y": 768.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Set Velocity",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Shooter Stop",
-            "x": 1152.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Stop",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Shooter Setpoint RPM",
-            "x": 640.0,
-            "y": 768.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Setpoint RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter Set Velocity 500 rpm",
-            "x": 896.0,
-            "y": 768.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Set Velocity 500 rpm",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Feeder Set Velocity",
-            "x": 384.0,
-            "y": 640.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Feeder Set Velocity",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Feeder Setpoint RPM",
-            "x": 640.0,
-            "y": 640.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Feeder Setpoint RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter Set Percent",
-            "x": 128.0,
-            "y": 512.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Set Percent",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Shooter Percent",
-            "x": 0.0,
-            "y": 512.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Percent",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter 1 Temp C",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 1 Temp C",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter 1 Voltage",
-            "x": 0.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 1 Voltage",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter 2 Temp C",
-            "x": 128.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 2 Temp C",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter 2 Voltage",
-            "x": 128.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 2 Voltage",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter 2 RPM",
-            "x": 128.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 2 RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter 1 RPM",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 1 RPM",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Feeder Set Percent",
-            "x": 128.0,
-            "y": 640.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Feeder Set Percent",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Feeder Percent",
-            "x": 0.0,
-            "y": 640.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Feeder Percent",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Feeder Velocity",
-            "x": 1152.0,
-            "y": 128.0,
-            "width": 640.0,
-            "height": 768.0,
-            "type": "Graph",
-            "properties": {
-              "topic": "/SmartDashboard/Feeder Velocity",
-              "period": 0.033,
-              "data_type": "double",
-              "time_displayed": 5.0,
-              "color": 4278238420,
-              "line_width": 2.0
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Mechanism (Test)",
-      "grid_layout": {
-        "layouts": [
-          {
-            "title": "Intake",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 1024.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Intake Set Percent",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Set Percent",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
-              {
-                "title": "Intake Percent",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Percent",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Intake Stop",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Stop",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": false
-                }
-              },
-              {
-                "title": "Intake Velocity",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Velocity",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          }
-        ],
-        "containers": [
-          {
-            "title": "Shooter  Set Velocity Input",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter  Set Velocity Input",
-              "period": 0.033,
-              "data_type": "double",
-              "show_submit_button": true
-            }
-          },
-          {
-            "title": "Shooter  Set Velocity",
-            "x": 512.0,
-            "y": 128.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter  Set Velocity",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": true
-            }
-          },
-          {
-            "title": "Shooter Stop",
-            "x": 896.0,
-            "y": 0.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter Stop",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": true
-            }
-          },
-          {
-            "title": "Shooter 1 RPM",
-            "x": 384.0,
-            "y": 256.0,
-            "width": 1536.0,
-            "height": 768.0,
-            "type": "Graph",
-            "properties": {
-              "topic": "/SmartDashboard/Shooter 1 RPM",
-              "period": 0.033,
-              "data_type": "double",
-              "time_displayed": 5.0,
-              "color": 4278238420,
-              "line_width": 2.0
-            }
-          }
-        ]
-      }
-    },
-    {
       "name": "Driver",
       "grid_layout": {
         "layouts": [
@@ -681,24 +18,10 @@
             },
             "children": [
               {
-                "title": "Autonomous delay",
-                "x": 640.0,
-                "y": 640.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Autonomous delay",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "Autonomous routine",
-                "x": 512.0,
-                "y": 768.0,
-                "width": 128.0,
+                "title": "Autonomous Routine",
+                "x": 0.0,
+                "y": 256.0,
+                "width": 384.0,
                 "height": 128.0,
                 "type": "ComboBox Chooser",
                 "properties": {
@@ -708,7 +31,7 @@
                 }
               },
               {
-                "title": "Autonomous cached",
+                "title": "Autonomous Cached",
                 "x": 512.0,
                 "y": 768.0,
                 "width": 128.0,
@@ -720,102 +43,26 @@
                   "data_type": "string",
                   "show_submit_button": false
                 }
-              }
-            ]
-          },
-          {
-            "title": "Alliance",
-            "x": 0.0,
-            "y": 256.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Alliance Selection",
-                "x": 0.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "ComboBox Chooser",
-                "properties": {
-                  "topic": "/SmartDashboard/Alliance Selection",
-                  "period": 0.06,
-                  "sort_options": false
-                }
               },
               {
-                "title": "Alliance",
-                "x": 128.0,
-                "y": 384.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/SmartDashboard/Alliance Blue",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4279456444,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              }
-            ]
-          },
-          {
-            "title": "Game Pieces",
-            "x": 1280.0,
-            "y": 640.0,
-            "width": 256.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "HIDDEN"
-            },
-            "children": [
-              {
-                "title": " Feeder Exit",
-                "x": 1152.0,
-                "y": 768.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Object Detected Exit",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4294967040,
-                  "false_color": 4278190080,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
-              {
-                "title": "Feeder Entry",
-                "x": 1152.0,
+                "title": "Autonomous Delay",
+                "x": 640.0,
                 "y": 640.0,
-                "width": 256.0,
+                "width": 128.0,
                 "height": 128.0,
-                "type": "Boolean Box",
+                "type": "Text Display",
                 "properties": {
-                  "topic": "/SmartDashboard/Feeder Object Detected Entry",
+                  "topic": "/SmartDashboard/Autonomous delay",
                   "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4294967040,
-                  "false_color": 4278190080,
-                  "true_icon": "None",
-                  "false_icon": "None"
+                  "data_type": "double",
+                  "show_submit_button": true
                 }
               }
             ]
           },
           {
             "title": "Intake Calibration",
-            "x": 1280.0,
+            "x": 1024.0,
             "y": 0.0,
             "width": 256.0,
             "height": 384.0,
@@ -825,24 +72,7 @@
             },
             "children": [
               {
-                "title": "Intake Deploy Calibrated?",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Deploy Calibrated?",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
-              {
-                "title": "Intake Deploy CANcoder Connected?",
+                "title": "Deploy CANcoder?",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
@@ -859,9 +89,26 @@
                 }
               },
               {
-                "title": "Intake Deploy Calibrate",
+                "title": "Deploy Calibrated?",
                 "x": 0.0,
                 "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Calibrated?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Intake Deploy Calibrate",
+                "x": 1024.0,
+                "y": 128.0,
                 "width": 256.0,
                 "height": 128.0,
                 "type": "Command",
@@ -875,8 +122,8 @@
             ]
           },
           {
-            "title": "List Layout",
-            "x": 1536.0,
+            "title": "Turret Calibration",
+            "x": 1280.0,
             "y": 0.0,
             "width": 256.0,
             "height": 384.0,
@@ -892,8 +139,8 @@
             "title": "Field",
             "x": 384.0,
             "y": 0.0,
-            "width": 896.0,
-            "height": 512.0,
+            "width": 640.0,
+            "height": 384.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
@@ -912,7 +159,7 @@
           {
             "title": "Clear Sticky Faults",
             "x": 1280.0,
-            "y": 512.0,
+            "y": 640.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -924,10 +171,10 @@
             }
           },
           {
-            "title": "problemSubsystem",
+            "title": "Sticky Fault Problem Subsystem(s)",
             "x": 0.0,
-            "y": 768.0,
-            "width": 640.0,
+            "y": 640.0,
+            "width": 1280.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -938,9 +185,9 @@
             }
           },
           {
-            "title": "problemExists",
+            "title": "Sticky Fault Problem Exists?",
             "x": 0.0,
-            "y": 640.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Boolean Box",
@@ -948,16 +195,16 @@
               "topic": "/SmartDashboard/problemExists",
               "period": 0.06,
               "data_type": "boolean",
-              "true_color": 4294901764,
+              "true_color": 4294198070,
               "false_color": 4278190080,
               "true_icon": "None",
               "false_icon": "None"
             }
           },
           {
-            "title": "Prefs Init",
+            "title": "Prefs Init?",
             "x": 0.0,
-            "y": 512.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
@@ -972,9 +219,9 @@
             }
           },
           {
-            "title": "GyroReading",
+            "title": "Gyro Read?",
             "x": 128.0,
-            "y": 512.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
@@ -991,7 +238,7 @@
           {
             "title": "Stop All Motors",
             "x": 1280.0,
-            "y": 384.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -1004,9 +251,9 @@
           },
           {
             "title": "Match Timer",
-            "x": 640.0,
-            "y": 512.0,
-            "width": 384.0,
+            "x": 256.0,
+            "y": 384.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Match Time",
             "properties": {
@@ -1020,9 +267,9 @@
           },
           {
             "title": "Shift Timer",
-            "x": 640.0,
-            "y": 640.0,
-            "width": 384.0,
+            "x": 512.0,
+            "y": 384.0,
+            "width": 512.0,
             "height": 256.0,
             "type": "Match Time",
             "properties": {
@@ -1046,15 +293,15 @@
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
-              "false_color": 4278190080,
+              "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
             }
           },
           {
             "title": "RCam OK",
-            "x": 256.0,
-            "y": 640.0,
+            "x": 384.0,
+            "y": 512.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Boolean Box",
@@ -1063,9 +310,56 @@
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Feeder Object Detected Exit",
+            "x": 1280.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Feeder Object Detected Exit",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4294963456,
               "false_color": 4278190080,
               "true_icon": "None",
               "false_icon": "None"
+            }
+          },
+          {
+            "title": "Alliance",
+            "x": 256.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Alliance Blue",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4279456444,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Alliance Selection",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Alliance Selection",
+              "period": 0.06,
+              "sort_options": false
             }
           }
         ]
@@ -1670,7 +964,7 @@
             ]
           },
           {
-            "title": "DriveStraight",
+            "title": "Drive Straight",
             "x": 1024.0,
             "y": 0.0,
             "width": 256.0,
@@ -1753,7 +1047,7 @@
             ]
           },
           {
-            "title": "DriveToPose",
+            "title": "Drive To Pose",
             "x": 768.0,
             "y": 384.0,
             "width": 256.0,
@@ -1979,255 +1273,6 @@
             "title": "Stop All Motors",
             "x": 0.0,
             "y": 512.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Stop All Motors",
-              "period": 0.06,
-              "show_type": false,
-              "maximize_button_space": true
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Mechanisms",
-      "grid_layout": {
-        "layouts": [
-          {
-            "title": "Intake",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": " ",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Stop",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              },
-              {
-                "title": "Intake Deploy Target Angle",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Deploy Target Angle",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Intake Deploy Set Angle",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Intake Deploy Set Angle",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              }
-            ]
-          },
-          {
-            "title": "Spindexer",
-            "x": 256.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": " ",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Spindexer Stop",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              },
-              {
-                "title": "Spindexer Target RPM",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Spindexer Target RPM",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Spindexer Set Velocity",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Spindexer Set Velocity",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              }
-            ]
-          },
-          {
-            "title": "Feeder",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Feeder Object Detected Entry",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Object Detected Entry",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4278190080,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
-              {
-                "title": "Feeder Object Detected Exit",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Object Detected Exit",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4278190080,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
-              {
-                "title": "Feeder Stop",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Feeder Stop",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              }
-            ]
-          },
-          {
-            "title": "Shooter",
-            "x": 768.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Shooter Target RPM",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Target RPM",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": true
-                }
-              },
-              {
-                "title": "Shooter  Set Velocity",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter  Set Velocity",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              },
-              {
-                "title": " Shooter Stop",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter Stop",
-                  "period": 0.06,
-                  "show_type": false,
-                  "maximize_button_space": true
-                }
-              }
-            ]
-          }
-        ],
-        "containers": [
-          {
-            "title": "Stop All Motors",
-            "x": 128.0,
-            "y": 512.0,
             "width": 512.0,
             "height": 256.0,
             "type": "Command",
@@ -2242,9 +1287,979 @@
       }
     },
     {
+      "name": "Intake/Feeder/Climber",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Intake Deploy",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 640.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Intake Deploy Set Angle Input",
+                "x": 0.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Set Angle Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Intake Deploy Set Angle",
+                "x": 0.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Set Angle",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Intake Deploy Set Percent Input",
+                "x": 128.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Set Percent Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Intake Deploy Set Percent",
+                "x": 0.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Set Percent",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Intake Deploy Cal Input (Deg)",
+                "x": 0.0,
+                "y": 256.0,
+                "width": 384.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Calibrate Manual Input (Degrees)",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Intake Deploy Calibrate Manual",
+                "x": 128.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Calibrate Manual",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Intake Roller",
+            "x": 256.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Intake Roller Set Percent Input",
+                "x": 1024.0,
+                "y": 128.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Roller Set Percent Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Intake Roller Set Percent",
+                "x": 1024.0,
+                "y": 128.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Roller Set Percent",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Spindexer",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Spindexer Set Velocity Input",
+                "x": 512.0,
+                "y": 128.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Set Velocity Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Spindexer Set Velocity",
+                "x": 640.0,
+                "y": 128.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Set Velocity",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Spindexer Set Percent Input",
+                "x": 512.0,
+                "y": 256.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Set Percent Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Spindexer Set Percent",
+                "x": 512.0,
+                "y": 256.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Set Percent",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Intake Deploy Readings",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Deploy CANcoder?",
+                "x": 256.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy CANcoder Connected?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Deploy Calibrated?",
+                "x": 384.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Calibrated?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Deploy Raw Rot",
+                "x": 256.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Raw Rotations",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Deploy Target Angle",
+                "x": 256.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Target Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Deploy Angle",
+                "x": 256.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Spindexer Readings",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Spindexer Target RPM",
+                "x": 512.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Target RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Spindexer RPM",
+                "x": 512.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Uptake",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Uptake Set Velocity Input",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Set Velocity Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Uptake Set Velocity",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Set Velocity",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Uptake Set Percent Input",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Set Percent Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Uptake Set Percent",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Set Percent",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Temperatures",
+            "x": 1280.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Intake Deploy Temp",
+                "x": 1408.0,
+                "y": 128.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Intake Roller Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Roller Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Spindexer Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Uptake Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Uptake Readings",
+            "x": 768.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Uptake Target RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Target RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Uptake RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Uptake Exit?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Exit Triggered?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4294963456,
+                  "false_color": 4278190080,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Climber",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          },
+          {
+            "title": "Climber Readings",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          }
+        ],
+        "containers": [
+          {
+            "title": "Stop All Motors",
+            "x": 1280.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Stop All Motors",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Intake Deploy Stop",
+            "x": 0.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Intake Deploy Stop",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Intake Roller Stop",
+            "x": 256.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Intake Roller Stop",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Spindexer Stop",
+            "x": 512.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Spindexer Stop",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Uptake Stop",
+            "x": 768.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Uptake Stop",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Turret/Shooter",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Turret",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 640.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          },
+          {
+            "title": "Shooter",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Shooter Set Velocity Input",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter Set Velocity Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Shooter Set Velocity",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter Set Velocity",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Shooter Set Percent Input",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter Set Percent Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Shooter Set Percent",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter Set Percent",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Shooter Readings",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Shooter Target RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter Target RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter RPM",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter RPM",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Temperatures",
+            "x": 1280.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Shooter L Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter L Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter R Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter R Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Turret Readings",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          },
+          {
+            "title": "Hood",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 640.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          },
+          {
+            "title": "Hood Readings",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          }
+        ],
+        "containers": [
+          {
+            "title": "Shooter Stop",
+            "x": 1024.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Shooter Stop",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Stop All Motors",
+            "x": 1280.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Stop All Motors",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "Sequences",
       "grid_layout": {
-        "layouts": [],
+        "layouts": [
+          {
+            "title": "Temperatures",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "LEFT"
+            },
+            "children": [
+              {
+                "title": "Intake Deploy Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Intake Roller Temp",
+                "x": 896.0,
+                "y": 128.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Roller Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Spindexer Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Uptake Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter L Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter L Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter R Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter R Temp",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
         "containers": [
           {
             "title": "Intake Sequence",

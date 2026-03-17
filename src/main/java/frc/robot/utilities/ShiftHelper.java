@@ -1,10 +1,7 @@
 package frc.robot.utilities;
 
 import static edu.wpi.first.wpilibj2.command.Commands.repeatingSequence;
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.IS_BLUE_SHIFT;
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.IS_YOUR_SHIFT;
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.MATCH_TIMER;
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.SHIFT_TIMER;
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;

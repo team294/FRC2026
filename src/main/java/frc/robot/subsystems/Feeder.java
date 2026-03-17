@@ -16,7 +16,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
-import static frc.robot.utilities.StringUtil.*;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -75,7 +74,6 @@ public class Feeder extends SubsystemBase implements Loggable {
   private final StatusSignal<Boolean> CANRangeExitIsDetected;
 
   private boolean lastDetectedState = false; // Previous detected state from CANRAnge isDetected() method
-  private int ballsShot = 0;
 
   // Configurators
   private final TalonFXConfigurator uptakeConfigurator = uptakeMotor.getConfigurator();
@@ -450,7 +448,6 @@ public class Feeder extends SubsystemBase implements Loggable {
     else currentDetectedState = CANRangeEntryIsDetected.refresh().getValue();
 
     if (lastDetectedState == false && currentDetectedState == true) {
-        if(CANRange == 0) ballsShot += 1; // Only increments ballsShot if using the exit CANRange.
       lastDetectedState = true;
     }
     if (lastDetectedState != currentDetectedState) {
@@ -553,13 +550,11 @@ public class Feeder extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(SPINDEXER_TARGET_RPM.value, spindexerSetpointRPM);
       SmartDashboard.putNumber(SPINDEXER_TEMP.value, spindexerTemp.refresh().getValueAsDouble());
 
-      SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Entry"), getAmbientSignal(1));
-      SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Entry"), getDistance(1));
-      SmartDashboard.putBoolean(buildString(subsystemName, " Object Detected Entry"), isDetected(1));
-      SmartDashboard.putNumber(buildString(subsystemName, " Ambient Signal Exit"), getAmbientSignal(0));
-      SmartDashboard.putNumber(buildString(subsystemName, " Object Distance Exit"), getDistance(0));
-      SmartDashboard.putBoolean(buildString(subsystemName, " Object Detected Exit"), isDetected(0));
-      SmartDashboard.putNumber(buildString(subsystemName, " Num Balls Shot"), ballsShot);
+
+      SmartDashboard.putNumber("Uptake Entry Detected Distance", getDistance(1));
+      SmartDashboard.putBoolean("Uptake Entry Triggered?", isDetected(1));
+      SmartDashboard.putNumber("Uptake Exit Detected Distance", getDistance(0));
+      SmartDashboard.putBoolean("Uptake Exit Triggered?", isDetected(0));
     }    
   }
 }

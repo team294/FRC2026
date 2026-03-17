@@ -599,10 +599,11 @@ public class Intake extends SubsystemBase implements Loggable{
 
     SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
     SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
-    SmartDashboard.putNumber(INTAKE_DEPLOY_VELOCITY.value, getIntakeDeployVelocity());
-    SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
-    SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
-    SmartDashboard.putNumber(INTAKE_ROLLER_VELOCITY.value, getIntakeRollerVelocity());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
     SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
+    SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
+
+    SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
   }
 }
