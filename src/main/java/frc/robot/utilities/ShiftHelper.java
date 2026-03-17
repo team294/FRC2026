@@ -37,12 +37,14 @@ public class ShiftHelper {
      * @return time left in the current shift, in seconds
      */
     public double timeLeftInShiftSeconds() {
-        if (teleopTimer.get() <= 10.0) {return teleopTimer.get() - 10.0;}
-        else if (teleopTimer.get() <= 35.0) {return teleopTimer.get() - 35.0;}
-        else if (teleopTimer.get() <= 60.0) {return teleopTimer.get() - 60.0;}
-        else if (teleopTimer.get() <= 85.0) {return teleopTimer.get() - 85.0;}
-        else if (teleopTimer.get() <= 110.0) {return teleopTimer.get() - 110.0;}
-        else {return teleopTimer.get() - 140.0;}
+        if (teleopTimer.get() <= 0.0) {return 0.0;}
+
+        if (teleopTimer.get() <= 10.0) {return 10.0 - teleopTimer.get();}
+        else if (teleopTimer.get() <= 35.0) {return 35.0 - teleopTimer.get();}
+        else if (teleopTimer.get() <= 60.0) {return 60.0 - teleopTimer.get();}
+        else if (teleopTimer.get() <= 85.0) {return 85.0 - teleopTimer.get();}
+        else if (teleopTimer.get() <= 110.0) {return 110.0 - teleopTimer.get();}
+        else {return 140.0 - teleopTimer.get();}
     }
 
     /**
@@ -59,6 +61,8 @@ public class ShiftHelper {
      * @return true = your scoring shift (transition, 2 alliance-specific, endgame), false = not your shift (other 2 alliance-specific)
      */
     public boolean isCurrentShiftYours() {
+        if (teleopTimer.get() <= 0) {return false;}
+
         if (teleopTimer.get() <= 10 || teleopTimer.get() >= 130) {
             return true;
         } else if (alliance == Alliance.Blue) {
@@ -69,7 +73,7 @@ public class ShiftHelper {
     }
 
     public void periodic() {
-        SmartDashboard.putNumber(MATCH_TIMER.value, Math.max(160.0 - teleopTimer.get(), 0));
+        SmartDashboard.putNumber(MATCH_TIMER.value, Math.max(140.0 - teleopTimer.get(), 0));
         SmartDashboard.putNumber(SHIFT_TIMER.value, timeLeftInShiftSeconds());
         SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, isCurrentShiftBlue());
         SmartDashboard.putBoolean(IS_YOUR_SHIFT.value, isCurrentShiftYours());

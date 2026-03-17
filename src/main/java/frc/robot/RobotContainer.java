@@ -174,13 +174,6 @@ public class RobotContainer {
 
     // Stop All Motors
     SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
-
-    // Match Timer
-    SmartDashboard.putNumber(MATCH_TIMER.value, 0);
-
-    // Shift Timer
-    SmartDashboard.putNumber(SHIFT_TIMER.value, 0);
-    SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, true);
   }
  
   /**

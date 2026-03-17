@@ -267,7 +267,7 @@ public final class Constants {
       CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Motor 2 Lower Limit"),
 
       // Match
-      MATCH_TIMER("Match Timer"),
+      MATCH_TIMER("Teleop Timer"),
       SHIFT_TIMER("Shift Timer"),
       IS_BLUE_SHIFT("Is Blue Shift"),
       IS_YOUR_SHIFT("Is Your Shift");
