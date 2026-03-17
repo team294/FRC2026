@@ -108,6 +108,8 @@ public final class Constants {
     // PWM Ports
     public static final int PWMHoodServo1 = 0;
     public static final int PWMHoodServo2 = 1;
+    public static final int DIOClimberLowerLimitSensor1 = 2;
+    public static final int DIOClimberLowerLimitSensor2 = 3;
   }
 
   public static final class OIConstants {
@@ -137,7 +139,6 @@ public final class Constants {
     private static final String stopCmdString = " Stop";
 
     // Readings
-    private static final String velocityString = " Velocity";
     private static final String rpmString = " RPM";
     private static final String targetRpmString = " Target RPM";
     private static final String tempString = " Temp";
@@ -267,7 +268,7 @@ public final class Constants {
       CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Motor 2 Lower Limit"),
 
       // Match
-      MATCH_TIMER("Match Timer"),
+      MATCH_TIMER("Teleop Timer"),
       SHIFT_TIMER("Shift Timer"),
       IS_BLUE_SHIFT("Is Blue Shift"),
       IS_YOUR_SHIFT("Is Your Shift");
@@ -496,7 +497,7 @@ public final class Constants {
       public static final double kA = 0.0;
     }
   }
-  
+
   public static final class ShooterConstants {
     public static final double compensationVoltage = 12.0;
     public static final double shooterPercent = 0.2; 
