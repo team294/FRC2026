@@ -44,9 +44,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // Define key utilities here:
-  private final AllianceSelection allianceSelection = new AllianceSelection();
-  private final Field field = new Field(allianceSelection);
   private final Timer teleopTimer = new Timer();
+  private final Timer matchTimer = new Timer();
+  private final AllianceSelection allianceSelection = new AllianceSelection();
+  private final ShiftHelper shiftHelper = new ShiftHelper(allianceSelection, matchTimer);
+  private final Field field = new Field(allianceSelection);
 
   // Define robot subsystems
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
@@ -142,6 +144,8 @@ public class RobotContainer {
     SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(true, intake));
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_PERCENT.value, new IntakeDeploySetPercent(false, intake));
+    SmartDashboard.putData(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL.value, new IntakeDeployCalibrateManual(intake));
+    SmartDashboard.putData(INTAKE_STOP.value, new IntakeStop(intake));
 
     // Feeder
     // SmartDashboard.putData("Feeder Set Percent", new FeederSetPercent(feeder));
@@ -158,6 +162,7 @@ public class RobotContainer {
     SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
     SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
     SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
+    SmartDashboard.putData(UPTAKE_STOP.value, new FeederStop(feeder));
     
     // Shooter
     SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
@@ -180,6 +185,16 @@ public class RobotContainer {
 
     //  ---  Sequences  ---
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
+
+    // Stop All Motors
+    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
+
+    // Match Timer
+    SmartDashboard.putNumber(MATCH_TIMER.value, 0);
+
+    // Shift Timer
+    SmartDashboard.putNumber(SHIFT_TIMER.value, 0);
+    SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, true);
   }
  
   /**
@@ -331,6 +346,7 @@ public class RobotContainer {
   public void robotPeriodic(){
     DataLogUtil.advanceLogRotation();
     allianceSelection.periodic();
+    shiftHelper.periodic();
     autoSelection.periodic();
   }
 
@@ -352,6 +368,9 @@ public class RobotContainer {
     LEDEventUtil.sendEvent(LEDStripEvents.ROBOT_DISABLED);
     teleopTimer.stop();
     teleopTimer.reset();
+
+    matchTimer.stop();
+    matchTimer.reset();
 
     SignalLogger.stop();
   }
@@ -384,6 +403,9 @@ public class RobotContainer {
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
     // it will read the gyro/encoder before the reset goes into effect.
+
+    matchTimer.reset();
+    matchTimer.start();
   }
 
   /**

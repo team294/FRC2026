@@ -127,7 +127,16 @@ public final class Constants {
     private static final String setPercentInputString = " Set Percent Input";
     private static final String setVelocityCmdString = " Set Velocity";
     private static final String setVelocityInputString = " Set Velocity Input";
-    private static final String stopString = " Stop";
+    private static final String setAngleCmdString = " Set Angle";
+    private static final String setAngleInputString = " Set Angle Input";
+    private static final String stopCmdString = " Stop";
+
+    private static final String velocityString = " Velocity";
+    private static final String rpmString = " RPM";
+    private static final String targetRpmString = " Target RPM";
+    private static final String tempString = " Temp";
+    private static final String angleString = " Angle";
+    private static final String targetAngleString = " Target Angle";
 
     // Subsystem names
     private static final String intakeRollerString = "Intake Roller";
@@ -142,47 +151,53 @@ public final class Constants {
     private static final String hoodWholeString = "Hood";
 
     public enum ElasticKey {
+
+      STOP_ALL_MOTORS("Stop All Motors"),
+
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
+      
+      INTAKE_STOP("Intake Stop"),
 
       INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
       INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
-      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + " Stop"),
+      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.stopCmdString),
 
-      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + " Velocity"),
+      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.velocityString),
 
-      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + " " + ElasticKeyConstants.setPercentInputString),
-      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + " Stop"),
-      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + " Set Angle"),
-      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + " Set Angle Input"),
+      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentInputString),
+      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.stopCmdString),
+      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleCmdString),
+      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleInputString),
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.intakeDeployString + " Calibrate Manual"),
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(ElasticKeyConstants.intakeDeployString + " Calibrate Manual Input Angle"),
       INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(ElasticKeyConstants.intakeDeployString + " Calibration Ramp"),
 
-      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + " Velocity"),
+      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.velocityString),
       INTAKE_DEPLOY_IS_CANCODER_CONNECTED(ElasticKeyConstants.intakeDeployString + " CANcoder Connected?"),
       INTAKE_DEPLOY_IS_CALIBRATED(ElasticKeyConstants.intakeDeployString + " Calibrated?"),
-      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + " Target Angle"),
-      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + " Angle"),
+      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.targetAngleString),
+      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.angleString),
       INTAKE_DEPLOY_RAW_ROTATIONS(ElasticKeyConstants.intakeDeployString + " Raw Rotations"),
 
-      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + " Stop"),
-      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentCmdString),
-      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setPercentInputString),
-      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityCmdString),
-      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + " " + ElasticKeyConstants.setVelocityInputString),
+      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.stopCmdString),
+      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentCmdString),
+      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentInputString),
+      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityCmdString),
+      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityInputString),
 
-      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + " RPM"),
-      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + " Target RPM"),
-      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + " Temp"),
+      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.rpmString),
+      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.targetRpmString),
+      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.tempString),
 
-      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + " Stop"),
-      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentCmdString),
-      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setPercentInputString),
-      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityCmdString),
-      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + " " + ElasticKeyConstants.setVelocityInputString),
+      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.stopCmdString),
+      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentCmdString),
+      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentInputString),
+      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdString),
+      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityInputString),
+      UPTAKE_STOP("Feeder Stop"),
 
       UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
       UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
@@ -206,7 +221,7 @@ public final class Constants {
       SHOOTER_CMD_SET_VELOCITY_500_RPM(ElasticKeyConstants.shooterWholeString + " Set Velocity 500 rpm"),
       SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setVelocityCmdString),
       SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setVelocityInputString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.stopString),
+      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.stopCmdString),
 
       SHOOTER_VELOCITY_CONTROL_ON(ElasticKeyConstants.shooterWholeString + " Velocity Control On"),
 
@@ -222,7 +237,6 @@ public final class Constants {
       HOOD_2_CURRENT(ElasticKeyConstants.hood2String + " Current"),
       HOOD_ANGLE_CURRENT_SETPOINT("Current Hood Angle Setpoint"),
 
-
       HOOD_CMD_SET_ANGLE_FOREVER(ElasticKeyConstants.hoodWholeString + " Set Angle (Run Forever)"),
       HOOD_CMD_SET_ANGLE_WAIT(ElasticKeyConstants.hoodWholeString + " Set Angle (Wait for Angle)"),
       HOOD_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.hoodWholeString + " Set Angle Input"),
@@ -233,9 +247,14 @@ public final class Constants {
       HOOD_CMD_SET_VOLTAGE_2(ElasticKeyConstants.hood2String + " Set Voltage"),
       HOOD_CMD_SET_VOLTAGE_BOTH(ElasticKeyConstants.hoodWholeString + " Set Voltage (both motors)"),
       HOOD_CMD_SET_VOLTAGE_INPUT(ElasticKeyConstants.hoodWholeString + " Set Voltage Input"),
-      HOOD_CMD_STOP_BOTH(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.stopString),
-      HOOD_CMD_STOP_1(ElasticKeyConstants.hood1String + ElasticKeyConstants.stopString),
-      HOOD_CMD_STOP_2(ElasticKeyConstants.hood2String + ElasticKeyConstants.stopString);
+      HOOD_CMD_STOP_BOTH(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.stopCmdString),
+      HOOD_CMD_STOP_1(ElasticKeyConstants.hood1String + ElasticKeyConstants.stopCmdString),
+      HOOD_CMD_STOP_2(ElasticKeyConstants.hood2String + ElasticKeyConstants.stopCmdString),
+
+      MATCH_TIMER("Match Timer"),
+      SHIFT_TIMER("Shift Timer"),
+      IS_BLUE_SHIFT("Is Blue Shift"),
+      IS_YOUR_SHIFT("Is Your Shift");
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final String value;
