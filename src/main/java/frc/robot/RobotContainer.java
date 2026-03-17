@@ -199,13 +199,15 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
+
+    // toggle turret auto-aim functionality, rumbling if toggling off
     xbStart.onTrue(parallel(
-      new TurretToggleAutoAim(turret),
       either (
         new XboxControllerRumble(0.5, xboxController),
         none(),
         () -> turret.getAutoAimEnabled()
-      )
+      ),
+      new TurretToggleAutoAim(turret)
     ));
   }
 

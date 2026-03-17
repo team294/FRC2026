@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -711,7 +712,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param targetPose2d Pose2d object for aiming target
    * @return goal auto-targeting angle based on current turret position, in degrees
    */
-  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Pose2d targetPose2d) {
+  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Translation2d targetPose2d) {
     return Math.toDegrees(Math.atan2(getTurretAbsolutePose(robotPose2d).getY() - targetPose2d.getY(), getTurretAbsolutePose(robotPose2d).getX() - targetPose2d.getX()));
   }
 
@@ -721,7 +722,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param targetPose2d Pose2d object for aiming target
    * @return target angle for turret to turn to
    */
-  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Pose2d targetPose2d) {
+  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetPose2d) {
     return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
   }
 
