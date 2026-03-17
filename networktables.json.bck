@@ -1,0 +1,50 @@
+[
+  {
+    "name": "/Preferences/Drive.offsetAngleFrontLeftMotor",
+    "type": "double",
+    "value": -5.712,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive.offsetAngleFrontRightMotor",
+    "type": "double",
+    "value": 7.294,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive.offsetAngleBackLeftMotor",
+    "type": "double",
+    "value": 0.175,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive.offsetAngleBackRightMotor",
+    "type": "double",
+    "value": 151.611,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/problemSubsystem",
+    "type": "string",
+    "value": "",
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/problemExists",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
+  }
+]
