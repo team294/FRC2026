@@ -475,7 +475,8 @@ public final class Constants {
 
     public static final double velocityErrorTolerance = 100;
 
-    public static final double hoodShootAngleRadians = Math.toRadians(30.0);  // TODO tune if needed
+    public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot with, in deg TODO tune if needed 
+    public static final double hoodShootAngleRadians = Math.toRadians(hoodShootAngle);  
     public static final double shooterHeightOffGround = Units.inchesToMeters(18.0);  // in meters  -  for LAR, assumes shot @ 30 degrees
   }
 
