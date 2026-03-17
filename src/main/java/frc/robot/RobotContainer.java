@@ -44,9 +44,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // Define key utilities here:
   private final Timer teleopTimer = new Timer();
-  private final Timer matchTimer = new Timer();
   private final AllianceSelection allianceSelection = new AllianceSelection();
-  private final ShiftHelper shiftHelper = new ShiftHelper(allianceSelection, matchTimer);
+  private final ShiftHelper shiftHelper = new ShiftHelper(allianceSelection.getAlliance(), teleopTimer);
   private final Field field = new Field(allianceSelection);
 
   // Define robot subsystems
@@ -348,10 +347,6 @@ public class RobotContainer {
 
     LEDEventUtil.sendEvent(LEDStripEvents.ROBOT_DISABLED);
     teleopTimer.stop();
-    teleopTimer.reset();
-
-    matchTimer.stop();
-    matchTimer.reset();
 
     SignalLogger.stop();
   }
@@ -384,9 +379,6 @@ public class RobotContainer {
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
     // it will read the gyro/encoder before the reset goes into effect.
-
-    matchTimer.reset();
-    matchTimer.start();
   }
 
   /**
@@ -412,7 +404,7 @@ public class RobotContainer {
     // CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
     // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
-    teleopTimer.start();
+    teleopTimer.restart();
   }
 
   /**
