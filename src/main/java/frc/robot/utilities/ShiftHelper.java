@@ -1,5 +1,6 @@
 package frc.robot.utilities;
 
+import static edu.wpi.first.wpilibj2.command.Commands.repeatingSequence;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.IS_BLUE_SHIFT;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.IS_YOUR_SHIFT;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.MATCH_TIMER;
@@ -11,67 +12,84 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShiftHelper {
-    private final Alliance alliance;
-    private final Timer teleopTimer;
+    private AllianceSelection allianceSelection;
+    private Alliance alliance;
 
-    /**
-     * Keeps track of shifts, publishing data to Elastic regarding whether or not shift is active.
-     * @param alliance Current Alliance (Alliance.Blue, Alliance.Red)
-     * @param teleopTimer Timer object tracking match time
-     */
-    public ShiftHelper(Alliance alliance, Timer teleopTimer) {
-        this.alliance = alliance;
-        this.teleopTimer = teleopTimer;
+    private Timer matchTimer;
+
+    public ShiftHelper(AllianceSelection allianceSelection, Timer matchTimer) {
+        this.allianceSelection = allianceSelection; 
+        alliance = this.allianceSelection.getAlliance();
+
+        this.matchTimer = matchTimer;
     }
 
     /**
-     * Returns whether or not Blue Alliance scored more points in autonomous based on FMS message.
-     * @return true = blue won, false = red won  
+     * 
+     * @return If blue won auto or not depending on FMC game specific message  
      */
     public boolean blueWonAuto() {
-        return DriverStation.getGameSpecificMessage().equals("B"); // TODO Test Blue won auto function
+        return DriverStation.getGameSpecificMessage().equals("B"); // TODO Test Blue won auto function 
     }
 
     /**
-     * Returns time left in the current scoring shift, regardless of which Alliance's it is.
-     * @return time left in the current shift, in seconds
+     * 
+     * @param currentMatchTime match time counting up from 0 in seconds
+     * @return time left in seconds in the current shift
      */
-    public double timeLeftInShiftSeconds() {
-        if (teleopTimer.get() <= 10.0) {return teleopTimer.get() - 10.0;}
-        else if (teleopTimer.get() <= 35.0) {return teleopTimer.get() - 35.0;}
-        else if (teleopTimer.get() <= 60.0) {return teleopTimer.get() - 60.0;}
-        else if (teleopTimer.get() <= 85.0) {return teleopTimer.get() - 85.0;}
-        else if (teleopTimer.get() <= 110.0) {return teleopTimer.get() - 110.0;}
-        else {return teleopTimer.get() - 140.0;}
-    }
-
-    /**
-     * Returns whether or not it is Blue Alliance's shift
-     * @return true = Blue Alliance scoring shift, false = Red Alliance scoring shift. ignores transition and endgame
-     */
-    public boolean isCurrentShiftBlue() {
-        boolean firstOrThirdShift = (teleopTimer.get() > 10.0 && teleopTimer.get() <= 35.0) || (teleopTimer.get() > 85.0);
-        return blueWonAuto() ? !firstOrThirdShift : firstOrThirdShift;
-    }
-
-    /**
-     * Returns whether or not your hub is active.
-     * @return true = your scoring shift (transition, 2 alliance-specific, endgame), false = not your shift (other 2 alliance-specific)
-     */
-    public boolean isCurrentShiftYours() {
-        if (teleopTimer.get() <= 10 || teleopTimer.get() >= 130) {
-            return true;
-        } else if (alliance == Alliance.Blue) {
-            return isCurrentShiftBlue();
+    public double timeLeftInShiftSeconds(double currentMatchTime) {
+        if(currentMatchTime < 20) {
+            return 20 - currentMatchTime;
         } else {
-            return !isCurrentShiftBlue();
+            double teleopMatchTime = currentMatchTime - 20; // Teleop Time
+            if(teleopMatchTime < 10) {
+                return 10 - teleopMatchTime; // Transition Shift
+            } else {
+                double afterTransitionTime = teleopMatchTime - 10;  // Active/Inactive Shifts
+                if(afterTransitionTime < 100) {
+                    return 25 - afterTransitionTime % 25;
+                } else {
+                    double endGameTime = afterTransitionTime - 100; // Endgame Shift
+                    return Math.max(30 - endGameTime, 0);
+                }
+            }
         }
     }
 
+    /**
+     * 
+     * @param currentMatchTime match time counting up from 0 in seconds
+     * @return if the current shift is blue or not
+     */
+    public boolean isCurrentShiftBlue(double currentMatchTime) {
+        if (blueWonAuto() ) {
+            return !((currentMatchTime > 30 && currentMatchTime < 55) || (currentMatchTime > 80 && currentMatchTime < 105)); // 0:30 - 0:55 or 1:20 - 1:45
+        } else {
+            return !((currentMatchTime > 55 && currentMatchTime < 80) || (currentMatchTime > 105 && currentMatchTime < 130)); // 0:55 - 1:20 or 1:45 - 2:10
+        }
+    }
+
+    /**
+     * 
+     * @param currentMatchTime
+     * @return if the current shift is your alliance's
+     */
+    public boolean isCurrentShiftYours(double currentMatchTime) {
+        if(currentMatchTime < 30 || currentMatchTime > 130) // If in auto+transition or endgame
+            return true;
+        if(alliance == Alliance.Blue) {
+            return isCurrentShiftBlue(matchTimer.get());
+        }
+        if(alliance == Alliance.Red) {
+            return !isCurrentShiftBlue(matchTimer.get());
+        }
+        return true;
+    }
+
     public void periodic() {
-        SmartDashboard.putNumber(MATCH_TIMER.value, Math.max(160.0 - teleopTimer.get(), 0));
-        SmartDashboard.putNumber(SHIFT_TIMER.value, timeLeftInShiftSeconds());
-        SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, isCurrentShiftBlue());
-        SmartDashboard.putBoolean(IS_YOUR_SHIFT.value, isCurrentShiftYours());
+        SmartDashboard.putNumber(MATCH_TIMER.value, Math.max(160-matchTimer.get(), 0));
+        SmartDashboard.putNumber(SHIFT_TIMER.value, timeLeftInShiftSeconds(matchTimer.get()));
+        SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, isCurrentShiftBlue(matchTimer.get()));
+        SmartDashboard.putBoolean(IS_YOUR_SHIFT.value, isCurrentShiftYours(matchTimer.get()));
     }
 }
