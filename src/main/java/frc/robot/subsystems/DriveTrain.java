@@ -102,10 +102,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private Rotation2d driverAngleToStation = Rotation2d.kZero;       // Driver's facing relative to their driver station.  (Blue driver relative to Blue station, or Red driver relative to Red station)
 
   // Variables to store vision cameras
-  // TODO (PhotonVision) uncomment when camera(s) are ready on the robot
-  // private PhotonCameraWrapper cameraUp;
+  private PhotonCameraWrapper cameraLeft;
+  private PhotonCameraWrapper cameraRight;
   List<PhotonCameraWrapper> cameras = new ArrayList<PhotonCameraWrapper>(2);
-  private boolean useVisionForOdometry = false;
+  private boolean useVisionForOdometry = true;
 
   // Odometry class for tracking robot pose
   private final SwerveDrivePoseEstimator poseEstimator; 
@@ -131,9 +131,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     logRotationKey = DataLogUtil.allocateLogRotation();
 
     // Create and enable cameras
-    // TODO (PhotonVision) uncomment when camera(s) are ready on the robot
-    // cameraUp = new PhotonCameraWrapper(VisionConstants.robotToCamUp, VisionConstants.upCameraName, field.getAprilTagFieldLayout());
-    // cameras.add(cameraUp);
+    cameraLeft = new PhotonCameraWrapper(VisionConstants.robotToCamLeft, VisionConstants.leftCameraName, field.getAprilTagFieldLayout());
+    cameraRight = new PhotonCameraWrapper(VisionConstants.robotToCamRight, VisionConstants.rightCameraName, field.getAprilTagFieldLayout());
+    cameras.add(cameraLeft);
+    cameras.add(cameraRight);
 
     // Create swerve modules
     swerveFrontLeft = new SwerveModule("FL",
