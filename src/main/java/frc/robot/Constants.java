@@ -552,7 +552,7 @@ public final class Constants {
   public static final class TurretConstants {
     public static final double compensationVoltage = 12.0;
 
-    public static final double turretToMotorGearRatio = 52.5/1.0;    // For gear reduction from motor to turret, value should be greater than 1
+    public static final double turretToMotorGearRatio = (70.0 / 12.0) * (135.0 / 15.0);  // CALIBRATED: (70.0 / 12.0) * (135.0 / 15.0) For gear reduction from motor to turret, value should be greater than 1
     public static final double turretBeltTeeth = 135.0;
     public static final double encoder1BeltTeeth = 24.0;
     public static final double encoder1GearTeeth = 30.0;
@@ -565,22 +565,22 @@ public final class Constants {
     public static final double offsetAngleCANcoder1 = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of encoder 1 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
     public static final double offsetAngleCANcoder2 = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of encoder 2 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
-    public static final double maxPercentOutput = 1.0;               // TODO CALIBRATE      // Absolute max percent out allowed for turret
-    public static final double maxManualPercentOutput = 0.5; // TODO CALIBRATE              // Max percent out allowed for manual turret movement when calibrated
-    public static final double maxUncalibratedPercentOutput = 0.1;   // TODO CALIBRATE      // Max percent out allowed for any turrent movement when uncalibrated
+    public static final double maxPercentOutput = 1.0;               // Absolute max percent out allowed for turret
+    public static final double maxManualPercentOutput = 0.5; // Max percent out allowed for manual turret movement when calibrated
+    public static final double maxUncalibratedPercentOutput = 0.1;   // Max percent out allowed for any turrent movement when uncalibrated
 
     public static final double angleTolerance = 0.5;        // Angle tolerance for setting the turret angle, in degrees
 
-    public static final double kP = 0.0;  // TODO CALIBRATE
-    public static final double kI = 0.0;  // TODO CALIBRATE
-    public static final double kD = 0.0;  // TODO CALIBRATE
-    public static final double kS = 0.275; // CALIBRATED 3/15/2026: 0.275
-    public static final double kV = 0.0;  // TODO CALIBRATE
-    public static final double kA = 0.0;  // TODO CALIBRATE
+    public static final double kP = 90.0;  // CALIBRATED 3/17/26: 90.0
+    public static final double kI = 0.0;  // CALIBRATED 3/17/26: 0.0
+    public static final double kD = 0.0;  // CALIBRATED 3/17/26: 0.0
+    public static final double kS = 0.275; // CALIBRATED 3/17/26: 0.275
+    public static final double kV = 5.1;  // CALIBRATED 3/17/26: 5.1
+    public static final double kA = 0.0;  // CALIBRATED 3/17/26: 0.0
 
-    public static final double MMCruiseVelocity = 8.0; // TODO CALIBRATE
-    public static final double MMAcceleration = 2.0;   // TODO CALIBRATE
-    public static final double MMJerk = 1.0;           // TODO CALIBRATE
+    public static final double MMCruiseVelocity = 20.0; // CALIBRATED 3/17/26: 20.0
+    public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
+    public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
 
     public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
