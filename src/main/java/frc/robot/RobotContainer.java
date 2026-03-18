@@ -41,9 +41,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // Define key utilities here:
   private final Timer teleopTimer = new Timer();
-  private final Timer matchTimer = new Timer();
   private final AllianceSelection allianceSelection = new AllianceSelection();
-  private final ShiftHelper shiftHelper = new ShiftHelper(allianceSelection, matchTimer);
+  private final ShiftHelper shiftHelper = new ShiftHelper(allianceSelection.getAlliance(), teleopTimer);
   private final Field field = new Field(allianceSelection);
 
   // Define robot subsystems
@@ -176,13 +175,14 @@ public class RobotContainer {
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
 
+    // Climber
+    // SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberSetPercent(0, true, climber));
+    // SmartDashboard.putData(CLIMBER_CMD_CALIBRATION_RAMP. value, new ClimberCalibration(5, climber));
+    // SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_INPUT.value, new ClimberSetPercent(true, climber));
+    // SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_INPUT.value, new ClimberSetPosition(climber));
+
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
-
-    // Match TODO update timers
-    SmartDashboard.putNumber(MATCH_TIMER.value, 0);
-    SmartDashboard.putNumber(SHIFT_TIMER.value, 0);
-    SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, true);
   }
  
   /**
@@ -265,24 +265,13 @@ public class RobotContainer {
 
     // ex: coP[1].onTrue(new command(param1, param2, etc));
 
-    // Send intake deploy out manually while held, stop when released
-    coP[1].whileTrue(new IntakeDeploySetPercent(-1.0 * IntakeConstants.deployMaxManualPercentOutput, false, intake));
+    // Send intake deploy in/out manually while held, stop when released
+    coP[1].whileTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, false, intake));
+    coP[2].whileTrue(new IntakeDeploySetPercent(-IntakeConstants.deployMaxManualPercentOutput, false, intake));
 
-    // Bring intake deploy in manually while held, stop when released
-    coP[2].whileTrue(new IntakeDeploySetPercent(IntakeConstants.deployMaxManualPercentOutput, false, intake));
-
-    // Spin rollers inwards while held, stop when released
+    // Spin rollers inwards/outwards while held, stop when released
     coP[3].whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
-
-    // Spin rollers outwards while held, stop when released
-    coP[4].whileTrue(new IntakeRollerSetPercent(-1.0 * IntakeConstants.rollerIntakePercent, false, intake));
-
-
-    // Reset Pose
-    coP[7].onTrue(either(
-      new DriveResetPose(180, false, driveTrain), 
-      new DriveResetPose(0, false, driveTrain), 
-      () -> allianceSelection.getAlliance() == Alliance.Red));
+    coP[4].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
 
     // Spin uptake then spindexer to feed shooter, stop when released
@@ -303,9 +292,36 @@ public class RobotContainer {
     );
     coP[6].onFalse(new FeederStop(feeder));
 
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shooterPercent, VelocityType.runForever, shooter));
+    // Reset Pose
+    coP[7].onTrue(either(
+      new DriveResetPose(180, false, driveTrain), 
+      new DriveResetPose(0, false, driveTrain), 
+      () -> allianceSelection.getAlliance() == Alliance.Red));
 
-    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShooterPercent, VelocityType.runForever, shooter));
+    // // Manually spin turret CW/CCW while held, stopping when released
+    // coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
+    // coP[10].whileTrue(new TurretSetPercent(turret, +TurretConstants.maxManualPercentOutput));
+
+    // Manually move the hood up/down while held, stopping when released
+    // coP[11].whileTrue(new HoodSetPercent(ShooterConstants.hoodMaxManualPercentOutput, EndType.runForever, shooter));
+    // coP[12].whileTrue(new HoodSetPercent(-ShooterConstants.hoodMaxManualPercentOutput, EndType.runForever, shooter));
+
+    // Manually spin shooter out/in while held, stopping when released
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShootRPM, VelocityType.runForever, shooter));
+
+    // Manually move climber up/down while held, stopping when released
+    // coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, EndType.runForever, climber));
+    // coP[16].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, EndType.runForever, climber));
+
+    // Manually calibrate climber, assuming it's at the lower limit
+    // coP[18].onTrue(new ClimberManualCalibration(climber));
+
+    // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
+    // coP[19].onTrue(new TurretManualCalibration(turret, true));
+
+    // Manually recalibrate intake deploy, assuming it's at intaking position
+    coP[20].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
   }
 
   private void configureTriggers() {
@@ -349,10 +365,6 @@ public class RobotContainer {
 
     LEDEventUtil.sendEvent(LEDStripEvents.ROBOT_DISABLED);
     teleopTimer.stop();
-    teleopTimer.reset();
-
-    matchTimer.stop();
-    matchTimer.reset();
 
     SignalLogger.stop();
   }
@@ -385,9 +397,6 @@ public class RobotContainer {
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
     // it will read the gyro/encoder before the reset goes into effect.
-
-    matchTimer.reset();
-    matchTimer.start();
   }
 
   /**
@@ -413,7 +422,7 @@ public class RobotContainer {
     // CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
     // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
-    teleopTimer.start();
+    teleopTimer.restart();
   }
 
   /**
