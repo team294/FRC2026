@@ -136,8 +136,8 @@ public final class Constants {
     private static final String setPositionCmdString = " Set Position";
     private static final String setPositionCmdInputString = " Set Position Input";
     private static final String calibrationRampCmdString = " Calibration Ramp";
-    private static final String calibrateManualCmdString = " Calibrate Manual";
-    private static final String calibrateManualCmdInputString = " Calibrate Manual Input";
+    private static final String calibrateManualCmdString = " Recalibrate";
+    private static final String calibrateManualCmdInputString = " Recalibrate Manual Input";
     private static final String stopCmdString = " Stop";
 
     // Readings
@@ -210,7 +210,7 @@ public final class Constants {
 
       // Set Angle Command Input
       INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
-      TURRET_CMD_SET_ANGLE_INPUT(TURRET_CMD_SET_ANGLE.value + setAngleCmdInputString),
+      TURRET_CMD_SET_ANGLE_INPUT(turretString + setAngleCmdInputString),
 
       // Set Position Command
       CLIMBER_CMD_SET_POSITION(climberString + setPositionCmdString),
@@ -225,8 +225,8 @@ public final class Constants {
       // Calibrate Manual Command
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(intakeDeployString + calibrateManualCmdString),
       CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
-      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString),
-      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + " Automatic Recalibration"),
+      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
+      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
 
       // Calibrate Manual Command Input
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(intakeDeployString + calibrateManualCmdInputString + " (Degrees)"),
