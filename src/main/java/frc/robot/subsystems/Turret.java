@@ -795,11 +795,7 @@ public class Turret extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(TURRET_ENCODER_RAW.value, getTurretEncoderRotationsRaw());
       SmartDashboard.putNumber(TURRET_ANGLE.value, getTurretEncoderDegrees());
       SmartDashboard.putNumber(TURRET_TARGET_ANGLE.value, getCurrentTurretTarget());
-      SmartDashboard.putNumber(TURRET_OUTPUT.value, getTurretMotorPercentOutput());
-      SmartDashboard.putNumber(TURRET_OUTPUT.value, turretTemp.refresh().getValueAsDouble());
-      SmartDashboard.putNumber(TURRET_CURRENT.value, turretStatorCurrent.refresh().getValueAsDouble());
 
-      SmartDashboard.putNumber(TURRET_BASIC_ESTIMATION.value, calcTurretAngleFromEncodersBasic());
       SmartDashboard.putNumber(TURRET_ADVANCED_ESTIMATION.value, calcTurretAngleFromEncodersAdvanced());
     }
 
