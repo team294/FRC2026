@@ -110,6 +110,8 @@ public final class Constants {
     // PWM Ports
     public static final int PWMHoodServo1 = 0;
     public static final int PWMHoodServo2 = 1;
+    public static final int DIOClimberLowerLimitSensor1 = 2;
+    public static final int DIOClimberLowerLimitSensor2 = 3;
   }
 
   public static final class OIConstants {
@@ -124,23 +126,31 @@ public final class Constants {
   }
 
   public static final class ElasticKeyConstants {
-    // Common commands
+    // Commands
     private static final String setPercentCmdString = " Set Percent";
-    private static final String setPercentInputString = " Set Percent Input";
+    private static final String setPercentCmdInputString = " Set Percent Input";
     private static final String setVelocityCmdString = " Set Velocity";
-    private static final String setVelocityInputString = " Set Velocity Input";
+    private static final String setVelocityCmdInputString = " Set Velocity Input";
     private static final String setAngleCmdString = " Set Angle";
-    private static final String setAngleInputString = " Set Angle Input";
+    private static final String setAngleCmdInputString = " Set Angle Input";
+    private static final String setPositionCmdString = " Set Position";
+    private static final String setPositionCmdInputString = " Set Position Input";
+    private static final String calibrationRampCmdString = " Calibration Ramp";
+    private static final String calibrateManualCmdString = " Calibrate Manual";
+    private static final String calibrateManualCmdInputString = " Calibrate Manual Input";
     private static final String stopCmdString = " Stop";
 
-    private static final String velocityString = " Velocity";
+    // Readings
     private static final String rpmString = " RPM";
     private static final String targetRpmString = " Target RPM";
     private static final String tempString = " Temp";
     private static final String angleString = " Angle";
     private static final String targetAngleString = " Target Angle";
+    private static final String positionString = " Position";
+    private static final String targetPositionString = " Target Position";
 
-    // Subsystem names
+    // Subsystems
+    private static final String intakeString = "Intake";
     private static final String intakeRollerString = "Intake Roller";
     private static final String intakeDeployString = "Intake Deploy";
     private static final String feederSpindexerString = "Spindexer";
@@ -151,109 +161,154 @@ public final class Constants {
     private static final String hood2String = "Hood 2";
     private static final String shooterWholeString = "Shooter";
     private static final String hoodWholeString = "Hood";
+    private static final String climberString = "Climber";
 
     public enum ElasticKey {
-
       STOP_ALL_MOTORS("Stop All Motors"),
-
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
-      
-      INTAKE_STOP("Intake Stop"),
 
-      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentInputString),
-      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.stopCmdString),
+      // Stop Command
+      INTAKE_CMD_STOP(intakeString + stopCmdString),
+      INTAKE_DEPLOY_CMD_STOP(intakeDeployString + stopCmdString),
+      INTAKE_ROLLER_CMD_STOP(intakeRollerString + stopCmdString),
+      SPINDEXER_CMD_STOP(feederSpindexerString + stopCmdString),
+      UPTAKE_CMD_STOP(feederUptakeString + stopCmdString),
+      FEEDER_CMD_STOP(feederSpindexerString + "/" + feederUptakeString + stopCmdString),
+      SHOOTER_CMD_STOP(shooterWholeString + stopCmdString),
+      CLIMBER_CMD_STOP(climberString + stopCmdString),
+      HOOD_CMD_STOP_BOTH(hoodWholeString + stopCmdString),
+      HOOD_CMD_STOP_1(hood1String + stopCmdString),
+      HOOD_CMD_STOP_2(hood2String + stopCmdString),
 
-      INTAKE_ROLLER_VELOCITY(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.velocityString),
+      // Set Voltage Command
+      HOOD_CMD_SET_VOLTAGE_1(hood1String + " Set Voltage"),
+      HOOD_CMD_SET_VOLTAGE_2(hood2String + " Set Voltage"),
+      HOOD_CMD_SET_VOLTAGE_BOTH(hoodWholeString + " Set Voltage (both motors)"),
 
-      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentInputString),
-      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.stopCmdString),
-      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleCmdString),
-      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleInputString),
-      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.intakeDeployString + " Calibrate Manual"),
-      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(ElasticKeyConstants.intakeDeployString + " Calibrate Manual Input Angle"),
-      INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(ElasticKeyConstants.intakeDeployString + " Calibration Ramp"),
+      // Set Voltage Command Input
+      HOOD_CMD_SET_VOLTAGE_INPUT(hoodWholeString + " Set Voltage Input"),
 
-      INTAKE_DEPLOY_VELOCITY(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.velocityString),
-      INTAKE_DEPLOY_IS_CANCODER_CONNECTED(ElasticKeyConstants.intakeDeployString + " CANcoder Connected?"),
-      INTAKE_DEPLOY_IS_CALIBRATED(ElasticKeyConstants.intakeDeployString + " Calibrated?"),
-      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.targetAngleString),
-      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.angleString),
-      INTAKE_DEPLOY_RAW_ROTATIONS(ElasticKeyConstants.intakeDeployString + " Raw Rotations"),
+      // Set Percent Command
+      INTAKE_ROLLER_CMD_SET_PERCENT(intakeRollerString + setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT(intakeDeployString + setPercentCmdString),
+      SPINDEXER_CMD_SET_PERCENT(feederSpindexerString + setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT(shooterWholeString + setPercentCmdString),
+      UPTAKE_CMD_SET_PERCENT(feederUptakeString + setPercentCmdString),
+      CLIMBER_CMD_SET_PERCENT(climberString + setPercentCmdString),
+      HOOD_CMD_SET_PERCENT_1(hoodWholeString + setPercentCmdString + " 1"),
+      HOOD_CMD_SET_PERCENT_2(hoodWholeString + setPercentCmdString + " 2"),
 
-      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.stopCmdString),
-      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentCmdString),
-      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentInputString),
-      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityCmdString),
-      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityInputString),
 
-      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.rpmString),
-      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.targetRpmString),
-      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.tempString),
+      // Set Percent Command Input
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(intakeDeployString + setPercentCmdInputString),
+      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(intakeRollerString + setPercentCmdInputString),
+      SPINDEXER_CMD_SET_PERCENT_INPUT(feederSpindexerString + setPercentCmdInputString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(shooterWholeString + setPercentCmdInputString),
+      UPTAKE_CMD_SET_PERCENT_INPUT(feederUptakeString + setPercentCmdInputString),
+      CLIMBER_CMD_SET_PERCENT_INPUT(climberString + setPercentCmdInputString),
+      HOOD_CMD_SET_PERCENT_INPUT(hoodWholeString + setPercentCmdInputString),
 
-      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.stopCmdString),
-      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentCmdString),
-      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentInputString),
-      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdString),
-      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityInputString),
-      UPTAKE_STOP("Feeder Stop"),
+      // Set Velocity Command
+      SPINDEXER_CMD_SET_VELOCITY(feederSpindexerString + setVelocityCmdString),
+      UPTAKE_CMD_SET_VELOCITY(feederUptakeString + setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY(shooterWholeString + setVelocityCmdString),
 
-      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + " RPM"),
-      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + " Target RPM"),
-      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + " Temp"),
+      // Set Velocity Command Input
+      SPINDEXER_CMD_SET_VELOCITY_INPUT(feederSpindexerString + setVelocityCmdInputString),
+      UPTAKE_CMD_SET_VELOCITY_INPUT(feederUptakeString + setVelocityCmdInputString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(shooterWholeString + setVelocityCmdInputString),
 
-      SHOOTER_1_VOLTAGE(ElasticKeyConstants.shooter1String + " Voltage"),
-      SHOOTER_1_POSITION_REV(ElasticKeyConstants.shooter1String + " Position Rev"),
-      SHOOTER_1_RPM(ElasticKeyConstants.shooter1String + " RPM"),
-      SHOOTER_1_TEMP_C(ElasticKeyConstants.shooter1String + " Temp C"),
+      // Set Angle Command
+      INTAKE_DEPLOY_CMD_SET_ANGLE(intakeDeployString + setAngleCmdString),
+      HOOD_CMD_SET_ANGLE_FOREVER(hoodWholeString + setAngleCmdString + " (Run Forever)"),
+      HOOD_CMD_SET_ANGLE_WAIT(hoodWholeString + setAngleCmdString + " (Wait for Angle)"),
 
-      SHOOTER_2_VOLTAGE(ElasticKeyConstants.shooter2String + " Voltage"),
-      SHOOTER_2_POSITION_REV(ElasticKeyConstants.shooter2String + " Position Rev"),
-      SHOOTER_2_RPM(ElasticKeyConstants.shooter2String + " RPM"),
-      SHOOTER_2_TEMP_C(ElasticKeyConstants.shooter2String + " Temp C"),
+      // Set Angle Command Input
+      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
+      HOOD_CMD_SET_ANGLE_INPUT(hoodWholeString + setAngleCmdInputString),
 
-      SHOOTER_AVG_RPM(ElasticKeyConstants.shooterWholeString + " Avg RPM"),
-      SHOOTER_TARGET_RPM(ElasticKeyConstants.shooterWholeString + " Target RPM"),
+      // Set Position Command
+      CLIMBER_CMD_SET_POSITION(climberString + setPositionCmdString),
 
-      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setPercentCmdString),
-      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setPercentInputString),
-      SHOOTER_CMD_SET_VELOCITY_500_RPM(ElasticKeyConstants.shooterWholeString + " Set Velocity 500 rpm"),
-      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setVelocityCmdString),
-      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.setVelocityInputString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterWholeString + ElasticKeyConstants.stopCmdString),
+      // Set Position Command Input
+      CLIMBER_CMD_SET_POSITION_INPUT(climberString + setPositionCmdInputString),
 
-      SHOOTER_VELOCITY_CONTROL_ON(ElasticKeyConstants.shooterWholeString + " Velocity Control On"),
+      // Calibration Ramp Command
+      INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(intakeDeployString + calibrationRampCmdString),
+      CLIMBER_CMD_CALIBRATION_RAMP(climberString + calibrationRampCmdString),
 
-      HOOD_1_VOLTAGE(ElasticKeyConstants.hood1String + " Voltage"),
-      HOOD_2_VOLTAGE(ElasticKeyConstants.hood2String + " Voltage"),
-      HOOD_1_ANALOG_VOLTAGE(ElasticKeyConstants.hood1String + " Analog Voltage"),
-      HOOD_2_ANALOG_VOLTAGE(ElasticKeyConstants.hood2String + " Analog Voltage"),
-      HOOD_1_ANGLE(ElasticKeyConstants.hood1String + " Angle Deg"),
-      HOOD_2_ANGLE(ElasticKeyConstants.hood2String + " Angle Deg"),
-      HOOD_1_LENGTH(ElasticKeyConstants.hood1String + " Extension Length"),
-      HOOD_2_LENGTH(ElasticKeyConstants.hood2String + " Extension Length"),
-      HOOD_1_CURRENT(ElasticKeyConstants.hood1String + " Current"),
-      HOOD_2_CURRENT(ElasticKeyConstants.hood2String + " Current"),
-      HOOD_ANGLE_CURRENT_SETPOINT("Current Hood Angle Setpoint"),
+      // Calibrate Manual Command
+      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(intakeDeployString + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
 
-      HOOD_CMD_SET_ANGLE_FOREVER(ElasticKeyConstants.hoodWholeString + " Set Angle (Run Forever)"),
-      HOOD_CMD_SET_ANGLE_WAIT(ElasticKeyConstants.hoodWholeString + " Set Angle (Wait for Angle)"),
-      HOOD_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.hoodWholeString + " Set Angle Input"),
-      HOOD_CMD_SET_PERCENT_1(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.setPercentCmdString + " 1"),
-      HOOD_CMD_SET_PERCENT_2(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.setPercentCmdString + " 2"),
-      HOOD_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.setPercentInputString),
-      HOOD_CMD_SET_VOLTAGE_1(ElasticKeyConstants.hood1String + " Set Voltage"),
-      HOOD_CMD_SET_VOLTAGE_2(ElasticKeyConstants.hood2String + " Set Voltage"),
-      HOOD_CMD_SET_VOLTAGE_BOTH(ElasticKeyConstants.hoodWholeString + " Set Voltage (both motors)"),
-      HOOD_CMD_SET_VOLTAGE_INPUT(ElasticKeyConstants.hoodWholeString + " Set Voltage Input"),
-      HOOD_CMD_STOP_BOTH(ElasticKeyConstants.hoodWholeString + ElasticKeyConstants.stopCmdString),
-      HOOD_CMD_STOP_1(ElasticKeyConstants.hood1String + ElasticKeyConstants.stopCmdString),
-      HOOD_CMD_STOP_2(ElasticKeyConstants.hood2String + ElasticKeyConstants.stopCmdString),
+      // Calibrate Manual Command Input
+      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(intakeDeployString + calibrateManualCmdInputString + " (Degrees)"),
+      CLIMBER_CMD_CALIBRATE_MANUAL_INPUT(climberString + calibrateManualCmdInputString + " (Inches)"),
 
-      MATCH_TIMER("Match Timer"),
+      // Voltage
+      HOOD_1_VOLTAGE(hood1String + " Voltage"),
+      HOOD_2_VOLTAGE(hood2String + " Voltage"),
+      HOOD_1_ANALOG_VOLTAGE(hood1String + " Analog Voltage"),
+      HOOD_2_ANALOG_VOLTAGE(hood2String + " Analog Voltage"),
+
+      // Current
+      HOOD_1_CURRENT(hood1String + " Current"),
+      HOOD_2_CURRENT(hood2String + " Current"),
+
+      // Temp
+      INTAKE_DEPLOY_TEMP(intakeDeployString + tempString),
+      INTAKE_ROLLER_TEMP(intakeRollerString + tempString),
+      SPINDEXER_TEMP(feederSpindexerString + tempString),
+      UPTAKE_TEMP(feederUptakeString + tempString),
+      SHOOTER_LEFT_TEMP(shooterWholeString + " L" + tempString),
+      SHOOTER_RIGHT_TEMP(shooterWholeString + " R" + tempString),
+
+      // RPM
+      SPINDEXER_RPM(feederSpindexerString + rpmString),
+      UPTAKE_RPM(feederUptakeString + rpmString),
+      SHOOTER_RPM(shooterWholeString + rpmString),
+
+      // Target RPM
+      SPINDEXER_TARGET_RPM(feederSpindexerString + targetRpmString),
+      UPTAKE_TARGET_RPM(feederUptakeString + targetRpmString),
+      SHOOTER_TARGET_RPM(shooterWholeString + targetRpmString),
+
+      // Angle
+      INTAKE_DEPLOY_ANGLE(intakeDeployString + angleString),
+      HOOD_1_ANGLE(hood1String + angleString),
+      HOOD_2_ANGLE(hood2String + angleString),
+
+      // Target Angle
+      INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
+      HOOD_ANGLE_CURRENT_SETPOINT(hoodWholeString + targetAngleString),
+
+      // Position
+      CLIMBER_POSITION(climberString + positionString),
+      HOOD_1_LENGTH(hood1String + " Extension Length (in)"),
+      HOOD_2_LENGTH(hood2String + " Extension Length (in)"),
+
+      // Target Position
+      CLIMBER_TARGET(climberString + targetPositionString),
+
+      // CANcoder Connected
+      INTAKE_DEPLOY_IS_CANCODER_CONNECTED(intakeDeployString + " CANcoder Connected?"),
+
+      // Calibrated
+      INTAKE_DEPLOY_IS_CALIBRATED(intakeDeployString + " Calibrated?"),
+      CLIMBER_IS_CALIBRATED(climberString + " Calibrated?"),
+
+      // Raw Rotations
+      INTAKE_DEPLOY_RAW_ROTATIONS(intakeDeployString + " Raw Rotations"),
+
+      // Limits
+      CLIMBER_IS_AT_LOWER_LIMIT(climberString + " Lower Limit"),
+      CLIMBER_MOTOR_ONE_IS_AT_LOWER_LIMIT(climberString + " Motor 1 Lower Limit"),
+      CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT(climberString + " Motor 2 Lower Limit"),
+
+      // Match
+      TELEOP_TIMER("Teleop Timer"),
       SHIFT_TIMER("Shift Timer"),
       IS_BLUE_SHIFT("Is Blue Shift"),
       IS_YOUR_SHIFT("Is Your Shift");
@@ -485,7 +540,7 @@ public final class Constants {
       public static final double kA = 0.0;
     }
   }
-  
+
   public static final class ShooterConstants {
     public static final double compensationVoltage = 12.0;
     public static final double shooterPercent = 0.2; 

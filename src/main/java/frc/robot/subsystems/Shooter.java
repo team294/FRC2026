@@ -43,6 +43,8 @@ import frc.robot.utilities.RobotPreferences;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
+import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
+
 public class Shooter extends SubsystemBase implements Loggable {
   private final int logRotationKey;     // Key to identify the log rotation
   private boolean fastLogging = true;  // true = log every cycle, false = log every 10 cycles
@@ -302,6 +304,14 @@ public class Shooter extends SubsystemBase implements Loggable {
   public double getShooterVelocity(int motorNumber) {
     return motorNumber == 1 ? shooter1EncoderVelocity.refresh().getValueAsDouble() * ShooterConstants.gearRatio * 60.0
                             : shooter2EncoderVelocity.refresh().getValueAsDouble() * ShooterConstants.gearRatio * 60.0;
+  }
+
+  /**
+   * Gets the velocity of the shooter wheel, averaging the two motors.
+   * @return wheel velocity, in RPM
+   */
+  public double getShooterVelocity() {
+    return (getShooterVelocity(1) + getShooterVelocity(2)) / 2.0;
   }
 
   /**
@@ -620,20 +630,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     
 
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
-      SmartDashboard.putNumber(SHOOTER_1_VOLTAGE.value, getShooterVoltage(1));
-      SmartDashboard.putNumber(SHOOTER_1_POSITION_REV.value, getShooterEncoderPosition(1));
-      SmartDashboard.putNumber(SHOOTER_1_RPM.value, getShooterVelocity(1));
-      SmartDashboard.putNumber(SHOOTER_1_TEMP_C.value, getShooterTemp(1));
-      SmartDashboard.putNumber(SHOOTER_2_VOLTAGE.value, getShooterVoltage(2));
-      SmartDashboard.putNumber(SHOOTER_2_POSITION_REV.value, getShooterEncoderPosition(2));
-      SmartDashboard.putNumber(SHOOTER_2_RPM.value, getShooterVelocity(2));
-      SmartDashboard.putNumber(SHOOTER_2_TEMP_C.value, getShooterTemp(2));
-
-      SmartDashboard.putNumber(SHOOTER_AVG_RPM.value, (getShooterVelocity(1) + getShooterVelocity(2)) / 2.0);
-
-      SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, getShooterSetpointRPM());
-      SmartDashboard.putBoolean(SHOOTER_VELOCITY_CONTROL_ON.value, isShooterVelocityControlOn());
-
+      SmartDashboard.putNumber(SHOOTER_LEFT_TEMP.value, shooter1Temperature.refresh().getValueAsDouble());
+      SmartDashboard.putNumber(SHOOTER_RIGHT_TEMP.value, shooter2Temperature.refresh().getValueAsDouble());
+      SmartDashboard.putNumber(SHOOTER_RPM.value, getShooterVelocity());
+      SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, setpointRPM);
+      
       SmartDashboard.putNumber(HOOD_1_VOLTAGE.value, hoodMotor1.getMotorVoltage(true).getValueAsDouble());
       SmartDashboard.putNumber(HOOD_2_VOLTAGE.value, hoodMotor2.getMotorVoltage(true).getValueAsDouble());
       SmartDashboard.putNumber(HOOD_1_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(1));
