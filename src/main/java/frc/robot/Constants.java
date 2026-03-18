@@ -498,6 +498,30 @@ public final class Constants {
     }
   }
 
+  public static final class ClimberConstants {
+    public static final double kEncoderCPR = 0.0;                 // Encoder counts per revolution of the motor pinion gear
+    public static final double kClimberGearRatio = 0.0;      // Gear reduction ratio between Kraken and gear driving the climber TODO CALIBRATE
+    public static final double kClimberPulleyDiameterInches = 0.0; // Diameter of the pulley driving the climber in inches TODO CALIBRATE
+    public static final double kClimberEncoderInchesPerTick = (kClimberPulleyDiameterInches * Math.PI) / kEncoderCPR / kClimberGearRatio;  // TODO CALIBRATE
+    
+    public static final double compensationVoltage = 12.0;
+
+    // TODO CALIBRATE
+    public static final double maxUncalibratedPercentOutput = 0.05;
+    public static final double maxManualPercentOutput = 0.1;  // Max climber speed when driven using Xbox controller
+    public static final double maxPercentOutput = 1.0;        // Absolute max output to climber motors
+
+    // TODO CALIBRATE
+    public enum ClimberPosition {
+      LOWER_LIMIT(0.0),
+      UPPER_LIMIT(0.0);
+ 
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final double value;
+      ClimberPosition(double value) { this.value = value; }
+    }
+  }
+
   public static final class ShooterConstants {
     public static final double compensationVoltage = 12.0;
     public static final double shooterPercent = 0.2; 
