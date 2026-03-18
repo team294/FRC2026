@@ -707,7 +707,7 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Get turret target angle for aiming to the hub based on current alliance and robot position/velocity.
+   * Get turret target angle for aiming to a target based on turret position and target position
    * @param robotPose2d Pose2d object for robot's current position
    * @param targetPose2d Pose2d object for aiming target
    * @return goal auto-targeting angle based on current turret position, in degrees
@@ -720,7 +720,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * Get target angle for turret to turn to relative to turret's absolute zero.
    * @param robotPose2d Current Pose2d of robot on field
    * @param targetPose2d Pose2d object for aiming target
-   * @return target angle for turret to turn to
+   * @return target angle for turret to turn to in turret-relative, 0deg is back of robot
    */
   public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetPose2d) {
     return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
