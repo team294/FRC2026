@@ -12,7 +12,6 @@ import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
-import frc.robot.commands.ShooterScorePrep.ScoreEndType;
 import frc.robot.commands.ShooterSetVelocity.VelocityType;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
