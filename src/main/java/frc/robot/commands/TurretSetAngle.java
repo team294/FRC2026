@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.EndType;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.DataLogUtil;
@@ -23,13 +24,7 @@ public class TurretSetAngle extends Command {
   private final boolean useGetter;
   private double targetAngle;
 
-  private int counter;
-
-  public enum EndType{
-    immediatelyEnd,
-    waitForAngle,
-    runForever
-  }
+  private int toleranceCounter;
 
    /**
     * Sets the angle of the turret if the turret is calibrated.  Otherwise, does nothing.
@@ -38,7 +33,7 @@ public class TurretSetAngle extends Command {
     *              positive = counter clockwise, negative = clockwise)
     * @param endType
     * <p> immediatelyEnd = command ends immediately, but turret continues turning towards requested angle
-    * <p> waitForAngle = command runs until turret is within tolerance of the requested angle for 5 cycles, then command ends
+    * <p> waitForSetPoint = command runs until turret is within tolerance of the requested angle for 5 cycles, then command ends
     * <p> runForever = command runs until interrupted, continuing to move to last requested angle when interrupted.  This
     *     endType is useful when using the angleGetter implementation for tracking a target.
     * @param turret Turret subsystem
@@ -63,7 +58,7 @@ public class TurretSetAngle extends Command {
     *              positive = counter clockwise, negative = clockwise)
     * @param endType
     * <p> immediatelyEnd = command ends immediately, but turret continues turning towards requested angle
-    * <p> waitForAngle = command runs until turret is within tolerance of the requested angle for 5 cycles, then command ends
+    * <p> waitForSetPoint = command runs until turret is within tolerance of the requested angle for 5 cycles, then command ends
     * <p> runForever = command runs until interrupted, continuing to move to last requested angle when interrupted.  This
     *     endType is useful when using the angleGetter implementation for tracking a target.
     * @param turret Turret subsystem
@@ -87,7 +82,7 @@ public class TurretSetAngle extends Command {
     *              positive = counter clockwise, negative = clockwise)
     * @param endType
     * <p> immediatelyEnd = command ends immediately, but turret continues turning towards requested angle
-    * <p> waitForAngle = command runs until turret is within tolerance of the requested angle for 5 cycles, then command ends
+    * <p> waitForSetPoint = command runs until turret is within tolerance of the requested angle for 5 cycles, then command ends
     * <p> runForever = command runs until interrupted, continuing to move to last requested angle when interrupted.  This
     *     endType is useful when using the angleGetter implementation for tracking a target.
     * @param turret Turret subsystem
@@ -121,7 +116,7 @@ public class TurretSetAngle extends Command {
     turret.enableFastLogging(true);
     //SignalLogger.start();     // Uncomment for Phoenix logging
     turret.setTurretAngle(targetAngle);
-    counter = 0;
+    toleranceCounter = 0;
 
     DataLogUtil.writeMessage("TurretSetAngle: Initialize, Target angle =", targetAngle, ", endType =", endType, 
         ", starting angle =", turret.getTurretAngle());
@@ -158,18 +153,18 @@ public class TurretSetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    switch (endType){
+    switch (endType) {
       case immediatelyEnd:
         return true;
       case runForever:
         return false;
-      case waitForAngle:
-        if( (Math.abs(turret.getTurretAngle() - targetAngle) < TurretConstants.angleTolerance) ) {
-          counter++;
-        }else{
-          counter = 0;
+      case waitForSetPoint:
+        if ( (Math.abs(turret.getTurretAngle() - targetAngle) < TurretConstants.angleTolerance) ) {
+          toleranceCounter++;
+        } else {
+          toleranceCounter = 0;
         }
-        return counter >= 5;
+        return toleranceCounter >= 5;
       default:
         return true;
     }
