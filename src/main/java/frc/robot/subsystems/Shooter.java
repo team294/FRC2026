@@ -635,14 +635,14 @@ public class Shooter extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(SHOOTER_RPM.value, getShooterVelocity());
       SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, setpointRPM);
       
-      SmartDashboard.putNumber(HOOD_1_VOLTAGE.value, hoodMotor1.getMotorVoltage(true).getValueAsDouble());
-      SmartDashboard.putNumber(HOOD_2_VOLTAGE.value, hoodMotor2.getMotorVoltage(true).getValueAsDouble());
-      SmartDashboard.putNumber(HOOD_1_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(1));
-      SmartDashboard.putNumber(HOOD_2_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(2));
-      SmartDashboard.putNumber(HOOD_1_LENGTH.value, getHoodExtensionLength(1));
-      SmartDashboard.putNumber(HOOD_2_LENGTH.value, getHoodExtensionLength(2));
-      SmartDashboard.putNumber(HOOD_1_ANGLE.value, getHoodAngle(1));
-      SmartDashboard.putNumber(HOOD_2_ANGLE.value, getHoodAngle(2));
+      SmartDashboard.putNumber(HOOD_LEFT_VOLTAGE.value, hoodMotor1.getMotorVoltage(true).getValueAsDouble());
+      SmartDashboard.putNumber(HOOD_RIGHT_VOLTAGE.value, hoodMotor2.getMotorVoltage(true).getValueAsDouble());
+      SmartDashboard.putNumber(HOOD_LEFT_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(1));
+      SmartDashboard.putNumber(HOOD_RIGHT_ANALOG_VOLTAGE.value, getHoodAnalogVoltage(2));
+      SmartDashboard.putNumber(HOOD_LEFT_LENGTH.value, getHoodExtensionLength(1));
+      SmartDashboard.putNumber(HOOD_RIGHT_LENGTH.value, getHoodExtensionLength(2));
+      SmartDashboard.putNumber(HOOD_LEFT_ANGLE.value, getHoodAngle(1));
+      SmartDashboard.putNumber(HOOD_RIGHT_ANGLE.value, getHoodAngle(2));
       SmartDashboard.putNumber(HOOD_ANGLE_CURRENT_SETPOINT.value, hoodAngleSetpoint);
     }
   }

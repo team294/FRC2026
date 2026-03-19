@@ -19,7 +19,7 @@ public class HoodSetAngle extends Command {
   private double targetAngle = ShooterConstants.hoodMinimumAngle;
   private final Shooter shooter;
   private final boolean fromElastic;
-  private int counter;
+  private int toleranceCounter;
   
   private DoubleSupplier angleGetter;
   private boolean useGetter = false;
@@ -97,7 +97,7 @@ public class HoodSetAngle extends Command {
 
     shooter.setHoodAnglePID(targetAngle);
 
-    counter = 0;
+    toleranceCounter = 0;
     DataLogUtil.writeMessage("HoodSetAngle: Initialize, Angle Setpoint =", targetAngle, ", type =", type);
   }
 
@@ -141,11 +141,11 @@ public class HoodSetAngle extends Command {
         return false;
       case waitForAngle:
         if ( Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) {
-          counter++;
+          toleranceCounter++;
         } else {
-          counter = 0;
+          toleranceCounter = 0;
         }
-        return counter >= 5;
+        return toleranceCounter >= 5;
       default:
         return true;
     }

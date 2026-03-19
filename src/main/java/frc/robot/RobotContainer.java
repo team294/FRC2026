@@ -13,6 +13,7 @@ import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.HoodSetAngle.EndType;
+import frc.robot.commands.ShooterScorePrep.ScoreEndType;
 import frc.robot.commands.ShooterSetVelocity.VelocityType;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
@@ -158,12 +159,18 @@ public class RobotContainer {
     // Set Velocity
     SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
     SmartDashboard.putData(UPTAKE_CMD_SET_VELOCITY.value, new UptakeSetVelocity(feeder));
-    SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(ShooterSetVelocity.VelocityType.runForever, shooter));
+    SmartDashboard.putData(SHOOTER_CMD_SET_VELOCITY.value, new ShooterSetVelocity(VelocityType.runForever, shooter));
 
     // Set Angle
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
 
     // Set Position
+
+    // Score Sequences
+
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(ScoreEndType.runForever, driveTrain, shooter));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(() -> driveTrain.getPose(), ScoreEndType.waitForSetPoint, driveTrain, shooter));
+                                                                          // placeholder supplier that doesn't do anything rn -- change getPose to getStaticBallTarget/getGhostBallTarget
 
     // Calibration Ramp
     
@@ -181,15 +188,15 @@ public class RobotContainer {
     // SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_INPUT.value, new ClimberSetPosition(climber));
 
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_BOTH.value, new HoodSetVoltage(shooter, 0));
-    SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_1.value, new HoodSetVoltage(shooter, 1));
-    SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_2.value, new HoodSetVoltage(shooter, 2));
-    SmartDashboard.putData(HOOD_CMD_SET_PERCENT_1.value, new HoodSetPercent(true, shooter, 1));
-    SmartDashboard.putData(HOOD_CMD_SET_PERCENT_2.value, new HoodSetPercent(true, shooter, 2));
+    SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_LEFT.value, new HoodSetVoltage(shooter, 1));
+    SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_RIGHT.value, new HoodSetVoltage(shooter, 2));
+    SmartDashboard.putData(HOOD_CMD_SET_PERCENT_LEFT.value, new HoodSetPercent(true, shooter, 1));
+    SmartDashboard.putData(HOOD_CMD_SET_PERCENT_RIGHT.value, new HoodSetPercent(true, shooter, 2));
     SmartDashboard.putData(HOOD_CMD_SET_ANGLE_FOREVER.value, new HoodSetAngle(EndType.runForever, shooter));
     SmartDashboard.putData(HOOD_CMD_SET_ANGLE_WAIT.value, new HoodSetAngle(EndType.waitForAngle, shooter));
     SmartDashboard.putData(HOOD_CMD_STOP_BOTH.value, new HoodSetVoltage(shooter, 0, 0));
-    SmartDashboard.putData(HOOD_CMD_STOP_1.value, new HoodSetVoltage(shooter, 0, 1));
-    SmartDashboard.putData(HOOD_CMD_STOP_2.value, new HoodSetVoltage(shooter, 0, 2));
+    SmartDashboard.putData(HOOD_CMD_STOP_LEFT.value, new HoodSetVoltage(shooter, 0, 1));
+    SmartDashboard.putData(HOOD_CMD_STOP_RIGHT.value, new HoodSetVoltage(shooter, 0, 2));
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());

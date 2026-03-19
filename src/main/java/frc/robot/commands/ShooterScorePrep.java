@@ -141,7 +141,7 @@ public class ShooterScorePrep extends Command {
   public void initialize() {
     if (type == ScoreEndType.waitForSetPoint) shooter.enableFastLogging(true);
 
-    if(fromElastic) {
+    if (fromElastic) {
       targetAngle = SmartDashboard.getNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
       targetVelocity = SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_PERCENT_INPUT.value, 0);
     }
@@ -153,7 +153,7 @@ public class ShooterScorePrep extends Command {
     else if (selfCalculate) { 
       // goalPose = calc goal pose
 
-      distance = driveTrain.getDistanceToGoalPose(); // TODO if sotm, update parameters to pass in goal pose
+      distance = driveTrain.getDistanceToGoalPose(); // TODO if sotm, update parameters to pass in goal pose (from poseSupplier)
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
       targetVelocity = (ShooterConstants.shooterScoreA0 + (ShooterConstants.shooterScoreA0 * distance) + (ShooterConstants.shooterScoreA2*(distance*distance)));
       targetAngle = ShooterConstants.hoodShootAngle;
@@ -161,6 +161,9 @@ public class ShooterScorePrep extends Command {
       // Target hood angle based on: (shooter speed)(B0) + B1, where B0 and B1 are unique constants
       // targetAngle = ((targetVelocity * ShooterConstants.hoodScoreB0) + ShooterConstants.hoodScoreB1); Not varying hood angle at the moment 
     }
+
+    shooter.setHoodAnglePID(targetAngle);
+    shooter.setShooterVelocity(targetVelocity);
 
     DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetAngle, ", Velocity Setpoint =", targetVelocity,
                              ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distance);
@@ -176,11 +179,11 @@ public class ShooterScorePrep extends Command {
       // try to track and maybe never get in tolerance, and then this command would never end.
       targetAngle = angleGetter.getAsDouble();
       targetVelocity = velocityGetter.getAsDouble();
-      shooter.setHoodAngleSetpoint(targetAngle);
+      shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
     if (fromElastic) {
-      shooter.setHoodAngleSetpoint(targetAngle);
+      shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
     else if (selfCalculate){ // Calculates distance and velocity based on position
@@ -189,6 +192,9 @@ public class ShooterScorePrep extends Command {
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
       targetVelocity = (ShooterConstants.shooterScoreA0 + (ShooterConstants.shooterScoreA0 * distance) + (ShooterConstants.shooterScoreA2 * (distance * distance)));
       targetAngle = ShooterConstants.hoodShootAngle;
+
+      shooter.setHoodAnglePID(targetAngle);
+      shooter.setShooterVelocity(targetVelocity);
 
       // Target hood angle based on: (shooter speed)(B0) + B1, where B0 and B1 are unique constants
       // targetAngle = ((targetVelocity * ShooterConstants.hoodScoreB0) + ShooterConstants.hoodScoreB1);
@@ -201,7 +207,8 @@ public class ShooterScorePrep extends Command {
     shooter.enableFastLogging(false);
 
     if (type == ScoreEndType.runForever || type == ScoreEndType.waitForSetPoint) {
-      shooter.setHoodVoltage(0);
+      shooter.setHoodVoltageBothMotors(0);
+      shooter.stopShooterMotor();
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");

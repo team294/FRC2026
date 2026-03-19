@@ -28,7 +28,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.utilities.TrapezoidProfileBCR;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * The Constants class provides a convenient placei n for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
@@ -138,6 +138,7 @@ public final class Constants {
     private static final String calibrationRampCmdString = " Calibration Ramp";
     private static final String calibrateManualCmdString = " Calibrate Manual";
     private static final String calibrateManualCmdInputString = " Calibrate Manual Input";
+    private static final String scorePrepCmdString = " Score Prep";
     private static final String stopCmdString = " Stop";
 
     // Readings
@@ -148,6 +149,7 @@ public final class Constants {
     private static final String targetAngleString = " Target Angle";
     private static final String positionString = " Position";
     private static final String targetPositionString = " Target Position";
+    
 
     // Subsystems
     private static final String intakeString = "Intake";
@@ -155,12 +157,13 @@ public final class Constants {
     private static final String intakeDeployString = "Intake Deploy";
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
-    private static final String shooter1String = "Shooter 1";
-    private static final String shooter2String = "Shooter 2";
-    private static final String hood1String = "Hood 1";
-    private static final String hood2String = "Hood 2";
-    private static final String shooterWholeString = "Shooter";
-    private static final String hoodWholeString = "Hood";
+    private static final String shooterString = "Shooter";
+    private static final String hoodString = "Hood";
+    private static final String shooterLeftString = shooterString + " L" ; // aka shooter 1
+    private static final String shooterRightString = shooterString + " R"; // aka shooter 2
+    private static final String hoodLeftString = hoodString + " L";// aka hood 1
+    private static final String hoodRightString = hoodString + " R"; // aka hood 2
+
     private static final String climberString = "Climber";
 
     public enum ElasticKey {
@@ -176,58 +179,61 @@ public final class Constants {
       SPINDEXER_CMD_STOP(feederSpindexerString + stopCmdString),
       UPTAKE_CMD_STOP(feederUptakeString + stopCmdString),
       FEEDER_CMD_STOP(feederSpindexerString + "/" + feederUptakeString + stopCmdString),
-      SHOOTER_CMD_STOP(shooterWholeString + stopCmdString),
+      SHOOTER_CMD_STOP(shooterString + stopCmdString),
       CLIMBER_CMD_STOP(climberString + stopCmdString),
-      HOOD_CMD_STOP_BOTH(hoodWholeString + stopCmdString),
-      HOOD_CMD_STOP_1(hood1String + stopCmdString),
-      HOOD_CMD_STOP_2(hood2String + stopCmdString),
+      HOOD_CMD_STOP_BOTH(hoodString + stopCmdString),
+      HOOD_CMD_STOP_LEFT(hoodLeftString + stopCmdString),
+      HOOD_CMD_STOP_RIGHT(hoodRightString + stopCmdString),
 
       // Set Voltage Command
-      HOOD_CMD_SET_VOLTAGE_1(hood1String + " Set Voltage"),
-      HOOD_CMD_SET_VOLTAGE_2(hood2String + " Set Voltage"),
-      HOOD_CMD_SET_VOLTAGE_BOTH(hoodWholeString + " Set Voltage (both motors)"),
+      HOOD_CMD_SET_VOLTAGE_LEFT(hoodLeftString + " Set Voltage"),
+      HOOD_CMD_SET_VOLTAGE_RIGHT(hoodRightString + " Set Voltage"),
+      HOOD_CMD_SET_VOLTAGE_BOTH(hoodString + " Set Voltage (both motors)"),
 
       // Set Voltage Command Input
-      HOOD_CMD_SET_VOLTAGE_INPUT(hoodWholeString + " Set Voltage Input"),
+      HOOD_CMD_SET_VOLTAGE_INPUT(hoodString + " Set Voltage Input"),
 
       // Set Percent Command
       INTAKE_ROLLER_CMD_SET_PERCENT(intakeRollerString + setPercentCmdString),
       INTAKE_DEPLOY_CMD_SET_PERCENT(intakeDeployString + setPercentCmdString),
       SPINDEXER_CMD_SET_PERCENT(feederSpindexerString + setPercentCmdString),
-      SHOOTER_CMD_SET_PERCENT(shooterWholeString + setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT(shooterString + setPercentCmdString),
       UPTAKE_CMD_SET_PERCENT(feederUptakeString + setPercentCmdString),
       CLIMBER_CMD_SET_PERCENT(climberString + setPercentCmdString),
-      HOOD_CMD_SET_PERCENT_1(hoodWholeString + setPercentCmdString + " 1"),
-      HOOD_CMD_SET_PERCENT_2(hoodWholeString + setPercentCmdString + " 2"),
+      HOOD_CMD_SET_PERCENT_LEFT(hoodLeftString + setPercentCmdString),
+      HOOD_CMD_SET_PERCENT_RIGHT(hoodRightString + setPercentCmdString),
 
 
       // Set Percent Command Input
       INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(intakeDeployString + setPercentCmdInputString),
       INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(intakeRollerString + setPercentCmdInputString),
       SPINDEXER_CMD_SET_PERCENT_INPUT(feederSpindexerString + setPercentCmdInputString),
-      SHOOTER_CMD_SET_PERCENT_INPUT(shooterWholeString + setPercentCmdInputString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(shooterString + setPercentCmdInputString),
       UPTAKE_CMD_SET_PERCENT_INPUT(feederUptakeString + setPercentCmdInputString),
       CLIMBER_CMD_SET_PERCENT_INPUT(climberString + setPercentCmdInputString),
-      HOOD_CMD_SET_PERCENT_INPUT(hoodWholeString + setPercentCmdInputString),
+      HOOD_CMD_SET_PERCENT_INPUT(hoodString + setPercentCmdInputString),
 
       // Set Velocity Command
       SPINDEXER_CMD_SET_VELOCITY(feederSpindexerString + setVelocityCmdString),
       UPTAKE_CMD_SET_VELOCITY(feederUptakeString + setVelocityCmdString),
-      SHOOTER_CMD_SET_VELOCITY(shooterWholeString + setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY(shooterString + setVelocityCmdString),
 
       // Set Velocity Command Input
       SPINDEXER_CMD_SET_VELOCITY_INPUT(feederSpindexerString + setVelocityCmdInputString),
       UPTAKE_CMD_SET_VELOCITY_INPUT(feederUptakeString + setVelocityCmdInputString),
-      SHOOTER_CMD_SET_VELOCITY_INPUT(shooterWholeString + setVelocityCmdInputString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(shooterString + setVelocityCmdInputString),
 
       // Set Angle Command
       INTAKE_DEPLOY_CMD_SET_ANGLE(intakeDeployString + setAngleCmdString),
-      HOOD_CMD_SET_ANGLE_FOREVER(hoodWholeString + setAngleCmdString + " (Run Forever)"),
-      HOOD_CMD_SET_ANGLE_WAIT(hoodWholeString + setAngleCmdString + " (Wait for Angle)"),
+      HOOD_CMD_SET_ANGLE_FOREVER(hoodString + setAngleCmdString + " (Run Forever)"),
+      HOOD_CMD_SET_ANGLE_WAIT(hoodString + setAngleCmdString + " (Wait for Angle)"),
 
       // Set Angle Command Input
       INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
-      HOOD_CMD_SET_ANGLE_INPUT(hoodWholeString + setAngleCmdInputString),
+      HOOD_CMD_SET_ANGLE_INPUT(hoodString + setAngleCmdInputString),
+
+      // Shooter Score Prep Command
+      SHOOTER_CMD_SCORE_PREP(shooterString + scorePrepCmdString),
 
       // Set Position Command
       CLIMBER_CMD_SET_POSITION(climberString + setPositionCmdString),
@@ -248,46 +254,46 @@ public final class Constants {
       CLIMBER_CMD_CALIBRATE_MANUAL_INPUT(climberString + calibrateManualCmdInputString + " (Inches)"),
 
       // Voltage
-      HOOD_1_VOLTAGE(hood1String + " Voltage"),
-      HOOD_2_VOLTAGE(hood2String + " Voltage"),
-      HOOD_1_ANALOG_VOLTAGE(hood1String + " Analog Voltage"),
-      HOOD_2_ANALOG_VOLTAGE(hood2String + " Analog Voltage"),
+      HOOD_LEFT_VOLTAGE(hoodLeftString + " Voltage"),
+      HOOD_RIGHT_VOLTAGE(hoodRightString + " Voltage"),
+      HOOD_LEFT_ANALOG_VOLTAGE(hoodLeftString + " Analog Voltage"),
+      HOOD_RIGHT_ANALOG_VOLTAGE(hoodRightString + " Analog Voltage"),
 
       // Current
-      HOOD_1_CURRENT(hood1String + " Current"),
-      HOOD_2_CURRENT(hood2String + " Current"),
+      HOOD_LEFT_CURRENT(hoodLeftString + " Current"),
+      HOOD_RIGHT_CURRENT(hoodRightString + " Current"),
 
       // Temp
       INTAKE_DEPLOY_TEMP(intakeDeployString + tempString),
       INTAKE_ROLLER_TEMP(intakeRollerString + tempString),
       SPINDEXER_TEMP(feederSpindexerString + tempString),
       UPTAKE_TEMP(feederUptakeString + tempString),
-      SHOOTER_LEFT_TEMP(shooterWholeString + " L" + tempString),
-      SHOOTER_RIGHT_TEMP(shooterWholeString + " R" + tempString),
+      SHOOTER_LEFT_TEMP(shooterLeftString + tempString),
+      SHOOTER_RIGHT_TEMP(shooterRightString + tempString),
 
       // RPM
       SPINDEXER_RPM(feederSpindexerString + rpmString),
       UPTAKE_RPM(feederUptakeString + rpmString),
-      SHOOTER_RPM(shooterWholeString + rpmString),
+      SHOOTER_RPM(shooterString + rpmString),
 
       // Target RPM
       SPINDEXER_TARGET_RPM(feederSpindexerString + targetRpmString),
       UPTAKE_TARGET_RPM(feederUptakeString + targetRpmString),
-      SHOOTER_TARGET_RPM(shooterWholeString + targetRpmString),
+      SHOOTER_TARGET_RPM(shooterString + targetRpmString),
 
       // Angle
       INTAKE_DEPLOY_ANGLE(intakeDeployString + angleString),
-      HOOD_1_ANGLE(hood1String + angleString),
-      HOOD_2_ANGLE(hood2String + angleString),
+      HOOD_LEFT_ANGLE(hoodLeftString + angleString),
+      HOOD_RIGHT_ANGLE(hoodRightString + angleString),
 
       // Target Angle
       INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
-      HOOD_ANGLE_CURRENT_SETPOINT(hoodWholeString + targetAngleString),
+      HOOD_ANGLE_CURRENT_SETPOINT(hoodString + targetAngleString),
 
       // Position
       CLIMBER_POSITION(climberString + positionString),
-      HOOD_1_LENGTH(hood1String + " Extension Length (in)"),
-      HOOD_2_LENGTH(hood2String + " Extension Length (in)"),
+      HOOD_LEFT_LENGTH(hoodLeftString + " Extension Length (in)"),
+      HOOD_RIGHT_LENGTH(hoodRightString + " Extension Length (in)"),
 
       // Target Position
       CLIMBER_TARGET(climberString + targetPositionString),
