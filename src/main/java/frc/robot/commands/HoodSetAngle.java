@@ -31,7 +31,7 @@ public class HoodSetAngle extends Command {
    * Sets the hood angle (degrees).
    * @param angleGetter DoubleSupplier that returns the target angle for the hood, in degrees
    * @param type
-   * <p> waitForAngle = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
+   * <p> waitForSetPoint = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
    * <p> runForever = command runs until interrupted, turn off hood when interrupted
    * @param shooter shooter subsystem
    */
@@ -49,7 +49,7 @@ public class HoodSetAngle extends Command {
    * Sets the hood angle (degrees).
    * @param angle angle for hood, in degrees
    * @param type
-   * <p> waitForAngle = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
+   * <p> waitForSetPoint = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
    * <p> runForever = command runs until interrupted, turn off hood when interrupted
    * @param shooter shooter subsystem
    */
@@ -63,7 +63,7 @@ public class HoodSetAngle extends Command {
 
   /** Sets the hood angle (degrees).
    * @param type
-   * <p> waitForAngle = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
+   * <p> waitForSetPoint = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
    * <p> runForever = command runs until interrupted, turn off hood when interrupted
    * @param shooter shooter subsystem
    * */
@@ -101,7 +101,7 @@ public class HoodSetAngle extends Command {
   public void execute() {
 
     if (useGetter && type == EndType.runForever) {
-      // Don't update angle from getter if type == waitForAngle, otherwise the getter could
+      // Don't update angle from getter if type == waitForSetPoint, otherwise the getter could
       // change the angle a little and never settle on a value. Then the PID controller would
       // try to track and maybe never get in tolerance, and then this command would never end.
       targetAngle = angleGetter.getAsDouble();

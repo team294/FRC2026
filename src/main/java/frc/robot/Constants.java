@@ -619,14 +619,11 @@ public final class Constants {
     public static final double hood1MaximumAnalogVoltage = 4.1; // 3.536
     public static final double hood2MaximumAnalogVoltage = 4.1; // 4.018
 
-    public static final double hood1SlopePointAnalogVoltage = 1.692; // 3.536
-    public static final double hood2SlopePointAnalogVoltage = 1.692; // 4.018
+    public static final double hood1SlopePointAnalogVoltage = 1.692; // analog voltage, arbitrary value to calculate extension slope 
+    public static final double hood2SlopePointAnalogVoltage = 1.692; // analog voltage, arbitrary value to calculate extension slope
 
-    //public static final double hood1SlopePointAngle = 22.0; // please comment me
-    //public static final double hood2SlopePointAngle = 212.0; // pleassseee
-
-    public static final double hood1SlopePointExtensionLength = 8.0; // please comment me
-    public static final double hood2SlopePointExtensionLength = 8.0; // pleassseee
+    public static final double hood1SlopePointExtensionLength = 8.0; // in inches, arbitrary extension length corresponding to 1.692 analog voltage
+    public static final double hood2SlopePointExtensionLength = 8.0; // in inches, arbitrary extension length corresponding to 1.692 analog voltage
     
 
     public static final double hoodToleranceFromTopOrBottom = 0.005;
