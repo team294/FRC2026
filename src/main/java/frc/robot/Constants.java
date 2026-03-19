@@ -452,7 +452,7 @@ public final class Constants {
       AGITATE_LOWER(-70.0),
       AGITATE_UPPER(-40.0),
       START_CONFIG(73.9),  // TODO TEST VALUE
-      UPPER_LIMIT(79.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
+      UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
