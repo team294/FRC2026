@@ -17,13 +17,13 @@ public class TurretDebug extends Command {
   private final DataLog log = DataLogManager.getLog();
   private long timeNow = 0;
   
-  private final DoubleLogEntry dLogRemoteEncoder1Raw = new DoubleLogEntry(log, "TurretDebug/Remote Encoder 1 Raw");
-  private final DoubleLogEntry dLogRemoteEncoder2Raw = new DoubleLogEntry(log, "TurretDebug/Remote Encoder 2 Raw");
+  private final DoubleLogEntry dLogRemoteEncoderBeltRaw = new DoubleLogEntry(log, "TurretDebug/Remote Encoder Belt Raw");
+  private final DoubleLogEntry dLogRemoteEncoderGearRaw = new DoubleLogEntry(log, "TurretDebug/Remote Encoder Gear Raw");
   private final DoubleLogEntry dLogMotorEncoderRaw = new DoubleLogEntry(log, "TurretDebug/Motor Encoder Raw");
-  private final DoubleLogEntry dLogRemoteEncoder1Data = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder 1 Raw");
-  private final DoubleLogEntry dLogRemoteEncoder1Abs = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder 1 Abs");
-  private final DoubleLogEntry dLogRemoteEncoder2Data = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder 2 Raw");
-  private final DoubleLogEntry dLogRemoteEncoder2Abs = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder 2 Abs");
+  private final DoubleLogEntry dLogRemoteEncoderBeltData = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder Belt Raw");
+  private final DoubleLogEntry dLogRemoteEncoderBeltAbs = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder Belt Abs");
+  private final DoubleLogEntry dLogRemoteEncoderGearData = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder Gear Raw");
+  private final DoubleLogEntry dLogRemoteEncoderGearAbs = new DoubleLogEntry(log, "TurretDebugData/Remote Encoder Gear Abs");
   private final DoubleLogEntry dLogMotorEncoderData = new DoubleLogEntry(log, "TurretDebugData/Motor Encoder Raw");
 
   /**
@@ -47,8 +47,8 @@ public class TurretDebug extends Command {
   @Override
   public void execute() {    
     timeNow = RobotController.getFPGATime();
-    dLogRemoteEncoder1Raw.append(turret.getCANcoderRotationsRaw(1), timeNow);
-    dLogRemoteEncoder2Raw.append(turret.getCANcoderRotationsRaw(2), timeNow);
+    dLogRemoteEncoderBeltRaw.append(turret.getCANcoderRotationsRaw(1), timeNow);
+    dLogRemoteEncoderGearRaw.append(turret.getCANcoderRotationsRaw(2), timeNow);
     dLogMotorEncoderRaw.append(turret.getTurretEncoderRotationsRaw(), timeNow);
 
       if (loopCounter <= 4) {
@@ -58,10 +58,10 @@ public class TurretDebug extends Command {
     } else if (loopCounter == 5) {
       turret.stopTurret();
     } else if (loopCounter == 9) {
-      dLogRemoteEncoder1Data.append(turret.getCANcoderRotationsRaw(1), timeNow);
-      dLogRemoteEncoder1Abs.append(turret.getCANcoderAbsRotationsRaw(1), timeNow);
-      dLogRemoteEncoder2Data.append(turret.getCANcoderRotationsRaw(2), timeNow);
-      dLogRemoteEncoder2Abs.append(turret.getCANcoderAbsRotationsRaw(2), timeNow);
+      dLogRemoteEncoderBeltData.append(turret.getCANcoderRotationsRaw(1), timeNow);
+      dLogRemoteEncoderBeltAbs.append(turret.getCANcoderAbsRotationsRaw(1), timeNow);
+      dLogRemoteEncoderGearData.append(turret.getCANcoderRotationsRaw(2), timeNow);
+      dLogRemoteEncoderGearAbs.append(turret.getCANcoderAbsRotationsRaw(2), timeNow);
       dLogMotorEncoderData.append(turret.getTurretEncoderRotationsRaw(), timeNow);
       loopCounter = -1;
     }
