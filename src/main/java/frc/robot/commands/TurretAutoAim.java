@@ -32,7 +32,7 @@ public class TurretAutoAim extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   public void execute() {
-    turret.setTurretAngle(turret.getAutoTargetAngleTurretRelative(allianceSelection.getAlliance(), driveTrain.getPose()));
+    if (turret.getAutoAimEnabled()) turret.setTurretAngle(turret.getAutoTargetAngleTurretRelative(allianceSelection.getAlliance(), driveTrain.getPose()));
   }
 
   // Returns true when the command should end.

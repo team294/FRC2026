@@ -10,6 +10,10 @@ import frc.robot.subsystems.Turret;
 public class TurretToggleAutoAim extends InstantCommand {
   private final Turret turret;
 
+  /**
+   * Toggle auto-aim functionality on Turret
+   * @param turret Turret subsystem
+   */
   public TurretToggleAutoAim(Turret turret) {
     this.turret = turret;
 

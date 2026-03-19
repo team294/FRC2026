@@ -98,6 +98,7 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
+    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, allianceSelection));
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
@@ -217,14 +218,8 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
-    xbStart.onTrue(parallel(
-      new TurretToggleAutoAim(turret),
-      either (
-        new XboxControllerRumble(0.5, xboxController),
-        none(),
-        () -> turret.getAutoAimEnabled()
-      )
-    ));
+
+    xbStart.onTrue(new TurretToggleAutoAim(turret));
   }
 
   /**
@@ -312,8 +307,8 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
     // // Manually spin turret CW/CCW while held, stopping when released
-    // coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
-    // coP[10].whileTrue(new TurretSetPercent(turret, +TurretConstants.maxManualPercentOutput));
+    coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
+    coP[10].whileTrue(new TurretSetPercent(turret, TurretConstants.maxManualPercentOutput));
 
     // Manually move the hood up/down while held, stopping when released
     // coP[11].whileTrue(new HoodSetPercent(ShooterConstants.hoodMaxManualPercentOutput, EndType.runForever, shooter));
@@ -331,7 +326,7 @@ public class RobotContainer {
     // coP[18].onTrue(new ClimberManualCalibration(climber));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
-    // coP[19].onTrue(new TurretManualCalibration(turret, true));
+    coP[19].onTrue(new TurretManualCalibration(turret, true));
 
     // Manually recalibrate intake deploy, assuming it's at intaking position
     coP[20].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
