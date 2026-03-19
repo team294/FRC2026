@@ -87,7 +87,7 @@ public class Field {
                                 / (2.0 * 9.81 * (1.0 / Math.tan(ShooterConstants.hoodShootAngleRadians)));
 
         double ghostTargetX = staticTargetTranslation2d.getX() - (robotFieldRelativeSpeeds.vxMetersPerSecond * estFuelTimeOfFlight);
-        double ghostTargetY = staticTargetTranslation2d.getX() - (robotFieldRelativeSpeeds.vyMetersPerSecond * estFuelTimeOfFlight);
+        double ghostTargetY = staticTargetTranslation2d.getY() - (robotFieldRelativeSpeeds.vyMetersPerSecond * estFuelTimeOfFlight);
 
         return new Translation2d(ghostTargetX, ghostTargetY);
     }
