@@ -43,8 +43,6 @@ import frc.robot.utilities.RobotPreferences;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
-import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
-
 public class Shooter extends SubsystemBase implements Loggable {
   private final int logRotationKey;     // Key to identify the log rotation
   private boolean fastLogging = true;  // true = log every cycle, false = log every 10 cycles
