@@ -578,10 +578,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     Translation2d position = getPose().getTranslation();
       Translation2d hub;
       if (allianceSelection.getAlliance().equals(Alliance.Red)) { // If on red alliance target red alliance hub
-        hub = FieldConstants.hubPositionRed.getTranslation();
+        hub = FieldConstants.hubPositionRed;
       }
       else {                                                    // Otherwise, default to targeting blue alliance hub
-        hub = FieldConstants.hubPositionBlue.getTranslation();
+        hub = FieldConstants.hubPositionBlue;
       }
       // Distance between position and hub
      return position.getDistance(hub);
