@@ -13,6 +13,7 @@ import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.ShooterSetVelocity.VelocityType;
+import frc.robot.commands.TurretSetAngle.EndType;
 import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
@@ -53,6 +54,7 @@ public class RobotContainer {
   // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
+  private final Turret turret = new Turret("Turret");
   // private final Climber climber = new Climber("Climber");
 
   // Define controllers
@@ -96,6 +98,7 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
+    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, allianceSelection));
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
@@ -145,6 +148,7 @@ public class RobotContainer {
     SmartDashboard.putData(UPTAKE_CMD_STOP.value, new UptakeStop(feeder));
     SmartDashboard.putData(FEEDER_CMD_STOP.value, new FeederStop(feeder));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
+    SmartDashboard.putData(TURRET_CMD_STOP.value, new TurretStop(turret));
     SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
 
     // Set Percent
@@ -153,6 +157,7 @@ public class RobotContainer {
     SmartDashboard.putData(SPINDEXER_CMD_SET_PERCENT.value, new SpindexerSetPercent(false, feeder));
     SmartDashboard.putData(UPTAKE_CMD_SET_PERCENT.value, new UptakeSetPercent(false, feeder));
     SmartDashboard.putData(SHOOTER_CMD_SET_PERCENT.value, new ShooterSetPercent(shooter));
+    SmartDashboard.putData(TURRET_CMD_SET_PERCENT.value, new TurretSetPercent(turret));
 
     // Set Velocity
     SmartDashboard.putData(SPINDEXER_CMD_SET_VELOCITY.value, new SpindexerSetVelocity(feeder));
@@ -161,6 +166,7 @@ public class RobotContainer {
 
     // Set Angle
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_SET_ANGLE.value, new IntakeDeploySetAngle(intake));
+    SmartDashboard.putData(TURRET_CMD_SET_ANGLE.value, new TurretSetAngle(EndType.runForever, turret));
 
     // Set Position
 
@@ -168,6 +174,8 @@ public class RobotContainer {
     
     // Calibrate Manual
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL.value, new IntakeDeployCalibrateManual(intake));
+    SmartDashboard.putData(TURRET_CMD_RECALIBRATE_MANUAL.value, new TurretManualCalibration(turret, true));
+    SmartDashboard.putData(TURRET_CMD_RECALIBRATE_AUTOMATIC.value, new TurretManualCalibration(turret, false));
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
@@ -197,7 +205,7 @@ public class RobotContainer {
     Trigger xbLB = xboxController.leftBumper();
     // Trigger xbRB = xboxController.rightBumper();
     // Trigger xbBack = xboxController.back();
-    // Trigger xbStart = xboxController.start();
+    Trigger xbStart = xboxController.start();
     // Trigger xbPOVUp = xboxController.povUp();
     // Trigger xbPOVRight = xboxController.povRight();
     // Trigger xbPOVLeft = xboxController.povLeft();
@@ -210,6 +218,8 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
+
+    xbStart.onTrue(new TurretToggleAutoAim(turret));
   }
 
   /**
@@ -297,8 +307,8 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
     // // Manually spin turret CW/CCW while held, stopping when released
-    // coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
-    // coP[10].whileTrue(new TurretSetPercent(turret, +TurretConstants.maxManualPercentOutput));
+    coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
+    coP[10].whileTrue(new TurretSetPercent(turret, TurretConstants.maxManualPercentOutput));
 
     // Manually move the hood up/down while held, stopping when released
     // coP[11].whileTrue(new HoodSetPercent(ShooterConstants.hoodMaxManualPercentOutput, EndType.runForever, shooter));
@@ -316,7 +326,7 @@ public class RobotContainer {
     // coP[18].onTrue(new ClimberManualCalibration(climber));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
-    // coP[19].onTrue(new TurretManualCalibration(turret, true));
+    coP[19].onTrue(new TurretManualCalibration(turret, true));
 
     // Manually recalibrate intake deploy, assuming it's at intaking position
     coP[20].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
