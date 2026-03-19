@@ -40,15 +40,18 @@ public class TurretAutoAim extends Command {
   public void execute() {
     robotPose2d = driveTrain.getPose();
 
-    turret.setTurretAngle(
-      turret.getAutoTargetAngleTurretRelative(
-        robotPose2d, 
-        field.getGhostShotTarget(
-          field.getStaticShotTarget(robotPose2d.getTranslation()),
-          turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
-          robotPose2d.getTranslation(),
-          driveTrain.getRobotSpeeds()
-    )));
+    if (turret.getAutoAimEnabled()) {
+      turret.setTurretAngle(
+        turret.getAutoTargetAngleTurretRelative(
+          robotPose2d, 
+          field.getGhostShotTarget(
+            field.getStaticShotTarget(robotPose2d.getTranslation()),
+            turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
+            robotPose2d.getTranslation(),
+            driveTrain.getRobotSpeeds())
+        )
+      );
+    }
   }
 
   // Returns true when the command should end.

@@ -126,12 +126,92 @@
             "x": 1280.0,
             "y": 0.0,
             "width": 256.0,
-            "height": 384.0,
+            "height": 640.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
             },
-            "children": []
+            "children": [
+              {
+                "title": "Turret CANcoder?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret CANcoder Connected?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Turret Using CANCoder?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Using CANCoder?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Turret Calibrated?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Calibrated?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Turret Recalibrate Advanced",
+                "x": 1408.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Recalibrate Advanced",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Turret Recalibrate Basic",
+                "x": 1408.0,
+                "y": 384.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Recalibrate Basic",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
           }
         ],
         "containers": [
@@ -237,7 +317,7 @@
           },
           {
             "title": "Stop All Motors",
-            "x": 1280.0,
+            "x": 1024.0,
             "y": 512.0,
             "width": 256.0,
             "height": 128.0,
@@ -317,7 +397,7 @@
           },
           {
             "title": "Feeder Object Detected Exit",
-            "x": 1280.0,
+            "x": 1024.0,
             "y": 384.0,
             "width": 256.0,
             "height": 128.0,
@@ -1936,7 +2016,92 @@
             "properties": {
               "label_position": "TOP"
             },
-            "children": []
+            "children": [
+              {
+                "title": "Turret Set Angle Input",
+                "x": 0.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Set Angle Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Turret Set Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Set Angle",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Turret Set Percent Input",
+                "x": 128.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Set Percent Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Turret Set Percent",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Set Percent",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Turret Recalibrate Advanced",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Recalibrate Advanced",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Turret Recalibrate Basic",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Recalibrate Basic",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
           },
           {
             "title": "Shooter",
@@ -2094,12 +2259,90 @@
             "x": 256.0,
             "y": 0.0,
             "width": 256.0,
-            "height": 384.0,
+            "height": 640.0,
             "type": "List Layout",
             "properties": {
-              "label_position": "TOP"
+              "label_position": "LEFT"
             },
-            "children": []
+            "children": [
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Angle",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Target Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Target Angle",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "CANcoder?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret CANcoder Connected?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Using CANCoder?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Using CANCoder?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Calibrated?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Calibrated?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
           },
           {
             "title": "Hood",
@@ -2150,6 +2393,20 @@
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Stop All Motors",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Turret Stop",
+            "x": 0.0,
+            "y": 640.0,
+            "width": 512.0,
+            "height": 256.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Turret Stop",
               "period": 0.06,
               "show_type": false,
               "maximize_button_space": true

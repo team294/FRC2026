@@ -76,8 +76,8 @@ public final class Constants {
     public static final int CANDriveTurnBackLeftEncoder = 11;
     public static final int CANDriveTurnBackRightEncoder = 12;
     public static final int CANIntakeDeployEncoder = 13;
-    public static final int CANTurretEncoder1 = 14;
-    public static final int CANTurretEncoder2 = 15;
+    public static final int CANTurretEncoderBelt = 14;
+    public static final int CANTurretEncoderGear = 15;
 
     public static final int CANRangeEntry = 16;
     public static final int CANRangeExit = 17;
@@ -134,8 +134,8 @@ public final class Constants {
     private static final String setPositionCmdString = " Set Position";
     private static final String setPositionCmdInputString = " Set Position Input";
     private static final String calibrationRampCmdString = " Calibration Ramp";
-    private static final String calibrateManualCmdString = " Calibrate Manual";
-    private static final String calibrateManualCmdInputString = " Calibrate Manual Input";
+    private static final String calibrateManualCmdString = " Recalibrate";
+    private static final String calibrateManualCmdInputString = " Recalibrate Manual Input";
     private static final String stopCmdString = " Stop";
 
     // Readings
@@ -208,7 +208,7 @@ public final class Constants {
 
       // Set Angle Command Input
       INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
-      TURRET_CMD_SET_ANGLE_INPUT(TURRET_CMD_SET_ANGLE.value + setAngleCmdInputString),
+      TURRET_CMD_SET_ANGLE_INPUT(turretString + setAngleCmdInputString),
 
       // Set Position Command
       CLIMBER_CMD_SET_POSITION(climberString + setPositionCmdString),
@@ -223,8 +223,8 @@ public final class Constants {
       // Calibrate Manual Command
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(intakeDeployString + calibrateManualCmdString),
       CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
-      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString),
-      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + " Automatic Recalibration"),
+      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
+      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
 
       // Calibrate Manual Command Input
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(intakeDeployString + calibrateManualCmdInputString + " (Degrees)"),
@@ -260,8 +260,8 @@ public final class Constants {
 
       // Position
       CLIMBER_POSITION(climberString + positionString),
-      TURRET_CANCODER1_ABS(turretString + " CANcoder 1 ABS"),
-      TURRET_CANCODER2_ABS(turretString + " CANcoder 2 ABS"),
+      TURRET_CANCODER_BELT_ABS(turretString + " CANcoder Belt ABS"),
+      TURRET_CANCODER_GEAR_ABS(turretString + " CANcoder Gear ABS"),
 
       // Target Position
       CLIMBER_TARGET(climberString + targetPositionString),
@@ -280,8 +280,8 @@ public final class Constants {
 
       // Raw Rotations
       INTAKE_DEPLOY_RAW_ROTATIONS(intakeDeployString + " Raw Rotations"),
-      TURRET_CANCODER1_RAW(turretString + " CANcoder 1 Raw"),
-      TURRET_CANCODER2_RAW(turretString + " CANcoder 2 Raw"),
+      TURRET_CANCODER_BELT_RAW(turretString + " CANcoder Belt Raw"),
+      TURRET_CANCODER_GEAR_RAW(turretString + " CANcoder Gear Raw"),
       TURRET_ENCODER_RAW(turretString + " Encoder Raw"),
 
       // Limits
@@ -556,35 +556,35 @@ public final class Constants {
   public static final class TurretConstants {
     public static final double compensationVoltage = 12.0;
 
-    public static final double turretToMotorGearRatio = 52.5/1.0;    // For gear reduction from motor to turret, value should be greater than 1
+    public static final double turretToMotorGearRatio = (70.0 / 12.0) * (135.0 / 15.0);  // CALIBRATED: (70.0 / 12.0) * (135.0 / 15.0) For gear reduction from motor to turret, value should be greater than 1
     public static final double turretBeltTeeth = 135.0;
-    public static final double encoder1BeltTeeth = 24.0;
-    public static final double encoder1GearTeeth = 30.0;
-    public static final double encoder2GearTeeth = 26.0;
+    public static final double beltEncoderBeltTeeth = 24.0;
+    public static final double beltEncoderGearTeeth = 30.0;
+    public static final double gearEncoderGearTeeth = 26.0;
 
-    public static final double encoder1ToTurretRatio = TurretConstants.encoder1BeltTeeth / TurretConstants.turretBeltTeeth;
-    public static final double encoderCalculationCoefficient = encoder1ToTurretRatio  /  (encoder1GearTeeth / encoder2GearTeeth - 1);
+    public static final double gearEncoderToTurretRatio = TurretConstants.beltEncoderBeltTeeth / TurretConstants.turretBeltTeeth;
+    public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoder1 = 0.1052;  // CALIBRATED: 0.1052  - (1) set this value to 0.0.  (2) Read value of encoder 1 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoder2 = -0.4818; // CALIBRATED: -0.4818 - (1) set this value to 0.0.  (2) Read value of encoder 2 raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
-    public static final double maxPercentOutput = 1.0;               // TODO CALIBRATE      // Absolute max percent out allowed for turret
-    public static final double maxManualPercentOutput = 0.5; // TODO CALIBRATE              // Max percent out allowed for manual turret movement when calibrated
-    public static final double maxUncalibratedPercentOutput = 0.1;   // TODO CALIBRATE      // Max percent out allowed for any turrent movement when uncalibrated
+    public static final double maxPercentOutput = 1.0;               // Absolute max percent out allowed for turret
+    public static final double maxManualPercentOutput = 0.5; // Max percent out allowed for manual turret movement when calibrated
+    public static final double maxUncalibratedPercentOutput = 0.1;   // Max percent out allowed for any turrent movement when uncalibrated
 
     public static final double angleTolerance = 0.5;        // Angle tolerance for setting the turret angle, in degrees
 
-    public static final double kP = 0.0;  // TODO CALIBRATE
-    public static final double kI = 0.0;  // TODO CALIBRATE
-    public static final double kD = 0.0;  // TODO CALIBRATE
-    public static final double kS = 0.275; // CALIBRATED 3/15/2026: 0.275
-    public static final double kV = 0.0;  // TODO CALIBRATE
-    public static final double kA = 0.0;  // TODO CALIBRATE
+    public static final double kP = 90.0;  // CALIBRATED 3/17/26: 90.0
+    public static final double kI = 0.0;   // CALIBRATED 3/17/26: 0.0
+    public static final double kD = 0.0;   // CALIBRATED 3/17/26: 0.0
+    public static final double kS = 0.275; // CALIBRATED 3/17/26: 0.275
+    public static final double kV = 5.1;   // CALIBRATED 3/17/26: 5.1
+    public static final double kA = 0.0;   // CALIBRATED 3/17/26: 0.0
 
-    public static final double MMCruiseVelocity = 8.0; // TODO CALIBRATE
-    public static final double MMAcceleration = 2.0;   // TODO CALIBRATE
-    public static final double MMJerk = 1.0;           // TODO CALIBRATE
+    public static final double MMCruiseVelocity = 20.0; // CALIBRATED 3/17/26: 20.0
+    public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
+    public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
 
     public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     

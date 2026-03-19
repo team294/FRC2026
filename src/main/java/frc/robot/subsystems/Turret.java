@@ -47,7 +47,7 @@ public class Turret extends SubsystemBase implements Loggable {
   // We create two configs for the turret motor -- one with RemoteCANcoder and one
   // with RotorEncoder. The default config is RemoteCANcoder. If the CANcoder fails,
   // the turret will use the RotorEncoder config as a fallback.
-  private boolean usingEncoder1; // true = using encoder 1 configuration, false = using RotorEncoder configuration
+  private boolean usingBeltEncoder; // true = using belt encoder configuration, false = using RotorEncoder configuration
   private TalonFXConfiguration usingRotorEncoderConfig; // Configuration for reading the rotor encoder
   private TalonFXConfiguration usingRemoteEncoderConfig; // Configuration for reading a remote encoder (CANcoder)
 
@@ -68,20 +68,20 @@ public class Turret extends SubsystemBase implements Loggable {
   private final StatusSignal<ControlModeValue> turretControlMode;
 
   // Create CANcoder
-  private final CANcoder canCoder1 = new CANcoder(Ports.CANTurretEncoder1);
-  private final CANcoderConfigurator canCoder1Configurator = canCoder1.getConfigurator();
-  private CANcoderConfiguration canCoder1Config;
-  private final CANcoder canCoder2 = new CANcoder(Ports.CANTurretEncoder2);
-  private final CANcoderConfigurator canCoder2Configurator = canCoder2.getConfigurator();
-  private CANcoderConfiguration canCoder2Config;
+  private final CANcoder canCoderBelt = new CANcoder(Ports.CANTurretEncoderBelt);
+  private final CANcoderConfigurator canCoderBeltConfigurator = canCoderBelt.getConfigurator();
+  private CANcoderConfiguration canCoderBeltConfig;
+  private final CANcoder canCoderGear = new CANcoder(Ports.CANTurretEncoderGear);
+  private final CANcoderConfigurator canCoderGearConfigurator = canCoderGear.getConfigurator();
+  private CANcoderConfiguration canCoderGearConfig;
 
   // CANcoder signals and sensors
-  private final StatusSignal<MagnetHealthValue> canCoder1MagnetHealth;
-  private final StatusSignal<Angle> canCoder1Position; // CANcoder position, in CANcoder rotations
-  private final StatusSignal<Angle> canCoder1AbsPosition; // CANcoder position, in CANcoder rotations
-  private final StatusSignal<MagnetHealthValue> canCoder2MagnetHealth;
-  private final StatusSignal<Angle> canCoder2Position; // CANcoder position, in CANcoder rotations
-  private final StatusSignal<Angle> canCoder2AbsPosition; // CANcoder position, in CANcoder rotations
+  private final StatusSignal<MagnetHealthValue> canCoderGearMagnetHealth;
+  private final StatusSignal<Angle> canCoderGearPosition; // CANcoder position, in CANcoder rotations
+  private final StatusSignal<Angle> canCoderGearAbsPosition; // CANcoder position, in CANcoder rotations
+  private final StatusSignal<MagnetHealthValue> canCoderBeltMagnetHealth;
+  private final StatusSignal<Angle> canCoderBeltPosition; // CANcoder position, in CANcoder rotations
+  private final StatusSignal<Angle> canCoderBeltAbsPosition; // CANcoder position, in CANcoder rotations
 
   // Create Data Log Entries
   private final DataLog log = DataLogManager.getLog();
@@ -89,8 +89,8 @@ public class Turret extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogTurretPctOut = new DoubleLogEntry(log, "/Turret/Pct Out");
   private final DoubleLogEntry dLogTurretCurrent = new DoubleLogEntry(log, "/Turret/Current (amps)");
   private final DoubleLogEntry dLogBatteryVoltage = new DoubleLogEntry(log, "/Turret/Battery Voltage");
-  private final DoubleLogEntry dLogCANcoder1RotRaw = new DoubleLogEntry(log, "/Turret/CANcoder1 Rot Raw");
-  private final DoubleLogEntry dLogCANcoder2RotRaw = new DoubleLogEntry(log, "/Turret/CANcoder2 Rot Raw");
+  private final DoubleLogEntry dLogCANcoderBeltRotRaw = new DoubleLogEntry(log, "/Turret/CANcoder Belt Rot Raw");
+  private final DoubleLogEntry dLogCANcoderGearRotRaw = new DoubleLogEntry(log, "/Turret/CANcoder Gear Rot Raw");
   private final DoubleLogEntry dLogTurretCalZero = new DoubleLogEntry(log, "/Turret/TurretCalZero");
   private final DoubleLogEntry dLogTurretTarget = new DoubleLogEntry(log, "/Turret/Target");
   private final DoubleLogEntry dLogTurretEncAngle = new DoubleLogEntry(log, "/Turret/Encoder Angle (deg)");
@@ -99,10 +99,10 @@ public class Turret extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogTurretBasicEstimation = new DoubleLogEntry(log, "/Turret/Turret Basic Estimation");
   private final DoubleLogEntry dLogTurretAdvancedEstimation = new DoubleLogEntry(log, "/Turret/Turret Advanced Estimation");
   private final BooleanLogEntry dLogTurretCalibrated = new BooleanLogEntry(log, "/Turret/Turret Calibrated?");
-  private final BooleanLogEntry dLogCANcoder1Connected = new BooleanLogEntry(log, "/Turret/CANcoder1 Connected?");
-  private final BooleanLogEntry dLogCANcoder2Connected = new BooleanLogEntry(log, "/Turret/CANcoder2 Connected?");
+  private final BooleanLogEntry dLogCANcoderBeltConnected = new BooleanLogEntry(log, "/Turret/CANcoder Belt Connected?");
+  private final BooleanLogEntry dLogCANcoderGearConnected = new BooleanLogEntry(log, "/Turret/CANcoder Gear Connected?");
 
-  private double turretZero = 0.0;  // offset of turret encoder (either internal motor encoder or calculated from encoder1 through gear ratio) to turret zero position, in turret degrees
+  private double turretZero = 0.0;  // offset of turret encoder (either internal motor encoder or calculated from belt encoder through gear ratio) to turret zero position, in turret degrees
 
   private boolean turretCalibrated = false; // Default to turret being uncalibrated. Calibrate from robot preferences or
                                             // "Calibrate Turret Zero" button on dashboard.
@@ -164,7 +164,7 @@ public class Turret extends SubsystemBase implements Loggable {
     usingRotorEncoderConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
 
-    // Create configuration for using the CANcoder reading (encoder 1)
+    // Create configuration for using the CANcoder reading (Belt Encoder)
     usingRemoteEncoderConfig = new TalonFXConfiguration();
     usingRemoteEncoderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     usingRemoteEncoderConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -200,9 +200,9 @@ public class Turret extends SubsystemBase implements Loggable {
 
     // Configure encoder to user for feedback
     usingRemoteEncoderConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    usingRemoteEncoderConfig.Feedback.FeedbackRemoteSensorID = Ports.CANTurretEncoder1;
-    usingRemoteEncoderConfig.Feedback.RotorToSensorRatio = TurretConstants.encoder1ToTurretRatio * TurretConstants.turretToMotorGearRatio;
-    usingRemoteEncoderConfig.Feedback.SensorToMechanismRatio = 1.0 / TurretConstants.encoder1ToTurretRatio;
+    usingRemoteEncoderConfig.Feedback.FeedbackRemoteSensorID = Ports.CANTurretEncoderBelt;
+    usingRemoteEncoderConfig.Feedback.RotorToSensorRatio = TurretConstants.gearEncoderToTurretRatio * TurretConstants.turretToMotorGearRatio;
+    usingRemoteEncoderConfig.Feedback.SensorToMechanismRatio = 1.0 / TurretConstants.gearEncoderToTurretRatio;
     usingRemoteEncoderConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     // NOTE: In Phoenix 6, slots are selected in the ControlRequest (ex.
@@ -213,40 +213,40 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMMVoltageControl.OverrideBrakeDurNeutral = true;
 
     // Get signal and sensor objects for CANcoder
-    canCoder1MagnetHealth = canCoder1.getMagnetHealth();
-    canCoder1Position = canCoder1.getPosition();
-    canCoder1AbsPosition = canCoder1.getAbsolutePosition();
-    canCoder2MagnetHealth = canCoder2.getMagnetHealth();
-    canCoder2Position = canCoder2.getPosition();
-    canCoder2AbsPosition = canCoder2.getAbsolutePosition();
+    canCoderGearMagnetHealth = canCoderBelt.getMagnetHealth();
+    canCoderGearPosition = canCoderBelt.getPosition();
+    canCoderGearAbsPosition = canCoderBelt.getAbsolutePosition();
+    canCoderBeltMagnetHealth = canCoderGear.getMagnetHealth();
+    canCoderBeltPosition = canCoderGear.getPosition();
+    canCoderBeltAbsPosition = canCoderGear.getAbsolutePosition();
 
     // Create CANcoder configuration
-    canCoder1Config = new CANcoderConfiguration();
-    canCoder1Config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    canCoder1Config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
-    canCoder1Config.MagnetSensor.MagnetOffset = 0.0;
+    canCoderBeltConfig = new CANcoderConfiguration();
+    canCoderBeltConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    canCoderBeltConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
+    canCoderBeltConfig.MagnetSensor.MagnetOffset = 0.0;
 
-    canCoder2Config = new CANcoderConfiguration();
-    canCoder2Config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    canCoder2Config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
-    canCoder2Config.MagnetSensor.MagnetOffset = 0.0;
+    canCoderGearConfig = new CANcoderConfiguration();
+    canCoderGearConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    canCoderGearConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
+    canCoderGearConfig.MagnetSensor.MagnetOffset = 0.0;
 
     // Apply the configurations to the CANcoder.
     // This is a blocking call and will wait up to 50ms-70ms for the config to
     // apply.
-    canCoder1Configurator.apply(canCoder1Config);
-    canCoder2Configurator.apply(canCoder2Config);
+    canCoderBeltConfigurator.apply(canCoderBeltConfig);
+    canCoderGearConfigurator.apply(canCoderGearConfig);
 
-    // Use encoder1 for motion control if it is connected
-    // since encoder1 has less backlash to the turret than the motor to the turret
-    usingEncoder1 = isCANcoderConnected(1);
-    if(usingEncoder1) {
+    // Use belt encoder for motion control if it is connected
+    // since belt encoder has less backlash to the turret than the motor to the turret
+    usingBeltEncoder = isCANcoderConnected(1);
+    if(usingBeltEncoder) {
       turretMotorConfigurator.apply(usingRemoteEncoderConfig);
-      DataLogUtil.writeMessageEcho("Turret: Motor using Encoder1 for motion control.");
+      DataLogUtil.writeMessageEcho("Turret: Motor using Belt Encoder for motion control.");
     } else {
-      // Use motor built-in encoder for motion control if encoder1 is not connected
+      // Use motor built-in encoder for motion control if belt encoder is not connected
       turretMotorConfigurator.apply(usingRotorEncoderConfig);
-      DataLogUtil.writeMessageEcho("Turret: Error -- Encoder 1 not found!  Motor using internal encoder for motion control.");
+      DataLogUtil.writeMessageEcho("Turret: Error -- Belt Encoder not found!  Motor using internal encoder for motion control.");
 
       // Record the missing encoder as a sticky fault
       RobotPreferences.recordStickyFaults("Turret-Encoders");
@@ -405,15 +405,15 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public boolean isCANcoderConnected(int CANcoder) {
     if (CANcoder == 1) {
-      canCoder1MagnetHealth.refresh();
-      MagnetHealthValue magnetHealth = canCoder1MagnetHealth.getValue();
-      return canCoder1.isConnected() &&
+      canCoderGearMagnetHealth.refresh();
+      MagnetHealthValue magnetHealth = canCoderGearMagnetHealth.getValue();
+      return canCoderBelt.isConnected() &&
           (magnetHealth == MagnetHealthValue.Magnet_Green ||
               magnetHealth == MagnetHealthValue.Magnet_Orange);
     } else if (CANcoder == 2) {
-      canCoder2MagnetHealth.refresh();
-      MagnetHealthValue magnetHealth = canCoder2MagnetHealth.getValue();
-      return canCoder2.isConnected() &&
+      canCoderBeltMagnetHealth.refresh();
+      MagnetHealthValue magnetHealth = canCoderBeltMagnetHealth.getValue();
+      return canCoderGear.isConnected() &&
           (magnetHealth == MagnetHealthValue.Magnet_Green ||
               magnetHealth == MagnetHealthValue.Magnet_Orange);
     } else
@@ -441,11 +441,11 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public double getCANcoderRotationsRaw(int CANcoder) {
     if (CANcoder == 1) {
-      canCoder1Position.refresh(); // Verified that this is not a blocking call
-      return canCoder1Position.getValueAsDouble() - TurretConstants.offsetAngleCANcoder1;
+      canCoderGearPosition.refresh(); // Verified that this is not a blocking call
+      return canCoderGearPosition.getValueAsDouble() - TurretConstants.offsetAngleCANcoderBelt;
     } else if (CANcoder == 2) {
-      canCoder2Position.refresh(); // Verified that this is not a blocking call
-      return canCoder2Position.getValueAsDouble() - TurretConstants.offsetAngleCANcoder2;
+      canCoderBeltPosition.refresh(); // Verified that this is not a blocking call
+      return canCoderBeltPosition.getValueAsDouble() - TurretConstants.offsetAngleCANcoderGear;
     } else
       return 0.0;
   }
@@ -458,12 +458,12 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public double getCANcoderAbsRotationsRaw(int CANcoder) {
     if (CANcoder == 1) {
-      canCoder1AbsPosition.refresh(); // Verified that this is not a blocking call
-      double angle = canCoder1AbsPosition.getValueAsDouble() - TurretConstants.offsetAngleCANcoder1;
+      canCoderGearAbsPosition.refresh(); // Verified that this is not a blocking call
+      double angle = canCoderGearAbsPosition.getValueAsDouble() - TurretConstants.offsetAngleCANcoderBelt;
       return (angle<0) ? angle+1 : angle;
     } else if (CANcoder == 2) {
-      canCoder2AbsPosition.refresh(); // Verified that this is not a blocking call
-      double angle = canCoder2AbsPosition.getValueAsDouble() - TurretConstants.offsetAngleCANcoder2;
+      canCoderBeltAbsPosition.refresh(); // Verified that this is not a blocking call
+      double angle = canCoderBeltAbsPosition.getValueAsDouble() - TurretConstants.offsetAngleCANcoderGear;
       return (angle<0) ? angle+1 : angle;
     } else
       return 0.0;
@@ -472,7 +472,7 @@ public class Turret extends SubsystemBase implements Loggable {
   // ****** Kraken encoder methods (may be reading internal encoder or may be reading remote CANcoder)
 
   /**
-   * Gets the raw number of turret rotations from the encoder configured on the motor, which could be the motor encoder or encoder1.
+   * Gets the raw number of turret rotations from the encoder configured on the motor, which could be the motor encoder or belt encoder.
    * 
    * @return raw turret encoder reading, in turret rotations. + is counter-clockwise, - is clockwise (when viewed from above facing turret zero)
    */
@@ -483,7 +483,7 @@ public class Turret extends SubsystemBase implements Loggable {
 
   /**
    * Gets the current turret angle from the encoder configured on the motor,
-   * which could be the motor encoder or encoder1, assuming the turret is calibrated.
+   * which could be the motor encoder or belt encoder, assuming the turret is calibrated.
    * NOTE: This is for internal subsystem use only. Use getTurretAngle() when calling from outside.
    * 
    * @return calibrated turret position, in degrees. 0 = facing back of robot, + is counter-clockwise, - is clockwise (when viewed from above facing turret zero)
@@ -544,7 +544,7 @@ public class Turret extends SubsystemBase implements Loggable {
 
     // Apply the configurations to the motor.
     // This is a blocking call and will wait up to 50ms-70ms for the config to apply.
-    if (usingEncoder1) {
+    if (usingBeltEncoder) {
       turretMotorConfigurator.apply(usingRemoteEncoderConfig);
     } else {
       turretMotorConfigurator.apply(usingRotorEncoderConfig);
@@ -564,12 +564,12 @@ public class Turret extends SubsystemBase implements Loggable {
     turretZero = getTurretEncoderRotationsRaw() * TurretConstants.turretDegreesPerRotation - angle;
     turretCalibrated = true;
 
-    DataLogUtil.writeMessageEcho("Turret: Calibrated, Using encoder1 =", usingEncoder1,
-        ", encoder1 abs =", getCANcoderAbsRotationsRaw(1), ", encoder2 abs =", getCANcoderAbsRotationsRaw(2),
+    DataLogUtil.writeMessageEcho("Turret: Calibrated, Using Belt Encoder=", usingBeltEncoder,
+        ", Belt Encoder abs =", getCANcoderAbsRotationsRaw(1), ", encoder2 abs =", getCANcoderAbsRotationsRaw(2),
         ", turret Zero =", turretZero, ", turret Raw =", getTurretEncoderRotationsRaw(), ", Angle =", getTurretAngle(),
         ", Target =", getCurrentTurretTarget());
 
-    if (usingEncoder1) {
+    if (usingBeltEncoder) {
       // Set software limits after setting turretZero
       usingRemoteEncoderConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = turretDegreesToEncoderRotations(
           TurretAngle.UPPER_LIMIT.value);
@@ -598,12 +598,12 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Calibrate turret using encoder 1 and 2 readings if they are both connected, otherwise do nothing.
+   * Calibrate turret using belt and gear encoder readings if they are both connected, otherwise do nothing.
    */
   public void calibrateTurretAutomatic() {
     if (areBothCANcodersConnected()) {
-      if (!usingEncoder1) {
-        usingEncoder1 = true;
+      if (!usingBeltEncoder) {
+        usingBeltEncoder = true;
         // Apply the configurations to the motor.
         // This is a blocking call and will wait up to 50ms-70ms for the config to apply.
         turretMotorConfigurator.apply(usingRemoteEncoderConfig);
@@ -614,8 +614,8 @@ public class Turret extends SubsystemBase implements Loggable {
       }
       calibrateTurret(calcTurretAngleFromEncodersAdvanced());
     } else {
-      DataLogUtil.writeMessage("Turret: Automatic Calibration Failed, encoder 1 connected =", 
-        isCANcoderConnected(1), " encoder 2 connected =", isCANcoderConnected(2));
+      DataLogUtil.writeMessage("Turret: Automatic Calibration Failed, Belt Encoder connected =", 
+        isCANcoderConnected(1), " gear encoder connected =", isCANcoderConnected(2));
     }
   }
 
@@ -648,15 +648,15 @@ public class Turret extends SubsystemBase implements Loggable {
 
   /**
    * Turret angle estimation for use on initial robot boot.
-   * Calculate turret angle based on the raw reading of encoder 1, with correction for encoder 1 wraps by using both encoders.
+   * Calculate turret angle based on the raw reading of belt encoder, with correction for belt encoder wraps by using both encoders.
    * @return Turret angle, in degrees (from -180 * theoreticalCalculationCoefficient to +180 * theoreticalCalculationCoefficient)
    */
   public double calcTurretAngleFromEncodersAdvanced() {
-    double uncorrectedEncoderReading = cancoderRotationsToDegrees(getCANcoderAbsRotationsRaw(1)) * TurretConstants.encoder1ToTurretRatio;
+    double uncorrectedEncoderReading = cancoderRotationsToDegrees(getCANcoderAbsRotationsRaw(1)) * TurretConstants.gearEncoderToTurretRatio;
     
-    return uncorrectedEncoderReading + 360.0 * TurretConstants.encoder1ToTurretRatio * 
+    return uncorrectedEncoderReading + 360.0 * TurretConstants.gearEncoderToTurretRatio * 
           (double) Math.round((calcTurretAngleFromEncodersBasic() - uncorrectedEncoderReading) /
-                              360.0 / TurretConstants.encoder1ToTurretRatio);
+                              360.0 / TurretConstants.gearEncoderToTurretRatio);
   }
 
   /**
@@ -766,8 +766,8 @@ public class Turret extends SubsystemBase implements Loggable {
       dLogTurretPctOut.append(getTurretMotorPercentOutput(), timeNow);
       dLogTurretCurrent.append(turretStatorCurrent.refresh().getValueAsDouble(), timeNow);
       dLogBatteryVoltage.append(turretSupplyVoltage.refresh().getValueAsDouble(), timeNow);
-      dLogCANcoder1RotRaw.append(getCANcoderRotationsRaw(1), timeNow);
-      dLogCANcoder2RotRaw.append(getCANcoderRotationsRaw(2), timeNow);
+      dLogCANcoderBeltRotRaw.append(getCANcoderRotationsRaw(1), timeNow);
+      dLogCANcoderGearRotRaw.append(getCANcoderRotationsRaw(2), timeNow);
       dLogTurretCalZero.append(turretZero, timeNow);
       dLogTurretTarget.append(getCurrentTurretTarget(), timeNow);
       dLogTurretEncAngle.append(getTurretEncoderDegrees(), timeNow);
@@ -776,8 +776,8 @@ public class Turret extends SubsystemBase implements Loggable {
       dLogTurretBasicEstimation.append(calcTurretAngleFromEncodersBasic(), timeNow);
       dLogTurretAdvancedEstimation.append(calcTurretAngleFromEncodersAdvanced(), timeNow);
       dLogTurretCalibrated.append(isTurretCalibrated(), timeNow);
-      dLogCANcoder1Connected.append(isCANcoderConnected(1), timeNow);
-      dLogCANcoder2Connected.append(isCANcoderConnected(2), timeNow);
+      dLogCANcoderBeltConnected.append(isCANcoderConnected(1), timeNow);
+      dLogCANcoderGearConnected.append(isCANcoderConnected(2), timeNow);
     }
   }
 
@@ -787,11 +787,11 @@ public class Turret extends SubsystemBase implements Loggable {
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
       SmartDashboard.putBoolean(TURRET_IS_CANCODER_CONNECTED.value, areBothCANcodersConnected());
       SmartDashboard.putBoolean(TURRET_IS_CALIBRATED.value, turretCalibrated);
-      SmartDashboard.putBoolean(TURRET_IS_USING_CANCODER.value, usingEncoder1);
-      SmartDashboard.putNumber(TURRET_CANCODER1_RAW.value, getCANcoderRotationsRaw(1));
-      SmartDashboard.putNumber(TURRET_CANCODER2_RAW.value, getCANcoderRotationsRaw(2));
-      SmartDashboard.putNumber(TURRET_CANCODER1_ABS.value, getCANcoderAbsRotationsRaw(1));
-      SmartDashboard.putNumber(TURRET_CANCODER2_ABS.value, getCANcoderAbsRotationsRaw(2));
+      SmartDashboard.putBoolean(TURRET_IS_USING_CANCODER.value, usingBeltEncoder);
+      SmartDashboard.putNumber(TURRET_CANCODER_BELT_RAW.value, getCANcoderRotationsRaw(1));
+      SmartDashboard.putNumber(TURRET_CANCODER_GEAR_RAW.value, getCANcoderRotationsRaw(2));
+      SmartDashboard.putNumber(TURRET_CANCODER_BELT_ABS.value, getCANcoderAbsRotationsRaw(1));
+      SmartDashboard.putNumber(TURRET_CANCODER_GEAR_ABS.value, getCANcoderAbsRotationsRaw(2));
       SmartDashboard.putNumber(TURRET_ENCODER_RAW.value, getTurretEncoderRotationsRaw());
       SmartDashboard.putNumber(TURRET_ANGLE.value, getTurretEncoderDegrees());
       SmartDashboard.putNumber(TURRET_TARGET_ANGLE.value, getCurrentTurretTarget());
@@ -806,17 +806,17 @@ public class Turret extends SubsystemBase implements Loggable {
     // If the CANcoder stops reading, apply RotorEncoder configuration and stop
     // using the CANcoder
     // This condition should only occur one time (if at all)
-    if (usingEncoder1 && !isCANcoderConnected(1)) {
-      usingEncoder1 = false;
+    if (usingBeltEncoder && !isCANcoderConnected(1)) {
+      usingBeltEncoder = false;
       setTurretUncalibrated(); // will make a blocking call (50-70ms)
 
       RobotPreferences.recordStickyFaults("Turret-CANcoder");
 
       DataLogUtil.writeMessageEcho("Turret: CANcoder Disconnection, Enc Zero =", turretZero,
-          ", CANcoder1 Angle =", getCANcoderRotationsRaw(1),
-          ", CANcoder2 Angle =", getCANcoderRotationsRaw(2),
-          ", CANcoder1 Connected =", isCANcoderConnected(1),
-          ", CANcoder2 Connected =", isCANcoderConnected(2),
+          ", CANcoder Belt Angle =", getCANcoderRotationsRaw(1),
+          ", CANcoder Gear Angle =", getCANcoderRotationsRaw(2),
+          ", CANcoder Belt Connected =", isCANcoderConnected(1),
+          ", CANcoder Gear Connected =", isCANcoderConnected(2),
           ", Enc Raw =", getTurretEncoderRotationsRaw(),
           ", Angle =", getTurretEncoderDegrees(),
           ", Target =", getCurrentTurretTarget());
