@@ -430,7 +430,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     hood2PositionControlOn = true;
 
     hoodMotor1.set(hood1PidController.calculate(getHoodAngle(1), hoodAngleSetpoint)); 
-    hoodMotor2.set(hood1PidController.calculate(getHoodAngle(2), hoodAngleSetpoint)); 
+    hoodMotor2.set(hood2PidController.calculate(getHoodAngle(2), hoodAngleSetpoint)); 
   }
   
   /**

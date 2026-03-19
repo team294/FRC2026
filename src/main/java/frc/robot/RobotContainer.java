@@ -166,10 +166,10 @@ public class RobotContainer {
 
     // Set Position
 
-    // Score Sequences
+    // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(ScoreEndType.runForever, driveTrain, shooter));
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(() -> driveTrain.getPose(), ScoreEndType.waitForSetPoint, driveTrain, shooter));
+    // SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(ScoreEndType.runForever, driveTrain, shooter));
+    // SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(() -> driveTrain.getPose(), ScoreEndType.waitForSetPoint, driveTrain, shooter));
                                                                           // placeholder supplier that doesn't do anything rn -- change getPose to getStaticBallTarget/getGhostBallTarget
 
     // Calibration Ramp

@@ -579,15 +579,25 @@ public final class Constants {
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     //public static final double hoodMaximumAngle = 45.0; // in degrees 
-    public static final double hoodMaximumAngle = 39.4; // in degrees Natalie Test
+    public static final double hoodMaximumAngle = 40.0; // in degrees Natalie Test
 
     public static final double hoodMaximumPercentOutput = 0.5;
 
     public static final double hoodMinimumAnalogVoltage = 0;
     //public static final double hood1MaximumAnalogVoltage = 4.92;
     //public static final double hood2MaximumAnalogVoltage = 4.92;
-    public static final double hood1MaximumAnalogVoltage = 3.536;
-    public static final double hood2MaximumAnalogVoltage = 4.018;
+    public static final double hood1MaximumAnalogVoltage = 4.1; // 3.536
+    public static final double hood2MaximumAnalogVoltage = 4.1; // 4.018
+
+    public static final double hood1SlopePointAnalogVoltage = 1.692; // 3.536
+    public static final double hood2SlopePointAnalogVoltage = 1.692; // 4.018
+
+    //public static final double hood1SlopePointAngle = 22.0; // please comment me
+    //public static final double hood2SlopePointAngle = 212.0; // pleassseee
+
+    public static final double hood1SlopePointExtensionLength = 8.0; // please comment me
+    public static final double hood2SlopePointExtensionLength = 8.0; // pleassseee
+    
 
     public static final double hoodToleranceFromTopOrBottom = 0.005;
 
@@ -603,16 +613,16 @@ public final class Constants {
     public static final double radius1 = 7.678; // the length of one side of the triangle formed with the linear actuator for the hood angle
     public static final double radius2 = 6.361; // the length of the other side of the triangle 
 
-    public static final double hood1VoltageToExtensionLengthSlope = (hoodActuatorMaxExtensionLength - hoodActuatorMinExtensionLength) / (hood1MaximumAnalogVoltage - hoodMinimumAnalogVoltage);
-    public static final double hood2VoltageToExtensionLengthSlope = (hoodActuatorMaxExtensionLength - hoodActuatorMinExtensionLength) / (hood2MaximumAnalogVoltage - hoodMinimumAnalogVoltage);
+    public static final double hood1VoltageToExtensionLengthSlope = (hood1SlopePointExtensionLength - hoodActuatorMinExtensionLength) / (hood1SlopePointAnalogVoltage - hoodMinimumAnalogVoltage);
+    public static final double hood2VoltageToExtensionLengthSlope = (hood2SlopePointExtensionLength - hoodActuatorMinExtensionLength) / (hood2SlopePointAnalogVoltage - hoodMinimumAnalogVoltage);
 
-    public static final double hood1kP = 0.21;    // volts / error in motor rps
+    public static final double hood1kP = 0.24;    // volts / error in motor rps
     public static final double hood1kI = 0.0;
     public static final double hood1kD = 0.0;
     public static final double hood1kS = 0.0;   // voltage output to overcome static friction (constant added to basic PID control to overcome static friction from having to move the hood)
     public static final double hood1kV = 0.0; // volts / desired motor rps
     public static final double hood1kA = 0.0;
-    public static final double hood2kP = 0.254;    // volts / error in motor rps
+    public static final double hood2kP = 0.275;    // volts / error in motor rps
     public static final double hood2kI = 0.0;
     public static final double hood2kD = 0.0;
     public static final double hood2kS = 0.0;   // voltage output to overcome static friction (constant added to basic PID control to overcome static friction from having to move the hood)
