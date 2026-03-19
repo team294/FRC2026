@@ -13,6 +13,8 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -76,8 +78,8 @@ public final class Constants {
     public static final int CANDriveTurnBackLeftEncoder = 11;
     public static final int CANDriveTurnBackRightEncoder = 12;
     public static final int CANIntakeDeployEncoder = 13;
-    public static final int CANTurretEncoder1 = 14;
-    public static final int CANTurretEncoder2 = 15;
+    public static final int CANTurretEncoderBelt = 14;
+    public static final int CANTurretEncoderGear = 15;
 
     public static final int CANRangeEntry = 16;
     public static final int CANRangeExit = 17;
@@ -134,8 +136,8 @@ public final class Constants {
     private static final String setPositionCmdString = " Set Position";
     private static final String setPositionCmdInputString = " Set Position Input";
     private static final String calibrationRampCmdString = " Calibration Ramp";
-    private static final String calibrateManualCmdString = " Calibrate Manual";
-    private static final String calibrateManualCmdInputString = " Calibrate Manual Input";
+    private static final String calibrateManualCmdString = " Recalibrate";
+    private static final String calibrateManualCmdInputString = " Recalibrate Manual Input";
     private static final String stopCmdString = " Stop";
 
     // Readings
@@ -154,6 +156,7 @@ public final class Constants {
     private static final String feederSpindexerString = "Spindexer";
     private static final String feederUptakeString = "Uptake";
     private static final String shooterString = "Shooter";
+    private static final String turretString = "Turret";
     private static final String climberString = "Climber";
 
     public enum ElasticKey {
@@ -163,112 +166,133 @@ public final class Constants {
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
 
       // Stop Command
-      INTAKE_CMD_STOP(ElasticKeyConstants.intakeString + ElasticKeyConstants.stopCmdString),
-      INTAKE_DEPLOY_CMD_STOP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.stopCmdString),
-      INTAKE_ROLLER_CMD_STOP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.stopCmdString),
-      SPINDEXER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.stopCmdString),
-      UPTAKE_CMD_STOP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.stopCmdString),
-      FEEDER_CMD_STOP(ElasticKeyConstants.feederSpindexerString + "/" + ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.stopCmdString),
-      SHOOTER_CMD_STOP(ElasticKeyConstants.shooterString + ElasticKeyConstants.stopCmdString),
-      CLIMBER_CMD_STOP(ElasticKeyConstants.climberString + ElasticKeyConstants.stopCmdString),
+      INTAKE_CMD_STOP(intakeString + stopCmdString),
+      INTAKE_DEPLOY_CMD_STOP(intakeDeployString + stopCmdString),
+      INTAKE_ROLLER_CMD_STOP(intakeRollerString + stopCmdString),
+      SPINDEXER_CMD_STOP(feederSpindexerString + stopCmdString),
+      UPTAKE_CMD_STOP(feederUptakeString + stopCmdString),
+      FEEDER_CMD_STOP(feederSpindexerString + "/" + feederUptakeString + stopCmdString),
+      SHOOTER_CMD_STOP(shooterString + stopCmdString),
+      CLIMBER_CMD_STOP(climberString + stopCmdString),
+      TURRET_CMD_STOP(turretString + stopCmdString),
 
       // Set Percent Command
-      INTAKE_ROLLER_CMD_SET_PERCENT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdString),
-      INTAKE_DEPLOY_CMD_SET_PERCENT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdString),
-      SPINDEXER_CMD_SET_PERCENT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentCmdString),
-      SHOOTER_CMD_SET_PERCENT(ElasticKeyConstants.shooterString + ElasticKeyConstants.setPercentCmdString),
-      UPTAKE_CMD_SET_PERCENT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentCmdString),
-      CLIMBER_CMD_SET_PERCENT(ElasticKeyConstants.climberString + ElasticKeyConstants.setPercentCmdString),
+      INTAKE_ROLLER_CMD_SET_PERCENT(intakeRollerString + setPercentCmdString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT(intakeDeployString + setPercentCmdString),
+      SPINDEXER_CMD_SET_PERCENT(feederSpindexerString + setPercentCmdString),
+      SHOOTER_CMD_SET_PERCENT(shooterString + setPercentCmdString),
+      UPTAKE_CMD_SET_PERCENT(feederUptakeString + setPercentCmdString),
+      CLIMBER_CMD_SET_PERCENT(climberString + setPercentCmdString),
+      TURRET_CMD_SET_PERCENT(turretString + setPercentCmdString),
 
       // Set Percent Command Input
-      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setPercentCmdInputString),
-      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.setPercentCmdInputString),
-      SPINDEXER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setPercentCmdInputString),
-      SHOOTER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.shooterString + ElasticKeyConstants.setPercentCmdInputString),
-      UPTAKE_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setPercentCmdInputString),
-      CLIMBER_CMD_SET_PERCENT_INPUT(ElasticKeyConstants.climberString + ElasticKeyConstants.setPercentCmdInputString),
+      INTAKE_DEPLOY_CMD_SET_PERCENT_INPUT(intakeDeployString + setPercentCmdInputString),
+      INTAKE_ROLLER_CMD_SET_PERCENT_INPUT(intakeRollerString + setPercentCmdInputString),
+      SPINDEXER_CMD_SET_PERCENT_INPUT(feederSpindexerString + setPercentCmdInputString),
+      SHOOTER_CMD_SET_PERCENT_INPUT(shooterString + setPercentCmdInputString),
+      UPTAKE_CMD_SET_PERCENT_INPUT(feederUptakeString + setPercentCmdInputString),
+      CLIMBER_CMD_SET_PERCENT_INPUT(climberString + setPercentCmdInputString),
+      TURRET_CMD_SET_PERCENT_INPUT(turretString + setPercentCmdInputString),
 
       // Set Velocity Command
-      SPINDEXER_CMD_SET_VELOCITY(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityCmdString),
-      UPTAKE_CMD_SET_VELOCITY(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdString),
-      SHOOTER_CMD_SET_VELOCITY(ElasticKeyConstants.shooterString + ElasticKeyConstants.setVelocityCmdString),
+      SPINDEXER_CMD_SET_VELOCITY(feederSpindexerString + setVelocityCmdString),
+      UPTAKE_CMD_SET_VELOCITY(feederUptakeString + setVelocityCmdString),
+      SHOOTER_CMD_SET_VELOCITY(shooterString + setVelocityCmdString),
 
       // Set Velocity Command Input
-      SPINDEXER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.setVelocityCmdInputString),
-      UPTAKE_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.setVelocityCmdInputString),
-      SHOOTER_CMD_SET_VELOCITY_INPUT(ElasticKeyConstants.shooterString + ElasticKeyConstants.setVelocityCmdInputString),
+      SPINDEXER_CMD_SET_VELOCITY_INPUT(feederSpindexerString + setVelocityCmdInputString),
+      UPTAKE_CMD_SET_VELOCITY_INPUT(feederUptakeString + setVelocityCmdInputString),
+      SHOOTER_CMD_SET_VELOCITY_INPUT(shooterString + setVelocityCmdInputString),
 
       // Set Angle Command
-      INTAKE_DEPLOY_CMD_SET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleCmdString),
+      INTAKE_DEPLOY_CMD_SET_ANGLE(intakeDeployString + setAngleCmdString),
+      TURRET_CMD_SET_ANGLE(turretString + setAngleCmdString),
 
       // Set Angle Command Input
-      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.setAngleCmdInputString),
+      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
+      TURRET_CMD_SET_ANGLE_INPUT(turretString + setAngleCmdInputString),
 
       // Set Position Command
-      CLIMBER_CMD_SET_POSITION(ElasticKeyConstants.climberString + ElasticKeyConstants.setPositionCmdString),
+      CLIMBER_CMD_SET_POSITION(climberString + setPositionCmdString),
 
       // Set Position Command Input
-      CLIMBER_CMD_SET_POSITION_INPUT(ElasticKeyConstants.climberString + ElasticKeyConstants.setPositionCmdInputString),
+      CLIMBER_CMD_SET_POSITION_INPUT(climberString + setPositionCmdInputString),
 
       // Calibration Ramp Command
-      INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.calibrationRampCmdString),
-      CLIMBER_CMD_CALIBRATION_RAMP(ElasticKeyConstants.climberString + ElasticKeyConstants.calibrationRampCmdString),
+      INTAKE_DEPLOY_CMD_CALIBRATION_RAMP(intakeDeployString + calibrationRampCmdString),
+      CLIMBER_CMD_CALIBRATION_RAMP(climberString + calibrationRampCmdString),
 
       // Calibrate Manual Command
-      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.calibrateManualCmdString),
-      CLIMBER_CMD_CALIBRATE_MANUAL(ElasticKeyConstants.climberString + ElasticKeyConstants.calibrateManualCmdString),
+      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(intakeDeployString + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
+      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
+      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
 
       // Calibrate Manual Command Input
-      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.calibrateManualCmdInputString + " (Degrees)"),
-      CLIMBER_CMD_CALIBRATE_MANUAL_INPUT(ElasticKeyConstants.climberString + ElasticKeyConstants.calibrateManualCmdInputString + " (Inches)"),
+      INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(intakeDeployString + calibrateManualCmdInputString + " (Degrees)"),
+      CLIMBER_CMD_CALIBRATE_MANUAL_INPUT(climberString + calibrateManualCmdInputString + " (Inches)"),
 
       // Temp
-      INTAKE_DEPLOY_TEMP(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.tempString),
-      INTAKE_ROLLER_TEMP(ElasticKeyConstants.intakeRollerString + ElasticKeyConstants.tempString),
-      SPINDEXER_TEMP(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.tempString),
-      UPTAKE_TEMP(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.tempString),
-      SHOOTER_LEFT_TEMP(ElasticKeyConstants.shooterString + " L" + ElasticKeyConstants.tempString),
-      SHOOTER_RIGHT_TEMP(ElasticKeyConstants.shooterString + " R" + ElasticKeyConstants.tempString),
+      INTAKE_DEPLOY_TEMP(intakeDeployString + tempString),
+      INTAKE_ROLLER_TEMP(intakeRollerString + tempString),
+      SPINDEXER_TEMP(feederSpindexerString + tempString),
+      UPTAKE_TEMP(feederUptakeString + tempString),
+      SHOOTER_LEFT_TEMP(shooterString + " L" + tempString),
+      SHOOTER_RIGHT_TEMP(shooterString + " R" + tempString),
+      TURRET_TEMP(turretString + tempString),
 
       // RPM
-      SPINDEXER_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.rpmString),
-      UPTAKE_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.rpmString),
-      SHOOTER_RPM(ElasticKeyConstants.shooterString + ElasticKeyConstants.rpmString),
+      SPINDEXER_RPM(feederSpindexerString + rpmString),
+      UPTAKE_RPM(feederUptakeString + rpmString),
+      SHOOTER_RPM(shooterString + rpmString),
 
       // Target RPM
-      SPINDEXER_TARGET_RPM(ElasticKeyConstants.feederSpindexerString + ElasticKeyConstants.targetRpmString),
-      UPTAKE_TARGET_RPM(ElasticKeyConstants.feederUptakeString + ElasticKeyConstants.targetRpmString),
-      SHOOTER_TARGET_RPM(ElasticKeyConstants.shooterString + ElasticKeyConstants.targetRpmString),
+      SPINDEXER_TARGET_RPM(feederSpindexerString + targetRpmString),
+      UPTAKE_TARGET_RPM(feederUptakeString + targetRpmString),
+      SHOOTER_TARGET_RPM(shooterString + targetRpmString),
 
       // Angle
-      INTAKE_DEPLOY_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.angleString),
+      INTAKE_DEPLOY_ANGLE(intakeDeployString + angleString),
+      TURRET_ANGLE(turretString + angleString),
+      TURRET_ADVANCED_ESTIMATION(turretString + " Advanced Estimation"),
 
       // Target Angle
-      INTAKE_DEPLOY_TARGET_ANGLE(ElasticKeyConstants.intakeDeployString + ElasticKeyConstants.targetAngleString),
+      INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
+      TURRET_TARGET_ANGLE(turretString + targetAngleString),
 
       // Position
-      CLIMBER_POSITION(ElasticKeyConstants.climberString + ElasticKeyConstants.positionString),
+      CLIMBER_POSITION(climberString + positionString),
+      TURRET_CANCODER_BELT_ABS(turretString + " CANcoder Belt ABS"),
+      TURRET_CANCODER_GEAR_ABS(turretString + " CANcoder Gear ABS"),
 
       // Target Position
-      CLIMBER_TARGET(ElasticKeyConstants.climberString + ElasticKeyConstants.targetPositionString),
+      CLIMBER_TARGET(climberString + targetPositionString),
 
       // CANcoder Connected
-      INTAKE_DEPLOY_IS_CANCODER_CONNECTED(ElasticKeyConstants.intakeDeployString + " CANcoder Connected?"),
+      INTAKE_DEPLOY_IS_CANCODER_CONNECTED(intakeDeployString + " CANcoder Connected?"),
+      TURRET_IS_CANCODER_CONNECTED(turretString + " CANcoder Connected?"),
+
+      // Using CANcoder
+      TURRET_IS_USING_CANCODER(turretString + " Using CANCoder?"),
 
       // Calibrated
-      INTAKE_DEPLOY_IS_CALIBRATED(ElasticKeyConstants.intakeDeployString + " Calibrated?"),
-      CLIMBER_IS_CALIBRATED(ElasticKeyConstants.climberString + " Calibrated"),
+      INTAKE_DEPLOY_IS_CALIBRATED(intakeDeployString + " Calibrated?"),
+      CLIMBER_IS_CALIBRATED(climberString + " Calibrated?"),
+      TURRET_IS_CALIBRATED(turretString + " Calibrated?"),
 
       // Raw Rotations
-      INTAKE_DEPLOY_RAW_ROTATIONS(ElasticKeyConstants.intakeDeployString + " Raw Rotations"),
+      INTAKE_DEPLOY_RAW_ROTATIONS(intakeDeployString + " Raw Rotations"),
+      TURRET_CANCODER_BELT_RAW(turretString + " CANcoder Belt Raw"),
+      TURRET_CANCODER_GEAR_RAW(turretString + " CANcoder Gear Raw"),
+      TURRET_ENCODER_RAW(turretString + " Encoder Raw"),
 
       // Limits
-      CLIMBER_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Lower Limit"),
-      CLIMBER_MOTOR_ONE_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Motor 1 Lower Limit"),
-      CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT(ElasticKeyConstants.climberString + " Motor 2 Lower Limit"),
+      CLIMBER_IS_AT_LOWER_LIMIT(climberString + " Lower Limit"),
+      CLIMBER_MOTOR_ONE_IS_AT_LOWER_LIMIT(climberString + " Motor 1 Lower Limit"),
+      CLIMBER_MOTOR_TWO_IS_AT_LOWER_LIMIT(climberString + " Motor 2 Lower Limit"),
 
       // Match
-      MATCH_TIMER("Teleop Timer"),
+      TELEOP_TIMER("Teleop Timer"),
       SHIFT_TIMER("Shift Timer"),
       IS_BLUE_SHIFT("Is Blue Shift"),
       IS_YOUR_SHIFT("Is Your Shift");
@@ -396,6 +420,14 @@ public final class Constants {
   public static class FieldConstants {
     public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
     public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
+    
+    public static final Pose2d hubPositionBlue = new Pose2d(Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+    public static final Pose2d hubPositionRed = new Pose2d(length - Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+
+    public static final Pose2d leftPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0, new Rotation2d(0));
+    public static final Pose2d rightPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0, new Rotation2d(0));
+    public static final Pose2d leftPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0, new Rotation2d(0));
+    public static final Pose2d rightPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0, new Rotation2d(0));
   }
 
   public static class VisionConstants {
@@ -565,6 +597,52 @@ public final class Constants {
     public static final double ShooterkA = 0;
 
     public static final double velocityErrorTolerance = 100;
+  }
+
+  public static final class TurretConstants {
+    public static final double compensationVoltage = 12.0;
+
+    public static final double turretToMotorGearRatio = (70.0 / 12.0) * (135.0 / 15.0);  // CALIBRATED: (70.0 / 12.0) * (135.0 / 15.0) For gear reduction from motor to turret, value should be greater than 1
+    public static final double turretBeltTeeth = 135.0;
+    public static final double beltEncoderBeltTeeth = 24.0;
+    public static final double beltEncoderGearTeeth = 30.0;
+    public static final double gearEncoderGearTeeth = 26.0;
+
+    public static final double gearEncoderToTurretRatio = TurretConstants.beltEncoderBeltTeeth / TurretConstants.turretBeltTeeth;
+    public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
+    public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
+
+    public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+
+    public static final double maxPercentOutput = 1.0;               // Absolute max percent out allowed for turret
+    public static final double maxManualPercentOutput = 0.5; // Max percent out allowed for manual turret movement when calibrated
+    public static final double maxUncalibratedPercentOutput = 0.1;   // Max percent out allowed for any turrent movement when uncalibrated
+
+    public static final double angleTolerance = 0.5;        // Angle tolerance for setting the turret angle, in degrees
+
+    public static final double kP = 90.0;  // CALIBRATED 3/17/26: 90.0
+    public static final double kI = 0.0;   // CALIBRATED 3/17/26: 0.0
+    public static final double kD = 0.0;   // CALIBRATED 3/17/26: 0.0
+    public static final double kS = 0.275; // CALIBRATED 3/17/26: 0.275
+    public static final double kV = 5.1;   // CALIBRATED 3/17/26: 5.1
+    public static final double kA = 0.0;   // CALIBRATED 3/17/26: 0.0
+
+    public static final double MMCruiseVelocity = 20.0; // CALIBRATED 3/17/26: 20.0
+    public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
+    public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
+
+    public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
+    
+    public enum TurretAngle {
+      LOWER_LIMIT(-180.0),
+      UPPER_LIMIT(180.0);
+
+      public final double value;
+      TurretAngle(double angle) {
+        this.value = angle;
+      }
+    }
   }
 
   public static final class TrajectoryConstants {
