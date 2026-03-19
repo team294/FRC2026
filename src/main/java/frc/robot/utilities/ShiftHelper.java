@@ -70,7 +70,7 @@ public class ShiftHelper {
     }
 
     public void periodic() {
-        SmartDashboard.putNumber(MATCH_TIMER.value, Math.max(140.0 - teleopTimer.get(), 0));
+        SmartDashboard.putNumber(TELEOP_TIMER.value, Math.max(140.0 - teleopTimer.get(), 0));
         SmartDashboard.putNumber(SHIFT_TIMER.value, timeLeftInShiftSeconds());
         SmartDashboard.putBoolean(IS_BLUE_SHIFT.value, isCurrentShiftBlue());
         SmartDashboard.putBoolean(IS_YOUR_SHIFT.value, isCurrentShiftYours());
