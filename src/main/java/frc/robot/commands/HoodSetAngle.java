@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.EndType;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.DataLogUtil;
@@ -24,13 +25,7 @@ public class HoodSetAngle extends Command {
   private DoubleSupplier angleGetter;
   private boolean useGetter = false;
 
-  private final EndType type;
-
-  public enum EndType {
-    immediatelyEnd,
-    runForever,
-    waitForAngle
-  }
+  private EndType type;
   
   /**
    * Sets the hood angle (degrees).
@@ -87,7 +82,7 @@ public class HoodSetAngle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (type == EndType.waitForAngle) {
+    if (type == EndType.waitForSetPoint) {
       shooter.enableFastLogging(true);
     }
 
@@ -126,7 +121,7 @@ public class HoodSetAngle extends Command {
   public void end(boolean interrupted) {
     shooter.enableFastLogging(false);
 
-    if (type == EndType.runForever || type == EndType.waitForAngle) {
+    if (type == EndType.runForever || type == EndType.waitForSetPoint) {
       shooter.setHoodVoltageBothMotors(0);
     }
 
@@ -139,7 +134,7 @@ public class HoodSetAngle extends Command {
     switch (type) {
       case runForever:
         return false;
-      case waitForAngle:
+      case waitForSetPoint:
         if ( Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) {
           toleranceCounter++;
         } else {

@@ -229,18 +229,15 @@ public final class Constants {
       INTAKE_DEPLOY_CMD_SET_ANGLE(intakeDeployString + setAngleCmdString),
       HOOD_CMD_SET_ANGLE_FOREVER(hoodString + setAngleCmdString + " (Run Forever)"),
       HOOD_CMD_SET_ANGLE_WAIT(hoodString + setAngleCmdString + " (Wait for Angle)"),
-
-      // Set Angle Command Input
-      INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
-      HOOD_CMD_SET_ANGLE_INPUT(hoodString + setAngleCmdInputString),
-
-      // Shooter Score Prep Command
-      SHOOTER_CMD_SCORE_PREP(shooterString + scorePrepCmdString),
       TURRET_CMD_SET_ANGLE(turretString + setAngleCmdString),
 
       // Set Angle Command Input
       INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT(intakeDeployString + setAngleCmdInputString),
+      HOOD_CMD_SET_ANGLE_INPUT(hoodString + setAngleCmdInputString),
       TURRET_CMD_SET_ANGLE_INPUT(turretString + setAngleCmdInputString),
+
+      // Shooter Score Prep Command
+      SHOOTER_CMD_SCORE_PREP(shooterString + scorePrepCmdString),
 
       // Set Position Command
       CLIMBER_CMD_SET_POSITION(climberString + setPositionCmdString),
@@ -298,6 +295,7 @@ public final class Constants {
       // Target Angle
       INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
       HOOD_ANGLE_CURRENT_SETPOINT(hoodString + targetAngleString),
+      TURRET_TARGET_ANGLE(turretString + targetAngleString),
 
       // Position
       CLIMBER_POSITION(climberString + positionString),
@@ -305,13 +303,6 @@ public final class Constants {
       HOOD_RIGHT_LENGTH(hoodRightString + " Extension Length (in)"),
       TURRET_ANGLE(turretString + angleString),
       TURRET_ADVANCED_ESTIMATION(turretString + " Advanced Estimation"),
-
-      // Target Angle
-      INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
-      TURRET_TARGET_ANGLE(turretString + targetAngleString),
-
-      // Position
-      CLIMBER_POSITION(climberString + positionString),
       TURRET_CANCODER_BELT_ABS(turretString + " CANcoder Belt ABS"),
       TURRET_CANCODER_GEAR_ABS(turretString + " CANcoder Gear ABS"),
 
@@ -351,6 +342,12 @@ public final class Constants {
       public final String value;
       private ElasticKey(String value) { this.value = value; }
     }
+  }
+
+  public static enum EndType {
+    immediatelyEnd,
+    waitForSetPoint,
+    runForever
   }
 
   public static final class RobotDimensions {

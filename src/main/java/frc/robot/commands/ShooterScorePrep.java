@@ -44,7 +44,7 @@ public class ShooterScorePrep extends Command {
    * Sets the hood angle and shooter velocity for scoring.
    * @param velocityGetter DoubleSupplier that returns the target velocity of the shooter, in rpm
    * @param angleGetter DoubleSupplier that returns the target angle of the hood, in degrees
-   * @param type
+   * @param type EndType; don't use immediatelyEnd for the hood
    * <p> waitForSetPoint = command runs until shooter velocity and hood angle are within tolerance for 5 cycles, then command ends but leaves shooter and hood moving
    * <p> runForever = command runs until interrupted, turn off hood and shooter motor when interrupted
    * @param driveTrain driveTrain subsystem
