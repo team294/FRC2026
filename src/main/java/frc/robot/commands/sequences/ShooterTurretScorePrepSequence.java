@@ -29,10 +29,10 @@ public class ShooterTurretScorePrepSequence extends SequentialCommandGroup {
    * @param shooter Shooter shooter subsystem 
    * @param driveTrain DriveTrain driveTrain -- only for current pose information
    */
-  public ShooterTurretScorePrepSequence(boolean shootOnTheMove, Turret turret, Shooter shooter, DriveTrain driveTrain, Field field) {
+  public ShooterTurretScorePrepSequence(boolean shootOnTheMove, EndType endType, Turret turret, Shooter shooter, DriveTrain driveTrain, Field field) {
     addCommands(
       parallel(
-        new ShooterScorePrep(shootOnTheMove, EndType.waitForSetPoint, shooter, driveTrain, field), 
+        new ShooterScorePrep(shootOnTheMove, endType, shooter, driveTrain, field), 
         new WaitUntilCommand(() -> turret.getTurretAtGoalAngle())
         )
     );

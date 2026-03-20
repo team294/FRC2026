@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ElasticKeyConstants.ElasticKey;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.ShooterConstants;
@@ -202,6 +203,7 @@ public class ShooterScorePrep extends Command {
       shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
+
     else if (selfCalculate){ // Calculates distance and velocity based on position
       Translation2d robotTranslation2d = driveTrain.getPose().getTranslation();
       if (!shootOnTheMove) {
@@ -216,6 +218,8 @@ public class ShooterScorePrep extends Command {
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       targetAngle = ShooterConstants.hoodShootAngle;
+      shooter.setHoodAnglePID(targetAngle);
+      shooter.setShooterVelocity(targetVelocity);
     }
   }
 
@@ -224,9 +228,10 @@ public class ShooterScorePrep extends Command {
   public void end(boolean interrupted) {
     shooter.enableFastLogging(false);
 
-    if (type == EndType.runForever || type == EndType.waitForSetPoint) {
+    if (type == EndType.runForever) {
       shooter.setHoodVoltageBothMotors(0);
       shooter.stopShooterMotor();
+      CommandScheduler.getInstance().schedule(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");
@@ -239,7 +244,7 @@ public class ShooterScorePrep extends Command {
       case runForever:
         return false;
       case waitForSetPoint:
-         if ( (Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) && (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.velocityErrorTolerance)) {
+         if ( (Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) && (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
           toleranceCounter++;
         } else {
           toleranceCounter = 0;

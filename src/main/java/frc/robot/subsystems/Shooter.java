@@ -48,6 +48,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   private boolean fastLogging = true;  // true = log every cycle, false = log every 10 cycles
   private String subsystemName;         // Name of the subsystem, used for logging/dashboard
 
+
   // Motor, configurator, and feedforward control objects
   private final TalonFX shooterMotor1 = new TalonFX(Ports.CANShooterMotor1);
   private final TalonFX shooterMotor2 = new TalonFX(Ports.CANShooterMotor2);
@@ -90,7 +91,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   private VelocityVoltage shooterVelocityControl = new VelocityVoltage(0).withSlot(0);
 
   private boolean shooterVelocityControlOn = false;  // true = velocity control is on, false = velocity control is off (e.g. percent output, position)
-  private double setpointRPM;                 // Target velocity, in RPM (positive = forward, negative = reverse)
+  private double shooterSetpointRPM;                 // Target velocity, in RPM (positive = forward, negative = reverse)
+  private boolean atGoalSetpoint;
   
   private VoltageOut hood1VoltageControl = new VoltageOut(0.0).withEnableFOC(true);
   private VoltageOut hood2VoltageControl = new VoltageOut(0.0).withEnableFOC(true);
@@ -258,7 +260,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setShooterPercentOutput(double percent) {
     shooterVelocityControlOn = false;
-    setpointRPM = 0.0;
+    shooterSetpointRPM = 0.0;
     shooterMotor1.setControl(shooterVoltageControl.withOutput(percent * ShooterConstants.compensationVoltage));
   }
 
@@ -268,7 +270,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setShooterVelocity(double velocityRPM) {
     shooterVelocityControlOn = true;
-    setpointRPM = velocityRPM;
+    shooterSetpointRPM = velocityRPM;
     double motorRPS = (velocityRPM / 60.0) / ShooterConstants.gearRatio;
 
     shooterMotor1.setControl(
@@ -352,7 +354,19 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return the shooter wheel setpoint in rotations per minute
    */
   public double getShooterSetpointRPM() {
-    return setpointRPM;
+    return shooterSetpointRPM;
+  }
+
+  /**
+   * Gets the error of the PID for spindexerMotor velocity control.
+   * @return error, in RPM (positive = measured speed is too fast, negative = too slow)
+   */
+  public double getShooterVelocityPIDError() {
+    return getShooterVelocity() - shooterSetpointRPM;
+  }
+
+  public boolean getShooterAtGoalVelocity() {
+    return Math.abs(getShooterVelocityPIDError()) < ShooterConstants.shooterVelocityErrorTolerance && (shooterSetpointRPM != 0.0);
   }
  
   /**
@@ -484,6 +498,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     return hoodAngleSetpoint;
   }
   
+  public boolean getHoodAtGoalAngle() {
+    return Math.abs(getHoodAngle() - hoodAngleSetpoint) < 0.7;
+  }
+
   /**
    * Gets the name of the subsystem.
    * @return the subsystem name
@@ -621,7 +639,7 @@ public class Shooter extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(SHOOTER_LEFT_TEMP.value, shooter1Temperature.refresh().getValueAsDouble());
       SmartDashboard.putNumber(SHOOTER_RIGHT_TEMP.value, shooter2Temperature.refresh().getValueAsDouble());
       SmartDashboard.putNumber(SHOOTER_RPM.value, getShooterVelocity());
-      SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, setpointRPM);
+      SmartDashboard.putNumber(SHOOTER_TARGET_RPM.value, shooterSetpointRPM);
       
       SmartDashboard.putNumber(HOOD_LEFT_VOLTAGE.value, hoodMotor1.getMotorVoltage(true).getValueAsDouble());
       SmartDashboard.putNumber(HOOD_RIGHT_VOLTAGE.value, hoodMotor2.getMotorVoltage(true).getValueAsDouble());
