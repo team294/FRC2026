@@ -99,19 +99,17 @@ public final class Constants {
     public static final int CANShooterMotor1 = 35;
     public static final int CANShooterMotor2 = 36;
 
-    public static final int CANClimberMotor1 = 37;
-    public static final int CANClimberMotor2 = 38;
+    public static final int CANClimberMotorLeft = 37;
+    public static final int CANClimberMotorRight = 38;
 
     public static final int CANHoodMotor1 = 39;
     public static final int CANHoodMotor2 = 40;
 
-    // DIO Ports (add sensors if needed)
-
-    // PWM Ports
-    public static final int PWMHoodServo1 = 0;
-    public static final int PWMHoodServo2 = 1;
-    public static final int DIOClimberLowerLimitSensor1 = 2;
-    public static final int DIOClimberLowerLimitSensor2 = 3;
+    // DIO Ports
+    public static final int DIOClimberLowerLimitLeftSensor = 0;
+    public static final int DIOClimberLowerLimitRightSensor = 1;
+    public static final int DIOClimberUpperLimitLeftSensor = 2;
+    public static final int DIOClimberUpperLimitRightSensor = 3;
   }
 
   public static final class OIConstants {
