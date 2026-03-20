@@ -368,7 +368,7 @@ public final class Constants {
 
     // distance from center of robot to corner of intake (in meters):                 (ask Cameron to explain this!!)
     // (half of the robot length) + (intake length) then divide result by cosine of rotation away from wall  
-    public static final double robotCenterToIntakeEdge = (robotCenterToFront + IntakeConstants.intakeLength) / Math.cos(Math.toDegrees(FieldConstants.rotationAwayFromWall));
+    public static final double robotCenterToIntakeEdge = (robotCenterToFront + IntakeConstants.intakeLength) / Math.cos(FieldConstants.rotationAwayFromWall) - Units.inchesToMeters(3.0);
   }
 
   public static final class SwerveConstants {

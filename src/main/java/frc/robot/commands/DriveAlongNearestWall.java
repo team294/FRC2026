@@ -23,6 +23,8 @@ public class DriveAlongNearestWall extends Command {
   private boolean facingLeft;
   private boolean facingBlue;
 
+  private Command driveToPoseCommand;
+
   /**
    * Locates the nearest wall (either side of field, driver station wall, neutral zone, alliance zone) and drives to
    * it, rotating to prepare for fuel pickup along wall and locking joystick-controlled movement away from the wall.
@@ -100,12 +102,20 @@ public class DriveAlongNearestWall extends Command {
     }
 
     // actually move the robot using DriveToPose
-    CommandScheduler.getInstance().schedule(new DriveToPose(CoordType.kAbsolute, goalPose, driveTrain));
+    driveToPoseCommand = new DriveToPose(CoordType.kAbsolute, goalPose, driveTrain);
+    CommandScheduler.getInstance().schedule(driveToPoseCommand);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    driveTrain.unlockAll();
+    CommandScheduler.getInstance().cancel(driveToPoseCommand);
   }
 }

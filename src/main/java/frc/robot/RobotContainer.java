@@ -262,7 +262,8 @@ public class RobotContainer {
       )
     ));
 
-    right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    // right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
