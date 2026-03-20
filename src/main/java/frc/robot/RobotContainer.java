@@ -8,6 +8,8 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
+import java.util.function.Supplier;
+
 import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -169,9 +172,8 @@ public class RobotContainer {
 
     // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, driveTrain, shooter));
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(() -> driveTrain.getPose(), EndType.waitForSetPoint, driveTrain, shooter));
-                                                                          // placeholder supplier that doesn't do anything rn -- change getPose to getStaticBallTarget/getGhostBallTarget
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.waitForSetPoint, shooter, driveTrain, field));
 
     // Calibration Ramp
     
@@ -182,7 +184,7 @@ public class RobotContainer {
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, parallel(new FeedShooter(feeder), new IntakeDeployAgitate(intake)));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake));
 
     // Climber
     // SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberSetPercent(0, true, climber));
@@ -211,7 +213,7 @@ public class RobotContainer {
   private void configureXboxButtons() {
     // Triggers for all Xbox buttons
     Trigger xbLT = xboxController.leftTrigger();
-    // Trigger xbRT = xboxController.rightTrigger();
+    Trigger xbRT = xboxController.rightTrigger();
     // Trigger xbA = xboxController.a();
     // Trigger xbB = xboxController.b();
     // Trigger xbY = xboxController.y();
@@ -230,6 +232,8 @@ public class RobotContainer {
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
     xbLT.onTrue(new IntakeSequence(intake));
+    // TODO fill in with posesupplier
+    xbRT.onTrue(new ShooterTurretScorePrepSequence(false, turret, shooter, driveTrain, field));
     xbLB.onTrue(new IntakeRollerStop(intake));
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
 
@@ -254,13 +258,7 @@ public class RobotContainer {
     left[1].onTrue(new IntakeSequence(intake));
 
     // left[2].whileTrue(new FeedShooter(intake, feeder));
-    left[2].whileTrue(new ParallelCommandGroup(
-      new FeedShooter(feeder),
-      sequence(
-        waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
-        new IntakeDeployAgitate(intake)
-      )
-    ));
+    left[2].whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake));
 
     right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
 

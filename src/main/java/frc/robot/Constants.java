@@ -465,13 +465,13 @@ public final class Constants {
     public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
     public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
     
-    public static final Pose2d hubPositionBlue = new Pose2d(Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
-    public static final Pose2d hubPositionRed = new Pose2d(length - Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+    public static final Translation2d hubPositionBlue = new Translation2d(Units.inchesToMeters(182.11), width / 2.0);
+    public static final Translation2d hubPositionRed = new Translation2d(length - Units.inchesToMeters(182.11), width / 2.0);
 
-    public static final Pose2d leftPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0, new Rotation2d(0));
-    public static final Pose2d rightPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0, new Rotation2d(0));
-    public static final Pose2d leftPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0, new Rotation2d(0));
-    public static final Pose2d rightPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0, new Rotation2d(0));
+    public static final Translation2d leftPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0);
+    public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
+    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
+    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
   }
 
   public static class VisionConstants {

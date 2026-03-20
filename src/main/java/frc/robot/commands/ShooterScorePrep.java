@@ -4,11 +4,14 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
+
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,15 +20,19 @@ import frc.robot.Constants.EndType;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.DataLogUtil;
+import frc.robot.utilities.Field;
 
 public class ShooterScorePrep extends Command {
   private final Shooter shooter;
   private final DriveTrain driveTrain;
+  private final Field field;
   private DoubleSupplier velocityGetter;
   private DoubleSupplier angleGetter;
-  private Supplier<Pose2d> poseSupplier;
-  private Pose2d goalPose;
+  private boolean shootOnTheMove;
+  // private Supplier<Pose2d> poseSupplier;
+  private Translation2d goalTranslation2d;
   private double targetVelocity;
   private double targetAngle;
   private boolean useGetter = false;
@@ -33,7 +40,7 @@ public class ShooterScorePrep extends Command {
   private boolean fromElastic;
 
   private int toleranceCounter = 0;
-  private double distance;
+  private double distanceToTarget;
 
 
   private final EndType type;
@@ -49,9 +56,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(DoubleSupplier velocityGetter, DoubleSupplier angleGetter, EndType type, DriveTrain driveTrain, Shooter shooter) {
+  public ShooterScorePrep(DoubleSupplier velocityGetter, DoubleSupplier angleGetter, EndType type, Shooter shooter, DriveTrain driveTrain,  Field field) {
    this.driveTrain = driveTrain;
    this.shooter = shooter;
+   this.field = field;
    this.velocityGetter = velocityGetter;
    this.angleGetter = angleGetter;
    this.type = type;
@@ -73,9 +81,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(double velocity, double angle, EndType type, DriveTrain driveTrain, Shooter shooter) {
+  public ShooterScorePrep(double velocity, double angle, EndType type, Shooter shooter, DriveTrain driveTrain, Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.field = field;
     this.targetVelocity = velocity;
     this.targetAngle = angle;
     this.type = type;
@@ -95,9 +104,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(EndType type, DriveTrain driveTrain, Shooter shooter) {
+  public ShooterScorePrep(EndType type, Shooter shooter, DriveTrain driveTrain, Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.field = field;
     this.type = type;
     fromElastic = true;
     
@@ -112,7 +122,7 @@ public class ShooterScorePrep extends Command {
   }
 
   /**
-   * Sets the hood angle and shooter velocity for scoring. based on robot's distance from the nearest hub
+   * Calculates and sets the hood angle and shooter velocity for scoring, based on robot's distance from the nearest hub
    * @param allianceSelection the robot's alliance (determines which hub is targeted)
    * @param fromElastic boolean, true = reads values from elastic, false = calculates angle and velocity based on hub distance
    * @param type
@@ -123,11 +133,12 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(Supplier<Pose2d> poseSupplier, EndType type, DriveTrain driveTrain, Shooter shooter) {
+  public ShooterScorePrep(boolean shootOnTheMove, EndType type, Shooter shooter, DriveTrain driveTrain,  Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.field = field;
     this.type = type;
-    this.poseSupplier = poseSupplier;
+    this.shootOnTheMove = shootOnTheMove;
     selfCalculate = true;
 
     addRequirements(shooter);
@@ -149,14 +160,17 @@ public class ShooterScorePrep extends Command {
     }
     // Calculates velocity and angle based on calculated distance to the goal pose
     else if (selfCalculate) { 
-      // goalPose = poseSupplier.get();
-      // distance = goalPose.getTranslation().getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
+      Translation2d robotTranslation2d = driveTrain.getPose().getTranslation();
+      if (!shootOnTheMove) {
+        goalTranslation2d = field.getStaticShotTarget(robotTranslation2d);
+      } else {
+        // goalpose = shootonthemove
+      }
 
-      // must be in Meters!!!
-      distance = driveTrain.getDistanceToGoalPose(); // TODO replace this code with above commented out code and delete this method from drivetrain
+      distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
       
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distance));
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       targetAngle = ShooterConstants.hoodShootAngle;
       
@@ -168,7 +182,7 @@ public class ShooterScorePrep extends Command {
     shooter.setShooterVelocity(targetVelocity);
 
     DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetAngle, ", Velocity Setpoint =", targetVelocity,
-                             ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distance);
+                             ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distanceToTarget);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -189,19 +203,19 @@ public class ShooterScorePrep extends Command {
       shooter.setShooterVelocity(targetVelocity);
     }
     else if (selfCalculate){ // Calculates distance and velocity based on position
-      // goalPose = poseSupplier.get();
-      // distance = goalPose.getTranslation().getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
+      Translation2d robotTranslation2d = driveTrain.getPose().getTranslation();
+      if (!shootOnTheMove) {
+        goalTranslation2d = field.getStaticShotTarget(robotTranslation2d);
+      } else {
+        // goalpose = shootonthemove
+      }
 
-      // must be in Meters!!!
-      distance = driveTrain.getDistanceToGoalPose(); // TODO replace this code with above commented out code and delete this method from drivetrain
+      distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
       
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distance));
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       targetAngle = ShooterConstants.hoodShootAngle;
-
-      // Target hood angle based on: (shooter speed)(B0) + B1, where B0 and B1 are unique constants
-      // targetAngle = ((targetVelocity * ShooterConstants.hoodScoreB0) + ShooterConstants.hoodScoreB1);
     }
   }
 
@@ -234,6 +248,5 @@ public class ShooterScorePrep extends Command {
         default:
           return true;
     }
-    
   }
 }
