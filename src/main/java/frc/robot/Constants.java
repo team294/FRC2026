@@ -175,6 +175,8 @@ public final class Constants {
     private static final String hoodRightString = hoodString + " R"; // aka hood 2
     private static final String turretString = "Turret";
     private static final String climberString = "Climber";
+    private static final String climberLeftString = climberString + " L";
+    private static final String climberRightString = climberString + " R";
 
     public enum ElasticKey {
       STOP_ALL_MOTORS("Stop All Motors"),
@@ -191,6 +193,8 @@ public final class Constants {
       FEEDER_CMD_STOP(feederSpindexerString + "/" + feederUptakeString + stopCmdString),
       SHOOTER_CMD_STOP(shooterString + stopCmdString),
       CLIMBER_CMD_STOP(climberString + stopCmdString),
+      CLIMBER_CMD_STOP_LEFT(climberLeftString + stopCmdString),
+      CLIMBER_CMD_STOP_RIGHT(climberRightString + stopCmdString),
       HOOD_CMD_STOP_BOTH(hoodString + stopCmdString),
       HOOD_CMD_STOP_LEFT(hoodLeftString + stopCmdString),
       HOOD_CMD_STOP_RIGHT(hoodRightString + stopCmdString),
@@ -211,6 +215,8 @@ public final class Constants {
       SHOOTER_CMD_SET_PERCENT(shooterString + setPercentCmdString),
       UPTAKE_CMD_SET_PERCENT(feederUptakeString + setPercentCmdString),
       CLIMBER_CMD_SET_PERCENT(climberString + setPercentCmdString),
+      CLIMBER_CMD_SET_PERCENT_LEFT(climberLeftString + setPercentCmdString),
+      CLIMBER_CMD_SET_PERCENT_RIGHT(climberRightString + setPercentCmdString),
       HOOD_CMD_SET_PERCENT_LEFT(hoodLeftString + setPercentCmdString),
       HOOD_CMD_SET_PERCENT_RIGHT(hoodRightString + setPercentCmdString),
       TURRET_CMD_SET_PERCENT(turretString + setPercentCmdString),
@@ -222,6 +228,8 @@ public final class Constants {
       SHOOTER_CMD_SET_PERCENT_INPUT(shooterString + setPercentCmdInputString),
       UPTAKE_CMD_SET_PERCENT_INPUT(feederUptakeString + setPercentCmdInputString),
       CLIMBER_CMD_SET_PERCENT_INPUT(climberString + setPercentCmdInputString),
+      CLIMBER_CMD_SET_PERCENT_LEFT_INPUT(climberLeftString + setPercentCmdInputString),
+      CLIMBER_CMD_SET_PERCENT_RIGHT_INPUT(climberRightString + setPercentCmdInputString),
       HOOD_CMD_SET_PERCENT_INPUT(hoodString + setPercentCmdInputString),
       TURRET_CMD_SET_PERCENT_INPUT(turretString + setPercentCmdInputString),
 
@@ -751,6 +759,11 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
+    // Side convention for all climber side-specific commands/logic:
+    // 1 = left, 2 = right
+    public static final int SIDE_LEFT = 1;
+    public static final int SIDE_RIGHT = 2;
+
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE

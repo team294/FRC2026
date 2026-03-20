@@ -188,7 +188,11 @@ public class RobotContainer {
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT.value, new ClimberSetPercent(climber));
-    SmartDashboard.putData("Climber L Down", new InstantCommand(() -> climber.setClimberPercentOutput(-0.1)));
+    SmartDashboard.putData(CLIMBER_CMD_STOP_LEFT.value, new ClimberSingleStop(ClimberConstants.SIDE_LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP_RIGHT.value, new ClimberSingleStop(ClimberConstants.SIDE_RIGHT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_LEFT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_RIGHT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_RIGHT, climber));
+    SmartDashboard.putData("Climber L Down", new ClimberSingleSetPercent(-0.1, ClimberConstants.SIDE_LEFT, climber));
 
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_BOTH.value, new HoodSetVoltage(shooter, 0));
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_LEFT.value, new HoodSetVoltage(shooter, 1));
@@ -242,8 +246,8 @@ public class RobotContainer {
     xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
-    xbPOVUp.onTrue(new ClimberSetPercent(ClimberConstants.maxPercentOutput, climber));
-    xbPOVDown.onTrue(new ClimberSetPercent(-ClimberConstants.maxPercentOutput, climber));
+    xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxPercentOutput, climber));
+    xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxPercentOutput, climber));
   }
 
   /**

@@ -7,11 +7,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Current;
@@ -33,6 +31,11 @@ import frc.robot.utilities.Loggable;
 import frc.robot.utilities.Wait;
 
 public class Climber extends SubsystemBase implements Loggable {
+  // Side-specific "requirements" to allow commanding left/right independently
+  // without WPILib canceling one command when the other is running.
+  private final SubsystemBase leftSideRequirement = new SubsystemBase() {};
+  private final SubsystemBase rightSideRequirement = new SubsystemBase() {};
+
   private int logRotationKey;           // Key to identify the log rotation
   private boolean fastLogging = false;  // true = enabled to run every cycle, false = follows normal logging cycles
   private String subsystemName;         // Used in file logging and SmartDashboard for naming log entries
@@ -52,7 +55,8 @@ public class Climber extends SubsystemBase implements Loggable {
   private final TalonFXConfigurator climberRightConfigurator = climberRightMotor.getConfigurator();
 
   // Configurations
-  private TalonFXConfiguration climberConfig;
+  private TalonFXConfiguration climberLeftConfig;
+  private TalonFXConfiguration climberRightConfig;
 
   // Status signals for the left climber motor
   private final StatusSignal<Temperature> climberLeftTemp;                 // Motor temperature, in degrees Celsius
@@ -75,7 +79,9 @@ public class Climber extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogClimberRightCurrent = new DoubleLogEntry(log, "/ClimberRight/Current");
   private final DoubleLogEntry dLogClimberRightVoltage = new DoubleLogEntry(log, "/ClimberRight/Voltage");
 
-  private double setpointPercent; // Current setpoint percent output
+  // Current setpoint percent output (logical percent; sign indicates direction)
+  private double setpointPercentLeft;
+  private double setpointPercentRight;
 
   // Sticky Faults
   private boolean climberLeftMissingStickyFault;
@@ -99,36 +105,43 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightStatorCurrent = climberRightMotor.getStatorCurrent();
     climberRightVoltage = climberRightMotor.getMotorVoltage();
 
-    // Configure the motor
-    climberConfig = new TalonFXConfiguration();
-    climberConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    climberConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    climberConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
-    climberConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
-    climberConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
-    climberConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
+    // Configure motors independently (they drive opposite physical directions).
+    // Logical percent sign is consistent across both sides.
+    climberLeftConfig = new TalonFXConfiguration();
+    climberLeftConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    climberLeftConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    climberLeftConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
+    climberLeftConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
+    climberLeftConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
+    climberLeftConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
+    climberLeftConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
+    climberLeftConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
+    climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
+    climberLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    // If the current is above the supply current limit for the threshold time, the current is limited.
-    // This is configured to prevent the breakers from tripping.
-    climberConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
-    climberConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    climberConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
-    climberConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    climberRightConfig = new TalonFXConfiguration();
+    // Requirement: right side should be counterclockwise_positive.
+    climberRightConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    climberRightConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    climberRightConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
+    climberRightConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
+    climberRightConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;
+    climberRightConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3;
+    climberRightConfig.CurrentLimits.SupplyCurrentLimit = 60.0;
+    climberRightConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0;
+    climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;
+    climberRightConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    // Apply the configurations to the motor.
+    // Apply the configurations to the motors.
     // This is a blocking call and will wait up to 200ms to apply.
-    climberLeftConfigurator.apply(climberConfig);
+    climberLeftConfigurator.apply(climberLeftConfig);
+    Wait.waitTime(250);
+    climberRightConfigurator.apply(climberRightConfig);
     Wait.waitTime(250);
 
-    // Inversion configuration inverted by setControl for the follower motor
-    // If motor 2 isn't being used as a follower, it will require a separate motor configuration
-    climberRightConfigurator.apply(climberConfig);
-    Wait.waitTime(250);
-
-    // Make right motor follow left motor
-    climberRightMotor.setControl(new Follower(climberLeftMotor.getDeviceID(),  MotorAlignmentValue.Opposed)); 
-
-    // Stop the motor
+    // Stop the climber motors
+    setpointPercentLeft = 0.0;
+    setpointPercentRight = 0.0;
     stopClimberMotors();
 
     // Prime the DataLog to reduce delay when first enabling the robot
@@ -138,12 +151,27 @@ public class Climber extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Sets the percent output of the Climber motors using voltage compensation.
+   * Sets the percent output of both climber motors using voltage compensation.
    * @param percent output percent, -1.0 to 1.0 (positive = shoot direction, negative = reverse)
    */
   public void setClimberPercentOutput(double percent) {
-    setpointPercent = percent;
-    climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
+    setClimberPercentOutput(percent, ClimberConstants.SIDE_LEFT);
+    setClimberPercentOutput(percent, ClimberConstants.SIDE_RIGHT);
+  }
+
+  /**
+   * Sets the percent output of one climber motor using voltage compensation.
+   * @param percent output percent, -1.0 to 1.0 (positive = shoot direction, negative = reverse)
+   * @param side which climber side to control
+   */
+  public void setClimberPercentOutput(double percent, int side) {
+    if (side == ClimberConstants.SIDE_LEFT) {
+      setpointPercentLeft = percent;
+      climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
+    } else {
+      setpointPercentRight = percent;
+      climberRightMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
+    }
   }
 
   /**
@@ -154,11 +182,42 @@ public class Climber extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Stops a single climber motor.
+   * @param side which climber side to control
+   */
+  public void stopClimberMotor(int side) {
+    setClimberPercentOutput(0.0, side);
+  }
+
+  /**
    * Gets the setpoint percent output to the climber motors.
-   * @return percent output
+   * @return left side percent output (legacy; prefer side-specific getters)
    */
   public double getClimberSetpointPercent() {
-    return setpointPercent;
+    return setpointPercentLeft;
+  }
+
+  /** @return left side percent output (logical percent) */
+  public double getClimberSetpointPercentLeft() {
+    return getClimberSetpointPercent(ClimberConstants.SIDE_LEFT);
+  }
+
+  /** @return right side percent output (logical percent) */
+  public double getClimberSetpointPercentRight() {
+    return getClimberSetpointPercent(ClimberConstants.SIDE_RIGHT);
+  }
+
+  /**
+   * Returns the current side setpoint percent output (logical percent).
+   *
+   * Side convention:
+   * 1 = left, 2 = right
+   *
+   * @param side which side to query
+   * @return logical percent output being applied to that side
+   */
+  public double getClimberSetpointPercent(int side) {
+    return side == ClimberConstants.SIDE_LEFT ? setpointPercentLeft : setpointPercentRight;
   }
 
   /**
@@ -189,11 +248,49 @@ public class Climber extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Checks if the provided side is physically at a limit.
+   *
+   * @param side 1 = left, 2 = right
+   * @param lower true = lower limit, false = upper limit
+   * @return true if the side is physically at the selected limit
+   */
+  public boolean isSideLimitReached(int side, boolean lower) {
+    if (side == ClimberConstants.SIDE_LEFT) return lower ? !lowerLimitLeft.get() : !upperLimitLeft.get();
+    return lower ? !lowerLimitRight.get() : !upperLimitRight.get();
+  }
+
+  /**
+   * Checks whether the provided setpoint would be blocked by the given side's limits.
+   *
+   * Convention:
+   * - setpointPercent < 0.0 means moving toward the lower limit
+   * - setpointPercent > 0.0 means moving toward the upper limit
+   */
+  public boolean isSideLimitHitForSetpoint(int side, double setpointPercent) {
+    if (setpointPercent < 0.0) return isSideLimitReached(side, true);
+    if (setpointPercent > 0.0) return isSideLimitReached(side, false);
+    return false;
+  }
+
+  /**
+   * Checks whether either side would be blocked by the provided setpoint direction.
+   */
+  public boolean isEitherSideLimitHitForSetpoint(double setpointPercent) {
+    return isSideLimitHitForSetpoint(ClimberConstants.SIDE_LEFT, setpointPercent)
+        || isSideLimitHitForSetpoint(ClimberConstants.SIDE_RIGHT, setpointPercent);
+  }
+
+  /**
    * Gets the name of the subsystem.
    * @return the subsystem name
    */
   public String getName() {
     return subsystemName;
+  }
+
+  /** Returns the side-specific SubsystemBase used for command requirements. */
+  public SubsystemBase getSideSubsystem(int side) {
+    return side == ClimberConstants.SIDE_LEFT ? leftSideRequirement : rightSideRequirement;
   }
 
   /**
@@ -233,9 +330,12 @@ public class Climber extends SubsystemBase implements Loggable {
       updateLog(false);
     }
 
-    if (((!lowerLimitLeft.get() || !lowerLimitRight.get()) && getClimberSetpointPercent() < 0.0) ||
-        ((!upperLimitLeft.get() || !upperLimitRight.get()) && getClimberSetpointPercent() > 0.0)) {
-            stopClimberMotors();
+    // Stop each side independently based on its own limits.
+    if (isSideLimitHitForSetpoint(ClimberConstants.SIDE_LEFT, setpointPercentLeft)) {
+      stopClimberMotor(ClimberConstants.SIDE_LEFT);
+    }
+    if (isSideLimitHitForSetpoint(ClimberConstants.SIDE_RIGHT, setpointPercentRight)) {
+      stopClimberMotor(ClimberConstants.SIDE_RIGHT);
     }
 
     SmartDashboard.putBoolean("Climber L LOWER", !lowerLimitLeft.get());

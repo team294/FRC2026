@@ -4,10 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.Constants.ClimberConstants;
 
-public class ClimberStop extends InstantCommand {
+public class ClimberStop extends Command {
   private final Climber climber;
 
   /**
@@ -17,7 +18,9 @@ public class ClimberStop extends InstantCommand {
   public ClimberStop(Climber climber) {
     this.climber = climber;
 
-    addRequirements(climber);
+    addRequirements(
+        climber.getSideSubsystem(ClimberConstants.SIDE_LEFT),
+        climber.getSideSubsystem(ClimberConstants.SIDE_RIGHT));
   }
 
   // Called when the command is initially scheduled.
@@ -25,4 +28,15 @@ public class ClimberStop extends InstantCommand {
   public void initialize() {
     climber.stopClimberMotors();
   }
+
+  @Override
+  public void execute() {}
+
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
+
+  @Override
+  public void end(boolean interrupted) {}
 }
