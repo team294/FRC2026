@@ -106,10 +106,10 @@ public final class Constants {
     public static final int CANHoodMotor2 = 40;
 
     // DIO Ports
-    public static final int DIOClimberLowerLimitLeftSensor = 0;
+    public static final int DIOClimberUpperLimitRightSensor = 0;
     public static final int DIOClimberLowerLimitRightSensor = 1;
-    public static final int DIOClimberUpperLimitLeftSensor = 2;
-    public static final int DIOClimberUpperLimitRightSensor = 3;
+    public static final int DIOClimberLowerLimitLeftSensor = 2;
+    public static final int DIOClimberUpperLimitLeftSensor = 3;
   }
 
   public static final class OIConstants {
