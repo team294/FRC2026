@@ -261,7 +261,8 @@ public class RobotContainer {
     // left[2].whileTrue(new FeedShooter(intake, feeder));
     left[2].whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake));
 
-    right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    // right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }

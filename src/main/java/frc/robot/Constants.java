@@ -365,6 +365,10 @@ public final class Constants {
     public static final double robotCenterToBack = Units.inchesToMeters(16);  // TODO CALIBRATE
     // Diagonal Width of robot in meters
     public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + (robotCenterToFront+robotCenterToBack)*(robotCenterToFront+robotCenterToBack));
+
+    // distance from center of robot to corner of intake (in meters):                 (ask Cameron to explain this!!)
+    // (half of the robot length) + (intake length) then divide result by cosine of rotation away from wall  
+    public static final double robotCenterToIntakeEdge = (robotCenterToFront + IntakeConstants.intakeLength) / Math.cos(FieldConstants.rotationAwayFromWall) - Units.inchesToMeters(3.0);
   }
 
   public static final class SwerveConstants {
@@ -462,8 +466,40 @@ public final class Constants {
   }
 
   public static class FieldConstants {
-    public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
-    public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
+    private static final double lengthInches = 651.22; // from field drawings (welded b/c we're in California)
+    private static final double widthInches = 317.69;  // from field drawings (welded b/c we're in California)
+
+    public static final double length = Units.inchesToMeters(lengthInches); // x (forward is pos. from BLUE Alliance POV)
+    public static final double width = Units.inchesToMeters(widthInches);   // y (left is pos. from BLUE Alliance POV)
+
+    private static final double trenchWidth = 49.84;                       // in inches - distance from side wall to trench (approx.).
+    private static final double hubCenterX = 182.11;                       // in inches - distance from driver station wall to hub (x-axis).
+    private static final double driverStationWallZone = hubCenterX / 2.0;  // in inches - halfway to center of hub from driver station wall.
+    public static final double rotationAwayFromWall = Math.toRadians(45.0);  // in radians. should always be positive.
+
+    public static final double hubCenterToHubEdge = Units.inchesToMeters(23.5);  // in meters - distance from center of hub to side of hub
+
+    public enum FieldBoundaries {
+      LEFT_FIELD_WALL(widthInches - trenchWidth, widthInches, hubCenterX, lengthInches - hubCenterX),  // From BLUE Alliance POV
+      RIGHT_FIELD_WALL(0, trenchWidth, hubCenterX, lengthInches - hubCenterX),                    // From BLUE Alliance POV
+      BLUE_NEUTRAL_ZONE(trenchWidth, widthInches - trenchWidth, hubCenterX, lengthInches / 2.0),
+      RED_NEUTRAL_ZONE(trenchWidth, widthInches - trenchWidth, lengthInches / 2.0, lengthInches - hubCenterX),
+      BLUE_DRIVER_STATION(0, widthInches, 0, driverStationWallZone),
+      RED_DRIVER_STATION(0, widthInches, lengthInches - driverStationWallZone, lengthInches),
+      BLUE_ALLIANCE_ZONE(0, widthInches, driverStationWallZone, hubCenterX),
+      RED_ALLIANCE_ZONE(0, widthInches, lengthInches - hubCenterX, lengthInches - driverStationWallZone);
+
+      // all from BLUE Alliance POV: yMin is right-most y-axis boundary of the box,
+      // yMax is left-most, xMin is closest x-axis boundary of the box to blue
+      // alliance driver station, xMax is furthest from blue alliance driver station
+      public final double yBoundaryMin, yBoundaryMax, xBoundaryMin, xBoundaryMax;
+      private FieldBoundaries(double yMin, double yMax, double xMin, double xMax) {
+        this.yBoundaryMin = Units.inchesToMeters(yMin);
+        this.yBoundaryMax = Units.inchesToMeters(yMax);
+        this.xBoundaryMin = Units.inchesToMeters(xMin);
+        this.xBoundaryMax = Units.inchesToMeters(xMax);
+      }
+    }
     
     public static final Translation2d hubPositionBlue = new Translation2d(Units.inchesToMeters(182.11), width / 2.0);
     public static final Translation2d hubPositionRed = new Translation2d(length - Units.inchesToMeters(182.11), width / 2.0);
@@ -498,6 +534,9 @@ public final class Constants {
     public static final double rollerCompensationVoltage = 12.0;
     public static final double rollerIntakePercent = 0.8;   // TODO calibrate intake
     public static final double rollerOuttakePercent = -0.8; // TODO calibrate intake
+
+    // Length of intake, in meters (from front edge of robot to where intake ends - ignore bumpers)
+    public static final double intakeLength = Units.inchesToMeters(12.0);
 
     public static final double deployGearRatio = (52.0 / 12.0) * (36.0 / 18.0) * (64.0 / 24.0) * (36.0 / 18.0);    // CALIBRATED: (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0)
     public static final double deployDegreesPerRotation = 360.0;
