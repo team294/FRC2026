@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
@@ -24,12 +23,14 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.Constants.Ports;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
+import frc.robot.utilities.Wait;
 
 public class Climber extends SubsystemBase implements Loggable {
   private int logRotationKey;           // Key to identify the log rotation
@@ -51,7 +52,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private final TalonFXConfigurator climberRightConfigurator = climberRightMotor.getConfigurator();
 
   // Configurations
-  private TalonFXConfiguration climberLeftConfig;
+  private TalonFXConfiguration climberConfig;
 
   // Status signals for the left climber motor
   private final StatusSignal<Temperature> climberLeftTemp;                 // Motor temperature, in degrees Celsius
@@ -99,27 +100,30 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightVoltage = climberRightMotor.getMotorVoltage();
 
     // Configure the motor
-    climberLeftConfig = new TalonFXConfiguration();
-    climberLeftConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    climberLeftConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    climberLeftConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
-    climberLeftConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
-    climberLeftConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
-    climberLeftConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
+    climberConfig = new TalonFXConfiguration();
+    climberConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    climberConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    climberConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
+    climberConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
+    climberConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
+    climberConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
 
     // If the current is above the supply current limit for the threshold time, the current is limited.
     // This is configured to prevent the breakers from tripping.
-    climberLeftConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
-    climberLeftConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
-    climberLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    climberConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
+    climberConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
+    climberConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
+    climberConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     // Apply the configurations to the motor.
     // This is a blocking call and will wait up to 200ms to apply.
-    climberLeftConfigurator.apply(climberLeftConfig);
+    climberLeftConfigurator.apply(climberConfig);
+    Wait.waitTime(250);
+
     // Inversion configuration inverted by setControl for the follower motor
     // If motor 2 isn't being used as a follower, it will require a separate motor configuration
-    climberRightConfigurator.apply(climberLeftConfig);
+    climberRightConfigurator.apply(climberConfig);
+    Wait.waitTime(250);
 
     // Make right motor follow left motor
     climberRightMotor.setControl(new Follower(climberLeftMotor.getDeviceID(),  MotorAlignmentValue.Opposed)); 
@@ -139,7 +143,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public void setClimberPercentOutput(double percent) {
     setpointPercent = percent;
-    climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ShooterConstants.compensationVoltage));
+    climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
   }
 
   /**
@@ -153,16 +157,16 @@ public class Climber extends SubsystemBase implements Loggable {
    * Gets the setpoint percent output to the climber motors.
    * @return percent output
    */
-  public double getShooterSetpointPercent() {
+  public double getClimberSetpointPercent() {
     return setpointPercent;
   }
 
   /**
    * Gets the temperature of the Climber motor
    * @param motorNumber motor 1 (left) or 2 (right)
-   * @return shooter temperature, in degrees celsius
+   * @return climber temperature, in degrees celsius
    */
-  public double getShooterTemp(int motorNumber) {
+  public double getClimberTemp(int motorNumber) {
     return motorNumber == 1 ? climberLeftTemp.refresh().getValueAsDouble() : climberRightTemp.refresh().getValueAsDouble();
   }
 
@@ -171,16 +175,16 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param motorNumber motor 1 (left) or 2 (right)
    * @return motor current, in amps
    */
-  public double getShooterAmps(int motorNumber) {
+  public double getClimberAmps(int motorNumber) {
     return motorNumber == 1 ? climberLeftStatorCurrent.refresh().getValueAsDouble() : climberRightStatorCurrent.refresh().getValueAsDouble();
   }
 
   /**
    * Reads the voltage applied to the Climber motor.
    * @param motorNumber motor 1 (left) or 2 (right)
-   * @return shooter voltage, in volts
+   * @return climber voltage, in volts
    */
-  public double getShooterVoltage(int motorNumber) {
+  public double getClimberVoltage(int motorNumber) {
     return motorNumber == 1 ? climberLeftVoltage.refresh().getValueAsDouble() : climberRightVoltage.refresh().getValueAsDouble();
   }
 
@@ -209,12 +213,12 @@ public class Climber extends SubsystemBase implements Loggable {
     if (logWhenDisabled || !DriverStation.isDisabled()) {
       long timeNow = RobotController.getFPGATime();
 
-      dLogClimberLeftTemp.append(getShooterTemp(1), timeNow);
-      dLogClimberLeftCurrent.append(getShooterAmps(1), timeNow);
-      dLogClimberLeftVoltage.append(getShooterVoltage(1), timeNow);
-      dLogClimberRightTemp.append(getShooterTemp(2), timeNow);
-      dLogClimberRightCurrent.append(getShooterAmps(2), timeNow);
-      dLogClimberRightVoltage.append(getShooterVoltage(2), timeNow);
+      dLogClimberLeftTemp.append(getClimberTemp(1), timeNow);
+      dLogClimberLeftCurrent.append(getClimberAmps(1), timeNow);
+      dLogClimberLeftVoltage.append(getClimberVoltage(1), timeNow);
+      dLogClimberRightTemp.append(getClimberTemp(2), timeNow);
+      dLogClimberRightCurrent.append(getClimberAmps(2), timeNow);
+      dLogClimberRightVoltage.append(getClimberVoltage(2), timeNow);
     }
   }
 
@@ -229,9 +233,14 @@ public class Climber extends SubsystemBase implements Loggable {
       updateLog(false);
     }
 
-    // TODO prevent going up if top is read? idk if we will want to override ever
-    // TODO prevent going down if bottom is read? idk if we will want to override ever
+    if (((!lowerLimitLeft.get() || !lowerLimitRight.get()) && getClimberSetpointPercent() < 0.0) ||
+        ((!upperLimitLeft.get() || !upperLimitRight.get()) && getClimberSetpointPercent() > 0.0)) {
+            stopClimberMotors();
+    }
 
-    // TODO add dashboard values
+    SmartDashboard.putBoolean("Climber L LOWER", !lowerLimitLeft.get());
+    SmartDashboard.putBoolean("Climber R LOWER", !lowerLimitRight.get());
+    SmartDashboard.putBoolean("Climber L UPPER", !upperLimitLeft.get());
+    SmartDashboard.putBoolean("Climber R UPPER", !upperLimitRight.get());
   }
 }
