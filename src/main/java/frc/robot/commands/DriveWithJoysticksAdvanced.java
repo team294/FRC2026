@@ -103,9 +103,9 @@ public class DriveWithJoysticksAdvanced extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    fwdVelocity = (allianceSelection.getAlliance() == Alliance.Blue) ? -leftJoystick.getY() : leftJoystick.getY();
-    leftVelocity = (allianceSelection.getAlliance() == Alliance.Blue) ? -leftJoystick.getX() : leftJoystick.getX();
-    turnRate = -rightJoystick.getX();
+    fwdVelocity = (driveTrain.isXLocked()) ? 0.0 : (allianceSelection.getAlliance() == Alliance.Blue) ? -leftJoystick.getY() : leftJoystick.getY();
+    leftVelocity = (driveTrain.isYLocked()) ? 0.0 : (allianceSelection.getAlliance() == Alliance.Blue) ? -leftJoystick.getX() : leftJoystick.getX();
+    turnRate = (driveTrain.isTurnLocked()) ? 0.0 : -rightJoystick.getX();
 
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
       SmartDashboard.putNumber("Joystick Left-Y", fwdVelocity);
