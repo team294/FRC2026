@@ -6,8 +6,11 @@ package frc.robot.commands.sequences;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import org.xml.sax.helpers.ParserAdapter;
+
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.commands.FeederFeedShooter;
 import frc.robot.commands.IntakeDeployAgitate;
@@ -25,6 +28,10 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
    */
   public FeederIntakeFeedShooterSequence(Feeder feeder, Intake intake) {
     addCommands(
+      // // Ensure that all necessary subsystmes are in place
+      // parallel(
+      //   new WaitUntilCommand(null)
+      // ),
       parallel(
       new FeederFeedShooter(feeder),
       sequence(

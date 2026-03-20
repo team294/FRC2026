@@ -239,16 +239,6 @@ public class Shooter extends SubsystemBase implements Loggable {
     hoodMotor1Configurator.apply(hoodMotorConfiguration);
     hoodMotor2Configurator.apply(hoodMotorConfiguration);
 
-    // Apply the configurations to the motor.
-    // This is a blocking call and will wait up to 200ms to apply.
-    shooterMotor1Configurator.apply(shooterMotorConfiguration);
-    // Inversion configuration inverted by setControl for the follower motor
-    // If motor 2 isn't being used as a follower, it will require a separate motor configuration
-    shooterMotor2Configurator.apply(shooterMotorConfiguration);
-    
-    hoodMotor1Configurator.apply(hoodMotorConfiguration);
-    hoodMotor2Configurator.apply(hoodMotorConfiguration);
-
     // Make motor2 follow motor1
     shooterMotor2.setControl(new Follower(shooterMotor1.getDeviceID(),  MotorAlignmentValue.Opposed)); 
     // hoodMotor2.setControl(new Follower(hoodMotor1.getDeviceID(), MotorAlignmentValue.Aligned)); controlling both separately
