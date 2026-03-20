@@ -115,8 +115,8 @@ public class ShooterScorePrep extends Command {
       SmartDashboard.putNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
     }
 
-    if (SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_PERCENT_INPUT.value, -9999.9) == -9999.9) {
-      SmartDashboard.putNumber(ElasticKey.SHOOTER_CMD_SET_PERCENT_INPUT.value, 0);
+    if (SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, -9999.9) == -9999.9) {
+      SmartDashboard.putNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, 0);
     }
     addRequirements(shooter);
   }
@@ -152,7 +152,7 @@ public class ShooterScorePrep extends Command {
 
     if (fromElastic) {
       targetAngle = SmartDashboard.getNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
-      targetVelocity = SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_PERCENT_INPUT.value, 0);
+      targetVelocity = SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, 0);
     }
     else if (useGetter) {
       targetAngle = angleGetter.getAsDouble();
