@@ -42,6 +42,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import static frc.robot.Constants.DriveConstants.*;
 
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -628,6 +629,22 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     return ((swerveFrontLeft.getDriveBusVoltage() < 7.0) || (swerveFrontLeft.getDriveTemp() < 5.0) || !isGyroReading());
   }
 
+  /**
+   * Returns the distance between the robot and the goal pose (for now, always the alliance hub)
+   * @return Distance in meters between robot and the goal pose
+   */
+  public double getDistanceToGoalPose() {
+    Translation2d position = getPose().getTranslation();
+      Translation2d hub;
+      if (allianceSelection.getAlliance().equals(Alliance.Red)) { // If on red alliance target red alliance hub
+        hub = FieldConstants.hubPositionRed.getTranslation();
+      }
+      else {                                                    // Otherwise, default to targeting blue alliance hub
+        hub = FieldConstants.hubPositionBlue.getTranslation();
+      }
+      // Distance between position and hub
+     return position.getDistance(hub);
+  }
 
   @Override
   public void periodic() {
