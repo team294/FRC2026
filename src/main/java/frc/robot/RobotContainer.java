@@ -147,7 +147,7 @@ public class RobotContainer {
     SmartDashboard.putData(FEEDER_CMD_STOP.value, new FeederStop(feeder));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
     SmartDashboard.putData(TURRET_CMD_STOP.value, new TurretStop(turret));
-    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
+    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
 
     // Set Percent
     SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(false, intake));

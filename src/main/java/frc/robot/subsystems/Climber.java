@@ -165,7 +165,7 @@ public class Climber extends SubsystemBase implements Loggable {
       climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
     } else {
       setpointPercentRight = percent;
-      climberRightMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
+      climberRightMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage * 0.995));
     }
   }
 
@@ -328,9 +328,13 @@ public class Climber extends SubsystemBase implements Loggable {
       stopClimberMotor(ClimberConstants.SIDE_RIGHT);
     }
 
-    SmartDashboard.putBoolean("Climber L LOWER", !lowerLimitLeft.get());
-    SmartDashboard.putBoolean("Climber R LOWER", !lowerLimitRight.get());
-    SmartDashboard.putBoolean("Climber L UPPER", !upperLimitLeft.get());
-    SmartDashboard.putBoolean("Climber R UPPER", !upperLimitRight.get());
+    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+      SmartDashboard.putBoolean("Climber L LOWER", !lowerLimitLeft.get());
+      SmartDashboard.putBoolean("Climber R LOWER", !lowerLimitRight.get());
+      SmartDashboard.putBoolean("Climber L UPPER", !upperLimitLeft.get());
+      SmartDashboard.putBoolean("Climber R UPPER", !upperLimitRight.get());
+      SmartDashboard.putNumber("Climber L Temp", getClimberTemp(1));
+      SmartDashboard.putNumber("Climber R Temp", getClimberTemp(2));
+    }
   }
 }

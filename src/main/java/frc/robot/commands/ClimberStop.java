@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.utilities.DataLogUtil;
 
 public class ClimberStop extends Command {
   private final Climber climber;
@@ -24,6 +25,7 @@ public class ClimberStop extends Command {
   @Override
   public void initialize() {
     climber.stopClimberMotors();
+    DataLogUtil.writeMessage("ClimberStop: Init");
   }
 
   @Override

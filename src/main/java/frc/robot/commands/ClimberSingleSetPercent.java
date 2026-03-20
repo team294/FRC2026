@@ -8,6 +8,7 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.utilities.DataLogUtil;
 import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSingleSetPercent extends Command {
@@ -66,6 +67,7 @@ public class ClimberSingleSetPercent extends Command {
       percent = SmartDashboard.getNumber(key, 0.0);
     }
     climber.setClimberPercentOutput(percent, side);
+    DataLogUtil.writeMessage("ClimberSingleSetPercent: Init, Percent =", percent, ", Side = ", side);
   }
 
   @Override
@@ -79,6 +81,7 @@ public class ClimberSingleSetPercent extends Command {
   @Override
   public void end(boolean interrupted) {
     climber.stopClimberMotor(side);
+    DataLogUtil.writeMessage("ClimberSingleSetPercent: End, Side = ", side, ", Interupted = ", interrupted);
   }
 }
 

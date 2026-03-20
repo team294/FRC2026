@@ -9,6 +9,7 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.utilities.DataLogUtil;
 
 public class ClimberSetPercent extends Command {
   private final Climber climber;
@@ -22,12 +23,12 @@ public class ClimberSetPercent extends Command {
   public ClimberSetPercent(Climber climber) {
     this.climber = climber;
     fromElastic = true;
+    addRequirements(climber);
 
     if (SmartDashboard.getNumber(CLIMBER_CMD_SET_PERCENT_INPUT.value, -9999) == -9999) {
       SmartDashboard.putNumber(CLIMBER_CMD_SET_PERCENT_INPUT.value, 0.0);
     }
 
-    addRequirements(climber);
   }
 
   /**
@@ -48,6 +49,7 @@ public class ClimberSetPercent extends Command {
   public void initialize() {
     if (fromElastic) percent = SmartDashboard.getNumber(CLIMBER_CMD_SET_PERCENT_INPUT.value, 0.0);
     climber.setClimberPercentOutput(percent);
+    DataLogUtil.writeMessage("ClimberSetPercent: Init, Percent =", percent);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -66,5 +68,6 @@ public class ClimberSetPercent extends Command {
   public void end(boolean interrupted) {
     // If we ended due to a limit (or interruption), ensure the climber motors are stopped.
     climber.stopClimberMotors();
+    DataLogUtil.writeMessage("ClimberSetPercent: End, Interupted = ", interrupted);
   }
 }

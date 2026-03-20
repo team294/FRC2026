@@ -767,7 +767,6 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
-    public static final double maxPercentOutput = 0.7;      // TODO CALIBRATE
   }
 
   public static final class TrajectoryConstants {
