@@ -723,7 +723,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @return target angle for turret to turn to in turret-relative, 0deg is back of robot
    */
   public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetPose2d) {
-    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
+    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees())));
   }
 
   /**

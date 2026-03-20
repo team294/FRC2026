@@ -597,10 +597,10 @@ public final class Constants {
  
     public static final double shooterHeightOffGround = Units.inchesToMeters(18.0);  // in meters  -  for LAR, assumes shot @ 30 degrees
 
-    // a, b, and c coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
-    public static final double shooterScoreA0 = 0;
-    public static final double shooterScoreA1 = 0;
-    public static final double shooterScoreA2 = 0;
+    // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
+    // !! hood angle of 30 degrees !!      linear regression with r^2 of 0.9985 :)
+    public static final double distanceToRPMSlope = 529.1604;
+    public static final double distanceToRPMIntercept = 1042.93914;
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot with, in deg TODO tune if needed 
@@ -692,9 +692,9 @@ public final class Constants {
     public static final double kV = 5.1;   // CALIBRATED 3/17/26: 5.1
     public static final double kA = 0.0;   // CALIBRATED 3/17/26: 0.0
 
-    public static final double MMCruiseVelocity = 20.0; // CALIBRATED 3/17/26: 20.0
-    public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
-    public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
+    public static final double MMCruiseVelocity = 40.0; // CALIBRATED 3/17/26: 20.0
+    public static final double MMAcceleration = 18.0;    // CALIBRATED 3/17/26: 9.0
+    public static final double MMJerk = 24.0;           // CALIBRATED 3/17/26: 12.0
 
     public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     

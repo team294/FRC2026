@@ -44,10 +44,10 @@ public class TurretAutoAim extends Command {
       turret.setTurretAngle(
         turret.getAutoTargetAngleTurretRelative(
           robotPose2d, 
-          field.getGhostShotTarget(
+          field.getGhostShotTargetClaude(
             field.getStaticShotTarget(robotPose2d.getTranslation()),
             turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
-            robotPose2d.getTranslation(),
+            // robotPose2d.getTranslation(),
             driveTrain.getRobotSpeeds())
         )
       );

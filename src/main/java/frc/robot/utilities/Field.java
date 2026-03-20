@@ -79,16 +79,41 @@ public class Field {
      */
     public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, Translation2d robotTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
         double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
-        double hubRobotRelativeSpeed = ((robotTranslation2d.getX() * robotFieldRelativeSpeeds.vxMetersPerSecond) + (robotTranslation2d.getY() * robotFieldRelativeSpeeds.vyMetersPerSecond)) / distanceToHub;
 
-        // (speed + sqrt(speed^2 - 2 * g * cot(shot angle) * (height difference * cot(shot angle) - distance))) / (2 * g * cot(shot angle))
-        double estFuelTimeOfFlight = (hubRobotRelativeSpeed + Math.sqrt(Math.pow(hubRobotRelativeSpeed, 2.0) - 2.0 * 9.81 * (1.0 / Math.tan(ShooterConstants.hoodShootAngleRadians))
-                                * (FieldConstants.hubHeightMeters - ShooterConstants.shooterHeightOffGround) * (1.0 / Math.tan(ShooterConstants.hoodShootAngleRadians)) - distanceToHub))
-                                / (2.0 * 9.81 * (1.0 / Math.tan(ShooterConstants.hoodShootAngleRadians)));
+        // Horizontal velocity component of the ball
+        double ballHorizSpeed = ((ShooterConstants.distanceToRPMSlope * distanceToHub) + ShooterConstants.distanceToRPMIntercept) * Math.cos(ShooterConstants.hoodShootAngleRadians);
 
+        // time = distance / speed
+        double estFuelTimeOfFlight = distanceToHub / ballHorizSpeed;
+
+        // 
         double ghostTargetX = staticTargetTranslation2d.getX() - (robotFieldRelativeSpeeds.vxMetersPerSecond * estFuelTimeOfFlight);
         double ghostTargetY = staticTargetTranslation2d.getY() - (robotFieldRelativeSpeeds.vyMetersPerSecond * estFuelTimeOfFlight);
 
+        return new Translation2d(ghostTargetX, ghostTargetY);
+    }
+
+    public Translation2d getGhostShotTargetClaude(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
+        double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
+        
+        double tanAngle = Math.tan(ShooterConstants.hoodShootAngleRadians);
+        double cosAngle = Math.cos(ShooterConstants.hoodShootAngleRadians);
+        double heightDiff = FieldConstants.hubHeightMeters - ShooterConstants.shooterHeightOffGround;
+
+        double vSquared = 9.81 * distanceToHub * distanceToHub
+                        / (2.0 * cosAngle * cosAngle * (distanceToHub * tanAngle - heightDiff));
+
+        // protect against returning NaN (radicand < 0)
+        if (vSquared <= 0) return staticTargetTranslation2d;
+
+        // time = distance / speed
+        double estFuelTimeOfFlight = distanceToHub / (Math.sqrt(vSquared) * cosAngle);
+
+        double ghostTargetX = staticTargetTranslation2d.getX() - (robotFieldRelativeSpeeds.vxMetersPerSecond * estFuelTimeOfFlight);
+        double ghostTargetY = staticTargetTranslation2d.getY() - (robotFieldRelativeSpeeds.vyMetersPerSecond * estFuelTimeOfFlight);
+        
+        if (Double.isNaN(ghostTargetX) || Double.isNaN(ghostTargetY)) return staticTargetTranslation2d;
+        
         return new Translation2d(ghostTargetX, ghostTargetY);
     }
 }

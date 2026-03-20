@@ -107,6 +107,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private PhotonCameraWrapper cameraRight;
   List<PhotonCameraWrapper> cameras = new ArrayList<PhotonCameraWrapper>(2);
   private boolean useVisionForOdometry = true;
+  private double lastTimestamp;
 
   // Odometry class for tracking robot pose
   private final SwerveDrivePoseEstimator poseEstimator; 
@@ -752,8 +753,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
           SmartDashboard.putNumber("Vision " + camera.getName() + " Y", camPose.estimatedPose.toPose2d().getY());
           SmartDashboard.putNumber("Vision " + camera.getName() + " rot", camPose.estimatedPose.toPose2d().getRotation().getDegrees());
 
-          // Only run camera updates for pose estimator if useVisionForOdometry is true
-          if (camResult.hasTargets() && useVisionForOdometry) {
+          // Only run camera updates for pose estimator if useVisionForOdometry is true and if it is a new frame
+          if (camResult.getTimestampSeconds() != lastTimestamp && camResult.hasTargets() && useVisionForOdometry) {
+            lastTimestamp = camResult.getTimestampSeconds();
+
             PhotonTrackedTarget bestTarget = camResult.getBestTarget();
             SmartDashboard.putNumber("Vision " + camera.getName() + " AprilTag", bestTarget.getFiducialId());
 
@@ -764,8 +767,11 @@ public class DriveTrain extends SubsystemBase implements Loggable {
             //   poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds, VisionConstants.visionFarMatrix);
             // }
 
-            poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds, 
-              camera.getVisionMatrix(result, camResult.getTargets()));
+            // don't take bad data
+            if (camResult.getBestTarget().getPoseAmbiguity() < 0.2) {
+              poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds, 
+                camera.getVisionMatrix(result, camResult.getTargets()));
+            }
 
           } else {
             SmartDashboard.putNumber("Vision " + camera.getName() + " AprilTag", -3);
