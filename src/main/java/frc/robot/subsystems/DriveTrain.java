@@ -117,6 +117,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   // Cache a copy of the DriveStop command for using to cancel the default command (typically DriveWithJoystickAdvanced)
   Command driveStopCommand = new DriveStop(this);
 
+  private boolean xLocked = false;
+  private boolean yLocked = false;
+  private boolean turnLocked = false;
+
   /**
    * Creates the DriveTrain subsystem
    * @param allianceSelection BCR AllianceSelection object
@@ -411,6 +415,61 @@ public class DriveTrain extends SubsystemBase implements Loggable {
       swerveFrontLeft.getPosition(), swerveFrontRight.getPosition(),
       swerveBackLeft.getPosition(), swerveBackRight.getPosition()
     };
+  }
+
+  
+  /**
+   * Lock x-axis movement on the left joystick. The effect happens
+   * in DriveWithJoysticksAdvanced, but the boolean is updated here.
+   */
+  public void lockX() {
+    xLocked = true;
+  }
+
+  /**
+   * Lock y-axis movement on the left joystick. The effect happens
+   * in DriveWithJoysticksAdvanced, but the boolean is updated here.
+   */
+  public void lockY() {
+    yLocked = true;
+  }
+
+  /**
+   * Lock rotation on the right joystick (y-axis). The effect happens
+   * in DriveWithJoysticksAdvanced, but the boolean is updated here.
+   */
+  public void lockTurn() {
+    turnLocked = true;
+  }
+
+  /**
+   * Gets if x-axis movement should be locked.
+   * @return true = lock movement, false = don't lock movement
+   */
+  public boolean isXLocked() {
+    return xLocked;
+  }
+
+  /**
+   * Gets if y-axis movement should be locked.
+   * @return true = lock movement, false = don't lock movement
+   */
+  public boolean isYLocked() {
+    return yLocked;
+  }
+
+  /**
+   * Gets if rotation should be locked.
+   * @return true = lock rotation, false = don't lock rotation
+   */
+  public boolean isTurnLocked() {
+    return turnLocked;
+  }
+
+  public void unlockAll() {
+    xLocked = false;
+    yLocked = false;
+    turnLocked = false;
   }
   
   /**
