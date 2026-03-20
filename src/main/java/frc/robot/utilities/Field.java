@@ -83,7 +83,7 @@ public class Field {
         double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
 
         // Horizontal velocity component of the ball
-        double ballHorizSpeed = ((ShooterConstants.distanceToRPMSlope * distanceToHub) + ShooterConstants.distanceToRPMIntercept) * Math.cos(ShooterConstants.hoodShootAngleRadians);
+        double ballHorizSpeed = ((ShooterConstants.shooterDistanceToRPMSlope * distanceToHub) + ShooterConstants.shooterDistanceToRPMIntercept) * Math.cos(ShooterConstants.hoodShootAngleRadians);
 
         // time = distance / speed
         double estFuelTimeOfFlight = distanceToHub / ballHorizSpeed;
