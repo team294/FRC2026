@@ -514,23 +514,23 @@ public final class Constants {
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
 
-    public static final double kP = 80.0;  //3.6;  // TODO calibrate intake  0.1V/10deg   kP, in Volts/(intake-rotations-error)
-    public static final double kI = 0.0;  // TODO calibrate intake
-    public static final double kD = 0.0;  // TODO calibrate intake
-    public static final double kG = 0.26;  // TODO calibrate intake
-    public static final double kS = 0.185; // was 0.1767 // TODO calibrate intake   kS, in Volts
-    public static final double kV = 0.0903*60.0;  // TODO calibrate intake  kV, in Volts/(intake-rotations/sec)
+    public static final double kP = 10.0;  // CALIBRATED: 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kI = 0.8;  // CALIBRATED: 0.8
+    public static final double kD = 0.4;  // CALIBRATED: 0.4
+    public static final double kG = 0.26;  // CALIBRATED: 0.26
+    public static final double kS = 0.185; // CALIBRATED: 0.185 - kS, in Volts
+    public static final double kV = 0.0903*60.0;  // CALIBRATED: 0.0903 * 60.0 - kV, in Volts/(intake-rotations/sec)
 
-    public static final double MMCruiseVelocity = 1.20;                   // TODO calibrate intake, Max velocity in mechanism rotations / second
-    public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // TODO calibrate intake, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
-    public static final double MMJerk = MMAcceleration / 0.05;            // TODO calibrate intake, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
+    public static final double MMCruiseVelocity = 1.20;                   // CALIBRATED, Max velocity in mechanism rotations / second
+    public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // CALIBRATED, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
+    public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-85.6),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-84.0),        // TODO TEST VALUE
-      AGITATE_LOWER(-70.0),
-      AGITATE_UPPER(-40.0),
-      START_CONFIG(73.9),  // TODO TEST VALUE
+      LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
+      AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
+      AGITATE_UPPER(-40.0),  // CALIBRATED 3/19/26: -40.0
+      START_CONFIG(47.0),  // CALIBRATED 3/19/26: 47.0
       UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
