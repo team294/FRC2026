@@ -1346,14 +1346,79 @@
                 }
               }
             ]
+          },
+          {
+            "title": "Temperatures",
+            "x": 1536.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Swerve drive temp BL",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Swerve drive temp BL",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Swerve drive temp BR",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Swerve drive temp BR",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Swerve drive temp FL",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Swerve drive temp FL",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Swerve drive temp FR",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Swerve drive temp FR",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              }
+            ]
           }
         ],
         "containers": [
           {
             "title": "Stop All Motors",
             "x": 0.0,
-            "y": 512.0,
-            "width": 512.0,
+            "y": 768.0,
+            "width": 1536.0,
             "height": 256.0,
             "type": "Command",
             "properties": {
@@ -1440,26 +1505,26 @@
               {
                 "title": "Intake Deploy Cal Input (Deg)",
                 "x": 0.0,
-                "y": 256.0,
-                "width": 384.0,
+                "y": 512.0,
+                "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/SmartDashboard/Intake Deploy Calibrate Manual Input (Degrees)",
+                  "topic": "/SmartDashboard/Intake Deploy Recalibrate Manual Input (Degrees)",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": true
                 }
               },
               {
-                "title": "Intake Deploy Calibrate Manual",
-                "x": 128.0,
-                "y": 384.0,
+                "title": "Intake Deploy Cal",
+                "x": 0.0,
+                "y": 0.0,
                 "width": 256.0,
                 "height": 128.0,
                 "type": "Command",
                 "properties": {
-                  "topic": "/SmartDashboard/Intake Deploy Calibrate Manual",
+                  "topic": "/SmartDashboard/Intake Deploy Recalibrate",
                   "period": 0.06,
                   "show_type": false,
                   "maximize_button_space": true
@@ -1703,6 +1768,23 @@
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
+                }
+              },
+              {
+                "title": "Uptake Entry?",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Entry Triggered?",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4294963456,
+                  "false_color": 4278190080,
+                  "true_icon": "None",
+                  "false_icon": "None"
                 }
               }
             ]
@@ -2078,6 +2160,136 @@
                 }
               }
             ]
+          },
+          {
+            "title": "Temperatures",
+            "x": 1536.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 896.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Intake Deploy Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Intake Roller Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Roller Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Spindexer Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Uptake Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Turret Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Shooter L Temp",
+                "x": 1536.0,
+                "y": 384.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter L Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Shooter R Temp",
+                "x": 1536.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter R Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Climber L Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Climber L Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Climber R Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Climber R Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              }
+            ]
           }
         ],
         "containers": [
@@ -2086,7 +2298,7 @@
             "x": 0.0,
             "y": 768.0,
             "width": 1280.0,
-            "height": 128.0,
+            "height": 256.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Stop All Motors",
@@ -2271,7 +2483,7 @@
           },
           {
             "title": "Shooter",
-            "x": 1024.0,
+            "x": 1280.0,
             "y": 0.0,
             "width": 256.0,
             "height": 384.0,
@@ -2340,7 +2552,7 @@
           },
           {
             "title": "Shooter Readings",
-            "x": 1024.0,
+            "x": 1280.0,
             "y": 384.0,
             "width": 256.0,
             "height": 256.0,
@@ -2355,12 +2567,11 @@
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Large Text Display",
                 "properties": {
                   "topic": "/SmartDashboard/Shooter Target RPM",
                   "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "data_type": "double"
                 }
               },
               {
@@ -2369,53 +2580,11 @@
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Large Text Display",
                 "properties": {
                   "topic": "/SmartDashboard/Shooter RPM",
                   "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          },
-          {
-            "title": "Temperatures",
-            "x": 1280.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "LEFT"
-            },
-            "children": [
-              {
-                "title": "Shooter L Temp",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter L Temp",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "Shooter R Temp",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Shooter R Temp",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "data_type": "double"
                 }
               }
             ]
@@ -2511,19 +2680,7 @@
             ]
           },
           {
-            "title": "Hood",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 640.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": []
-          },
-          {
-            "title": "Hood Readings",
+            "title": "Hood Left Readings",
             "x": 768.0,
             "y": 0.0,
             "width": 256.0,
@@ -2532,16 +2689,333 @@
             "properties": {
               "label_position": "TOP"
             },
-            "children": []
+            "children": [
+              {
+                "title": "Hood L Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood L Angle",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Hood L Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood L Voltage",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Hood L Analog Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood L Analog Voltage",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Hood L Extension Length (in)",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood L Extension Length (in)",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Hood Set Voltage",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 640.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Hood Set Voltage Input",
+                "x": 512.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood Set Voltage Input",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": true
+                }
+              },
+              {
+                "title": "Hood Set Voltage BOTH",
+                "x": 640.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood Set Voltage (both motors)",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Hood L Set Voltage",
+                "x": 512.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood L Set Voltage",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              },
+              {
+                "title": "Hood R Set Voltage",
+                "x": 512.0,
+                "y": 512.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood R Set Voltage",
+                  "period": 0.06,
+                  "show_type": false,
+                  "maximize_button_space": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Hood Right Readings",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Hood R Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood R Angle",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Hood R Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood R Voltage",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Hood R Analog Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood R Analog Voltage",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Hood R Extension Length (in)",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Hood R Extension Length (in)",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Temperatures",
+            "x": 1536.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 896.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Intake Deploy Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Deploy Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Intake Roller Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Intake Roller Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Spindexer Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Spindexer Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Uptake Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Uptake Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Turret Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Turret Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Shooter L Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter L Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Shooter R Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Shooter R Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Climber L Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Climber L Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              },
+              {
+                "title": "Climber R Temp",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Large Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Climber R Temp",
+                  "period": 0.06,
+                  "data_type": "double"
+                }
+              }
+            ]
           }
         ],
         "containers": [
           {
             "title": "Shooter Stop",
-            "x": 1024.0,
+            "x": 1280.0,
             "y": 640.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 128.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Shooter Stop",
@@ -2552,10 +3026,10 @@
           },
           {
             "title": "Stop All Motors",
-            "x": 1280.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 512.0,
+            "x": 0.0,
+            "y": 768.0,
+            "width": 1536.0,
+            "height": 256.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Stop All Motors",
@@ -2569,13 +3043,69 @@
             "x": 0.0,
             "y": 640.0,
             "width": 512.0,
-            "height": 256.0,
+            "height": 128.0,
             "type": "Command",
             "properties": {
               "topic": "/SmartDashboard/Turret Stop",
               "period": 0.06,
               "show_type": false,
               "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Hood Stop",
+            "x": 512.0,
+            "y": 640.0,
+            "width": 768.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Stop",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Hood Set Angle (Wait for Angle)",
+            "x": 768.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Angle (Wait for Angle)",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Hood Set Angle (Run Forever)",
+            "x": 1024.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Angle (Run Forever)",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Hood Set Angle Input",
+            "x": 768.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Hood Set Angle Input",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
             }
           }
         ]
