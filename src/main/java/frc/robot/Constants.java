@@ -596,11 +596,10 @@ public final class Constants {
 
     public static final double velocityErrorTolerance = 100;
 
-    // a, b, and c coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
-    // Using a linear fit where x is distance in meters and returns shooter speed in rpm
-    public static final double shooterScoreA0 = 1042.93914;
-    public static final double shooterScoreA1 = 529.1604;
-    public static final double shooterScoreA2 = 0;
+    // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
+    // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
+    public static final double shooterDistanceToRPMSlope = 1042.93914;
+    public static final double shooterDistanceToRPMIntercept = 529.1604;
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at

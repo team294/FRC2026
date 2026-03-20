@@ -156,7 +156,7 @@ public class ShooterScorePrep extends Command {
       distance = driveTrain.getDistanceToGoalPose(); // TODO replace this code with above commented out code and delete this method from drivetrain
       
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterScoreA0 + (ShooterConstants.shooterScoreA1 * distance));
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distance));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       targetAngle = ShooterConstants.hoodShootAngle;
       
@@ -196,7 +196,7 @@ public class ShooterScorePrep extends Command {
       distance = driveTrain.getDistanceToGoalPose(); // TODO replace this code with above commented out code and delete this method from drivetrain
       
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterScoreA0 + (ShooterConstants.shooterScoreA1 * distance));
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distance));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       targetAngle = ShooterConstants.hoodShootAngle;
 
