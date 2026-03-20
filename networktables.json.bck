@@ -34,7 +34,7 @@
   {
     "name": "/Preferences/problemSubsystem",
     "type": "string",
-    "value": "LeftCamera, RightCamera, Shooter-Motor1, Shooter-Motor2, Feeder",
+    "value": "",
     "properties": {
       "persistent": true
     }
@@ -42,7 +42,7 @@
   {
     "name": "/Preferences/problemExists",
     "type": "boolean",
-    "value": true,
+    "value": false,
     "properties": {
       "persistent": true
     }
