@@ -221,8 +221,8 @@ public class RobotContainer {
     // Trigger xbY = xboxController.y();
     // Trigger xbX = xboxController.x();
     Trigger xbLB = xboxController.leftBumper();
-    // Trigger xbRB = xboxController.rightBumper();
-    // Trigger xbBack = xboxController.back();
+    Trigger xbRB = xboxController.rightBumper();
+    Trigger xbBack = xboxController.back();
     Trigger xbStart = xboxController.start();
     Trigger xbPOVUp = xboxController.povUp();
     Trigger xbPOVRight = xboxController.povRight();
@@ -234,20 +234,22 @@ public class RobotContainer {
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
     xbLT.onTrue(new IntakeSequence(intake));
-    xbRT.whileTrue(new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
-    xbRT.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)
-    ));
-
     xbLB.onTrue(new IntakeRollerStop(intake));
+
+    xbRT.whileTrue(new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
+    xbRT.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+
+    // xbRB.whileTrue(new ShooterTurretPassPrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
+    xbRB.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
 
-    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
+    xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
-    xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxPercentOutput, climber));
-    xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxPercentOutput, climber));
+    xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
+    xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
+    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
   }
 
   /**
