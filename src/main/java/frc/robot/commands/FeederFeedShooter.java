@@ -11,7 +11,7 @@ import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.subsystems.Feeder;
 
-public class FeedShooter extends Command {
+public class FeederFeedShooter extends Command {
   private final Feeder feeder;
   private final Timer timer;        // track time without Fuel
   private final Timer reverseTimer; // track time spinning in reverse
@@ -23,7 +23,7 @@ public class FeedShooter extends Command {
    * if no Fuel is detected for a certain amount of time specified in Constants
    * @param feeder Feeder subsystem
    */
-  public FeedShooter(Feeder feeder) {
+  public FeederFeedShooter(Feeder feeder) {
     this.feeder = feeder;
     this.timer = new Timer();
     this.reverseTimer = new Timer();

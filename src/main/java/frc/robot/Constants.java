@@ -50,6 +50,18 @@ public final class Constants {
     kBrake;
   }
 
+  public static enum EndType {
+    immediatelyEnd,
+    waitForSetPoint,
+    runForever
+  }
+
+  public enum VelocityType{
+    immediatelyEnd,
+    runForever, 
+    waitForVelocity
+  }
+
   public static final class Ports {
     // Specify which CANbus the drivetrain is on ("rio" or "CANivore")
     public static final String CANbusMainName = "rio";
@@ -342,12 +354,6 @@ public final class Constants {
     }
   }
 
-  public static enum EndType {
-    immediatelyEnd,
-    waitForSetPoint,
-    runForever
-  }
-
   public static final class RobotDimensions {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
     private static final double DrivetrainAdjustmentFactor = 1.0153;        // CALIBRATED = 1.0153
@@ -568,7 +574,7 @@ public final class Constants {
       LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
-      AGITATE_UPPER(-40.0),  // CALIBRATED 3/19/26: -40.0
+      AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
       START_CONFIG(47.0),  // CALIBRATED 3/19/26: 47.0
       UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
 
@@ -622,6 +628,7 @@ public final class Constants {
     public static final double reverseShooterPercent = -0.1;
     public static final double shootRPM = 2500;
     public static final double reverseShootRPM = -shootRPM;
+    public static final double maxShootRPM = 3500;
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -631,15 +638,15 @@ public final class Constants {
     public static final double ShooterkS = 0.224;  // CALIBRATED 3/13: 0.224 - volts to overcome static friction
     public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
     public static final double ShooterkA = 0;
-
-    public static final double velocityErrorTolerance = 100;
  
     public static final double shooterHeightOffGround = Units.inchesToMeters(18.0);  // in meters  -  for LAR, assumes shot @ 30 degrees
 
+    public static final double shooterVelocityErrorTolerance = 100;
+
     // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
-    // !! hood angle of 30 degrees !!      linear regression with r^2 of 0.9985 :)
-    public static final double distanceToRPMSlope = 529.1604;
-    public static final double distanceToRPMIntercept = 1042.93914;
+    // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
+    public static final double shooterDistanceToRPMSlope = 1042.93914;
+    public static final double shooterDistanceToRPMIntercept = 529.1604;
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot with, in deg TODO tune if needed 

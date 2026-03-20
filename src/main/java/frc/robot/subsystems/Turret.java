@@ -108,7 +108,7 @@ public class Turret extends SubsystemBase implements Loggable {
                                             // "Calibrate Turret Zero" button on dashboard.
 
   private double targetAngle; // Current turret target on position control on the motor (if in position mode)
-
+  private boolean atGoalAngle = false;
 
   public Turret(String subsystemName) {
     logRotationKey = DataLogUtil.allocateLogRotation();
@@ -741,6 +741,10 @@ public class Turret extends SubsystemBase implements Loggable {
     return turretAutoAimEnabled;
   }
 
+  public boolean getTurretAtGoalAngle() {
+    return atGoalAngle;
+  }
+
   // ****** Information methods
 
   /**
@@ -801,6 +805,12 @@ public class Turret extends SubsystemBase implements Loggable {
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
       updateTurretLog(false);
+    }
+
+    if (Math.abs(targetAngle - getTurretAngle()) < TurretConstants.angleTolerance) {
+      atGoalAngle = true;
+    } else {
+      atGoalAngle = false;
     }
 
     // If the CANcoder stops reading, apply RotorEncoder configuration and stop
