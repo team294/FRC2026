@@ -9,6 +9,9 @@ import java.io.UncheckedIOException;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.FieldConstants;
 
 /** BCR Field class (implementation in progress) */
 public class Field {
@@ -40,5 +43,26 @@ public class Field {
      */
     public AprilTagFieldLayout getAprilTagFieldLayout() {
         return aprilTagFieldLayout;
+    }
+
+    /**
+     * Get target to aim at based on current robot location. <b> Does NOT account for robot moving, use getBallTarget() instead if needed. </b>
+     * @param robotTranslation2d Translation2d object of robot position.
+     * @return Translation2d object of target.
+     */
+    public Translation2d getStaticShotTarget(Translation2d robotTranslation2d) {
+        if (allianceSelection.getAlliance() == Alliance.Blue) {
+            if (robotTranslation2d.getX() < FieldConstants.hubPositionBlue.getX()) {return FieldConstants.hubPositionBlue;}
+            else {
+                if (robotTranslation2d.getY() < FieldConstants.rightPassBlue.getY()) {return FieldConstants.rightPassBlue;}
+                else {return FieldConstants.leftPassBlue;}
+            }
+        } else {
+            if (robotTranslation2d.getX() > FieldConstants.hubPositionRed.getX()) {return FieldConstants.hubPositionRed;}
+            else {
+                if (robotTranslation2d.getY() < FieldConstants.leftPassRed.getY()) {return FieldConstants.leftPassRed;}
+                else {return FieldConstants.rightPassRed;}
+            }
+        }
     }
 }

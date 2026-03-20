@@ -117,6 +117,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   // Cache a copy of the DriveStop command for using to cancel the default command (typically DriveWithJoystickAdvanced)
   Command driveStopCommand = new DriveStop(this);
 
+  private boolean xLocked = false;
+  private boolean yLocked = false;
+  private boolean turnLocked = false;
+
   /**
    * Creates the DriveTrain subsystem
    * @param allianceSelection BCR AllianceSelection object
@@ -412,6 +416,61 @@ public class DriveTrain extends SubsystemBase implements Loggable {
       swerveBackLeft.getPosition(), swerveBackRight.getPosition()
     };
   }
+
+  
+  /**
+   * Lock x-axis movement on the left joystick. The effect happens
+   * in DriveWithJoysticksAdvanced, but the boolean is updated here.
+   */
+  public void lockX() {
+    xLocked = true;
+  }
+
+  /**
+   * Lock y-axis movement on the left joystick. The effect happens
+   * in DriveWithJoysticksAdvanced, but the boolean is updated here.
+   */
+  public void lockY() {
+    yLocked = true;
+  }
+
+  /**
+   * Lock rotation on the right joystick (y-axis). The effect happens
+   * in DriveWithJoysticksAdvanced, but the boolean is updated here.
+   */
+  public void lockTurn() {
+    turnLocked = true;
+  }
+
+  /**
+   * Gets if x-axis movement should be locked.
+   * @return true = lock movement, false = don't lock movement
+   */
+  public boolean isXLocked() {
+    return xLocked;
+  }
+
+  /**
+   * Gets if y-axis movement should be locked.
+   * @return true = lock movement, false = don't lock movement
+   */
+  public boolean isYLocked() {
+    return yLocked;
+  }
+
+  /**
+   * Gets if rotation should be locked.
+   * @return true = lock rotation, false = don't lock rotation
+   */
+  public boolean isTurnLocked() {
+    return turnLocked;
+  }
+
+  public void unlockAll() {
+    xLocked = false;
+    yLocked = false;
+    turnLocked = false;
+  }
   
   /**
    * Drives the robot using desired robot velocity and orientation, such as from joystick info.
@@ -568,23 +627,6 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    */
   public boolean canBusError() {
     return ((swerveFrontLeft.getDriveBusVoltage() < 7.0) || (swerveFrontLeft.getDriveTemp() < 5.0) || !isGyroReading());
-  }
-
-  /**
-   * Returns the distance between the robot and the goal pose (for now, always the alliance hub)
-   * @return Distance in meters between robot and the goal pose
-   */
-  public double getDistanceToGoalPose() {
-    Translation2d position = getPose().getTranslation();
-      Translation2d hub;
-      if (allianceSelection.getAlliance().equals(Alliance.Red)) { // If on red alliance target red alliance hub
-        hub = FieldConstants.hubPositionRed.getTranslation();
-      }
-      else {                                                    // Otherwise, default to targeting blue alliance hub
-        hub = FieldConstants.hubPositionBlue.getTranslation();
-      }
-      // Distance between position and hub
-     return position.getDistance(hub);
   }
 
   @Override

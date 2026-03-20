@@ -52,6 +52,18 @@ public final class Constants {
     kBrake;
   }
 
+  public static enum EndType {
+    immediatelyEnd,
+    waitForSetPoint,
+    runForever
+  }
+
+  public enum VelocityType{
+    immediatelyEnd,
+    runForever, 
+    waitForVelocity
+  }
+
   public static final class Ports {
     // Specify which CANbus the drivetrain is on ("rio" or "CANivore")
     public static final String CANbusMainName = "rio";
@@ -344,12 +356,6 @@ public final class Constants {
     }
   }
 
-  public static enum EndType {
-    immediatelyEnd,
-    waitForSetPoint,
-    runForever
-  }
-
   public static final class RobotDimensions {
     // Drivebase adjustment for path-of-wheel diameter when turning in place
     private static final double DrivetrainAdjustmentFactor = 1.0153;        // CALIBRATED = 1.0153
@@ -368,6 +374,10 @@ public final class Constants {
     public static final double robotCenterToBack = Units.inchesToMeters(16);  // TODO CALIBRATE
     // Diagonal Width of robot in meters
     public static final double robotDiagonal = Math.sqrt(robotWidth*robotWidth + (robotCenterToFront+robotCenterToBack)*(robotCenterToFront+robotCenterToBack));
+
+    // distance from center of robot to corner of intake (in meters):                 (ask Cameron to explain this!!)
+    // (half of the robot length) + (intake length) then divide result by cosine of rotation away from wall  
+    public static final double robotCenterToIntakeEdge = (robotCenterToFront + IntakeConstants.intakeLength) / Math.cos(FieldConstants.rotationAwayFromWall) - Units.inchesToMeters(3.0);
   }
 
   public static final class SwerveConstants {
@@ -465,16 +475,48 @@ public final class Constants {
   }
 
   public static class FieldConstants {
-    public static final double length = Units.inchesToMeters(651.22);     // CALIBRATED 2026
-    public static final double width = Units.inchesToMeters(317.69);      // CALIBRATED 2026
-    
-    public static final Pose2d hubPositionBlue = new Pose2d(Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
-    public static final Pose2d hubPositionRed = new Pose2d(length - Units.inchesToMeters(182.11), width / 2.0, new Rotation2d(0));
+    private static final double lengthInches = 651.22; // from field drawings (welded b/c we're in California)
+    private static final double widthInches = 317.69;  // from field drawings (welded b/c we're in California)
 
-    public static final Pose2d leftPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0, new Rotation2d(0));
-    public static final Pose2d rightPassBlue = new Pose2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0, new Rotation2d(0));
-    public static final Pose2d leftPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0, new Rotation2d(0));
-    public static final Pose2d rightPassRed = new Pose2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0, new Rotation2d(0));
+    public static final double length = Units.inchesToMeters(lengthInches); // x (forward is pos. from BLUE Alliance POV)
+    public static final double width = Units.inchesToMeters(widthInches);   // y (left is pos. from BLUE Alliance POV)
+
+    private static final double trenchWidth = 49.84;                       // in inches - distance from side wall to trench (approx.).
+    private static final double hubCenterX = 182.11;                       // in inches - distance from driver station wall to hub (x-axis).
+    private static final double driverStationWallZone = hubCenterX / 2.0;  // in inches - halfway to center of hub from driver station wall.
+    public static final double rotationAwayFromWall = Math.toRadians(45.0);  // in radians. should always be positive.
+
+    public static final double hubCenterToHubEdge = Units.inchesToMeters(23.5);  // in meters - distance from center of hub to side of hub
+
+    public enum FieldBoundaries {
+      LEFT_FIELD_WALL(widthInches - trenchWidth, widthInches, hubCenterX, lengthInches - hubCenterX),  // From BLUE Alliance POV
+      RIGHT_FIELD_WALL(0, trenchWidth, hubCenterX, lengthInches - hubCenterX),                    // From BLUE Alliance POV
+      BLUE_NEUTRAL_ZONE(trenchWidth, widthInches - trenchWidth, hubCenterX, lengthInches / 2.0),
+      RED_NEUTRAL_ZONE(trenchWidth, widthInches - trenchWidth, lengthInches / 2.0, lengthInches - hubCenterX),
+      BLUE_DRIVER_STATION(0, widthInches, 0, driverStationWallZone),
+      RED_DRIVER_STATION(0, widthInches, lengthInches - driverStationWallZone, lengthInches),
+      BLUE_ALLIANCE_ZONE(0, widthInches, driverStationWallZone, hubCenterX),
+      RED_ALLIANCE_ZONE(0, widthInches, lengthInches - hubCenterX, lengthInches - driverStationWallZone);
+
+      // all from BLUE Alliance POV: yMin is right-most y-axis boundary of the box,
+      // yMax is left-most, xMin is closest x-axis boundary of the box to blue
+      // alliance driver station, xMax is furthest from blue alliance driver station
+      public final double yBoundaryMin, yBoundaryMax, xBoundaryMin, xBoundaryMax;
+      private FieldBoundaries(double yMin, double yMax, double xMin, double xMax) {
+        this.yBoundaryMin = Units.inchesToMeters(yMin);
+        this.yBoundaryMax = Units.inchesToMeters(yMax);
+        this.xBoundaryMin = Units.inchesToMeters(xMin);
+        this.xBoundaryMax = Units.inchesToMeters(xMax);
+      }
+    }
+    
+    public static final Translation2d hubPositionBlue = new Translation2d(Units.inchesToMeters(182.11), width / 2.0);
+    public static final Translation2d hubPositionRed = new Translation2d(length - Units.inchesToMeters(182.11), width / 2.0);
+
+    public static final Translation2d leftPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0);
+    public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
+    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
+    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
   }
 
   public static class VisionConstants {
@@ -549,6 +591,9 @@ public final class Constants {
     public static final double rollerIntakePercent = 0.8;   // TODO calibrate intake
     public static final double rollerOuttakePercent = -0.8; // TODO calibrate intake
 
+    // Length of intake, in meters (from front edge of robot to where intake ends - ignore bumpers)
+    public static final double intakeLength = Units.inchesToMeters(12.0);
+
     public static final double deployGearRatio = (52.0 / 12.0) * (36.0 / 18.0) * (64.0 / 24.0) * (36.0 / 18.0);    // CALIBRATED: (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0)
     public static final double deployDegreesPerRotation = 360.0;
     public static final double deploySensorToRotorRatio = 36.0 / 18.0;
@@ -564,24 +609,24 @@ public final class Constants {
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
 
-    public static final double kP = 80.0;  //3.6;  // TODO calibrate intake  0.1V/10deg   kP, in Volts/(intake-rotations-error)
-    public static final double kI = 0.0;  // TODO calibrate intake
-    public static final double kD = 0.0;  // TODO calibrate intake
-    public static final double kG = 0.26;  // TODO calibrate intake
-    public static final double kS = 0.185; // was 0.1767 // TODO calibrate intake   kS, in Volts
-    public static final double kV = 0.0903*60.0;  // TODO calibrate intake  kV, in Volts/(intake-rotations/sec)
+    public static final double kP = 10.0;  // CALIBRATED: 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kI = 0.8;  // CALIBRATED: 0.8
+    public static final double kD = 0.4;  // CALIBRATED: 0.4
+    public static final double kG = 0.26;  // CALIBRATED: 0.26
+    public static final double kS = 0.185; // CALIBRATED: 0.185 - kS, in Volts
+    public static final double kV = 0.0903*60.0;  // CALIBRATED: 0.0903 * 60.0 - kV, in Volts/(intake-rotations/sec)
 
-    public static final double MMCruiseVelocity = 1.20;                   // TODO calibrate intake, Max velocity in mechanism rotations / second
-    public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // TODO calibrate intake, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
-    public static final double MMJerk = MMAcceleration / 0.05;            // TODO calibrate intake, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
+    public static final double MMCruiseVelocity = 1.20;                   // CALIBRATED, Max velocity in mechanism rotations / second
+    public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // CALIBRATED, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
+    public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-85.6),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-84.0),        // TODO TEST VALUE
-      AGITATE_LOWER(-70.0),
-      AGITATE_UPPER(-40.0),
-      START_CONFIG(73.9),  // TODO TEST VALUE
-      UPPER_LIMIT(79.0);   // CALIBRATED 3/7/26: 73.0   Upper limit is intake all the way in with fuel in the Spindexer
+      LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
+      AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
+      AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
+      START_CONFIG(47.0),  // CALIBRATED 3/19/26: 47.0
+      UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
@@ -633,6 +678,7 @@ public final class Constants {
     public static final double reverseShooterPercent = -0.1;
     public static final double shootRPM = 2500;
     public static final double reverseShootRPM = -shootRPM;
+    public static final double maxShootRPM = 3500;
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -643,12 +689,12 @@ public final class Constants {
     public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
     public static final double ShooterkA = 0;
 
-    public static final double velocityErrorTolerance = 100;
+    public static final double shooterVelocityErrorTolerance = 100;
 
-    // a, b, and c coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
-    public static final double shooterScoreA0 = 0;
-    public static final double shooterScoreA1 = 0;
-    public static final double shooterScoreA2 = 0;
+    // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
+    // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
+    public static final double shooterDistanceToRPMSlope = 1042.93914;
+    public static final double shooterDistanceToRPMIntercept = 529.1604;
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at

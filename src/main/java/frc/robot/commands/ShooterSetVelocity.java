@@ -11,6 +11,7 @@ import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VelocityType;
 import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.DataLogUtil;
 
@@ -25,12 +26,6 @@ public class ShooterSetVelocity extends Command {
 
   private DoubleSupplier velocityGetter;
   private boolean useGetter = false;
-
-  public enum VelocityType{
-    immediatelyEnd,
-    runForever, 
-    waitForVelocity
-  }
   
   /**
    * Sets the shooter wheel velocity (rpm) for top and bottom shooter motors.
@@ -140,7 +135,7 @@ public class ShooterSetVelocity extends Command {
       case runForever:
         return false;
       case waitForVelocity:
-        if( (Math.abs(shooter.getShooterVelocity() - velocity) < ShooterConstants.velocityErrorTolerance) ) {
+        if( (Math.abs(shooter.getShooterVelocity() - velocity) < ShooterConstants.shooterVelocityErrorTolerance) ) {
           counter++;
         }else{
           counter = 0;
