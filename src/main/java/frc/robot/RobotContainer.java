@@ -263,8 +263,8 @@ public class RobotContainer {
       )
     ));
 
-    // Temporary until command created to adjust hood angle & shooter RPM goes on Xbox
-    right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    // right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
+    right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
 
     // direction facing = new forward for joystick movement
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
