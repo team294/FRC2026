@@ -38,7 +38,7 @@ public class ClimberSingleSetPercent extends Command {
       SmartDashboard.putNumber(key, 0.0);
     }
 
-    addRequirements(climber.getSideSubsystem(side));
+    addRequirements(climber);
   }
 
   /**
@@ -54,7 +54,7 @@ public class ClimberSingleSetPercent extends Command {
     this.fromElastic = false;
     this.percent = percent;
 
-    addRequirements(climber.getSideSubsystem(side));
+    addRequirements(climber);
   }
 
   @Override

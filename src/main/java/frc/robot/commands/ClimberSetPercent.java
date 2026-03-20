@@ -9,7 +9,6 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
-import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSetPercent extends Command {
   private final Climber climber;
@@ -28,9 +27,7 @@ public class ClimberSetPercent extends Command {
       SmartDashboard.putNumber(CLIMBER_CMD_SET_PERCENT_INPUT.value, 0.0);
     }
 
-    addRequirements(
-        climber.getSideSubsystem(ClimberConstants.SIDE_LEFT),
-        climber.getSideSubsystem(ClimberConstants.SIDE_RIGHT));
+    addRequirements(climber);
   }
 
   /**
@@ -43,9 +40,7 @@ public class ClimberSetPercent extends Command {
     fromElastic = false;
     this.percent = percent;
 
-    addRequirements(
-        climber.getSideSubsystem(ClimberConstants.SIDE_LEFT),
-        climber.getSideSubsystem(ClimberConstants.SIDE_RIGHT));
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.

@@ -31,11 +31,6 @@ import frc.robot.utilities.Loggable;
 import frc.robot.utilities.Wait;
 
 public class Climber extends SubsystemBase implements Loggable {
-  // Side-specific "requirements" to allow commanding left/right independently
-  // without WPILib canceling one command when the other is running.
-  private final SubsystemBase leftSideRequirement = new SubsystemBase() {};
-  private final SubsystemBase rightSideRequirement = new SubsystemBase() {};
-
   private int logRotationKey;           // Key to identify the log rotation
   private boolean fastLogging = false;  // true = enabled to run every cycle, false = follows normal logging cycles
   private String subsystemName;         // Used in file logging and SmartDashboard for naming log entries
@@ -286,11 +281,6 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public String getName() {
     return subsystemName;
-  }
-
-  /** Returns the side-specific SubsystemBase used for command requirements. */
-  public SubsystemBase getSideSubsystem(int side) {
-    return side == ClimberConstants.SIDE_LEFT ? leftSideRequirement : rightSideRequirement;
   }
 
   /**

@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
-import frc.robot.Constants.ClimberConstants;
 
 public class ClimberStop extends Command {
   private final Climber climber;
@@ -18,9 +17,7 @@ public class ClimberStop extends Command {
   public ClimberStop(Climber climber) {
     this.climber = climber;
 
-    addRequirements(
-        climber.getSideSubsystem(ClimberConstants.SIDE_LEFT),
-        climber.getSideSubsystem(ClimberConstants.SIDE_RIGHT));
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.

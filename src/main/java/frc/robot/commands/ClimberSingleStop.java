@@ -21,7 +21,7 @@ public class ClimberSingleStop extends Command {
     this.climber = climber;
     this.side = side;
 
-    addRequirements(climber.getSideSubsystem(side));
+    addRequirements(climber);
   }
 
   @Override
