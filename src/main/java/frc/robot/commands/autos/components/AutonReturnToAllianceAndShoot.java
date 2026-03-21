@@ -7,6 +7,7 @@ package frc.robot.commands.autos.components;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.StopType;
@@ -42,7 +43,10 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
       ),
       // Whether to stop and shoot or wait to shoot until at the outpost/feeder. This depends on whether we are going to the outpost and scoring from there or not
       either(
-        new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field), // shoot
+        sequence(
+          new WaitCommand(2),
+          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field) // shoot
+        ),
         none(), // don't shoot
         () -> shoot),
       new DataLogMessage(false, "AutonDriveAndShoot: start")
