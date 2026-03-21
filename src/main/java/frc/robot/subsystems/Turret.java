@@ -801,6 +801,8 @@ public class Turret extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(TURRET_TARGET_ANGLE.value, getCurrentTurretTarget());
 
       SmartDashboard.putNumber(TURRET_ADVANCED_ESTIMATION.value, calcTurretAngleFromEncodersAdvanced());
+
+      SmartDashboard.putNumber("Turret Temp", turretTemp.refresh().getValueAsDouble());
     }
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
