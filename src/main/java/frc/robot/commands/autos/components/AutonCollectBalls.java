@@ -17,6 +17,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -37,10 +38,8 @@ public class AutonCollectBalls extends SequentialCommandGroup {
       new DataLogMessage(false, "AutonCollectBalls: start"),
       race(  
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
-        sequence(
-          
-        )
-        // start intaking balls command (climber up or down = returnToAllianceZone == ReturnToAllianceType.kUnderTrench)
+        new IntakeSequence(intake)
+        //  (climber up or down = returnToAllianceZone == ReturnToAllianceType.kUnderTrench)
       ),
       new DataLogMessage(false, "AutonCollectBalls: end")
     );
