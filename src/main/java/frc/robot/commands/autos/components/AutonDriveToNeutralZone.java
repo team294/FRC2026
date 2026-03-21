@@ -56,7 +56,7 @@ public class AutonDriveToNeutralZone extends SequentialCommandGroup {
       race(
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),  // race with intake command
         sequence(
-          new WaitCommand(0.75),
+          new WaitCommand(1.0),
           new IntakeSequence(intake)
         )
       ),

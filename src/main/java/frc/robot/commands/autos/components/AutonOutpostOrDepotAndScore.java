@@ -51,8 +51,8 @@ public class AutonOutpostOrDepotAndScore extends SequentialCommandGroup {
           new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(TrajectoryName.ShootTrenchToDepot), driveTrain, alliance),
           parallel(
             new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field), // doesn't end
-            new DriveToPose(CoordType.kRelative, new Pose2d(0.75, 0, Rotation2d.kZero), driveTrain),
-            new IntakeSequence(intake)
+            new DriveToPose(CoordType.kRelative, new Pose2d(0.75, 0, Rotation2d.kZero), driveTrain)
+            // new IntakeSequence(intake)
           )
 
         ),
