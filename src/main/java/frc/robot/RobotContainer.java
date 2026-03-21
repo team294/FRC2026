@@ -63,7 +63,7 @@ public class RobotContainer {
 
   // Define other utilities
   private final TrajectoryCache trajectoryCache = new TrajectoryCache();
-  private final AutoSelection autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, driveTrain);
+  private final AutoSelection autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, intake, feeder, turret, shooter, driveTrain);
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method

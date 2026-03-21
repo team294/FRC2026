@@ -38,7 +38,9 @@ import frc.robot.Constants.FieldConstants;
         RelativeStraight4m("RelativeStraight4m"),
         RelativeCirclePath("RelativeCirclePath"),
         RelativeRotate180("RelativeRotate180"),
-        AbsoluteDiagonalTest("AbsoluteDiagonalTest");
+        AbsoluteDiagonalTest("AbsoluteDiagonalTest"),
+
+        DriveOverBump("DriveOverBump");
 
         @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final String trajFileName;
