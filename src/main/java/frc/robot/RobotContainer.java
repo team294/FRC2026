@@ -216,7 +216,7 @@ public class RobotContainer {
     // Triggers for all Xbox buttons
     Trigger xbLT = xboxController.leftTrigger();
     Trigger xbRT = xboxController.rightTrigger();
-    // Trigger xbA = xboxController.a();
+    Trigger xbA = xboxController.a();
     // Trigger xbB = xboxController.b();
     // Trigger xbY = xboxController.y();
     // Trigger xbX = xboxController.x();
@@ -266,6 +266,8 @@ public class RobotContainer {
     xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
     xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
     xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
+
+    xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
   }
 
   /**
@@ -283,9 +285,6 @@ public class RobotContainer {
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
     left[1].onTrue(new IntakeSequence(intake));
-
-    // left[2].whileTrue(new FeedShooter(intake, feeder));
-    left[2].whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
 
     // right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
     right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
