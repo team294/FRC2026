@@ -40,7 +40,7 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
         ),
         () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
       ),
-      // Whether to stop and shoot or wait to shoot until at the outpost/feeder
+      // Whether to stop and shoot or wait to shoot until at the outpost/feeder. This depends on whether we are going to the outpost and scoring from there or not
       either(
         new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field), // shoot
         none(), // don't shoot

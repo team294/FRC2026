@@ -39,7 +39,6 @@ public class AutonCollectBalls extends SequentialCommandGroup {
       race(  
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
         new IntakeSequence(intake)
-        //  (climber up or down = returnToAllianceZone == ReturnToAllianceType.kUnderTrench)
       ),
       new DataLogMessage(false, "AutonCollectBalls: end")
     );

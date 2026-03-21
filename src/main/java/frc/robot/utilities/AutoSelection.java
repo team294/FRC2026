@@ -30,33 +30,34 @@ public class AutoSelection {
 		// CUSTOM("Custom", -2),
 		NONE("None", -1),
 
-		LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
+		// LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
 		// LeftSide_Preload_CenterCollect_UnderTrench("LeftSide_Preload_CenterCollect_UnderTrench", 2),
 		// LeftSide_CenterCollect_UnderTrench_2Cycle("LeftSide_CenterCollect_UnderTrench_2Cycle", 3),
-		// LeftSide_Preload_CenterCollect_UnderTrench_2Cycle("LeftSide_Preload_CenterCollect_UnderTrench_2Cycle", 4),
-		LeftSide_CenterCollect_UnderTrench_Depot("LeftSide_CenterCollect_UnderTrench_Depot", 5),
-		LeftSide_SideCollect_UnderTrench_Depot("LeftSide_SideCollect_UnderTrench_Depot", 6),
+		// // LeftSide_Preload_CenterCollect_UnderTrench_2Cycle("LeftSide_Preload_CenterCollect_UnderTrench_2Cycle", 4),
+		// LeftSide_CenterCollect_UnderTrench_Depot("LeftSide_CenterCollect_UnderTrench_Depot", 5),
+		// LeftSide_SideCollect_UnderTrench_Depot("LeftSide_Preload_CenterCollect_UnderTrench_Outpost", 6),
 		LeftSide_SideCollect_UnderTrench("LeftSide_SideCollect_UnderTrench", 7),
-		// LeftSide_SideCollect_OverBump_Depot("LeftSide_SideCollect_OverBump_Depot", 8),
-		// LeftSide_SideCollect_OverBump("LeftSide_SideCollect_OverBump", 9),
+		// LeftSide_SideCollect_OverBump_Depot("LeftSide_Preload_CenterCollect_UnderTrench_Outpost", 8),
+		// LeftSide_SideCollect_OverBump("LeftSide_SideCollect_UnderTrench", 9),
 
-		RightSide_CenterCollect_UnderTrench("RightSide_CenterCollect_UnderTrench", 10),
+		// RightSide_CenterCollect_UnderTrench("RightSide_CenterCollect_UnderTrench", 10),
+		RightSide_SideCollect_UnderTrench("RightSide_SideCollect_UnderTrench", 11);
 		// RightSide_Preload_CenterCollect_UnderTrench("RightSide_Preload_CenterCollect_UnderTrench", 11),
 		// RightSide_CenterCollect_UnderTrench_2Cycle("RightSide_CenterCollect_UnderTrench_2Cycle", 12),
 		// RightSide_Preload_CenterCollect_UnderTrench_2Cycle("RightSide_Preload_CenterCollect_UnderTrench_2Cycle", 13),
-		RightSide_CenterCollect_UnderTrench_Outpost("RightSide_CenterCollect_UnderTrench_Outpost", 14),
-		RightSide_SideCollect_UnderTrench_Outpost("RightSide_SideCollect_UnderTrench_Outpost", 15),
+		// RightSide_CenterCollect_UnderTrench_Outpost("RightSide_CenterCollect_UnderTrench_Outpost", 14),
+		// RightSide_SideCollect_UnderTrench_Outpost("RightSide_SideCollect_UnderTrench_Outpost", 15),
 
-		DriveForwardOneMeter("DriveForwardOneMeter", 101),
-		DriveForwardTwoMeters("DriveForwardTwoMeters", 102),
+		// DriveForwardOneMeter("DriveForwardOneMeter", 101),
+		// DriveForwardTwoMeters("DriveForwardTwoMeters", 102),
 
-		Rel4mRotate180("Relative4m-180", 103),
-		RelArcLeft("RelativeArcLeft", 104),
-		RelStraight4m("RelativeStraight4m", 105),
-		RelCirclePath("RelativeCirclePath", 106),
-		RelRotate180("RelativeRotate180", 107),
-		AbsDiagonalTest("AbsoluteDiagonalTest", 108),
-		DriveOverBump("DriveOverBump", 109);
+		// Rel4mRotate180("Relative4m-180", 103),
+		// RelArcLeft("RelativeArcLeft", 104),
+		// RelStraight4m("RelativeStraight4m", 105),
+		// RelCirclePath("RelativeCirclePath", 106),
+		// RelRotate180("RelativeRotate180", 107),
+		// AbsDiagonalTest("AbsoluteDiagonalTest", 108),
+		// DriveOverBump("DriveOverBump", 109)
 
 		@SuppressWarnings({ "MemberName", "PMD.SingularField" })
 		public final String name;
@@ -313,64 +314,64 @@ public class AutoSelection {
 			autonomousCommandMain = new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain);
 		}
 
-		else if (autoPlan == RoutineSelectionOption.DriveForwardOneMeter.value) {
-			autoSelectionOption = RoutineSelectionOption.DriveForwardOneMeter;
-			autonomousCommandMain = new SequentialCommandGroup(
-										new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
-										new DriveToPose(CoordType.kRelative, new Pose2d(1, 0, new Rotation2d(0)), driveTrain));
-		}
+		// else if (autoPlan == RoutineSelectionOption.DriveForwardOneMeter.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.DriveForwardOneMeter;
+		// 	autonomousCommandMain = new SequentialCommandGroup(
+		// 								new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
+		// 								new DriveToPose(CoordType.kRelative, new Pose2d(1, 0, new Rotation2d(0)), driveTrain));
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.DriveForwardTwoMeters.value) {
-			autoSelectionOption = RoutineSelectionOption.DriveForwardTwoMeters;
-			autonomousCommandMain = new SequentialCommandGroup(
-										new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
-										new DriveToPose(CoordType.kRelative, new Pose2d(2, 0, new Rotation2d(0)), driveTrain));
-		}
+		// else if (autoPlan == RoutineSelectionOption.DriveForwardTwoMeters.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.DriveForwardTwoMeters;
+		// 	autonomousCommandMain = new SequentialCommandGroup(
+		// 								new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
+		// 								new DriveToPose(CoordType.kRelative, new Pose2d(2, 0, new Rotation2d(0)), driveTrain));
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.Rel4mRotate180.value) {
-			autoSelectionOption = RoutineSelectionOption.Rel4mRotate180;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.Relative4mRotate180), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.Rel4mRotate180.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.Rel4mRotate180;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.Relative4mRotate180), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.RelArcLeft.value) {
-			autoSelectionOption = RoutineSelectionOption.RelArcLeft;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeArcLeft), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.RelArcLeft.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RelArcLeft;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeArcLeft), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.RelStraight4m.value) {
-			autoSelectionOption = RoutineSelectionOption.RelStraight4m;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeStraight4m), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.RelStraight4m.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RelStraight4m;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeStraight4m), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.RelCirclePath.value) {
-			autoSelectionOption = RoutineSelectionOption.RelCirclePath;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeCirclePath), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.RelCirclePath.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RelCirclePath;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeCirclePath), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.RelRotate180.value) {
-			autoSelectionOption = RoutineSelectionOption.RelRotate180;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeRotate180), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.RelRotate180.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RelRotate180;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.RelativeRotate180), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.AbsDiagonalTest.value) {
-			autoSelectionOption = RoutineSelectionOption.AbsDiagonalTest;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.AbsoluteDiagonalTest), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.AbsDiagonalTest.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.AbsDiagonalTest;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.AbsoluteDiagonalTest), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.DriveOverBump.value) {
-			autoSelectionOption = RoutineSelectionOption.DriveOverBump;
-			autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection);
-		}
+		// else if (autoPlan == RoutineSelectionOption.DriveOverBump.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.DriveOverBump;
+		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench.value) {
-			autoSelectionOption = RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench; 
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // climber, 
-		}
+		// else if (autoPlan == RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench; 
+		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // climber, 
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_UnderTrench_Depot.value) {
-			autoSelectionOption = RoutineSelectionOption.LeftSide_SideCollect_UnderTrench_Depot; 
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kOutpostOrDepot, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // climber, 
-		}
+		// else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_UnderTrench_Depot.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_SideCollect_UnderTrench_Depot; 
+		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kOutpostOrDepot, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // climber, 
+		// }
 
 		// else if (autoPlan == RoutineSelectionOption.LeftSide_Preload_CenterCollect_UnderTrench.value) {
 		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_Preload_CenterCollect_UnderTrench; 
@@ -402,9 +403,14 @@ public class AutoSelection {
 		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kSecondCycle, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
 		// }
 
-		else if (autoPlan == RoutineSelectionOption.RightSide_CenterCollect_UnderTrench.value) {
-			autoSelectionOption = RoutineSelectionOption.RightSide_CenterCollect_UnderTrench; 
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
+		// else if (autoPlan == RoutineSelectionOption.RightSide_CenterCollect_UnderTrench.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RightSide_CenterCollect_UnderTrench; 
+		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
+		// }
+
+		else if (autoPlan == RoutineSelectionOption.RightSide_SideCollect_UnderTrench.value) {
+			autoSelectionOption = RoutineSelectionOption.RightSide_SideCollect_UnderTrench; 
+			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
 		}
 
 		// else if (autoPlan == RoutineSelectionOption.RightSide_Preload_CenterCollect_UnderTrench.value) {
@@ -422,15 +428,15 @@ public class AutoSelection {
 		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kSecondCycle, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
 		// }
 
-		else if (autoPlan == RoutineSelectionOption.RightSide_CenterCollect_UnderTrench_Outpost.value) {
-			autoSelectionOption = RoutineSelectionOption.RightSide_CenterCollect_UnderTrench_Outpost;
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kOutpostOrDepot, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field);
-		}
+		// else if (autoPlan == RoutineSelectionOption.RightSide_CenterCollect_UnderTrench_Outpost.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RightSide_CenterCollect_UnderTrench_Outpost;
+		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughCenter, ReturnToAllianceType.kUnderTrench, AutoEndType.kOutpostOrDepot, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field);
+		// }
 
-		else if (autoPlan == RoutineSelectionOption.RightSide_SideCollect_UnderTrench_Outpost.value) {
-			autoSelectionOption = RoutineSelectionOption.RightSide_SideCollect_UnderTrench_Outpost;
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kOutpostOrDepot, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field);
-		}
+		// else if (autoPlan == RoutineSelectionOption.RightSide_SideCollect_UnderTrench_Outpost.value) {
+		// 	autoSelectionOption = RoutineSelectionOption.RightSide_SideCollect_UnderTrench_Outpost;
+		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kOutpostOrDepot, RoutineSideType.kRightSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field);
+		// }
 
 		else {
 			autoSelectionOption = RoutineSelectionOption.NONE;
