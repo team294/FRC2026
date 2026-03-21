@@ -236,11 +236,27 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
-    xbRT.whileTrue(new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
-    xbRT.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+    // Agitate while shooting
+    xbRT.whileTrue(parallel(
+      new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(true))
+    ));
+    xbRT.onFalse(parallel(
+      new FeederStop(feeder),
+      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+    ));
 
-    // xbRB.whileTrue(new ShooterTurretPassPrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
-    xbRB.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+    // Intake while shooting
+    xbRB.whileTrue(parallel(
+      new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+    ));
+    xbRB.onFalse(parallel(
+      new FeederStop(feeder),
+      new IntakeSequence(intake),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+    ));
 
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
 
