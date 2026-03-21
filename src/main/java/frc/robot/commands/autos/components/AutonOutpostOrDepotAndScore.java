@@ -6,13 +6,20 @@ package frc.robot.commands.autos.components;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants.RoutineSideType;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.DataLogMessage;
+import frc.robot.commands.DriveStraight;
+import frc.robot.commands.DriveToPose;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -42,7 +49,11 @@ public class AutonOutpostOrDepotAndScore extends SequentialCommandGroup {
         ),
         sequence(
           new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(TrajectoryName.ShootTrenchToDepot), driveTrain, alliance),
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field) // doesn't end
+          parallel(
+            new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field), // doesn't end
+            new DriveToPose(CoordType.kRelative, new Pose2d(0.75, 0, Rotation2d.kZero), driveTrain),
+            new IntakeSequence(intake)
+          )
 
         ),
         () -> routineSide == RoutineSideType.kRightSide),
