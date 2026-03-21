@@ -41,7 +41,7 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
         new FeederFeedShooter(feeder),
         sequence(
           waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
-          new IntakeDeployAgitate(intake)
+          either(new IntakeDeployAgitate(intake), new IntakeSequence(intake), () -> intake.getAgitateDuringFeed())
         )
       )
     );
