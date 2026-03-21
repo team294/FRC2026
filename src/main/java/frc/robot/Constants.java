@@ -580,7 +580,7 @@ public final class Constants {
       LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
-      AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
+      AGITATE_UPPER(-20.0),  // CALIBRATED 3/19/26: -40.0
       START_CONFIG(47.0),  // CALIBRATED 3/19/26: 47.0
       UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
 
