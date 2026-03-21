@@ -14,7 +14,7 @@
  },
  "params":{
   "waypoints":[
-    {"x":{"exp":"shootTrench.x", "val":2.75483012199401}, "y":{"exp":"shootTrench.y", "val":0.6902327537536621}, "heading":{"exp":"shootTrench.heading", "val":-3.13463071579435}, "intervals":27, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"shootTrench.x", "val":2.45483012199401}, "y":{"exp":"shootTrench.y", "val":0.673967838287351}, "heading":{"exp":"shootTrench.heading", "val":-3.13463071579435}, "intervals":27, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"outpost.x", "val":0.6100117564201355}, "y":{"exp":"outpost.y", "val":0.72523033618927}, "heading":{"exp":"outpost.heading", "val":-3.13463071579435}, "intervals":25, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
