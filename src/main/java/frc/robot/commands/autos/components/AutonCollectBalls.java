@@ -8,6 +8,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants.BallPickupTrajType;
@@ -36,7 +37,9 @@ public class AutonCollectBalls extends SequentialCommandGroup {
     Trajectory<SwerveSample> trajectory = driveThroughCenter == BallPickupTrajType.kDriveThroughCenter ? cache.getTrajectory(leftSide, TrajectoryName.CollectThroughCenter) : cache.getTrajectory(leftSide, TrajectoryName.CollectThroughSide);
     addCommands(
       new DataLogMessage(false, "AutonCollectBalls: start"),
-      race(  
+      new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
+      
+      parallel(  
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
         new IntakeSequence(intake)
       ),

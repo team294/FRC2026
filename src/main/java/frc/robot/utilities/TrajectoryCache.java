@@ -24,13 +24,13 @@ import frc.robot.Constants.FieldConstants;
     public enum TrajectoryName {
         // Add Choreo trajectories here.  Syntax:
         //   TrajectoryConstantName("Trajectory file name"),
-        CollectThroughCenter("CollectThroughCenter"),
-        CollectThroughSide("CollectThroughSide"),
-        CollectEndToShootBump("CollectEndToShootBump"),
-        CollectEndToShootTrench("CollectEndToShootTrench"),
+        CollectThroughCenter("collectThroughCenter"),
+        CollectThroughSide("collectThroughSide"),
+        CollectEndToShootBump("collectEndToShootBump"),
+        CollectEndToShootTrench("collectEndToShootTrench"),
         //StartBumpToCollectStart("StartBumpToCollectStart"),
         StartTrenchToCollectStart("StartTrenchToCollectStart"),
-        ShootTrenchToOutpost("ShootTrenchToOutpost"),
+        ShootTrenchToOutpost("shootTrenchToOutpost"),
         ShootTrenchToDepot("ShootTrenchToDepot"),
     
         Relative4mRotate180("Relative4mRotate180"),
