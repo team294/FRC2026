@@ -1,5 +1,7 @@
 package frc.robot.utilities;
 
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 
 import frc.robot.Constants.CoordType;
+import frc.robot.Constants.EndType;
 import frc.robot.Constants.StopType;
 import frc.robot.Constants.AutoConstants.BallPickupTrajType;
 import frc.robot.Constants.AutoConstants.AutoEndType;
@@ -30,6 +33,7 @@ public class AutoSelection {
 		// CUSTOM("Custom", -2),
 		NONE("None", -1),
 
+		ShootPreload("ShootPreload", 1),
 		// LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
 		// LeftSide_Preload_CenterCollect_UnderTrench("LeftSide_Preload_CenterCollect_UnderTrench", 2),
 		// LeftSide_CenterCollect_UnderTrench_2Cycle("LeftSide_CenterCollect_UnderTrench_2Cycle", 3),
@@ -312,6 +316,15 @@ public class AutoSelection {
 			// Starting position = facing drivers
 			autoSelectionOption = RoutineSelectionOption.NONE;
 			autonomousCommandMain = new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain);
+		}
+
+		if (autoPlan == RoutineSelectionOption.ShootPreload.value) {
+			// Starting position = facing drivers
+			autoSelectionOption = RoutineSelectionOption.ShootPreload;
+			autonomousCommandMain = sequence(
+											new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
+											new ShootPreload(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field)
+									);
 		}
 
 		// else if (autoPlan == RoutineSelectionOption.DriveForwardOneMeter.value) {
