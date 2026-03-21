@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ElasticKeyConstants.ElasticKey;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
@@ -173,14 +174,16 @@ public class ShooterScorePrep extends Command {
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
-      targetAngle = ShooterConstants.hoodShootAngle;
       
-      // Target hood angle based on: (shooter speed)(B0) + B1, where B0 and B1 are unique constants
-      // targetAngle = ((targetVelocity * ShooterConstants.hoodScoreB0) + ShooterConstants.hoodScoreB1); Not varying hood angle at the moment 
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed) {
+        targetAngle = ShooterConstants.hoodPassAngle;
+      } else {
+        targetAngle = ShooterConstants.hoodShootAngle;
+      } 
     }
 
-    shooter.setHoodAnglePID(targetAngle);
-    shooter.setShooterVelocity(targetVelocity);
+      shooter.setHoodAnglePID(targetAngle);
+      shooter.setShooterVelocity(targetVelocity);
 
     DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetAngle, ", Velocity Setpoint =", targetVelocity,
                              ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distanceToTarget);
@@ -217,7 +220,13 @@ public class ShooterScorePrep extends Command {
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
-      targetAngle = ShooterConstants.hoodShootAngle;
+            
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed) {
+        targetAngle = ShooterConstants.hoodPassAngle;
+      } else {
+        targetAngle = ShooterConstants.hoodShootAngle;
+      }
+
       shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
