@@ -21,6 +21,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.TrajectoryCache;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
@@ -30,12 +31,15 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonCollectBalls extends SequentialCommandGroup {
   /** Collects balls from the neutral zone, either closer to the center line or along the edge closer to the alliance zone. */
-  public AutonCollectBalls(BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
+  public AutonCollectBalls(BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
     Trajectory<SwerveSample> trajectory = driveThroughCenter == BallPickupTrajType.kDriveThroughCenter ? cache.getTrajectory(leftSide, TrajectoryName.CollectThroughCenter) : cache.getTrajectory(leftSide, TrajectoryName.CollectThroughSide);
     addCommands(
       new DataLogMessage(false, "AutonCollectBalls: start"),
       race(  
-        new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance)
+        new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
+        sequence(
+          
+        )
         // start intaking balls command (climber up or down = returnToAllianceZone == ReturnToAllianceType.kUnderTrench)
       ),
       new DataLogMessage(false, "AutonCollectBalls: end")

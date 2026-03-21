@@ -52,7 +52,8 @@ public class AutoSelection {
 		RelStraight4m("RelativeStraight4m", 105),
 		RelCirclePath("RelativeCirclePath", 106),
 		RelRotate180("RelativeRotate180", 107),
-		AbsDiagonalTest("AbsoluteDiagonalTest", 108);
+		AbsDiagonalTest("AbsoluteDiagonalTest", 108),
+		DriveOverBump("DriveOverBump", 109);
 
 		@SuppressWarnings({ "MemberName", "PMD.SingularField" })
 		public final String name;
@@ -351,6 +352,11 @@ public class AutoSelection {
 		else if (autoPlan == RoutineSelectionOption.AbsDiagonalTest.value) {
 			autoSelectionOption = RoutineSelectionOption.AbsDiagonalTest;
 			autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.AbsoluteDiagonalTest), driveTrain, allianceSelection);
+		}
+
+		else if (autoPlan == RoutineSelectionOption.DriveOverBump.value) {
+			autoSelectionOption = RoutineSelectionOption.DriveOverBump;
+			autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection);
 		}
 
 		else if (autoPlan == RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench.value) {
