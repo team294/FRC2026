@@ -28,9 +28,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -55,7 +53,7 @@ public class RobotContainer {
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
   private final Turret turret = new Turret("Turret");
-  // private final Climber climber = new Climber("Climber");
+  private final Climber climber = new Climber("Climber");
 
   // Define controllers
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
@@ -149,7 +147,7 @@ public class RobotContainer {
     SmartDashboard.putData(FEEDER_CMD_STOP.value, new FeederStop(feeder));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
     SmartDashboard.putData(TURRET_CMD_STOP.value, new TurretStop(turret));
-    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter));
+    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
 
     // Set Percent
     SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(false, intake));
@@ -188,10 +186,13 @@ public class RobotContainer {
     SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
 
     // Climber
-    // SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberSetPercent(0, true, climber));
-    // SmartDashboard.putData(CLIMBER_CMD_CALIBRATION_RAMP. value, new ClimberCalibration(5, climber));
-    // SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_INPUT.value, new ClimberSetPercent(true, climber));
-    // SmartDashboard.putData(CLIMBER_CMD_SET_POSITION_INPUT.value, new ClimberSetPosition(climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT.value, new ClimberSetPercent(climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP_LEFT.value, new ClimberSingleStop(ClimberConstants.SIDE_LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP_RIGHT.value, new ClimberSingleStop(ClimberConstants.SIDE_RIGHT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_LEFT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_RIGHT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_RIGHT, climber));
+    SmartDashboard.putData("Climber L Down", new ClimberSingleSetPercent(-0.1, ClimberConstants.SIDE_LEFT, climber));
 
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_BOTH.value, new HoodSetVoltage(shooter, 0));
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_LEFT.value, new HoodSetVoltage(shooter, 1));
@@ -220,30 +221,35 @@ public class RobotContainer {
     // Trigger xbY = xboxController.y();
     // Trigger xbX = xboxController.x();
     Trigger xbLB = xboxController.leftBumper();
-    // Trigger xbRB = xboxController.rightBumper();
-    // Trigger xbBack = xboxController.back();
+    Trigger xbRB = xboxController.rightBumper();
+    Trigger xbBack = xboxController.back();
     Trigger xbStart = xboxController.start();
-    // Trigger xbPOVUp = xboxController.povUp();
+    Trigger xbPOVUp = xboxController.povUp();
     Trigger xbPOVRight = xboxController.povRight();
     // Trigger xbPOVLeft = xboxController.povLeft();
-    // Trigger xbPOVDown = xboxController.povDown();
+    Trigger xbPOVDown = xboxController.povDown();
     Trigger xbLJoystickTrigger = xboxController.leftStick();
     // Trigger xbRJoystickTrigger = xboxController.rightStick();
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
     xbLT.onTrue(new IntakeSequence(intake));
-    xbRT.whileTrue(new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
-    xbRT.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)
-    ));
-
     xbLB.onTrue(new IntakeRollerStop(intake));
+
+    xbRT.whileTrue(new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
+    xbRT.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+
+    // xbRB.whileTrue(new ShooterTurretPassPrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
+    xbRB.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
 
-    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
+    xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
+
+    xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
+    xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
+    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
   }
 
   /**
@@ -337,8 +343,8 @@ public class RobotContainer {
     coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShootRPM, VelocityType.runForever, shooter));
 
     // Manually move climber up/down while held, stopping when released
-    // coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, EndType.runForever, climber));
-    // coP[16].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, EndType.runForever, climber));
+    coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
+    coP[16].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
 
     // Manually calibrate climber, assuming it's at the lower limit
     // coP[18].onTrue(new ClimberManualCalibration(climber));
