@@ -21,6 +21,7 @@ import frc.robot.commands.DriveToPose;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -38,19 +39,19 @@ public class AutonOutpostOrDepotAndScore extends SequentialCommandGroup {
   /** Creates a new AutoOutpostOrDepotAndScore.
    * can only go to outpost from under the trench atm
    */
-  public AutonOutpostOrDepotAndScore(RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+  public AutonOutpostOrDepotAndScore(RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     addCommands(
       new DataLogMessage(false, "AutonOutpostOrDepotAndScore: start"),
       // If we are on the right side, we go to the outpost. Otherwise, we are on the left side and we go to the depot
       either(
         sequence(
           new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(TrajectoryName.ShootTrenchToOutpost), driveTrain, alliance),
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field) // doesn't end
+          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field) // doesn't end
         ),
         sequence(
           new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(TrajectoryName.ShootTrenchToDepot), driveTrain, alliance),
           parallel(
-            new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field), // doesn't end
+            new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field), // doesn't end
             new DriveToPose(CoordType.kRelative, new Pose2d(0.75, 0, Rotation2d.kZero), driveTrain)
             // new IntakeSequence(intake)
           )

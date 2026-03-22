@@ -24,6 +24,7 @@ import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -39,7 +40,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonDriveToNeutralZone extends SequentialCommandGroup {
   /** Drive to the neutral zone (can only do under the trench), finishing in position to start collecting balls */
-  public AutonDriveToNeutralZone(ShootPreloadType shootPreload, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+  public AutonDriveToNeutralZone(ShootPreloadType shootPreload, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     Trajectory<SwerveSample> trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchToCollectStart);
     addCommands(
       new DataLogMessage(false, "AutonDriveToNeutralZone: start"),
@@ -47,7 +48,7 @@ public class AutonDriveToNeutralZone extends SequentialCommandGroup {
       either(
         sequence(
           // If shooting preload, starts with front of the robot on the start line (one robot's length back)
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field), // this currently will never end. don't shoot preload
+          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field), // this currently will never end. don't shoot preload
           new DriveToPose(CoordType.kAbsolute, trajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), driveTrain) // TODO would this make it stop? how to make it continously go into the trajectory? 
         ),
         none(),
