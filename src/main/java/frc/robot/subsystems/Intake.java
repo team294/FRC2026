@@ -107,7 +107,7 @@ public class Intake extends SubsystemBase implements Loggable{
   private double intakeDeploySetpointPercent;       // Current setpoint percent output for the deploy motor
   private double intakeRollerSetpointPercent;       // Current setpoint percent output for the roller motor
 
-  private boolean shouldAgitateDuringFeed = false;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
+  private boolean shouldAgitateDuringFeed = true;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
   private boolean preventRolling = false;
 
 
