@@ -369,7 +369,10 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.25) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 20.25".
     // Front-back distance between the drivetrain wheels; should be measured from center to center
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(22.75) * DrivetrainAdjustmentFactor;      // CALIBRATED.  FRC2026 CAD = 22.75".
-    
+    // full length from front bumper to back bumper
+    public static final double robotLength = 0; 
+    // thickness of front bumper
+    public static final double frontBumperThickness = 0; 
     // Width of robot in meters, + bumpers
     public static final double robotWidth = Units.inchesToMeters(13.0);  // TODO CALIBRATE
     // Length of robot in meters, + bumpers
@@ -542,10 +545,57 @@ public final class Constants {
     public static final double kTagDistanceConst = 0.033;
   }
 
+    public static class AutoConstants {
+    // --- enums for building auto routines ---
+    /**
+     * IMPORTANT: CHANGES START POSITION
+     * <p> kShootPreload: starts with the robot's front bumper on start line. Shoots preload, then drives to front of first trajectory
+     * <p> kDontShootPreload: starts with robot's back bumper on start line. Immediately starts driving first trajectory
+     */
+    public enum ShootPreloadType {
+      kShootPreload,
+      kDontShootPreload
+    }
+
+    public enum BallPickupTrajType {
+      kDriveThroughCenter, // riskier
+      kDriveThroughSide,   // avoid getting our autos messed up if colliding
+    }
+
+    /**
+     * During autonomous, whether you return to the alliance zone driving over the bump or under the trench.
+     */
+    public enum ReturnToAllianceType {
+      kOverBump,
+      kUnderTrench
+    }
+
+    /**
+     * During autonomous, what to do at the end of the first cycle
+     * <p> kNone: do nothing and end at shooting position 
+     * <p> kSecondCycle: go to the center again for a second cycle
+     * <p> kOutpostOrDepot: depending on the side of the auto routine, go to the outpost/depot and intake before shooting balls 
+     */
+    public enum AutoEndType {
+      kNone,
+      kSecondCycle,
+      kOutpostOrDepot
+    }
+
+    /**
+     * During autonomous, whether the routine is left or right side, based on the driver perspective. <p>All trajectories are originally on the right side, and are mirrored if it is on the left side.
+     */
+    public enum RoutineSideType {
+      kLeftSide,
+      kRightSide
+      // center/sideSpecific?
+    }
+  }
+
   public static final class IntakeConstants {
     public static final double rollerCompensationVoltage = 12.0;
-    public static final double rollerIntakePercent = 0.8;   // TODO calibrate intake
-    public static final double rollerOuttakePercent = -0.8; // TODO calibrate intake
+    public static final double rollerIntakePercent = 0.72;   // TODO calibrate intake
+    public static final double rollerOuttakePercent = -0.72; // TODO calibrate intake
 
     // Length of intake, in meters (from front edge of robot to where intake ends - ignore bumpers)
     public static final double intakeLength = Units.inchesToMeters(12.0);
@@ -580,7 +630,7 @@ public final class Constants {
       LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
-      AGITATE_UPPER(-10.0),  // CALIBRATED 3/19/26: -40.0
+      AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
       START_CONFIG(47.0),  // CALIBRATED 3/19/26: 47.0
       UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
 

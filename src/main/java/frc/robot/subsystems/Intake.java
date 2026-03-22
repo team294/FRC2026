@@ -107,7 +107,9 @@ public class Intake extends SubsystemBase implements Loggable{
   private double intakeDeploySetpointPercent;       // Current setpoint percent output for the deploy motor
   private double intakeRollerSetpointPercent;       // Current setpoint percent output for the roller motor
 
-  private boolean shouldAgitateDuringFeed = false;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
+  private boolean shouldAgitateDuringFeed = true;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
+  private boolean preventRolling = false;
+
 
   public Intake(String subsystemName) {
     this.subsystemName = subsystemName;
@@ -301,6 +303,11 @@ public class Intake extends SubsystemBase implements Loggable{
    * @param percent output percent, -1.0 to 1.0 (positive = intake, negative = outtake)
    */
   public void setIntakeRollerPercentOutput(double percent) {
+    if (preventRolling) {
+      DataLogUtil.writeMessageEcho(subsystemName, ": setIntakeRollerPercentOutput", ", PREVENTED ROLLERS FROM TURNING ON");
+      return;
+    }
+
     intakeRollerMotor.setControl(intakeRollerVoltageControl.withOutput(percent * IntakeConstants.rollerCompensationVoltage));
     intakeRollerSetpointPercent = percent;
   
@@ -603,19 +610,30 @@ public class Intake extends SubsystemBase implements Loggable{
 
   @Override
   public void periodic() {
-    if (!fastLogging && !DataLogUtil.isMyLogRotation(logRotationKey)) return;
+    if (fastLogging && DataLogUtil.isMyLogRotation(logRotationKey)) {
+      updateLog(false);
 
-    updateLog(false);
+      SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
+      SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
+      SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
 
-    SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
-    SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
-    SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
-    SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
-    SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
-    SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
+      SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
 
-    SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
+      SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
 
-    SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
+      SmartDashboard.putBoolean("Roller >100 Amps", preventRolling);
+    }
+
+    double rollerAmps = getIntakeRollerAmps();
+
+    if (!preventRolling && rollerAmps > 100) {
+      setIntakeRollerPercentOutput(0.0);
+      preventRolling = true;
+    } else if (preventRolling && rollerAmps <= 100) {
+      preventRolling = false;
+    }
   }
 }

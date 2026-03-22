@@ -1,0 +1,226 @@
+{
+ "name":"ETU2026",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{
+   "maxVel":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
+    }
+   },
+   "maxVelBump":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1 m / s",
+     "val":1.0
+    }
+   },
+   "maxVelSpinAround":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1 m / s",
+     "val":1.0
+    }
+   },
+   "maxVelUnderTrench":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1 m / s",
+     "val":1.0
+    }
+   }
+  },
+  "poses":{
+   "collectEnd":{
+    "x":{
+     "exp":"6.61384868621826 m",
+     "val":6.61384868621826
+    },
+    "y":{
+     "exp":"3.363587856292724 m",
+     "val":3.363587856292724
+    },
+    "heading":{
+     "exp":"-2.626272981131867 rad",
+     "val":-2.626272981131867
+    }
+   },
+   "collectStart":{
+    "x":{
+     "exp":"7.354470252990723 m",
+     "val":7.354470252990723
+    },
+    "y":{
+     "exp":"0.9746696949005127 m",
+     "val":0.9746696949005128
+    },
+    "heading":{
+     "exp":"1.57 rad",
+     "val":1.57
+    }
+   },
+   "depot":{
+    "x":{
+     "exp":"1.158399224281311 m",
+     "val":1.158399224281311
+    },
+    "y":{
+     "exp":"5.930004119873047 m",
+     "val":5.930004119873047
+    },
+    "heading":{
+     "exp":"3.141592653589793 rad",
+     "val":3.141592653589793
+    }
+   },
+   "outpost":{
+    "x":{
+     "exp":"0.6100117564201355 m",
+     "val":0.6100117564201355
+    },
+    "y":{
+     "exp":"0.72523033618927 m",
+     "val":0.72523033618927
+    },
+    "heading":{
+     "exp":"-3.13463071579435 rad",
+     "val":-3.13463071579435
+    }
+   },
+   "shootBump":{
+    "x":{
+     "exp":"3.1754720211029053 m",
+     "val":3.1754720211029053
+    },
+    "y":{
+     "exp":"2.5111160278320312 m",
+     "val":2.5111160278320312
+    },
+    "heading":{
+     "exp":"-1.5661052183457105 rad",
+     "val":-1.5661052183457105
+    }
+   },
+   "shootTrench":{
+    "x":{
+     "exp":"2.45483012199401 m",
+     "val":2.45483012199401
+    },
+    "y":{
+     "exp":"0.673967838287351 m",
+     "val":0.673967838287351
+    },
+    "heading":{
+     "exp":"-3.13463071579435 rad",
+     "val":-3.13463071579435
+    }
+   },
+   "shootTrenchLeftSide":{
+    "x":{
+     "exp":"3.228759288787842 m",
+     "val":3.228759288787842
+    },
+    "y":{
+     "exp":"7.37909325 m",
+     "val":7.37909325
+    },
+    "heading":{
+     "exp":"-3.13463071579435 rad",
+     "val":-3.13463071579435
+    }
+   },
+   "trench":{
+    "x":{
+     "exp":"4.373150825500488 m",
+     "val":4.373150825500488
+    },
+    "y":{
+     "exp":"0.6710461378097534 m",
+     "val":0.6710461378097534
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"11.375 in",
+    "val":0.288925
+   },
+   "y":{
+    "exp":"10.125 in",
+    "val":0.257175
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-11.375 in",
+    "val":-0.288925
+   },
+   "y":{
+    "exp":"10.125 in",
+    "val":0.257175
+   }
+  },
+  "mass":{
+   "exp":"200 lbs",
+   "val":90.718474
+  },
+  "inertia":{
+   "exp":"19.5 kg m ^ 2",
+   "val":19.5
+  },
+  "gearing":{
+   "exp":"6.027",
+   "val":6.027
+  },
+  "radius":{
+   "exp":"2.0084 in",
+   "val":0.051013359999999994
+  },
+  "vmax":{
+   "exp":"4600 RPM",
+   "val":481.71087355043494
+  },
+  "tmax":{
+   "exp":"1.13 N * m",
+   "val":1.13
+  },
+  "cof":{
+   "exp":"1.2",
+   "val":1.2
+  },
+  "bumper":{
+   "front":{
+    "exp":"18 in",
+    "val":0.4572
+   },
+   "side":{
+    "exp":"18 in",
+    "val":0.4572
+   },
+   "back":{
+    "exp":"18 in",
+    "val":0.4572
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":"..\\C:\\Users\\Team\\Documents\\GitHub\\EngrTestUnit2026\\src\\main\\deploy\\choreo",
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}

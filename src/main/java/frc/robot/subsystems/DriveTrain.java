@@ -795,7 +795,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
           SmartDashboard.putNumber("Vision " + camera.getName() + " rot", camPose.estimatedPose.toPose2d().getRotation().getDegrees());
 
           // Only run camera updates for pose estimator if useVisionForOdometry is true
-          if (camResult.hasTargets() && useVisionForOdometry) {
+          if (camResult.getBestTarget().getPoseAmbiguity() < 0.7 && camResult.hasTargets() && useVisionForOdometry && camResult.getBestTarget().getBestCameraToTarget().getX() < 3) {
             PhotonTrackedTarget bestTarget = camResult.getBestTarget();
             SmartDashboard.putNumber("Vision " + camera.getName() + " AprilTag", bestTarget.getFiducialId());
 

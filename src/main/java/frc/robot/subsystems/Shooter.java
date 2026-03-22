@@ -122,10 +122,12 @@ public class Shooter extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogShooterVelocitySet = new DoubleLogEntry(log, "/Shooter/VelocitySet");
   private final BooleanLogEntry dLogShooterVelocityControl = new BooleanLogEntry(log, "/Shooter/VelocityControlOn");
 
+  private final DoubleLogEntry dLogHood1Angle = new DoubleLogEntry(log, "/Hood/Angle1");
   private final DoubleLogEntry dLogHood1AnalogVoltage = new DoubleLogEntry(log, "/Hood/AnalogVoltage1");
   private final DoubleLogEntry dLogHood1Voltage = new DoubleLogEntry(log, "/Hood/Voltage1");
   private final DoubleLogEntry dLogHood1SupplyVoltage = new DoubleLogEntry(log, "/Hood/SupplyVoltage1");
   private final DoubleLogEntry dLogHood1Current = new DoubleLogEntry(log, "/Hood/Current1");
+  private final DoubleLogEntry dLogHood2Angle = new DoubleLogEntry(log, "/Hood/Angle2");
   private final DoubleLogEntry dLogHood2AnalogVoltage = new DoubleLogEntry(log, "/Hood/AnalogVoltage2");
   private final DoubleLogEntry dLogHood2Voltage = new DoubleLogEntry(log, "/Hood/Voltage2");
   private final DoubleLogEntry dLogHood2SupplyVoltage = new DoubleLogEntry(log, "/Hood/SupplyVoltage2");
@@ -542,10 +544,12 @@ public class Shooter extends SubsystemBase implements Loggable {
       dLogShooterVelocitySet.append(getShooterSetpointRPM(), timeNow);
       dLogShooterVelocityControl.append(shooterVelocityControlOn, timeNow);
 
+      dLogHood1Angle.append(getHoodAngle(1), timeNow);
       dLogHood1AnalogVoltage.append(getHoodAnalogVoltage(1), timeNow);
       dLogHood1Voltage.append(hood1MotorVoltage.refresh().getValueAsDouble(), timeNow);
       dLogHood1SupplyVoltage.append(hood1SupplyVoltage.refresh().getValueAsDouble(), timeNow);
       dLogHood1Current.append(hood1Current.refresh().getValueAsDouble(), timeNow);
+      dLogHood2Angle.append(getHoodAngle(2), timeNow);
       dLogHood2AnalogVoltage.append(getHoodAnalogVoltage(2), timeNow);
       dLogHood2Voltage.append(hood2MotorVoltage.refresh().getValueAsDouble(), timeNow);
       dLogHood2SupplyVoltage.append(hood2SupplyVoltage.refresh().getValueAsDouble(), timeNow);

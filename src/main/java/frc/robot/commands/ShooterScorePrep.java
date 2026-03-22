@@ -240,7 +240,7 @@ public class ShooterScorePrep extends Command {
     if (type == EndType.runForever) {
       shooter.setHoodVoltageBothMotors(0);
       shooter.stopShooterMotor();
-      CommandScheduler.getInstance().schedule(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
+      // CommandScheduler.getInstance().schedule(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");
