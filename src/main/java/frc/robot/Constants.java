@@ -699,8 +699,8 @@ public final class Constants {
 
     // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
     // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
-    public static final double shooterDistanceToRPMSlope = 1042.93914;
-    public static final double shooterDistanceToRPMIntercept = 529.1604;
+    public static final double shooterDistanceToRPMIntercept = 942.93914; // was 1042.93914
+    public static final double shooterDistanceToRPMSlope = 529.1604;
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
@@ -746,7 +746,7 @@ public final class Constants {
     public static final double hood1VoltageToExtensionLengthSlope = (hood1SlopePointExtensionLength - hoodActuatorMinExtensionLength) / (hood1SlopePointAnalogVoltage - hoodMinimumAnalogVoltage);
     public static final double hood2VoltageToExtensionLengthSlope = (hood2SlopePointExtensionLength - hoodActuatorMinExtensionLength) / (hood2SlopePointAnalogVoltage - hoodMinimumAnalogVoltage);
 
-    public static final double hood1kP = 0.24;    // volts / error in motor rps
+    public static final double hood1kP = 0.26;   //was 0.24 // volts / error in motor rps
     public static final double hood1kI = 0.0;
     public static final double hood1kD = 0.0;
     public static final double hood1kS = 0.0;   // voltage output to overcome static friction (constant added to basic PID control to overcome static friction from having to move the hood)
@@ -783,7 +783,7 @@ public final class Constants {
     public static final double maxManualPercentOutput = 0.5; // Max percent out allowed for manual turret movement when calibrated
     public static final double maxUncalibratedPercentOutput = 0.1;   // Max percent out allowed for any turrent movement when uncalibrated
 
-    public static final double angleTolerance = 0.5;        // Angle tolerance for setting the turret angle, in degrees
+    public static final double angleTolerance = 1.0;        // Angle tolerance for setting the turret angle, in degrees
 
     public static final double kP = 90.0;  // CALIBRATED 3/17/26: 90.0
     public static final double kI = 0.0;   // CALIBRATED 3/17/26: 0.0
