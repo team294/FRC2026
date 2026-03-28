@@ -49,7 +49,7 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
         ),
         none(), // don't shoot
         () -> shoot),
-      new DataLogMessage(false, "AutonDriveAndShoot: start")
+      new DataLogMessage(false, "AutonDriveAndShoot: end")
     );
   }
 }

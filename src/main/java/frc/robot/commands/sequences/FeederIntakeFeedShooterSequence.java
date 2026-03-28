@@ -35,9 +35,9 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
       // Ensure that all necessary subsystmes are in place
       new DataLogMessage(false, "FeederIntakeFeedShooterSequence: Init"),
       parallel(
-        waitUntil(() -> shooter.getShooterAtGoalVelocity()),
-        waitUntil(() -> turret.getTurretAtGoalAngle()),
-        waitUntil(() -> shooter.getHoodAtGoalAngle() && shooter.getHoodAngleSetpoint() != ShooterConstants.hoodMinimumAngle)
+        waitUntil(() -> shooter.getShooterAtGoalVelocity()).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: ShooterAtGoal")),
+        waitUntil(() -> turret.getTurretAtGoalAngle()).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: TurretAtGoal")),
+        waitUntil(() -> shooter.getHoodAtGoalAngle() && shooter.getHoodAngleSetpoint() != ShooterConstants.hoodMinimumAngle).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: HoodAtGoal"))
       ),
       parallel(
         new FeederFeedShooter(feeder),
