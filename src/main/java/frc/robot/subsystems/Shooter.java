@@ -411,6 +411,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     if (motorNumber == 1) {
       hoodMotor1.setControl(hood1VoltageControl.withOutput(voltage));
       hood1VoltageSetpoint = voltage;
+      hood1PositionControlOn = false;
     } else {
       hoodMotor2.setControl(hood2VoltageControl.withOutput(voltage));
       hood2VoltageSetpoint = voltage;

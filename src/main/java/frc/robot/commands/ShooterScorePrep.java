@@ -39,7 +39,7 @@ public class ShooterScorePrep extends Command {
   private double targetAngle;
   private boolean useGetter = false;
   private boolean selfCalculate = false;
-  private boolean fromElastic;
+  private boolean fromElastic = false;
 
   private int toleranceCounter = 0;
   private double distanceToTarget;
