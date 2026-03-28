@@ -288,6 +288,7 @@ public class RobotContainer {
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
     left[1].onTrue(new IntakeSequence(intake));
+    left[1].onFalse(new IntakeRollerStop(intake));
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 

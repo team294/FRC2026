@@ -644,8 +644,8 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 1.0;
+    public static final double reverseSpindexerSeconds = 0.294;
+    public static final double noFuelSeconds = 0.687;
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
 
     public static final class SpindexerConstants {
