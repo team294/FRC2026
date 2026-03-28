@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.FeederFeedShooter;
 import frc.robot.commands.IntakeDeployAgitate;
 import frc.robot.subsystems.Feeder;
@@ -32,18 +33,21 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
   public FeederIntakeFeedShooterSequence(Feeder feeder, Intake intake, Shooter shooter, Turret turret) {
     addCommands(
       // Ensure that all necessary subsystmes are in place
+      new DataLogMessage(false, "FeederIntakeFeedShooterSequence: Init"),
       parallel(
-        waitUntil(() -> shooter.getShooterAtGoalVelocity()),
-        waitUntil(() -> turret.getTurretAtGoalAngle()),
-        waitUntil(() -> shooter.getHoodAtGoalAngle() && shooter.getHoodAngleSetpoint() != ShooterConstants.hoodMinimumAngle)
+        waitUntil(() -> shooter.getShooterAtGoalVelocity()).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: ShooterAtGoal")),
+        waitUntil(() -> turret.getTurretAtGoalAngle()).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: TurretAtGoal")),
+        waitUntil(() -> shooter.getHoodAtGoalAngle() && shooter.getHoodAngleSetpoint() != ShooterConstants.hoodMinimumAngle).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: HoodAtGoal"))
       ),
       parallel(
         new FeederFeedShooter(feeder),
         sequence(
           waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
-          new IntakeDeployAgitate(intake)
+          either(new IntakeDeployAgitate(intake), new IntakeSequence(intake), () -> intake.getAgitateDuringFeed())
         )
-      )
+      ),
+      new DataLogMessage(false, "FeederIntakeFeedShooterSequence: End")
+
     );
   }
 }

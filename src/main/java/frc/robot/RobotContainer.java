@@ -63,7 +63,7 @@ public class RobotContainer {
 
   // Define other utilities
   private final TrajectoryCache trajectoryCache = new TrajectoryCache();
-  private final AutoSelection autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, driveTrain);
+  private final AutoSelection autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, intake, feeder, turret, shooter, climber, driveTrain);
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
@@ -170,8 +170,8 @@ public class RobotContainer {
 
     // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, driveTrain, field));
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
     // Calibration Ramp
     
@@ -183,7 +183,7 @@ public class RobotContainer {
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
-    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
+    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
@@ -216,10 +216,10 @@ public class RobotContainer {
     // Triggers for all Xbox buttons
     Trigger xbLT = xboxController.leftTrigger();
     Trigger xbRT = xboxController.rightTrigger();
-    // Trigger xbA = xboxController.a();
-    // Trigger xbB = xboxController.b();
-    // Trigger xbY = xboxController.y();
-    // Trigger xbX = xboxController.x();
+    Trigger xbA = xboxController.a();
+    Trigger xbB = xboxController.b();
+    Trigger xbY = xboxController.y();
+    Trigger xbX = xboxController.x();
     Trigger xbLB = xboxController.leftBumper();
     Trigger xbRB = xboxController.rightBumper();
     Trigger xbBack = xboxController.back();
@@ -236,11 +236,27 @@ public class RobotContainer {
     xbLT.onTrue(new IntakeSequence(intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
-    xbRT.whileTrue(new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
-    xbRT.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+    // Agitate while shooting
+    xbRT.whileTrue(parallel(
+      new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(true))
+    ));
+    xbRT.onFalse(parallel(
+      new FeederStop(feeder),
+      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+    ));
 
-    // xbRB.whileTrue(new ShooterTurretPassPrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
-    xbRB.onFalse(parallel(new FeederStop(feeder), new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)));
+    // Intake while shooting
+    xbRB.whileTrue(parallel(
+      new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+    ));
+    xbRB.onFalse(parallel(
+      new FeederStop(feeder),
+      new IntakeSequence(intake),
+      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+    ));
 
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
 
@@ -250,6 +266,11 @@ public class RobotContainer {
     xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
     xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
     xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
+
+    xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
+    xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
+    xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
+    xbB.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
   }
 
   /**
@@ -268,11 +289,10 @@ public class RobotContainer {
 
     // Deploy intake and start rollers
     left[1].onTrue(new IntakeSequence(intake));
+    left[1].onFalse(new IntakeRollerStop(intake));
+    
+    left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    // left[2].whileTrue(new FeedShooter(intake, feeder));
-    left[2].whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
-
-    // right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
     right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
 
     // direction facing = new forward for joystick movement
@@ -341,8 +361,8 @@ public class RobotContainer {
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
     // Manually spin shooter out/in while held, stopping when released
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
-    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShootRPM, VelocityType.runForever, shooter));
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
+    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.manualReverseShootRPM, VelocityType.runForever, shooter));
 
     // Manually move climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));

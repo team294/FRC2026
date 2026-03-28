@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,15 +19,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ElasticKeyConstants.ElasticKey;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Field;
 
 public class ShooterScorePrep extends Command {
   private final Shooter shooter;
+  private final Turret turret;
   private final DriveTrain driveTrain;
   private final Field field;
   private DoubleSupplier velocityGetter;
@@ -38,7 +42,7 @@ public class ShooterScorePrep extends Command {
   private double targetAngle;
   private boolean useGetter = false;
   private boolean selfCalculate = false;
-  private boolean fromElastic;
+  private boolean fromElastic = false;
 
   private int toleranceCounter = 0;
   private double distanceToTarget;
@@ -57,9 +61,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(DoubleSupplier velocityGetter, DoubleSupplier angleGetter, EndType type, Shooter shooter, DriveTrain driveTrain,  Field field) {
+  public ShooterScorePrep(DoubleSupplier velocityGetter, DoubleSupplier angleGetter, EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain, Field field) {
    this.driveTrain = driveTrain;
    this.shooter = shooter;
+   this.turret = turret;
    this.field = field;
    this.velocityGetter = velocityGetter;
    this.angleGetter = angleGetter;
@@ -82,9 +87,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(double velocity, double angle, EndType type, Shooter shooter, DriveTrain driveTrain, Field field) {
+  public ShooterScorePrep(double velocity, double angle, EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain, Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.turret = turret;
     this.field = field;
     this.targetVelocity = velocity;
     this.targetAngle = angle;
@@ -105,9 +111,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(EndType type, Shooter shooter, DriveTrain driveTrain, Field field) {
+  public ShooterScorePrep(EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain, Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.turret = turret;
     this.field = field;
     this.type = type;
     fromElastic = true;
@@ -134,9 +141,10 @@ public class ShooterScorePrep extends Command {
    * @param shooter shooter subsystem
    * 
    */
-  public ShooterScorePrep(boolean shootOnTheMove, EndType type, Shooter shooter, DriveTrain driveTrain,  Field field) {
+  public ShooterScorePrep(boolean shootOnTheMove, EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain,  Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.turret = turret;
     this.field = field;
     this.type = type;
     this.shootOnTheMove = shootOnTheMove;
@@ -161,22 +169,24 @@ public class ShooterScorePrep extends Command {
     }
     // Calculates velocity and angle based on calculated distance to the goal pose
     else if (selfCalculate) { 
-      Translation2d robotTranslation2d = driveTrain.getPose().getTranslation();
+      Translation2d turretTranslation2d = turret.getTurretAbsolutePose(driveTrain.getPose()).getTranslation();
       if (!shootOnTheMove) {
-        goalTranslation2d = field.getStaticShotTarget(robotTranslation2d);
+        goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
         // goalpose = shootonthemove
       }
 
-      distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
+      distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);
       
-      // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
+      // Target shooter motor speed based on: A0 + (A1)(Dist) where A0, A1 are unique constants
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
-      targetAngle = ShooterConstants.hoodShootAngle;
       
-      // Target hood angle based on: (shooter speed)(B0) + B1, where B0 and B1 are unique constants
-      // targetAngle = ((targetVelocity * ShooterConstants.hoodScoreB0) + ShooterConstants.hoodScoreB1); Not varying hood angle at the moment 
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
+        targetAngle = ShooterConstants.hoodPassAngle;
+      } else {
+        targetAngle = ShooterConstants.hoodShootAngle;
+      } 
     }
 
     shooter.setHoodAnglePID(targetAngle);
@@ -204,20 +214,27 @@ public class ShooterScorePrep extends Command {
       shooter.setShooterVelocity(targetVelocity);
     }
 
-    else if (selfCalculate){ // Calculates distance and velocity based on position
-      Translation2d robotTranslation2d = driveTrain.getPose().getTranslation();
+    else if (selfCalculate) { 
+      Translation2d turretTranslation2d = turret.getTurretAbsolutePose(driveTrain.getPose()).getTranslation();
       if (!shootOnTheMove) {
-        goalTranslation2d = field.getStaticShotTarget(robotTranslation2d);
+        goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
         // goalpose = shootonthemove
       }
 
-      distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
+      distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);
       
-      // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
+      // Target shooter motor speed based on: A0 + (A1)(Dist) where A0, A1 are unique constants
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
-      targetAngle = ShooterConstants.hoodShootAngle;
+      
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
+        targetAngle = ShooterConstants.hoodPassAngle;
+      } else {
+        targetAngle = ShooterConstants.hoodShootAngle;
+      } 
+    
+
       shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
@@ -231,7 +248,7 @@ public class ShooterScorePrep extends Command {
     if (type == EndType.runForever) {
       shooter.setHoodVoltageBothMotors(0);
       shooter.stopShooterMotor();
-      CommandScheduler.getInstance().schedule(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
+      // CommandScheduler.getInstance().schedule(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");
@@ -244,7 +261,9 @@ public class ShooterScorePrep extends Command {
       case runForever:
         return false;
       case waitForSetPoint:
-         if ( (Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) && (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
+         if ( (Math.abs(shooter.getHoodAngle(1) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
+              (Math.abs(shooter.getHoodAngle(2) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
+              (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
           toleranceCounter++;
         } else {
           toleranceCounter = 0;
