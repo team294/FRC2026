@@ -95,6 +95,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogCANcoderGearRotRaw = new DoubleLogEntry(log, "/Turret/CANcoder Gear Rot Raw");
   private final DoubleLogEntry dLogTurretCalZero = new DoubleLogEntry(log, "/Turret/TurretCalZero");
   private final DoubleLogEntry dLogTurretTarget = new DoubleLogEntry(log, "/Turret/Target");
+  private final DoubleLogEntry dLogTurretTargetSet = new DoubleLogEntry(log, "/Turret/TargetSet");
   private final DoubleLogEntry dLogTurretEncAngle = new DoubleLogEntry(log, "/Turret/Encoder Angle (deg)");
   private final DoubleLogEntry dLogTurretAngle = new DoubleLogEntry(log, "/Turret/Turret Angle (Deg)");
   private final DoubleLogEntry dLogTurretVelDPS = new DoubleLogEntry(log, "/Turret/Turret Velocity dps");
@@ -365,7 +366,7 @@ public class Turret extends SubsystemBase implements Loggable {
       // Phoenix6 PositionVoltage control: Position is in rotor rotations
       turretMotor.setControl(turretMMVoltageControl.withPosition(turretDegreesToEncoderRotations(angle)));
 
-      DataLogUtil.writeMessage(subsystemName, ": setTurretAngle, Desired Angle =", angle, ", Set Angle =", angle);
+      dLogTurretTargetSet.append(angle);
       SmartDashboard.putNumber("Turret set raw rot", turretDegreesToEncoderRotations(angle));
 
       targetAngle = angle;
