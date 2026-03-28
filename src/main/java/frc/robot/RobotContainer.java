@@ -170,8 +170,8 @@ public class RobotContainer {
 
     // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, driveTrain, field));
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
     // Calibration Ramp
     

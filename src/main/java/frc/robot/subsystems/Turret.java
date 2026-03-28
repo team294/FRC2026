@@ -680,7 +680,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param robotPose2d Pose2d object for robot's current position.
    * @return Turret absolute field position, as a Pose2d object.
    */
-  private Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
+  public Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
     double robotRotRadians = robotPose2d.getRotation().getRadians();
     double xOffsetAbsolute;
     double yOffsetAbsolute;
