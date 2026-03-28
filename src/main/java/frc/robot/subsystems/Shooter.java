@@ -87,8 +87,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   private final StatusSignal<Current> hood2Current;
 
   // Voltage and velocity controls
-  private VoltageOut shooterVoltageControl = new VoltageOut(0.0);
-  private VelocityVoltage shooterVelocityControl = new VelocityVoltage(0).withSlot(0);
+  private VoltageOut shooterVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VelocityVoltage shooterVelocityControl = new VelocityVoltage(0).withSlot(0).withEnableFOC(false);
 
   private boolean shooterVelocityControlOn = false;  // true = velocity control is on, false = velocity control is off (e.g. percent output, position)
   private double shooterSetpointRPM;                 // Target velocity, in RPM (positive = forward, negative = reverse)

@@ -57,8 +57,8 @@ public class SwerveModule {
   private final TalonFX turningMotor;
 	private final TalonFXConfigurator turningMotorConfigurator;
 	private TalonFXConfiguration turningMotorConfig;
-	private VoltageOut turningVoltageControl = new VoltageOut(0.0);
-  private PositionVoltage turningPositionControl = new PositionVoltage(0.0);
+	private VoltageOut turningVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private PositionVoltage turningPositionControl = new PositionVoltage(0.0).withEnableFOC(false);
 
 	// Turning motor signals and sensors
 	private final StatusSignal<Temperature> turningMotorTemp;				    // Motor temperature, in degrees Celsius
