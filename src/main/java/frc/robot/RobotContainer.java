@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -49,7 +50,7 @@ public class RobotContainer {
   // Define robot subsystems
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
   private final Intake intake = new Intake("Intake");
-  // private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
+  private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
   private final Turret turret = new Turret("Turret");
@@ -67,8 +68,7 @@ public class RobotContainer {
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
-  // TODO (LED) uncomment when LEDs are ready on the robot
-  // private final RepeatCommand repeatedLEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led)).repeatedly();
+  private final RepeatCommand repeatedLEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led)).repeatedly();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -76,8 +76,7 @@ public class RobotContainer {
     SignalLogger.enableAutoLogging(false);
 
     // Start LEDEventUtil
-    // TODO (LED) uncomment when LEDs are ready on the robot
-    // LEDEventUtil.initialize(led, repeatedLEDAnimateRobotDisabled);
+    LEDEventUtil.initialize(led, repeatedLEDAnimateRobotDisabled);
 
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {

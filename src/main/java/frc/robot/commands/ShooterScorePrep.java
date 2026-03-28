@@ -25,6 +25,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Field;
+import frc.robot.utilities.LEDEventUtil;
+import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 
 public class ShooterScorePrep extends Command {
   private final Shooter shooter;
@@ -192,6 +194,7 @@ public class ShooterScorePrep extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
 
     if (useGetter && type == EndType.runForever) {
       // Don't update angle from getter if type == waitForAngle, otherwise the getter could
@@ -253,16 +256,16 @@ public class ShooterScorePrep extends Command {
       case runForever:
         return false;
       case waitForSetPoint:
-         if ( (Math.abs(shooter.getHoodAngle(1) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
+        if ( (Math.abs(shooter.getHoodAngle(1) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
               (Math.abs(shooter.getHoodAngle(2) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
               (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
           toleranceCounter++;
         } else {
           toleranceCounter = 0;
         }
-          return toleranceCounter >= 5;
-        default:
-          return true;
+        return toleranceCounter >= 5;
+      default:
+        return true;
     }
   }
 }

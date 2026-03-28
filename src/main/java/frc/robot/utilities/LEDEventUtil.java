@@ -20,6 +20,7 @@ public class LEDEventUtil {
     MATCH_COUNTDOWN,
     INTAKING,
     REVERSE_INTAKING,
+    PREPPING_SHOOTER,
     NEUTRAL,
     ROBOT_DISABLED
   }
@@ -29,9 +30,10 @@ public class LEDEventUtil {
   static {
     prioritiesLEDStripEvents.put(LEDStripEvents.INTAKING, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.REVERSE_INTAKING, 1);
-    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 2);
-    prioritiesLEDStripEvents.put(LEDStripEvents.MATCH_COUNTDOWN, 3);
-    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 4);
+    prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
+    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 3);
+    prioritiesLEDStripEvents.put(LEDStripEvents.MATCH_COUNTDOWN, 4);
+    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 5);
   }
 
   /**
@@ -65,6 +67,9 @@ public class LEDEventUtil {
         LED.dashboardColor = AnimationColor.REVERSE_INTAKING;
         led.animate(Animations.reverseIntakingAnimation);
         DataLogUtil.writeMessage("LED Strip Reverse Intaking");
+        break;
+      case PREPPING_SHOOTER:
+        
         break;
       case ROBOT_DISABLED:
         LED.dashboardColor = AnimationColor.NEUTRAL;
