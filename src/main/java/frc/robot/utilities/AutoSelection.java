@@ -321,10 +321,7 @@ public class AutoSelection {
 		if (autoPlan == RoutineSelectionOption.ShootPreload.value) {
 			// Starting position = facing drivers
 			autoSelectionOption = RoutineSelectionOption.ShootPreload;
-			autonomousCommandMain = sequence(
-											new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
-											new ShootPreload(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field)
-									);
+			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field);
 		}
 
 		// else if (autoPlan == RoutineSelectionOption.DriveForwardOneMeter.value) {
