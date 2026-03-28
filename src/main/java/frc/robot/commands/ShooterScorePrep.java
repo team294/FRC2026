@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -169,9 +170,9 @@ public class ShooterScorePrep extends Command {
         // goalpose = shootonthemove
       }
 
-      distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
+      distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().transformBy(ShooterConstants.robotToShooter).getTranslation()); // TODO verify this actially works
       
-      // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
+      // Target shooter motor speed based on: A0 + (A1)(Dist) where A0, A1 are unique constants
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
