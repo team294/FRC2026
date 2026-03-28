@@ -342,15 +342,6 @@ public class Turret extends SubsystemBase implements Loggable {
   /**
    * Sets the angle of the turret if the turret is calibrated.
    * 
-   * @param angle target angle, per TurretContstants.TurretAngle
-   */
-  public void setTurretAngle(TurretAngle angle) {
-    setTurretAngle(angle.value);
-  }
-
-  /**
-   * Sets the angle of the turret if the turret is calibrated.
-   * 
    * @param angle target angle, in degrees (0 = facing straight back out of robot,
    *              positive = counter clockwise, negative = clockwise)
    */

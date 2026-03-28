@@ -744,9 +744,9 @@ public final class Constants {
     public static final double kV = 5.1;   // CALIBRATED 3/17/26: 5.1
     public static final double kA = 0.0;   // CALIBRATED 3/17/26: 0.0
 
-    public static final double MMCruiseVelocity = 40.0; // CALIBRATED 3/17/26: 20.0
-    public static final double MMAcceleration = 18.0;    // CALIBRATED 3/17/26: 9.0
-    public static final double MMJerk = 24.0;           // CALIBRATED 3/17/26: 12.0
+    public static final double MMCruiseVelocity = 20.0; // CALIBRATED 3/17/26: 20.0
+    public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
+    public static final double MMJerk = 0.0;           // CALIBRATED 3/28/26: 0.0
 
     public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
