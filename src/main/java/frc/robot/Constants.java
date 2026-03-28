@@ -650,7 +650,7 @@ public final class Constants {
       public static final double spindexerGearRatio = 1.00;
       public static final double spindexerForwardPercent = 0.2; 
       public static final double spindexerReversePercent = -0.2;
-      public static final double spindexerShootRPM = 2612.0;  // CALIBRATED 3/10: 2612
+      public static final double spindexerShootRPM = 5224.0;  // CALIBRATED 3/27: 5224.0 rpm
       public static final double spindexerReverseRPM = -spindexerShootRPM;  // TODO CALIBRATE
 
       public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
@@ -661,7 +661,6 @@ public final class Constants {
       public static final double kA = 0.0;
     }
 
-    // TODO calibrate uptake
     public static final class UptakeConstants {
       public static final double compensationVoltage = 12.0;
       public static final double uptakeGearRatio = 1.0; // doesn't matter b/c we use motor's max output instead of relying on mechanism
@@ -669,11 +668,11 @@ public final class Constants {
       public static final double uptakeReversePercent = 0.2;
       public static final double uptakeShootRPM = 6650; // CALIBRATED 3/10: 6650
 
-      public static final double kP = 4.0;    // CALIBRATED 3/13: 4.0
+      public static final double kP = 1.4;     // CALIBRATED 3/27: 4.0
       public static final double kI = 0.0;
-      public static final double kD = 0.0;
-      public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
-      public static final double kV = 0.17;   // CALIBRATED 3/13: 0.17
+      public static final double kD = 0.03;    // CALIBRATED 3/27: 0.03
+      public static final double kS = 0.25;    // CALIBRATED 3/27: 0.25
+      public static final double kV = 0.0936;  // CALIBRATED 3/27: 0.0936
       public static final double kA = 0.0;
     }
   }
