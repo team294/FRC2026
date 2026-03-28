@@ -183,7 +183,7 @@ public class RobotContainer {
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
-    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field));
+    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));

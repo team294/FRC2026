@@ -686,7 +686,7 @@ public final class Constants {
     public static final double reverseShooterPercent = -0.1;
     public static final double shootRPM = 2500;
     public static final double reverseShootRPM = -shootRPM;
-    public static final double maxShootRPM = 3500;
+    public static final double maxShootRPM = 3800;
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -701,8 +701,8 @@ public final class Constants {
 
     // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
     // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
-    public static final double shooterDistanceToRPMIntercept = 942.93914; // was 1042.93914
-    public static final double shooterDistanceToRPMSlope = 529.1604;
+    public static final double shooterDistanceToRPMIntercept = 1270.76045; // was 1042.93914
+    public static final double shooterDistanceToRPMSlope = 466.41849;
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
@@ -797,7 +797,7 @@ public final class Constants {
     public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
     public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
 
-    public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
+    public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
     public enum TurretAngle {
       LOWER_LIMIT(-180.0),

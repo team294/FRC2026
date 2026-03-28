@@ -682,30 +682,10 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
     double robotRotRadians = robotPose2d.getRotation().getRadians();
-    double xOffsetAbsolute;
-    double yOffsetAbsolute;
 
-    if (robotRotRadians >= 0) {   // rotated CCW facing red wall or CW facing blue wall
-      if (robotRotRadians <= Math.PI / 2.0) {   // facing red wall
-        xOffsetAbsolute = TurretConstants.turretOffset * Math.cos(robotRotRadians);  // -x, so do nothing here
-        yOffsetAbsolute = TurretConstants.turretOffset * Math.sin(robotRotRadians);  // -y, so do nothing here
-      } else {   // facing blue wall
-        xOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.sin(Math.PI / 2.0 - robotRotRadians);  // +x, so make this negative
-        yOffsetAbsolute = TurretConstants.turretOffset * Math.cos(Math.PI / 2.0 - robotRotRadians);         // -y, so do nothing here
-      }
-    } else {   // rotated CW facing red wall or CCW facing blue wall
-      robotRotRadians = -1.0 * robotRotRadians;   // make the math easier by making angle positive
-      if (robotRotRadians >= Math.PI / -2.0) {   // facing red wall
-        xOffsetAbsolute = TurretConstants.turretOffset * Math.cos(robotRotRadians);         // -x, so do nothing here
-        yOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.sin(robotRotRadians);  // +y, so make this negative
-      } else {   // facing blue wall
-        xOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.sin(Math.PI / 2.0 - robotRotRadians);  // +x, so make this negative
-        yOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.cos(Math.PI / 2.0 - robotRotRadians);  // +y, so make this negative
-      }
-    }
-
-    // some are made negative above so we don't have to have a bunch of separate return statements!
-    return new Pose2d(robotPose2d.getX() - xOffsetAbsolute, robotPose2d.getY() - yOffsetAbsolute, getTurretAbsoluteAngle(robotPose2d.getRotation()));
+    return new Pose2d(robotPose2d.getX() + TurretConstants.turretOffset * Math.cos(robotRotRadians),
+                      robotPose2d.getY() + TurretConstants.turretOffset * Math.sin(robotRotRadians),
+                      getTurretAbsoluteAngle(robotPose2d.getRotation()));
   }
 
   /**
