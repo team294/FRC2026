@@ -94,8 +94,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   private double shooterSetpointRPM;                 // Target velocity, in RPM (positive = forward, negative = reverse)
   private boolean atGoalSetpoint;
   
-  private VoltageOut hood1VoltageControl = new VoltageOut(0.0).withEnableFOC(true);
-  private VoltageOut hood2VoltageControl = new VoltageOut(0.0).withEnableFOC(true);
+  private VoltageOut hood1VoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VoltageOut hood2VoltageControl = new VoltageOut(0.0).withEnableFOC(false);
   private double hoodAngleSetpoint;
   private double hood1VoltageSetpoint;
   private double hood2VoltageSetpoint;

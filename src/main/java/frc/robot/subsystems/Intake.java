@@ -84,7 +84,7 @@ public class Intake extends SubsystemBase implements Loggable{
   // Motor control modes
   private VoltageOut intakeRollerVoltageControl = new VoltageOut(0.0);
   private VoltageOut intakeDeployVoltageControl = new VoltageOut(0.0);
-  private MotionMagicVoltage intakeDeployMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(true);
+  private MotionMagicVoltage intakeDeployMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   // DataLog
   private final DataLog log = DataLogManager.getLog();
