@@ -291,7 +291,6 @@ public class RobotContainer {
     
     left[2].whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
 
-    // right[1].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
     right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
@@ -359,8 +358,8 @@ public class RobotContainer {
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
     // Manually spin shooter out/in while held, stopping when released
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.shootRPM, VelocityType.runForever, shooter));
-    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.reverseShootRPM, VelocityType.runForever, shooter));
+    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
+    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.manualReverseShootRPM, VelocityType.runForever, shooter));
 
     // Manually move climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
