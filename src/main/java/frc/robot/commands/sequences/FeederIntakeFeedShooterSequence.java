@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.FeederFeedShooter;
 import frc.robot.commands.IntakeDeployAgitate;
 import frc.robot.subsystems.Feeder;
@@ -32,6 +33,7 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
   public FeederIntakeFeedShooterSequence(Feeder feeder, Intake intake, Shooter shooter, Turret turret) {
     addCommands(
       // Ensure that all necessary subsystmes are in place
+      new DataLogMessage(false, "FeederIntakeFeedShooterSequence: Init"),
       parallel(
         waitUntil(() -> shooter.getShooterAtGoalVelocity()),
         waitUntil(() -> turret.getTurretAtGoalAngle()),
@@ -43,7 +45,9 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
           waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
           either(new IntakeDeployAgitate(intake), new IntakeSequence(intake), () -> intake.getAgitateDuringFeed())
         )
-      )
+      ),
+      new DataLogMessage(false, "FeederIntakeFeedShooterSequence: End")
+
     );
   }
 }

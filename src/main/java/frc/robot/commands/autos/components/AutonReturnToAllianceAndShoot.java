@@ -14,6 +14,7 @@ import frc.robot.Constants.StopType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -29,7 +30,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
   /** Creates a new AutonDriveAndShoot. */
-  public AutonReturnToAllianceAndShoot(ReturnToAllianceType returnToAllianceZone, boolean leftSide, boolean shoot, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+  public AutonReturnToAllianceAndShoot(ReturnToAllianceType returnToAllianceZone, boolean leftSide, boolean shoot, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     addCommands(
       new DataLogMessage(false, "AutonDriveAndShoot: start"),
       // intake off
@@ -44,7 +45,7 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
       // Whether to stop and shoot or wait to shoot until at the outpost/feeder. This depends on whether we are going to the outpost and scoring from there or not
       either(
         sequence(
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, driveTrain, field) // shoot
+          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field) // shoot
         ),
         none(), // don't shoot
         () -> shoot),

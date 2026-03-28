@@ -4,9 +4,14 @@
 
 package frc.robot.commands.autos;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
+import frc.robot.commands.IntakeDeploySetAngle;
 import frc.robot.commands.autos.components.AutonScore;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -19,9 +24,16 @@ import frc.robot.utilities.Field;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootPreload extends SequentialCommandGroup {
   /** Starts with front bumpers on the start line, facing away from drivers. Shoots preload then does nothing else */
-  public ShootPreload(EndType endType, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, Field field) {
+  public ShootPreload(EndType endType, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field) {
     addCommands(
-      new AutonScore(endType, intake, feeder, turret, shooter, driveTrain, field).withTimeout(8)
+      either(
+        sequence(
+          new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
+          new AutonScore(endType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(8)
+        ),
+        none(),
+        () -> intake.isIntakeDeployCalibrated()
+      )
     );
   }
 }

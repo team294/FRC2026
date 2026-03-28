@@ -172,7 +172,7 @@ public class ShooterScorePrep extends Command {
       distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
       
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
       if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
@@ -218,7 +218,7 @@ public class ShooterScorePrep extends Command {
       distanceToTarget = goalTranslation2d.getDistance(driveTrain.getPose().getTranslation()); // TODO verify units are correct
       
       // Target shooter motor speed based on: A0 + (A1)(Dist) + A2(Dist^2) where A0, A1, and A2 are unique constants
-      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMSlope + (ShooterConstants.shooterDistanceToRPMIntercept * distanceToTarget));
+      double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
             
       if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
@@ -253,7 +253,9 @@ public class ShooterScorePrep extends Command {
       case runForever:
         return false;
       case waitForSetPoint:
-         if ( (Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) && (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
+         if ( (Math.abs(shooter.getHoodAngle(1) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
+              (Math.abs(shooter.getHoodAngle(2) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
+              (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
           toleranceCounter++;
         } else {
           toleranceCounter = 0;
