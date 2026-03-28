@@ -7,9 +7,12 @@ package frc.robot.commands.autos.components;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.EndType;
+import frc.robot.commands.ClimberSetPercent;
 import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence;
 import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -22,11 +25,12 @@ import frc.robot.utilities.Field;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonScore extends SequentialCommandGroup {
   /** Creates a new AutonScore. */
-  public AutonScore(EndType endType, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, Field field) {
+  public AutonScore(EndType endType, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field) {
     addCommands(
       parallel(
         new ShooterTurretScorePrepSequence(false, endType, turret, shooter, driveTrain, field),
-        new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret)
+        new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret),
+        new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber)
         // TODO end condition for not seeing balls for extendend period of time? then put hood down
       )
     );

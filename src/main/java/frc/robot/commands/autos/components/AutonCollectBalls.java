@@ -11,6 +11,7 @@ import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants.BallPickupTrajType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.Constants.CoordType;
@@ -18,6 +19,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.IntakeRollerStop;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -40,7 +42,12 @@ public class AutonCollectBalls extends SequentialCommandGroup {
       
       parallel(  
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
-        new IntakeSequence(intake)
+        sequence(
+          new IntakeSequence(intake),
+          new WaitCommand(1.0),
+          new IntakeRollerStop(intake),
+          new IntakeSequence(intake)
+        )
       ),
       new DataLogMessage(false, "AutonCollectBalls: end")
     );

@@ -23,6 +23,7 @@ import frc.robot.commands.autos.components.AutonCollectBalls;
 import frc.robot.commands.autos.components.AutonReturnToAllianceAndShoot;
 import frc.robot.commands.autos.components.AutonDriveToNeutralZone;
 import frc.robot.commands.autos.components.AutonOutpostOrDepotAndScore;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -38,7 +39,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BuildAutonRoutine extends SequentialCommandGroup {
   /** Creates a new BuildAutoRoutine. */
-  public BuildAutonRoutine(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTrajDirection, ReturnToAllianceType returnToAllianceDirection, AutoEndType autoEnd, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) { 
+  public BuildAutonRoutine(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTrajDirection, ReturnToAllianceType returnToAllianceDirection, AutoEndType autoEnd, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) { 
     // Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber
     // intake, feeder, turret, shooter, climber, 
     boolean leftSide = routineSide == RoutineSideType.kLeftSide;
@@ -56,9 +57,9 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
       new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
       // First cycle
       new DriveResetPose(initalRobotStartPose, false, driveTrain),
-      new AutonDriveToNeutralZone(shootPreload, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache, field),
+      new AutonDriveToNeutralZone(shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache),
-      new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, shoot, intake, feeder, turret, shooter, driveTrain, alliance, cache, field),
+      new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       
       // Whether we are going to do anything after the first cycle
       either(
@@ -71,7 +72,7 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
             // new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache),
             // new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, true, intake, feeder, turret, shooter, driveTrain, alliance, cache, field)
           ), 
-          new AutonOutpostOrDepotAndScore(routineSide, intake, feeder, turret, shooter, driveTrain, alliance, cache, field),
+          new AutonOutpostOrDepotAndScore(routineSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
           () -> autoEnd == AutoEndType.kSecondCycle 
         ), 
         () -> autoEnd == AutoEndType.kNone
