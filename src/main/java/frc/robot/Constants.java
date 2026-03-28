@@ -704,7 +704,6 @@ public final class Constants {
     // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
     public static final double shooterDistanceToRPMIntercept = 942.93914; // was 1042.93914
     public static final double shooterDistanceToRPMSlope = 529.1604;
-    public static final Transform2d robotToShooter = new Transform2d(new Translation2d(Units.inchesToMeters(-11.086), 0), new Rotation2d(0, 0));
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
