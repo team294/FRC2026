@@ -289,7 +289,7 @@ public class RobotContainer {
 
     left[1].onTrue(new IntakeSequence(intake));
     
-    left[2].whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
+    left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
     right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
 
