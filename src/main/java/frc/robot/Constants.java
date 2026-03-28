@@ -286,6 +286,7 @@ public final class Constants {
       // Current
       HOOD_LEFT_CURRENT(hoodLeftString + " Current"),
       HOOD_RIGHT_CURRENT(hoodRightString + " Current"),
+      INTAKE_ROLLER_CURRENT(intakeRollerString + " Current"),
 
       // Temp
       INTAKE_DEPLOY_TEMP(intakeDeployString + tempString),
@@ -299,6 +300,7 @@ public final class Constants {
       SPINDEXER_RPM(feederSpindexerString + rpmString),
       UPTAKE_RPM(feederUptakeString + rpmString),
       SHOOTER_RPM(shooterString + rpmString),
+      INTAKE_ROLLER_RPM(intakeRollerString + rpmString),
 
       // Target RPM
       SPINDEXER_TARGET_RPM(feederSpindexerString + targetRpmString),
@@ -722,23 +724,22 @@ public final class Constants {
     public static final double hood1MaximumAnalogVoltage = 4.1; // 3.536
     public static final double hood2MaximumAnalogVoltage = 4.1; // 4.018
 
-    public static final double hood1SlopePointAnalogVoltage = 1.692; // analog voltage, arbitrary value to calculate extension slope 
-    public static final double hood2SlopePointAnalogVoltage = 1.692; // analog voltage, arbitrary value to calculate extension slope
+    //public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle)
+    //public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
+    public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
+    public static final double hoodActuatorMaxExtensionLength = 9.750; // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
 
-    public static final double hood1SlopePointExtensionLength = 8.0; // in inches, arbitrary extension length corresponding to 1.692 analog voltage
-    public static final double hood2SlopePointExtensionLength = 8.0; // in inches, arbitrary extension length corresponding to 1.692 analog voltage
-    
+    public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
+    public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
+
+    public static final double hood1SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.172; // in inches, arbitrary extension length corresponding to hood1SlopePointAnalogVoltage
+    public static final double hood2SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.25; // in inches, arbitrary extension length corresponding to hood2SlopePointAnalogVoltage
 
     public static final double hoodToleranceFromTopOrBottom = 0.005;
 
     public static final double hoodMinimumAnalogVoltageCutoff = hoodMinimumAnalogVoltage + hoodToleranceFromTopOrBottom;
     public static final double hood1MaximumAnalogVoltageCutoff = hood1MaximumAnalogVoltage - hoodToleranceFromTopOrBottom;
     public static final double hood2MaximumAnalogVoltageCutoff = hood2MaximumAnalogVoltage - hoodToleranceFromTopOrBottom;
-
-    //public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle)
-    //public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
-    public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
-    public static final double hoodActuatorMaxExtensionLength = 9.750; // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
 
     public static final double radius1 = 7.678; // the length of one side of the triangle formed with the linear actuator for the hood angle
     public static final double radius2 = 6.361; // the length of the other side of the triangle 
