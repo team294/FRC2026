@@ -33,6 +33,7 @@ public class HoodSetAngle extends Command {
    * @param type
    * <p> waitForSetPoint = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
    * <p> runForever = command runs until interrupted, turn off hood when interrupted
+   * <p> immediatelyEnd = DO NOT USE, does nothing for the hood
    * @param shooter shooter subsystem
    */
   public HoodSetAngle(DoubleSupplier angleGetter, EndType type, Shooter shooter) {
@@ -51,9 +52,11 @@ public class HoodSetAngle extends Command {
    * @param type
    * <p> waitForSetPoint = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
    * <p> runForever = command runs until interrupted, turn off hood when interrupted
+   * <p> immediatelyEnd = DO NOT USE, does nothing for the hood
    * @param shooter shooter subsystem
    */
   public HoodSetAngle(double angle, EndType type, Shooter shooter) {
+    targetAngle = angle;
     this.type = type;
     this.shooter = shooter;
     this.fromElastic = false;
@@ -65,6 +68,7 @@ public class HoodSetAngle extends Command {
    * @param type
    * <p> waitForSetPoint = command runs until hood is within tolerance of the set angle for 5 cycles, then command ends but leaves hood moving
    * <p> runForever = command runs until interrupted, turn off hood when interrupted
+   * <p> immediatelyEnd = DO NOT USE, does nothing for the hood
    * @param shooter shooter subsystem
    * */
   public HoodSetAngle(EndType type, Shooter shooter) {
@@ -105,15 +109,14 @@ public class HoodSetAngle extends Command {
       // change the angle a little and never settle on a value. Then the PID controller would
       // try to track and maybe never get in tolerance, and then this command would never end.
       targetAngle = angleGetter.getAsDouble();
-      shooter.setHoodAnglePID(targetAngle);
     }
 
-    if (fromElastic) {
-      if (type == EndType.runForever) {
-        targetAngle = SmartDashboard.getNumber(HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
-      }
-      shooter.setHoodAnglePID(targetAngle);
+    if (fromElastic && type == EndType.runForever) {
+      targetAngle = SmartDashboard.getNumber(HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
     }
+
+    // Call hoodPID every execute cycle, so that hood continues to run under PID control.
+    shooter.setHoodAnglePID(targetAngle);
   }
 
   // Called once the command ends or is interrupted.
@@ -121,9 +124,8 @@ public class HoodSetAngle extends Command {
   public void end(boolean interrupted) {
     shooter.enableFastLogging(false);
 
-    if (type == EndType.runForever || type == EndType.waitForSetPoint) {
-      shooter.setHoodVoltageBothMotors(0);
-    }
+    // Hood is no longer under PID control, so trun off motors
+    shooter.setHoodVoltageBothMotors(0);
 
     DataLogUtil.writeMessage("HoodSetAngle: End");
   }
@@ -135,7 +137,7 @@ public class HoodSetAngle extends Command {
       case runForever:
         return false;
       case waitForSetPoint:
-        if ( Math.abs(shooter.getHoodAngle() - targetAngle) < ShooterConstants.hoodErrorTolerance) {
+        if ( shooter.isHoodAtGoalAngle() ) {
           toleranceCounter++;
         } else {
           toleranceCounter = 0;

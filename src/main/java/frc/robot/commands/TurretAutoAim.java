@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.AllianceSelection;
@@ -33,6 +35,7 @@ public class TurretAutoAim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   public void execute() {
     if (turret.getAutoAimEnabled()) turret.setTurretAngle(turret.getAutoTargetAngleTurretRelative(allianceSelection.getAlliance(), driveTrain.getPose()));
+    SmartDashboard.putNumber("Turret Distance From Hub", turret.getTurretAbsolutePose(driveTrain.getPose()).getTranslation().getDistance(FieldConstants.hubPositionBlue));
   }
 
   // Returns true when the command should end.

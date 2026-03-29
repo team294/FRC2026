@@ -610,23 +610,6 @@ public class Intake extends SubsystemBase implements Loggable{
 
   @Override
   public void periodic() {
-    if (fastLogging && DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
-
-      SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
-      SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
-      SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
-      SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
-      SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
-      SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
-
-      SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
-
-      SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
-
-      SmartDashboard.putBoolean("Roller >100 Amps", preventRolling);
-    }
-
     double rollerAmps = getIntakeRollerAmps();
 
     if (!preventRolling && rollerAmps > 100) {
@@ -635,5 +618,27 @@ public class Intake extends SubsystemBase implements Loggable{
     } else if (preventRolling && rollerAmps <= 100) {
       preventRolling = false;
     }
+
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
+      updateLog(false);
+    }
+
+    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+      SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
+      SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
+      SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
+
+      SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
+      SmartDashboard.putNumber(INTAKE_ROLLER_CURRENT.value, rollerAmps);
+      SmartDashboard.putNumber(INTAKE_ROLLER_RPM.value, getIntakeRollerVelocity());
+
+      SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
+
+      SmartDashboard.putBoolean("Roller >100 Amps", preventRolling);
+    }
+
   }
 }

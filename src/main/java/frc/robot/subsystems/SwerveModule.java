@@ -101,6 +101,7 @@ public class SwerveModule {
   private final DoubleLogEntry dLogDriveOutput;
   private final DoubleLogEntry dLogDriveDist;
   private final DoubleLogEntry dLogDriveSpeed;
+  private final DoubleLogEntry dLogDriveCurrent;
 
 
   /**
@@ -234,6 +235,7 @@ public class SwerveModule {
     dLogDriveOutput = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveOutput"));
     dLogDriveDist = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveDistMeters"));
     dLogDriveSpeed = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveSpeedMPS"));
+    dLogDriveCurrent = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveCurrent"));
 
     // Prime the DataLog to reduce delay when first enabling the robot
     long timeNow = RobotController.getFPGATime();
@@ -652,5 +654,6 @@ public class SwerveModule {
     dLogDriveOutput.append(getDriveOutputPercent(), timeNow);
     dLogDriveDist.append(getDriveEncoderMeters(), timeNow);
     dLogDriveSpeed.append(getDriveEncoderVelocity(), timeNow);
+    dLogDriveCurrent.append(getDriveStatorCurrent(), timeNow);
   }
 }
