@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 // import edu.wpi.first.math.geometry.Rotation2d;
 // import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
@@ -692,21 +693,21 @@ public class Turret extends SubsystemBase implements Loggable {
   /**
    * Get turret target angle for aiming to the hub based on current alliance and robot position/velocity.
    * @param robotPose2d Pose2d object for robot's current position
-   * @param targetPose2d Pose2d object for aiming target
+   * @param targetTranslation2d Translation2d object for aiming target
    * @return goal auto-targeting angle based on current turret position, in degrees
    */
-  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Pose2d targetPose2d) {
-    return Math.toDegrees(Math.atan2(getTurretAbsolutePose(robotPose2d).getY() - targetPose2d.getY(), getTurretAbsolutePose(robotPose2d).getX() - targetPose2d.getX()));
+  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Translation2d targetTranslation2d) {
+    return Math.toDegrees(Math.atan2(getTurretAbsolutePose(robotPose2d).getY() - targetTranslation2d.getY(), getTurretAbsolutePose(robotPose2d).getX() - targetTranslation2d.getX()));
   }
 
   /**
    * Get target angle for turret to turn to relative to turret's absolute zero.
    * @param robotPose2d Current Pose2d of robot on field
-   * @param targetPose2d Pose2d object for aiming target
+   * @param targetTranslation2d Translation2d object for aiming target
    * @return target angle for turret to turn to
    */
-  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Pose2d targetPose2d) {
-    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
+  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetTranslation2d) {
+    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetTranslation2d) - robotPose2d.getRotation().getDegrees() - 180.0)));
   }
 
   /**
