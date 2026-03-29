@@ -616,24 +616,24 @@ public final class Constants {
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
 
-    public static final double kP = 10.0;  // CALIBRATED: 10.0 - kP, in Volts/(intake-rotations-error)
-    public static final double kI = 0.8;  // CALIBRATED: 0.8
-    public static final double kD = 0.4;  // CALIBRATED: 0.4
-    public static final double kG = 0.26;  // CALIBRATED: 0.26
-    public static final double kS = 0.185; // CALIBRATED: 0.185 - kS, in Volts
-    public static final double kV = 0.0903*60.0;  // CALIBRATED: 0.0903 * 60.0 - kV, in Volts/(intake-rotations/sec)
+    public static final double kP = 40.0;  // CALIBRATED: new 40.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
+    public static final double kD = 0.2;   // CALIBRATED: new 0.2, old intake 0.4
+    public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
+    public static final double kS = 0.195; // CALIBRATED: new 0.195, old intake 0.185 - kS, in Volts
+    public static final double kV = 5.132;  // CALIBRATED: new 5.132, old intake 5.418 - kV, in Volts/(intake-rotations/sec)
 
     public static final double MMCruiseVelocity = 1.20;                   // CALIBRATED, Max velocity in mechanism rotations / second
     public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // CALIBRATED, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-84.86),   // CALIBRATED 3/7/26: -84.86  Lower limit is intake all the way down, hard stopped by the bumpers
+      LOWER_LIMIT(-84.5),   // CALIBRATED 3/7/26: -84.5  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
-      START_CONFIG(47.0),  // CALIBRATED 3/19/26: 47.0
-      UPPER_LIMIT(47.5);   // CALIBRATED 3/18/26: 47.5   Upper limit is intake all the way in with fuel in the Spindexer
+      START_CONFIG(40.5),  // CALIBRATED 3/29/26: 40.5
+      UPPER_LIMIT(41.0);   // CALIBRATED 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
