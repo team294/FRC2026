@@ -265,7 +265,7 @@ public class RobotContainer {
 
     xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
     xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
-    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.immediatelyEnd, shooter));
+    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
 
     xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
     xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
