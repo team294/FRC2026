@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.RGBWColor;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -309,6 +310,7 @@ public final class Constants {
       INTAKE_DEPLOY_ANGLE(intakeDeployString + angleString),
       HOOD_LEFT_ANGLE(hoodLeftString + angleString),
       HOOD_RIGHT_ANGLE(hoodRightString + angleString),
+      HOOD_ANGLE(hoodString + angleString),
 
       // Target Angle
       INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
@@ -641,8 +643,8 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 1.0;
+    public static final double reverseSpindexerSeconds = 0.294;
+    public static final double noFuelSeconds = 0.687;
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
 
     public static final class SpindexerConstants {
@@ -650,7 +652,7 @@ public final class Constants {
       public static final double spindexerGearRatio = 1.00;
       public static final double spindexerForwardPercent = 0.2; 
       public static final double spindexerReversePercent = -0.2;
-      public static final double spindexerShootRPM = 2612.0;  // CALIBRATED 3/10: 2612
+      public static final double spindexerShootRPM = 5224.0;  // CALIBRATED 3/27: 5224.0 rpm
       public static final double spindexerReverseRPM = -spindexerShootRPM;  // TODO CALIBRATE
 
       public static final double kP = 1.2;   // CALIBRATED 3/7/26: 1.2
@@ -661,7 +663,6 @@ public final class Constants {
       public static final double kA = 0.0;
     }
 
-    // TODO calibrate uptake
     public static final class UptakeConstants {
       public static final double compensationVoltage = 12.0;
       public static final double uptakeGearRatio = 1.0; // doesn't matter b/c we use motor's max output instead of relying on mechanism
@@ -669,22 +670,22 @@ public final class Constants {
       public static final double uptakeReversePercent = 0.2;
       public static final double uptakeShootRPM = 6650; // CALIBRATED 3/10: 6650
 
-      public static final double kP = 4.0;    // CALIBRATED 3/13: 4.0
+      public static final double kP = 1.4;     // CALIBRATED 3/27: 4.0
       public static final double kI = 0.0;
-      public static final double kD = 0.0;
-      public static final double kS = 0.23;   // CALIBRATED 3/10: 0.23
-      public static final double kV = 0.17;   // CALIBRATED 3/13: 0.17
+      public static final double kD = 0.03;    // CALIBRATED 3/27: 0.03
+      public static final double kS = 0.25;    // CALIBRATED 3/27: 0.25
+      public static final double kV = 0.0936;  // CALIBRATED 3/27: 0.0936
       public static final double kA = 0.0;
     }
   }
 
   public static final class ShooterConstants {
     public static final double compensationVoltage = 12.0;
-    public static final double shooterPercent = 0.2; 
-    public static final double reverseShooterPercent = -0.1;
-    public static final double shootRPM = 2500;
-    public static final double reverseShootRPM = -shootRPM;
-    public static final double maxShootRPM = 3500;
+    public static final double manualShootPercent = 0.2; 
+    public static final double manualReverseShootPercent = -0.1;
+    public static final double manualShootRPM = 2500;
+    public static final double manualReverseShootRPM = -manualShootRPM;
+    public static final double maxShootRPM = 3800;
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -699,16 +700,19 @@ public final class Constants {
 
     // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
     // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
-    public static final double shooterDistanceToRPMIntercept = 942.93914; // was 1042.93914
-    public static final double shooterDistanceToRPMSlope = 529.1604;
+    public static final double shooterDistanceToRPMIntercept = 1270.76045; // CALIBRATED 3/28/26: 1270.76045
+    public static final double shooterDistanceToRPMSlope = 466.41849; // CALIBRATED 3/28/26: 466.41849
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
     public static final double hoodPassAngle = 35.0;
+    public static final double hoodAngleErrorTolerance = 0.7;  // Angle tolerance in degrees
 
     public static final double hoodVoltage = 12;
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
     public static final double hoodErrorTolerance = 0.2; // to monitor for when to stop moving the hood actuators (deg error)
+
+    public static final double hoodMotorRatio2to1 = 1.10;     // CALIBRATED 3-28-2026.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     //public static final double hoodMaximumAngle = 45.0; // in degrees 
@@ -795,7 +799,7 @@ public final class Constants {
     public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
     public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
 
-    public static final double turretOffset = Units.inchesToMeters(11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
+    public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
     public enum TurretAngle {
       LOWER_LIMIT(-180.0),

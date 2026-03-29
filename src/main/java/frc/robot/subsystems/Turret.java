@@ -95,6 +95,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogCANcoderGearRotRaw = new DoubleLogEntry(log, "/Turret/CANcoder Gear Rot Raw");
   private final DoubleLogEntry dLogTurretCalZero = new DoubleLogEntry(log, "/Turret/TurretCalZero");
   private final DoubleLogEntry dLogTurretTarget = new DoubleLogEntry(log, "/Turret/Target");
+  private final DoubleLogEntry dLogTurretTargetSet = new DoubleLogEntry(log, "/Turret/TargetSet");
   private final DoubleLogEntry dLogTurretEncAngle = new DoubleLogEntry(log, "/Turret/Encoder Angle (deg)");
   private final DoubleLogEntry dLogTurretAngle = new DoubleLogEntry(log, "/Turret/Turret Angle (Deg)");
   private final DoubleLogEntry dLogTurretVelDPS = new DoubleLogEntry(log, "/Turret/Turret Velocity dps");
@@ -365,7 +366,7 @@ public class Turret extends SubsystemBase implements Loggable {
       // Phoenix6 PositionVoltage control: Position is in rotor rotations
       turretMotor.setControl(turretMMVoltageControl.withPosition(turretDegreesToEncoderRotations(angle)));
 
-      DataLogUtil.writeMessage(subsystemName, ": setTurretAngle, Desired Angle =", angle, ", Set Angle =", angle);
+      dLogTurretTargetSet.append(angle);
       SmartDashboard.putNumber("Turret set raw rot", turretDegreesToEncoderRotations(angle));
 
       targetAngle = angle;
@@ -680,32 +681,12 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param robotPose2d Pose2d object for robot's current position.
    * @return Turret absolute field position, as a Pose2d object.
    */
-  private Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
+  public Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
     double robotRotRadians = robotPose2d.getRotation().getRadians();
-    double xOffsetAbsolute;
-    double yOffsetAbsolute;
 
-    if (robotRotRadians >= 0) {   // rotated CCW facing red wall or CW facing blue wall
-      if (robotRotRadians <= Math.PI / 2.0) {   // facing red wall
-        xOffsetAbsolute = TurretConstants.turretOffset * Math.cos(robotRotRadians);  // -x, so do nothing here
-        yOffsetAbsolute = TurretConstants.turretOffset * Math.sin(robotRotRadians);  // -y, so do nothing here
-      } else {   // facing blue wall
-        xOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.sin(Math.PI / 2.0 - robotRotRadians);  // +x, so make this negative
-        yOffsetAbsolute = TurretConstants.turretOffset * Math.cos(Math.PI / 2.0 - robotRotRadians);         // -y, so do nothing here
-      }
-    } else {   // rotated CW facing red wall or CCW facing blue wall
-      robotRotRadians = -1.0 * robotRotRadians;   // make the math easier by making angle positive
-      if (robotRotRadians >= Math.PI / -2.0) {   // facing red wall
-        xOffsetAbsolute = TurretConstants.turretOffset * Math.cos(robotRotRadians);         // -x, so do nothing here
-        yOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.sin(robotRotRadians);  // +y, so make this negative
-      } else {   // facing blue wall
-        xOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.sin(Math.PI / 2.0 - robotRotRadians);  // +x, so make this negative
-        yOffsetAbsolute = -1.0 * TurretConstants.turretOffset * Math.cos(Math.PI / 2.0 - robotRotRadians);  // +y, so make this negative
-      }
-    }
-
-    // some are made negative above so we don't have to have a bunch of separate return statements!
-    return new Pose2d(robotPose2d.getX() - xOffsetAbsolute, robotPose2d.getY() - yOffsetAbsolute, getTurretAbsoluteAngle(robotPose2d.getRotation()));
+    return new Pose2d(robotPose2d.getX() + TurretConstants.turretOffset * Math.cos(robotRotRadians),
+                      robotPose2d.getY() + TurretConstants.turretOffset * Math.sin(robotRotRadians),
+                      getTurretAbsoluteAngle(robotPose2d.getRotation()));
   }
 
   /**
@@ -767,7 +748,11 @@ public class Turret extends SubsystemBase implements Loggable {
     return turretAutoAimEnabled;
   }
 
-  public boolean getTurretAtGoalAngle() {
+  /**
+   * Returns if turret is within tolerance from the most recent goal angle
+   * @return true = in tolerance, false = not at goal angle.
+   */
+  public boolean isTurretAtGoalAngle() {
     return atGoalAngle;
   }
 
