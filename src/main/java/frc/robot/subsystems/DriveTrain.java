@@ -42,7 +42,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;

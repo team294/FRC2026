@@ -8,8 +8,6 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
-import java.util.function.Supplier;
-
 import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
@@ -96,7 +94,7 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
-    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, allianceSelection));
+    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, field));
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.

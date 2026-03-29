@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
-import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.Field;
 
 public class TurretAutoAim extends Command {
