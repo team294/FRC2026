@@ -94,7 +94,7 @@ public class Intake extends SubsystemBase implements Loggable{
   private final DoubleLogEntry dLogRollerVoltage = new DoubleLogEntry(log, "/IntakeRoller/Voltage");
   private final DoubleLogEntry dLogDeployTemp = new DoubleLogEntry(log, "/IntakeDeploy/Temperature");
   private final DoubleLogEntry dLogDeployCurrent = new DoubleLogEntry(log, "/IntakeDeploy/Current");
-  private final DoubleLogEntry dLogDeployVelocity = new DoubleLogEntry(log, "/IntakeDeploy/Velocity");
+  private final DoubleLogEntry dLogDeployVelocity = new DoubleLogEntry(log, "/IntakeDeploy/VelocityRPS");
   private final DoubleLogEntry dLogDeployVoltage = new DoubleLogEntry(log, "/IntakeDeploy/Voltage");
   private final DoubleLogEntry dLogDeployPosition = new DoubleLogEntry(log, "/IntakeDeploy/Position");
 
@@ -463,11 +463,11 @@ public class Intake extends SubsystemBase implements Loggable{
 
   /**
    * Gets the velocity of the intakeDeployMotor.
-   * @return motor velocity, in RPM
+   * @return motor velocity, in RPS
    */
   public double getIntakeDeployVelocity() {
     intakeDeployEncoderVelocity.refresh();
-    return intakeDeployEncoderVelocity.getValueAsDouble() * 60.0;
+    return intakeDeployEncoderVelocity.getValueAsDouble();
   }
 
   /**
