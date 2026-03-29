@@ -5,7 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Field;
@@ -44,13 +46,17 @@ public class TurretAutoAim extends Command {
       turret.setTurretAngle(
         turret.getAutoTargetAngleTurretRelative(
           robotPose2d, 
-          field.getGhostShotTargetClaude(
+          field.getGhostShotTarget(
             field.getStaticShotTarget(robotPose2d.getTranslation()),
             turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
-            driveTrain.getRobotSpeeds())
+            driveTrain.getChassisSpeeds(),
+            driveTrain.getAccelerationX(),
+            driveTrain.getAccelerationY())
         )
       );
     }
+
+    SmartDashboard.putNumber("Turret Distance To Blue Hub", turret.getTurretAbsolutePose(robotPose2d).getTranslation().getDistance(FieldConstants.hubPositionBlue));
   }
 
   // Returns true when the command should end.

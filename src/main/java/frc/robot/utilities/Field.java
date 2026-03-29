@@ -6,12 +6,16 @@ package frc.robot.utilities;
 
 import java.io.UncheckedIOException;
 
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.FieldCentric;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 
@@ -68,52 +72,10 @@ public class Field {
         }
     }
 
-    /**
-     * TODO verify that this works.
-     * Get ghost target to aim at based on static target, accounting for current robot velocity.
-     * @param staticTargetTranslation2d Translation2d object of scoring target.
-     * @param turretTranslation2d Translation2d object of current turret position.
-     * @param robotTranslation2d Translation2d object of current robot position.
-     * @param robotFieldRelativeSpeeds ChassisSpeeds object of robot speeds relative to field.
-     * @return Translation2d object of target to aim at to account for robot motion while shooting.
-     */
-    public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, Translation2d robotTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
-        double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
+    public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds, double accelerationX, double accelerationY) {
+        double offsetX = (robotFieldRelativeSpeeds.vxMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
+        double offsetY = (robotFieldRelativeSpeeds.vyMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
 
-        // Horizontal velocity component of the ball
-        double ballHorizSpeed = ((ShooterConstants.shooterDistanceToRPMSlope * distanceToHub) + ShooterConstants.shooterDistanceToRPMIntercept) * Math.cos(Math.toRadians(ShooterConstants.hoodShootAngle));
-
-        // time = distance / speed
-        double estFuelTimeOfFlight = distanceToHub / ballHorizSpeed;
-
-        // 
-        double ghostTargetX = staticTargetTranslation2d.getX() - (robotFieldRelativeSpeeds.vxMetersPerSecond * estFuelTimeOfFlight);
-        double ghostTargetY = staticTargetTranslation2d.getY() - (robotFieldRelativeSpeeds.vyMetersPerSecond * estFuelTimeOfFlight);
-
-        return new Translation2d(ghostTargetX, ghostTargetY);
-    }
-
-    public Translation2d getGhostShotTargetClaude(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
-        double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
-        
-        double tanAngle = Math.tan(Math.toRadians(ShooterConstants.hoodShootAngle));
-        double cosAngle = Math.cos(Math.toRadians(ShooterConstants.hoodShootAngle));
-        double heightDiff = FieldConstants.hubHeightMeters - ShooterConstants.shooterHeightOffGround;
-
-        double vSquared = 9.81 * distanceToHub * distanceToHub
-                        / (2.0 * cosAngle * cosAngle * (distanceToHub * tanAngle - heightDiff));
-
-        // protect against returning NaN (radicand < 0)
-        if (vSquared <= 0) return staticTargetTranslation2d;
-
-        // time = distance / speed
-        double estFuelTimeOfFlight = distanceToHub / (Math.sqrt(vSquared) * cosAngle);
-
-        double ghostTargetX = staticTargetTranslation2d.getX() - (robotFieldRelativeSpeeds.vxMetersPerSecond * estFuelTimeOfFlight);
-        double ghostTargetY = staticTargetTranslation2d.getY() - (robotFieldRelativeSpeeds.vyMetersPerSecond * estFuelTimeOfFlight);
-        
-        if (Double.isNaN(ghostTargetX) || Double.isNaN(ghostTargetY)) return staticTargetTranslation2d;
-        
-        return new Translation2d(ghostTargetX, ghostTargetY);
+        return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
     }
 }

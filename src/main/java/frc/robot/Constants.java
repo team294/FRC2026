@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.RGBWColor;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -527,6 +526,11 @@ public final class Constants {
     public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
 
     public static final double hubHeightMeters = Units.inchesToMeters(72.0);
+
+    // public static final double shootOnMoveCoefficient = 1.757; // TODO insert value here
+
+    public static final double timeOfFlightSlope = 0.214491;
+    public static final double timeOfFlightIntercept = 0.491421;
   }
 
   public static class VisionConstants {
@@ -698,7 +702,8 @@ public final class Constants {
     public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
     public static final double ShooterkA = 0;
  
-    public static final double shooterHeightOffGround = Units.inchesToMeters(18.0);  // in meters  -  for LAR, assumes shot @ 30 degrees
+    public static final double shooterHeightOffGround = Units.inchesToMeters(21.810);  // in meters  -  for LAR, assumes shot @ 30 degrees
+    public static final double shooterWheelRadius = 0.0508; // from CAD, in meters
 
     public static final double shooterVelocityErrorTolerance = 100;
 

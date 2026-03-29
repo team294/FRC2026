@@ -42,7 +42,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -472,6 +471,14 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     yLocked = false;
     turnLocked = false;
   }
+
+  public double getAccelerationX() {
+    return pigeon.getAccelerationX(true).getValueAsDouble() * Math.cos(Math.PI / 4.0) - pigeon.getAccelerationY(true).getValueAsDouble() * Math.sin(Math.PI / 4.0);
+  }
+
+  public double getAccelerationY() {
+    return pigeon.getAccelerationX(true).getValueAsDouble() * Math.sin(Math.PI / 4.0) + pigeon.getAccelerationY(true).getValueAsDouble() * Math.cos(Math.PI / 4.0);
+  }
   
   /**
    * Drives the robot using desired robot velocity and orientation, such as from joystick info.
@@ -661,6 +668,9 @@ public class DriveTrain extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Drive Odometry Theta", pose.getRotation().getDegrees());
 
       SmartDashboard.putBoolean("Vision Updating Odometry", useVisionForOdometry);
+
+      SmartDashboard.putNumber("Drive X Acceleration", getAccelerationX());
+      SmartDashboard.putNumber("Drive Y Acceleration", getAccelerationY());
 
       // TODO This code creates errors after running for a few minutes. Need to debug.
       // SmartDashboard.putData("Swerve Drive", new Sendable() {
