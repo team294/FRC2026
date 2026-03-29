@@ -20,6 +20,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.DataLogUtil;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -38,7 +39,7 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
         waitUntil(() -> shooter.isShooterAtGoalVelocity()).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: ShooterAtGoal")),
         waitUntil(() -> turret.isTurretAtGoalAngle()).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: TurretAtGoal")),
         waitUntil(() -> shooter.isHoodAtGoalAngle() && shooter.getHoodAngleSetpoint() != ShooterConstants.hoodMinimumAngle).andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: HoodAtGoal"))
-      ),
+      ).handleInterrupt(() -> DataLogUtil.writeMessage("FeederIntakeFeedShooterSequence: Interrupted")),
       parallel(
         new FeederFeedShooter(feeder),
         sequence(
