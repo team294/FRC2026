@@ -21,7 +21,7 @@ public class HoodSetPercent extends Command {
 
   /**
    * Set percent for hood motors to move at [0.0, 1.0] with input from Elastic
-   * @param endImmediately boolean
+   * @param endImmediately boolean.  True = command ends immediately, and leaves motors running.  False = command runs forever, and turns off motors when interrupted.
    * @param shooter Shooter subsystem
    * @param motorNumber int motorNumber to set, use 0 for both motors
    */
@@ -40,9 +40,9 @@ public class HoodSetPercent extends Command {
 
   /**
    * Set percent for hood motors to move at [0.0, 1.0] with input
-   * @param endImmediately boolean
+   * @param endImmediately boolean.  True = command ends immediately, and leaves motors running.  False = command runs forever, and turns off motors when interrupted.
    * @param shooter Shooter subsystem
-   * @param percent percent of max speed to move at [0.0, 1.0]
+   * @param percent percent of max speed to move at [-1.0, 1.0]
    * @param motorNumber int motorNumber to set, use 0 for both motors
    */
   public HoodSetPercent(boolean endImmediately, double percent, Shooter shooter, int motorNumber) {

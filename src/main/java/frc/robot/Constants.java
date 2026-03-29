@@ -311,6 +311,7 @@ public final class Constants {
       INTAKE_DEPLOY_ANGLE(intakeDeployString + angleString),
       HOOD_LEFT_ANGLE(hoodLeftString + angleString),
       HOOD_RIGHT_ANGLE(hoodRightString + angleString),
+      HOOD_ANGLE(hoodString + angleString),
 
       // Target Angle
       INTAKE_DEPLOY_TARGET_ANGLE(intakeDeployString + targetAngleString),
@@ -706,10 +707,13 @@ public final class Constants {
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
     public static final double hoodPassAngle = 35.0;
+    public static final double hoodAngleErrorTolerance = 0.7;  // Angle tolerance in degrees
 
     public static final double hoodVoltage = 12;
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
     public static final double hoodErrorTolerance = 0.2; // to monitor for when to stop moving the hood actuators (deg error)
+
+    public static final double hoodMotorRatio2to1 = 1.10;     // CALIBRATED 3-28-2026.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     //public static final double hoodMaximumAngle = 45.0; // in degrees 

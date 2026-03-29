@@ -768,7 +768,11 @@ public class Turret extends SubsystemBase implements Loggable {
     return turretAutoAimEnabled;
   }
 
-  public boolean getTurretAtGoalAngle() {
+  /**
+   * Returns if turret is within tolerance from the most recent goal angle
+   * @return true = in tolerance, false = not at goal angle.
+   */
+  public boolean isTurretAtGoalAngle() {
     return atGoalAngle;
   }
 
