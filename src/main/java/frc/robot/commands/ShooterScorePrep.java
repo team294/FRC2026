@@ -4,19 +4,14 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.wpilibj2.command.Commands.*;
-
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ElasticKeyConstants.ElasticKey;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.FieldConstants;
@@ -36,10 +31,9 @@ public class ShooterScorePrep extends Command {
   private DoubleSupplier velocityGetter;
   private DoubleSupplier angleGetter;
   private boolean shootOnTheMove;
-  // private Supplier<Pose2d> poseSupplier;
   private Translation2d goalTranslation2d;
   private double targetVelocity;
-  private double targetAngle;
+  private double targetHoodAngle;
   private boolean useGetter = false;
   private boolean selfCalculate = false;
   private boolean fromElastic = false;
@@ -93,7 +87,7 @@ public class ShooterScorePrep extends Command {
     this.turret = turret;
     this.field = field;
     this.targetVelocity = velocity;
-    this.targetAngle = angle;
+    this.targetHoodAngle = angle;
     this.type = type;
     fromElastic = false;
 
@@ -101,14 +95,13 @@ public class ShooterScorePrep extends Command {
   }
 
   /**
-   * Sets the hood angle and shooter velocity for scoring. 
-   * @param fromElastic boolean, true = reads values from elastic, false = calculates angle and velocity based on hub distance
+   * Sets the hood angle and shooter velocity for scoring, based on values specified on the dashboard. 
    * @param type
    * <p> waitForSetPoint = command runs until shooter velocity and hood angle are within tolerance for 5 cycles, then command ends but leaves shooter and hood moving
    * <p> runForever = command runs until interrupted, turn off hood and shooter motor when interrupted
    * <p> endInstantly = command ends instantly
-   * @param driveTrain driveTrain subsystem
    * @param shooter shooter subsystem
+   * @param driveTrain driveTrain subsystem
    * 
    */
   public ShooterScorePrep(EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain, Field field) {
@@ -160,11 +153,11 @@ public class ShooterScorePrep extends Command {
     if (type == EndType.waitForSetPoint) shooter.enableFastLogging(true);
 
     if (fromElastic) {
-      targetAngle = SmartDashboard.getNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
+      targetHoodAngle = SmartDashboard.getNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
       targetVelocity = SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, 0);
     }
     else if (useGetter) {
-      targetAngle = angleGetter.getAsDouble();
+      targetHoodAngle = angleGetter.getAsDouble();
       targetVelocity = velocityGetter.getAsDouble();
     }
     // Calculates velocity and angle based on calculated distance to the goal pose
@@ -185,16 +178,17 @@ public class ShooterScorePrep extends Command {
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
       if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
-        targetAngle = ShooterConstants.hoodPassAngle;
+        targetHoodAngle = ShooterConstants.hoodPassAngle;
       } else {
-        targetAngle = ShooterConstants.hoodShootAngle;
+        targetHoodAngle = ShooterConstants.hoodShootAngle;
       } 
     }
 
-    shooter.setHoodAnglePID(targetAngle);
+    shooter.setHoodAnglePID(targetHoodAngle);
     shooter.setShooterVelocity(targetVelocity);
 
-    DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetAngle, ", Velocity Setpoint =", targetVelocity,
+    toleranceCounter = 0;
+    DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetHoodAngle, ", Velocity Setpoint =", targetVelocity,
                              ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distanceToTarget);
   }
 
@@ -206,13 +200,11 @@ public class ShooterScorePrep extends Command {
       // Don't update angle from getter if type == waitForAngle, otherwise the getter could
       // change the angle a little and never settle on a value. Then the PID controller would
       // try to track and maybe never get in tolerance, and then this command would never end.
-      targetAngle = angleGetter.getAsDouble();
+      targetHoodAngle = angleGetter.getAsDouble();
       targetVelocity = velocityGetter.getAsDouble();
-      shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
     if (fromElastic) {
-      shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
 
@@ -231,15 +223,17 @@ public class ShooterScorePrep extends Command {
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
       if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
-        targetAngle = ShooterConstants.hoodPassAngle;
+        targetHoodAngle = ShooterConstants.hoodPassAngle;
       } else {
-        targetAngle = ShooterConstants.hoodShootAngle;
-      } 
-    
+        targetHoodAngle = ShooterConstants.hoodShootAngle;
+      }
 
-      shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
+
+    // Call hoodPID every execute cycle, so that hood continues to run under PID control.
+    shooter.setHoodAnglePID(targetHoodAngle);
+
   }
 
   // Called once the command ends or is interrupted.
@@ -247,8 +241,10 @@ public class ShooterScorePrep extends Command {
   public void end(boolean interrupted) {
     shooter.enableFastLogging(false);
 
+    // Hood is no longer under PID control, so trun off motors
+    shooter.setHoodVoltageBothMotors(0);
+
     if (type == EndType.runForever) {
-      shooter.setHoodVoltageBothMotors(0);
       shooter.stopShooterMotor();
       // CommandScheduler.getInstance().schedule(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
     }
@@ -263,9 +259,7 @@ public class ShooterScorePrep extends Command {
       case runForever:
         return false;
       case waitForSetPoint:
-         if ( (Math.abs(shooter.getHoodAngle(1) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
-              (Math.abs(shooter.getHoodAngle(2) - targetAngle) < ShooterConstants.hoodErrorTolerance) &&
-              (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
+         if ( shooter.isHoodAtGoalAngle() && shooter.isShooterAtGoalVelocity() ) {
           toleranceCounter++;
         } else {
           toleranceCounter = 0;

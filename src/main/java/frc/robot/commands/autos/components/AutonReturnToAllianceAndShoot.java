@@ -45,7 +45,8 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
       // Whether to stop and shoot or wait to shoot until at the outpost/feeder. This depends on whether we are going to the outpost and scoring from there or not
       either(
         sequence(
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field) // shoot
+          // 3-28-2026:  Don changed from EndType.waitForSetPoint to EndType.runForever, which matches the teleop button
+          new AutonScore(EndType.runForever, intake, feeder, turret, shooter, climber, driveTrain, field) // shoot
         ),
         none(), // don't shoot
         () -> shoot),

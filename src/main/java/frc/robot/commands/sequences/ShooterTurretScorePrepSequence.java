@@ -33,7 +33,7 @@ public class ShooterTurretScorePrepSequence extends SequentialCommandGroup {
     addCommands(
       parallel(
         new ShooterScorePrep(shootOnTheMove, endType, shooter, turret, driveTrain, field), 
-        new WaitUntilCommand(() -> turret.getTurretAtGoalAngle())
+        new WaitUntilCommand(() -> turret.isTurretAtGoalAngle())
         )
     );
   }
