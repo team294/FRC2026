@@ -249,7 +249,7 @@ public class RobotContainer {
 
     // Intake while shooting
     xbRB.whileTrue(parallel(
-      new ShooterTurretScorePrepSequence(false, EndType.runForever, turret, shooter, driveTrain, field),
+      new ShooterTurretScorePrepSequence(true, EndType.runForever, turret, shooter, driveTrain, field),
       new InstantCommand(() -> intake.setAgitateDuringFeed(false))
     ));
     xbRB.onFalse(parallel(

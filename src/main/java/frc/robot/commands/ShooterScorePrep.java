@@ -169,11 +169,13 @@ public class ShooterScorePrep extends Command {
     }
     // Calculates velocity and angle based on calculated distance to the goal pose
     else if (selfCalculate) { 
-      Translation2d turretTranslation2d = turret.getTurretAbsolutePose(driveTrain.getPose()).getTranslation();
+      Pose2d robotPose = driveTrain.getPose();
+      Translation2d turretTranslation2d = turret.getTurretAbsolutePose(robotPose).getTranslation();
+
       if (!shootOnTheMove) {
         goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
-        // goalpose = shootonthemove
+        goalTranslation2d = field.getGhostShotTargetClaude(field.getStaticShotTarget(robotPose.getTranslation()), turretTranslation2d, driveTrain.getChassisSpeeds());
       }
 
       distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);
