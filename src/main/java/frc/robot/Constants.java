@@ -781,9 +781,9 @@ public final class Constants {
     public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
     public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
-    public static final double maxPercentOutput = 1.0;               // Absolute max percent out allowed for turret
-    public static final double maxManualPercentOutput = 0.5; // Max percent out allowed for manual turret movement when calibrated
-    public static final double maxUncalibratedPercentOutput = 0.1;   // Max percent out allowed for any turrent movement when uncalibrated
+    public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
+    public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
+    public static final double maxUncalibratedPercentOutput = 0.05;   // Max percent out allowed for any turrent movement when uncalibrated
 
     public static final double angleTolerance = 1.0;        // Angle tolerance for setting the turret angle, in degrees
 
