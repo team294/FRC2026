@@ -94,7 +94,7 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
-    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, field));  // TODO decide whether or not to always aim turret or to only do it in PrepScore or Pass sequences
+    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, field));
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.

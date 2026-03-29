@@ -525,6 +525,7 @@ public final class Constants {
     public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
     public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
 
+    // used for Shoot On The Move calculations to estimate how much time a ball will fly for
     public static final double timeOfFlightSlope = 0.214491;
     public static final double timeOfFlightIntercept = 0.491421;
   }
@@ -698,9 +699,6 @@ public final class Constants {
     public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
     public static final double ShooterkA = 0;
  
-    public static final double shooterHeightOffGround = Units.inchesToMeters(21.810);  // in meters  -  for LAR, assumes shot @ 30 degrees
-    public static final double shooterWheelRadius = 0.0508; // from CAD, in meters
-
     public static final double shooterVelocityErrorTolerance = 100;
 
     // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
