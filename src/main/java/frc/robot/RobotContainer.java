@@ -438,7 +438,7 @@ public class RobotContainer {
     DataLogUtil.writeMessageEcho("Auto: Mode Init");
 
     driveTrain.setDriveModeCoast(false);
-    driveTrain.setVisionForOdometryState(true);
+    driveTrain.setVisionForOdometryState(false); // TODO return to true 
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever

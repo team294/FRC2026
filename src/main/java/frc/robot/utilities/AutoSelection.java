@@ -45,7 +45,7 @@ public class AutoSelection {
 		// LeftSide_SideCollect_OverBump("LeftSide_SideCollect_UnderTrench", 9),
 
 		// RightSide_CenterCollect_UnderTrench("RightSide_CenterCollect_UnderTrench", 10),
-		RightSide_SideCollect_UnderTrench("RightSide_SideCollect_UnderTrench", 11);
+		RightSide_SideCollect_UnderTrench("RightSide_SideCollect_UnderTrench", 11),
 		// RightSide_Preload_CenterCollect_UnderTrench("RightSide_Preload_CenterCollect_UnderTrench", 11),
 		// RightSide_CenterCollect_UnderTrench_2Cycle("RightSide_CenterCollect_UnderTrench_2Cycle", 12),
 		// RightSide_Preload_CenterCollect_UnderTrench_2Cycle("RightSide_Preload_CenterCollect_UnderTrench_2Cycle", 13),
@@ -61,7 +61,7 @@ public class AutoSelection {
 		// RelCirclePath("RelativeCirclePath", 106),
 		// RelRotate180("RelativeRotate180", 107),
 		// AbsDiagonalTest("AbsoluteDiagonalTest", 108),
-		// DriveOverBump("DriveOverBump", 109)
+		DriveOverBump("DriveOverBump", 109);
 
 		@SuppressWarnings({ "MemberName", "PMD.SingularField" })
 		public final String name;
@@ -371,10 +371,13 @@ public class AutoSelection {
 		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.AbsoluteDiagonalTest), driveTrain, allianceSelection);
 		// }
 
-		// else if (autoPlan == RoutineSelectionOption.DriveOverBump.value) {
-		// 	autoSelectionOption = RoutineSelectionOption.DriveOverBump;
-		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection);
-		// }
+		else if (autoPlan == RoutineSelectionOption.DriveOverBump.value) {
+			autoSelectionOption = RoutineSelectionOption.DriveOverBump;
+			autonomousCommandMain = sequence(
+										new DriveResetPose(new Pose2d(3.2031, 5.6425, new Rotation2d(Math.toRadians(90))), false, driveTrain),
+										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection)
+									);
+		}
 
 		// else if (autoPlan == RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench.value) {
 		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench; 
