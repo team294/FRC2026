@@ -14,8 +14,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants.FieldConstants;
 
 /** BCR Field class (implementation in progress) */
 public class Field {
@@ -83,7 +81,7 @@ public class Field {
         double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
 
         // Horizontal velocity component of the ball
-        double ballHorizSpeed = ((ShooterConstants.shooterDistanceToRPMSlope * distanceToHub) + ShooterConstants.shooterDistanceToRPMIntercept) * Math.cos(ShooterConstants.hoodShootAngleRadians);
+        double ballHorizSpeed = ((ShooterConstants.shooterDistanceToRPMSlope * distanceToHub) + ShooterConstants.shooterDistanceToRPMIntercept) * Math.cos(Math.toRadians(ShooterConstants.hoodShootAngle));
 
         // time = distance / speed
         double estFuelTimeOfFlight = distanceToHub / ballHorizSpeed;
@@ -98,8 +96,8 @@ public class Field {
     public Translation2d getGhostShotTargetClaude(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
         double distanceToHub = turretTranslation2d.getDistance(staticTargetTranslation2d);
         
-        double tanAngle = Math.tan(ShooterConstants.hoodShootAngleRadians);
-        double cosAngle = Math.cos(ShooterConstants.hoodShootAngleRadians);
+        double tanAngle = Math.tan(Math.toRadians(ShooterConstants.hoodShootAngle));
+        double cosAngle = Math.cos(Math.toRadians(ShooterConstants.hoodShootAngle));
         double heightDiff = FieldConstants.hubHeightMeters - ShooterConstants.shooterHeightOffGround;
 
         double vSquared = 9.81 * distanceToHub * distanceToHub
