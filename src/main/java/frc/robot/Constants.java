@@ -13,8 +13,6 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -874,9 +872,10 @@ public final class Constants {
     CANDLE_STICKY_FAULT(255, 0, 0),    // CANdle Red
 
     NEUTRAL(0, 0, 0),                  // Black  (strip neutral)
-    MATCH_COUNTDOWN(255, 0, 0),        // Red    (strip match countdown)
     INTAKING(255, 255, 0),             // Yellow (strip intaking)
     REVERSE_INTAKING(128, 0, 128),     // Purple (strip reverse intaking)
+    PREP_SHOOTER(240, 50, 0),          // Orange (strip prep shooter)
+    SHOOTER_READY(19, 82, 18),         // Blue (strip shooter ready)
 
     DISABLED_BLUE(19, 82, 188),        // Blue   (disabled animation)
     DISABLED_ORANGE(240, 50, 0);       // Orange (disabled animation)
@@ -892,8 +891,11 @@ public final class Constants {
   public static final class LEDConstants {
     public enum LEDSegments {
       CANdle(0, 7),
-      Strip(CANdle.endIndex + 1, (CANdle.endIndex + 1) + 35),
-      Full(CANdle.startIndex, Strip.endIndex);
+      Strip1(CANdle.endIndex + 1, (CANdle.endIndex + 1) + 15),
+      Strip2(Strip1.endIndex + 1, (Strip1.endIndex + 1) + 15),
+      Strip3(Strip2.endIndex + 1, (Strip2.endIndex + 1) + 15),
+      StripAll(Strip1.startIndex, Strip3.endIndex),
+      Full(CANdle.startIndex, Strip3.endIndex);
 
       public final int startIndex, endIndex;
       LEDSegments(int index, int count) {
@@ -908,22 +910,24 @@ public final class Constants {
 
       private static final RGBWColor disabledBlueColor = new RGBWColor(AnimationColor.DISABLED_BLUE.r, AnimationColor.DISABLED_BLUE.g, AnimationColor.DISABLED_BLUE.b);
       private static final RGBWColor disabledOrangeColor = new RGBWColor(AnimationColor.DISABLED_ORANGE.r, AnimationColor.DISABLED_ORANGE.g, AnimationColor.DISABLED_ORANGE.b);
-      private static final RGBWColor matchCountdownColor = new RGBWColor(AnimationColor.MATCH_COUNTDOWN.r, AnimationColor.MATCH_COUNTDOWN.g, AnimationColor.MATCH_COUNTDOWN.b);
       private static final RGBWColor neutralColor = new RGBWColor(AnimationColor.NEUTRAL.r, AnimationColor.NEUTRAL.g, AnimationColor.NEUTRAL.b);
       private static final RGBWColor intakingColor = new RGBWColor(AnimationColor.INTAKING.r, AnimationColor.INTAKING.g, AnimationColor.INTAKING.b);
       private static final RGBWColor reverseIntakingColor = new RGBWColor(AnimationColor.REVERSE_INTAKING.r, AnimationColor.REVERSE_INTAKING.g, AnimationColor.REVERSE_INTAKING.b);
+      private static final RGBWColor shooterPrepColor = new RGBWColor(AnimationColor.PREP_SHOOTER.r, AnimationColor.PREP_SHOOTER.g, AnimationColor.PREP_SHOOTER.b);
+      private static final RGBWColor shooterReadyColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
     }
 
     public static final class Animations {
       public static final SolidColor CANdleNeutralAnimation = new SolidColor(LEDSegments.CANdle.startIndex, LEDSegments.CANdle.endIndex).withColor(AnimationRGBWColors.CANdleNeutralColor);
       public static final SolidColor CANdleStickyFaultAnimation = new SolidColor(LEDSegments.CANdle.startIndex, LEDSegments.CANdle.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
 
-      public static final SingleFadeAnimation disabledBlueAnimation = new SingleFadeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.disabledBlueColor).withFrameRate(100);
-      public static final SingleFadeAnimation disabledOrangeAnimation = new SingleFadeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.disabledOrangeColor).withFrameRate(100);
-      public static final ColorFlowAnimation matchCountdownAnimation = new ColorFlowAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.matchCountdownColor).withFrameRate((LEDSegments.Strip.endIndex - LEDSegments.Strip.startIndex + 1) / 10);
-      public static final SolidColor neutralSolidColor = new SolidColor(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.neutralColor);
-      public static final StrobeAnimation neutralAnimation = new StrobeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.intakingColor);
-      public static final StrobeAnimation reverseIntakingAnimation = new StrobeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.reverseIntakingColor);
+      public static final SingleFadeAnimation disabledBlueAnimation = new SingleFadeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.disabledBlueColor).withFrameRate(100);
+      public static final SingleFadeAnimation disabledOrangeAnimation = new SingleFadeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.disabledOrangeColor).withFrameRate(100);
+      public static final SolidColor neutralSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.neutralColor);
+      public static final StrobeAnimation neutralAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.intakingColor);
+      public static final StrobeAnimation reverseIntakingAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.reverseIntakingColor);
+      public static final StrobeAnimation shooterPrepAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.shooterPrepColor);
+      public static final SolidColor shooterReadySolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.shooterReadyColor);
     }
   }
 }

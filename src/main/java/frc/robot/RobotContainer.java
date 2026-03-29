@@ -8,8 +8,6 @@ package frc.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
-import java.util.function.Supplier;
-
 import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
@@ -28,6 +26,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -50,7 +49,7 @@ public class RobotContainer {
   // Define robot subsystems
   private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
   private final Intake intake = new Intake("Intake");
-  private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED", teleopTimer);
+  private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED");
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
   private final Turret turret = new Turret("Turret");
@@ -441,9 +440,8 @@ public class RobotContainer {
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
-    // TODO (LED) uncomment when LEDs are ready on the robot
-    // CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
-    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
+    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
@@ -469,9 +467,8 @@ public class RobotContainer {
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
-    // TODO (LED) uncomment when LEDs are ready on the robot
-    // CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
-    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
+    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     teleopTimer.restart();
   }

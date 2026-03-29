@@ -17,10 +17,10 @@ public class LEDEventUtil {
   private static LEDStripEvents previousEventStrip;
 
   public enum LEDStripEvents {
-    MATCH_COUNTDOWN,
     INTAKING,
     REVERSE_INTAKING,
     PREPPING_SHOOTER,
+    SHOOTER_READY,
     NEUTRAL,
     ROBOT_DISABLED
   }
@@ -31,8 +31,8 @@ public class LEDEventUtil {
     prioritiesLEDStripEvents.put(LEDStripEvents.INTAKING, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.REVERSE_INTAKING, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
-    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 3);
-    prioritiesLEDStripEvents.put(LEDStripEvents.MATCH_COUNTDOWN, 4);
+    prioritiesLEDStripEvents.put(LEDStripEvents.SHOOTER_READY, 3);
+    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 4);
     prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 5);
   }
 
@@ -51,7 +51,7 @@ public class LEDEventUtil {
 
     if (
       previousEventStrip != LEDStripEvents.NEUTRAL && previousEventStrip != LEDStripEvents.ROBOT_DISABLED
-      && getPriority(event) < getPriority(previousEventStrip) && event != LEDStripEvents.MATCH_COUNTDOWN
+      && getPriority(event) < getPriority(previousEventStrip)
     ) {
       DataLogUtil.writeMessage("LED Strip SendEvent: Event Priority Too Low");
       return;
@@ -69,17 +69,18 @@ public class LEDEventUtil {
         DataLogUtil.writeMessage("LED Strip Reverse Intaking");
         break;
       case PREPPING_SHOOTER:
-        
+        LED.dashboardColor = AnimationColor.PREP_SHOOTER;
+        led.animate(Animations.shooterPrepAnimation);
+        DataLogUtil.writeMessage("LED Strip Prep Shooter");
         break;
+      case SHOOTER_READY:
+        LED.dashboardColor = AnimationColor.SHOOTER_READY;
+        led.animate(Animations.shooterReadySolidColor);
+        DataLogUtil.writeMessage("LED Strip Shooter Ready");
       case ROBOT_DISABLED:
         LED.dashboardColor = AnimationColor.NEUTRAL;
         CommandScheduler.getInstance().schedule(repeatedLEDAnimateRobotDisabled);
-        led.setCountdownStarted(false);
         DataLogUtil.writeMessage("LED Strip Robot Disabled");
-        break;
-      case MATCH_COUNTDOWN:
-        led.animate(Animations.matchCountdownAnimation);
-        DataLogUtil.writeMessage("LED Strip Match Countdown");
         break;
       default:
         LED.dashboardColor = AnimationColor.NEUTRAL;

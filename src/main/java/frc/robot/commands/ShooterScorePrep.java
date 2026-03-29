@@ -49,6 +49,8 @@ public class ShooterScorePrep extends Command {
 
   private final EndType type;
 
+  private boolean sentShooterReadyEvent;
+
   /**
    * Sets the hood angle and shooter velocity for scoring.
    * @param velocityGetter DoubleSupplier that returns the target velocity of the shooter, in rpm
@@ -187,6 +189,9 @@ public class ShooterScorePrep extends Command {
       shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
 
+    LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
+    sentShooterReadyEvent = false;
+
     DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetAngle, ", Velocity Setpoint =", targetVelocity,
                              ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distanceToTarget);
   }
@@ -194,8 +199,6 @@ public class ShooterScorePrep extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
-
     if (useGetter && type == EndType.runForever) {
       // Don't update angle from getter if type == waitForAngle, otherwise the getter could
       // change the angle a little and never settle on a value. Then the PID controller would
@@ -233,6 +236,14 @@ public class ShooterScorePrep extends Command {
       shooter.setHoodAnglePID(targetAngle);
       shooter.setShooterVelocity(targetVelocity);
     }
+
+    if (!sentShooterReadyEvent && (Math.abs(shooter.getHoodAngle(1) - targetAngle) < ShooterConstants.hoodErrorTolerance)
+          && (Math.abs(shooter.getHoodAngle(2) - targetAngle) < ShooterConstants.hoodErrorTolerance)
+          && (Math.abs(shooter.getShooterVelocity(1) - targetVelocity) < ShooterConstants.shooterVelocityErrorTolerance)) {
+
+        LEDEventUtil.sendEvent(LEDStripEvents.SHOOTER_READY);
+        sentShooterReadyEvent = true;
+      }
   }
 
   // Called once the command ends or is interrupted.
