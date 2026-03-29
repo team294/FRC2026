@@ -525,10 +525,6 @@ public final class Constants {
     public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
     public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
 
-    public static final double hubHeightMeters = Units.inchesToMeters(72.0);
-
-    // public static final double shootOnMoveCoefficient = 1.757; // TODO insert value here
-
     public static final double timeOfFlightSlope = 0.214491;
     public static final double timeOfFlightIntercept = 0.491421;
   }

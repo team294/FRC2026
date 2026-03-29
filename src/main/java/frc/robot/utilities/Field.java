@@ -73,8 +73,8 @@ public class Field {
     }
 
     public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds, double accelerationX, double accelerationY) {
-        double offsetX = (robotFieldRelativeSpeeds.vxMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
-        double offsetY = (robotFieldRelativeSpeeds.vyMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
+        double offsetX = (accelerationX * FieldConstants.timeOfFlightSlope * FieldConstants.timeOfFlightSlope) + (robotFieldRelativeSpeeds.vxMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
+        double offsetY = (accelerationY * FieldConstants.timeOfFlightSlope * FieldConstants.timeOfFlightSlope) + (robotFieldRelativeSpeeds.vyMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
 
         return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
     }

@@ -106,7 +106,6 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private PhotonCameraWrapper cameraRight;
   List<PhotonCameraWrapper> cameras = new ArrayList<PhotonCameraWrapper>(2);
   private boolean useVisionForOdometry = true;
-  private double lastTimestamp;
 
   // Odometry class for tracking robot pose
   private final SwerveDrivePoseEstimator poseEstimator; 
@@ -472,12 +471,36 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     turnLocked = false;
   }
 
-  public double getAccelerationX() {
+  /**
+   * Get forwards acceleration of robot (x) <b> in robot frame of reference </b>
+   * @return forwards robot acceleration, in m/s^2
+   */
+  public double getRobotAccelerationX() {
     return pigeon.getAccelerationX(true).getValueAsDouble() * Math.cos(Math.PI / 4.0) - pigeon.getAccelerationY(true).getValueAsDouble() * Math.sin(Math.PI / 4.0);
   }
 
-  public double getAccelerationY() {
+  /**
+   * Get sideways acceleration of robot (y) <b> in robot frame of reference </b>
+   * @return sideways robot acceleration, in m/s^2
+   */
+  public double getRobotAccelerationY() {
     return pigeon.getAccelerationX(true).getValueAsDouble() * Math.sin(Math.PI / 4.0) + pigeon.getAccelerationY(true).getValueAsDouble() * Math.cos(Math.PI / 4.0);
+  }
+
+  /**
+   * Get x acceleration of robot <b> in FIELD frame of reference </b>
+   * @return x acceleration: positive is away from blue driver station, negative is towards blue driver station
+   */
+  public double getFieldAccelerationX() {
+    return getRobotAccelerationX() * Math.cos(Math.toRadians(getPoseAngle())) - getRobotAccelerationY() * Math.sin(Math.toRadians(getPoseAngle()));
+  }
+
+  /**
+   * Get y acceleration of robot <b> in FIELD frame of reference </b>
+   * @return y acceleration: positive is left from blue driver station POV, negative is right from blue driver station POV
+   */
+  public double getFieldAccelerationY() {
+    return getRobotAccelerationX() * Math.sin(Math.toRadians(getPoseAngle()) + getRobotAccelerationY() * Math.cos(Math.toRadians(getPoseAngle())));
   }
   
   /**
@@ -669,8 +692,11 @@ public class DriveTrain extends SubsystemBase implements Loggable {
 
       SmartDashboard.putBoolean("Vision Updating Odometry", useVisionForOdometry);
 
-      SmartDashboard.putNumber("Drive X Acceleration", getAccelerationX());
-      SmartDashboard.putNumber("Drive Y Acceleration", getAccelerationY());
+      SmartDashboard.putNumber("Drive X Acceleration Robot", getRobotAccelerationX());
+      SmartDashboard.putNumber("Drive Y Acceleration Robot", getRobotAccelerationY());
+
+      SmartDashboard.putNumber("Drive X Acceleration Field", getFieldAccelerationX());
+      SmartDashboard.putNumber("Drive Y Acceleration Field", getFieldAccelerationY());
 
       // TODO This code creates errors after running for a few minutes. Need to debug.
       // SmartDashboard.putData("Swerve Drive", new Sendable() {
@@ -806,7 +832,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
           SmartDashboard.putNumber("Vision " + camera.getName() + " rot", camPose.estimatedPose.toPose2d().getRotation().getDegrees());
 
           // Only run camera updates for pose estimator if useVisionForOdometry is true
-          if (camResult.getBestTarget().getPoseAmbiguity() < 0.7 && camResult.hasTargets() && useVisionForOdometry && camResult.getBestTarget().getBestCameraToTarget().getX() < 3) {
+          if (camResult.getBestTarget().getPoseAmbiguity() < 0.2 && camResult.hasTargets() && useVisionForOdometry && camResult.getBestTarget().getBestCameraToTarget().getX() < 3) {
             PhotonTrackedTarget bestTarget = camResult.getBestTarget();
             SmartDashboard.putNumber("Vision " + camera.getName() + " AprilTag", bestTarget.getFiducialId());
 
@@ -817,11 +843,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
             //   poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds, VisionConstants.visionFarMatrix);
             // }
 
-            // don't take bad data
-            if (camResult.getBestTarget().getPoseAmbiguity() < 0.2) {
-              poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds, 
-                camera.getVisionMatrix(result, camResult.getTargets()));
-            }
+            poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds, 
+              camera.getVisionMatrix(result, camResult.getTargets()));
 
           } else {
             SmartDashboard.putNumber("Vision " + camera.getName() + " AprilTag", -3);

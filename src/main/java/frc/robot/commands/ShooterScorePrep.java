@@ -168,7 +168,7 @@ public class ShooterScorePrep extends Command {
       if (!shootOnTheMove) {
         goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
-        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(robotPose.getTranslation()), turretTranslation2d, driveTrain.getChassisSpeeds(), driveTrain.getAccelerationX(), driveTrain.getAccelerationY());
+        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(robotPose.getTranslation()), turretTranslation2d, driveTrain.getChassisSpeeds(), driveTrain.getFieldAccelerationX(), driveTrain.getFieldAccelerationY());
       }
 
       distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);
