@@ -616,15 +616,16 @@ public final class Constants {
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
 
-    public static final double kP = 40.0;  // CALIBRATED: new 40.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kP = 30.0;  // CALIBRATED: new 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
     public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
     public static final double kD = 0.2;   // CALIBRATED: new 0.2, old intake 0.4
     public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
     public static final double kS = 0.195; // CALIBRATED: new 0.195, old intake 0.185 - kS, in Volts
     public static final double kV = 5.132;  // CALIBRATED: new 5.132, old intake 5.418 - kV, in Volts/(intake-rotations/sec)
+    public static final double kA = 0.15;   // CALIBRATED: new 0.15, old intake 0.0 - kV, in Volts/(intake-rotations/sec2)
 
     public static final double MMCruiseVelocity = 1.20;                   // CALIBRATED, Max velocity in mechanism rotations / second
-    public static final double MMAcceleration = MMCruiseVelocity / 0.35;  // CALIBRATED, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
+    public static final double MMAcceleration = MMCruiseVelocity / 0.15;  // CALIBRATED:  new /0.15, old intake /0.35, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {

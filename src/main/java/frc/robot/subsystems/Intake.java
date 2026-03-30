@@ -208,6 +208,7 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorRotorConfig.Slot0.kG = 0.0;
     intakeDeployMotorRotorConfig.Slot0.kS = IntakeConstants.kS;
     intakeDeployMotorRotorConfig.Slot0.kV = IntakeConstants.kV;
+    intakeDeployMotorRotorConfig.Slot0.kA = IntakeConstants.kA;
 
     // Configure the CANcoder as a feedback source for the deploy motor
     // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio
@@ -223,6 +224,7 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorCANcoderConfig.Slot0.kG = 0.0;
     intakeDeployMotorCANcoderConfig.Slot0.kS = IntakeConstants.kS;
     intakeDeployMotorCANcoderConfig.Slot0.kV = IntakeConstants.kV;
+    intakeDeployMotorCANcoderConfig.Slot0.kA = IntakeConstants.kA;
 
     // Apply the configurations to the roller motor. This is a blocking call and will wait up to 200ms to apply.
     intakeRollerConfigurator.apply(intakeRollerMotorConfig);
