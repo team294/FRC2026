@@ -6,18 +6,13 @@ package frc.robot.utilities;
 
 import java.io.UncheckedIOException;
 
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.FieldCentric;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.ShooterConstants;
 
 /** BCR Field class (implementation in progress) */
 public class Field {
@@ -72,10 +67,24 @@ public class Field {
         }
     }
 
+    /**
+     * Get "ghost" target to use for aiming shots to account for robot acceleration and velocity
+     * @param staticTargetTranslation2d Translation2d object of shot target
+     * @param turretTranslation2d Translation2d object of turret (shooter)
+     * @param robotFieldRelativeSpeeds <i>Field-relative</i> robot velocities
+     * @param accelerationX <i>Field-relative</i> robot acceleration in x-direction (away from Blue POV)
+     * @param accelerationY <i>Field-relative</i> robot acceleration in y-direction (left from Blue POV)
+     * @return Translation2d object of "ghost" target to aim at
+     */
     public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds, double accelerationX, double accelerationY) {
-        double offsetX = (accelerationX * FieldConstants.timeOfFlightSlope * FieldConstants.timeOfFlightSlope) + (robotFieldRelativeSpeeds.vxMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
-        double offsetY = (accelerationY * FieldConstants.timeOfFlightSlope * FieldConstants.timeOfFlightSlope) + (robotFieldRelativeSpeeds.vyMetersPerSecond * FieldConstants.timeOfFlightSlope) + FieldConstants.timeOfFlightIntercept;
+        double estTimeOfFlight = turretTranslation2d.getDistance(staticTargetTranslation2d) * FieldConstants.timeOfFlightSlope + FieldConstants.timeOfFlightIntercept;
 
+        // final position = 0.5(acceleration)(time^2) + (velocity)(time) + (initial position)
+        // acceleration and velocity are done here
+        double offsetX = (0.5 * accelerationX * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
+        double offsetY = (0.5 * accelerationY * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
+
+        // add to initial position to get final position
         return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
     }
 }

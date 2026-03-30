@@ -30,7 +30,7 @@ public class TurretAutoAim extends Command {
     this.driveTrain = driveTrain;
     this.field = field;
 
-    addRequirements(turret);  // can't require drivetrain here b/c it would cancel DriveWithJoysticksAdvanced
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
