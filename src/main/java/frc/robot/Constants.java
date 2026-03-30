@@ -595,8 +595,8 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double rollerCompensationVoltage = 12.0;
-    public static final double rollerIntakePercent = 0.72;   // TODO calibrate intake
-    public static final double rollerOuttakePercent = -0.72; // TODO calibrate intake
+    public static final double rollerIntakePercent = 0.8;   // TODO calibrate intake
+    public static final double rollerOuttakePercent = -0.8; // TODO calibrate intake
 
     // Length of intake, in meters (from front edge of robot to where intake ends - ignore bumpers)
     public static final double intakeLength = Units.inchesToMeters(12.0);
@@ -628,8 +628,8 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-84.5),   // CALIBRATED 3/7/26: -84.5  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
+      LOWER_LIMIT(-87.4),   // CALIBRATED 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-87.0),        // CALIBRATED 3/29/26: -87.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
       START_CONFIG(40.5),  // CALIBRATED 3/29/26: 40.5
