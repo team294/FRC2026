@@ -1,12 +1,13 @@
 package frc.robot.utilities;
 
-import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -42,7 +43,7 @@ public class AutoSelection {
 		// LeftSide_SideCollect_UnderTrench_Depot("LeftSide_Preload_CenterCollect_UnderTrench_Outpost", 6),
 		LeftSide_SideCollect_UnderTrench("LeftSide_SideCollect_UnderTrench", 7),
 		// LeftSide_SideCollect_OverBump_Depot("LeftSide_Preload_CenterCollect_UnderTrench_Outpost", 8),
-		// LeftSide_SideCollect_OverBump("LeftSide_SideCollect_UnderTrench", 9),
+		LeftSide_SideCollect_OverBump("LeftSide_SideCollect_OverBump", 9),
 
 		// RightSide_CenterCollect_UnderTrench("RightSide_CenterCollect_UnderTrench", 10),
 		RightSide_SideCollect_UnderTrench("RightSide_SideCollect_UnderTrench", 11),
@@ -174,6 +175,7 @@ public class AutoSelection {
 	private final Shooter shooter;
 	private final Climber climber;
 
+	private Timer timer = new Timer();
 	
 	private Command cachedAutonomousCommand;
 	private int logRotationKey;
@@ -204,7 +206,7 @@ public class AutoSelection {
 	 * @param driveTrain DriveTrain subsystem
 	 */
 	public AutoSelection(Joystick rightJoystick, TrajectoryCache trajectoryCache, AllianceSelection allianceSelection, Field field, 
-							Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber,  DriveTrain driveTrain) {
+							Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain) {
 			    // Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber
 		this.rightJoystick = rightJoystick;
 		this.trajectoryCache = trajectoryCache;
@@ -404,10 +406,18 @@ public class AutoSelection {
 		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kOutpostOrDepot, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
 		// }
 
-		// else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_OverBump.value) {
-		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_SideCollect_OverBump; 
-		// 	autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
-		// }
+		else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_OverBump.value) {
+			autoSelectionOption = RoutineSelectionOption.LeftSide_SideCollect_OverBump; 
+			autonomousCommandMain = sequence(
+										new InstantCommand(() -> timer.restart()),
+										race(
+											new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
+											new WaitUntilCommand(() -> timer.get() >= 17.0)
+										),
+										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(true, TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
+										new InstantCommand(() -> timer.stop())
+									);
+		}
 
 		// else if (autoPlan == RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench_2Cycle.value) {
 		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench_2Cycle; 

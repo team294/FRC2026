@@ -20,6 +20,7 @@ import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotDimensions;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.Constants.AutoConstants.ShootPreloadType;
@@ -62,9 +63,13 @@ public class AutonDriveToNeutralZone extends SequentialCommandGroup {
           new WaitCommand(1.0),
           new IntakeSequence(intake),
           either(
-            new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber), 
+            parallel(
+              new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber), 
+              new HoodSetAngle(ShooterConstants.hoodShootAngle, EndType.waitForSetPoint, shooter)
+            ),
             none(), 
-          () -> returnToAllianceZone == ReturnToAllianceType.kOverBump)
+            () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
+          )
         )
       ),
       new DataLogMessage(false, "AutonDriveToNeutralZone: end")
