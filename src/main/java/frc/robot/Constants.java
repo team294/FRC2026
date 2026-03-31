@@ -575,7 +575,7 @@ public final class Constants {
 
     /**
      * During autonomous, what to do at the end of the first cycle
-     * <p> kNone: do nothing and end at shooting position 
+     * <p> kNone: do nothing and end at shooting position
      * <p> kSecondCycle: go to the center again for a second cycle
      * <p> kOutpostOrDepot: depending on the side of the auto routine, go to the outpost/depot and intake before shooting balls 
      */
