@@ -120,6 +120,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private boolean yLocked = false;
   private boolean turnLocked = false;
 
+  private boolean fineControl = false;
+
   /**
    * Creates the DriveTrain subsystem
    * @param allianceSelection BCR AllianceSelection object
@@ -465,10 +467,29 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     return turnLocked;
   }
 
+  /**
+   * Unlock joystick movement on all axes.
+   */
   public void unlockAll() {
     xLocked = false;
     yLocked = false;
     turnLocked = false;
+  }
+
+  /**
+   * Set fine control on joysticks. Enabled means robot will move slower, disabled means robot moves normally.
+   * @param enabled true = fine control, false = normal control
+   */
+  public void setFineControl(boolean enabled) {
+    fineControl = enabled;
+  }
+
+  /**
+   * Gets current fine control state.
+   * @return true = fine control, false = normal control
+   */
+  public boolean isFineControlEnabled() {
+    return fineControl;
   }
   
   /**
