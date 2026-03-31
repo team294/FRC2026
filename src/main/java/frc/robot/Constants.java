@@ -480,7 +480,7 @@ public final class Constants {
     // Theta kp value for joystick in rad/sec
     public static final double kPJoystickThetaController = 3;         // TODO CALIBRATE
 
-    public static final double fineControlRatio = 0.4; // TODO CALIBRATE percent of usual drive speed to drive at during fine control.
+    public static final double fineControlRatio = 0.4; // CALIBRATED 3/30/26: percent of usual drive speed to drive at during fine control.
   }
 
   public static class FieldConstants {
