@@ -63,7 +63,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private final StatusSignal<Current> climberRightStatorCurrent;            // Motor stator current, in amps (positive = forward, negative = reverse)
   private final StatusSignal<Voltage> climberRightVoltage;                  // Motor voltage, in volts
 
-  private VoltageOut climberVoltageControl = new VoltageOut(0.0);
+  private VoltageOut climberVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
 
     // DataLog entries
   private final DataLog log = DataLogManager.getLog();
