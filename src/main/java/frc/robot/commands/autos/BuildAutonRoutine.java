@@ -67,7 +67,7 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
       
       // Whether we are going to do anything after the first cycle
       either(
-        none(),
+        none(), 
         // If we are, check whether we are going to the neutral zone for a second cycle or going to the outpost/depot
         either(
           sequence( // Plz don't do this rn

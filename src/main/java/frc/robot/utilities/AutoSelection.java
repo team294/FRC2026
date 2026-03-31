@@ -52,7 +52,7 @@ public class AutoSelection {
 		// RightSide_Preload_CenterCollect_UnderTrench_2Cycle("RightSide_Preload_CenterCollect_UnderTrench_2Cycle", 13),
 		// RightSide_CenterCollect_UnderTrench_Outpost("RightSide_CenterCollect_UnderTrench_Outpost", 14),
 		// RightSide_SideCollect_UnderTrench_Outpost("RightSide_SideCollect_UnderTrench_Outpost", 15),
-		RightSide_SideCollect_OverBump("RightSide_SideCollect_OverBump", 16),
+		RightSide_SideCollect_OverBump("RightSide_SideCollect_OverBump", 16);
 
 		// DriveForwardOneMeter("DriveForwardOneMeter", 101),
 		// DriveForwardTwoMeters("DriveForwardTwoMeters", 102),
@@ -63,7 +63,6 @@ public class AutoSelection {
 		// RelCirclePath("RelativeCirclePath", 106),
 		// RelRotate180("RelativeRotate180", 107),
 		// AbsDiagonalTest("AbsoluteDiagonalTest", 108),
-		DriveOverBump("DriveOverBump", 109);
 
 		@SuppressWarnings({ "MemberName", "PMD.SingularField" })
 		public final String name;
@@ -233,14 +232,6 @@ public class AutoSelection {
 		// 	autoSelectionOption = RoutineSelectionOption.AbsDiagonalTest;
 		// 	autonomousCommandMain = new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.AbsoluteDiagonalTest), driveTrain, allianceSelection);
 		// }
-
-		else if (autoPlan == RoutineSelectionOption.DriveOverBump.value) {
-			autoSelectionOption = RoutineSelectionOption.DriveOverBump;
-			autonomousCommandMain = sequence(
-										new DriveResetPose(new Pose2d(3.2031, 5.6425, new Rotation2d(Math.toRadians(90))), false, driveTrain),
-										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection)
-									);
-		}
 
 		// else if (autoPlan == RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench.value) {
 		// 	autoSelectionOption = RoutineSelectionOption.LeftSide_CenterCollect_UnderTrench; 
