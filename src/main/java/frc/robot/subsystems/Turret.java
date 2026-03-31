@@ -51,9 +51,9 @@ public class Turret extends SubsystemBase implements Loggable {
   private TalonFXConfiguration usingRotorEncoderConfig; // Configuration for reading the rotor encoder
   private TalonFXConfiguration usingRemoteEncoderConfig; // Configuration for reading a remote encoder (CANcoder)
 
-  private VoltageOut turretVoltageControl = new VoltageOut(0.0).withEnableFOC(true);
-  private PositionVoltage turretPositionControl = new PositionVoltage(0.0).withEnableFOC(true);
-  private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(true);
+  private VoltageOut turretVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private PositionVoltage turretPositionControl = new PositionVoltage(0.0).withEnableFOC(false);
+  private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   private boolean turretAutoAimEnabled = false;   // TODO: true when calibrated
 
@@ -679,23 +679,23 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Get turret target angle for aiming to a target based on turret position and target position
+   * Get turret target angle for aiming to the hub based on current alliance and robot position/velocity.
    * @param robotPose2d Pose2d object for robot's current position
-   * @param targetPose2d Pose2d object for aiming target
+   * @param targetTranslation2d Translation2d object for aiming target
    * @return goal auto-targeting angle based on current turret position, in degrees
    */
-  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Translation2d targetPose2d) {
-    return Math.toDegrees(Math.atan2(getTurretAbsolutePose(robotPose2d).getY() - targetPose2d.getY(), getTurretAbsolutePose(robotPose2d).getX() - targetPose2d.getX()));
+  private double getAutoTargetAngleAbsolute(Pose2d robotPose2d, Translation2d targetTranslation2d) {
+    return Math.toDegrees(Math.atan2(getTurretAbsolutePose(robotPose2d).getY() - targetTranslation2d.getY(), getTurretAbsolutePose(robotPose2d).getX() - targetTranslation2d.getX()));
   }
 
   /**
    * Get target angle for turret to turn to relative to turret's absolute zero.
    * @param robotPose2d Current Pose2d of robot on field
-   * @param targetPose2d Pose2d object for aiming target
-   * @return target angle for turret to turn to in turret-relative, 0deg is back of robot
+   * @param targetTranslation2d Translation2d object for aiming target
+   * @return target angle for turret to turn to
    */
-  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetPose2d) {
-    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetPose2d) - robotPose2d.getRotation().getDegrees())));
+  public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetTranslation2d) {
+    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetTranslation2d) - robotPose2d.getRotation().getDegrees())));
   }
 
   /**
