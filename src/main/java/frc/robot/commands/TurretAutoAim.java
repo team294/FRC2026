@@ -4,25 +4,28 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
-import frc.robot.utilities.AllianceSelection;
+import frc.robot.utilities.Field;
 
 public class TurretAutoAim extends Command {
-  Turret turret;
-  DriveTrain driveTrain;
-  AllianceSelection allianceSelection;
+  private final Turret turret;
+  private final DriveTrain driveTrain;
+  private final Field field;
+
+  private Pose2d robotPose2d;
 
   /**
    * Calculate target turret angle for shooting depending on robot position on field
   */
-  public TurretAutoAim(Turret turret, DriveTrain driveTrain, AllianceSelection allianceSelection) {
+  public TurretAutoAim(Turret turret, DriveTrain driveTrain, Field field) {
     this.turret = turret;
     this.driveTrain = driveTrain;
-    this.allianceSelection = allianceSelection;
+    this.field = field;
 
     addRequirements(turret);
   }
@@ -34,8 +37,15 @@ public class TurretAutoAim extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   public void execute() {
-    if (turret.getAutoAimEnabled()) turret.setTurretAngle(turret.getAutoTargetAngleTurretRelative(allianceSelection.getAlliance(), driveTrain.getPose()));
+    robotPose2d = driveTrain.getPose();
+
+    if (turret.getAutoAimEnabled()) {
+      turret.setTurretAngle(
+        turret.getAutoTargetAngleTurretRelative(
+          robotPose2d, 
+          field.getStaticShotTarget(robotPose2d.getTranslation())));
     SmartDashboard.putNumber("Turret Distance From Hub", turret.getTurretAbsolutePose(driveTrain.getPose()).getTranslation().getDistance(FieldConstants.hubPositionBlue));
+    }
   }
 
   // Returns true when the command should end.
