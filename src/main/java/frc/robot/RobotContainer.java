@@ -224,7 +224,7 @@ public class RobotContainer {
     Trigger xbStart = xboxController.start();
     Trigger xbPOVUp = xboxController.povUp();
     Trigger xbPOVRight = xboxController.povRight();
-    // Trigger xbPOVLeft = xboxController.povLeft();
+    Trigger xbPOVLeft = xboxController.povLeft();
     Trigger xbPOVDown = xboxController.povDown();
     Trigger xbLJoystickTrigger = xboxController.leftStick();
     // Trigger xbRJoystickTrigger = xboxController.rightStick();
@@ -265,6 +265,11 @@ public class RobotContainer {
     xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
     xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
 
+    xbPOVLeft.onTrue(parallel(
+      new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter),
+      new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber)
+    ));
+
     xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
     xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
     xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
@@ -290,7 +295,8 @@ public class RobotContainer {
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    right[1].whileTrue(new DriveAlongNearestWall(driveTrain));
+    right[1].onTrue(new DriveTrainSetFineControl(true, driveTrain));
+    right[1].onFalse(new DriveTrainSetFineControl(false, driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
