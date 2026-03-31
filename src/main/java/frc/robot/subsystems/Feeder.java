@@ -96,10 +96,10 @@ public class Feeder extends SubsystemBase implements Loggable {
   private final StatusSignal<AngularVelocity> spindexerEncoderVelocity;  // Motor velocity measured by the encoder, in rotations/second
 
   // Motor control modes
-  private VoltageOut uptakeVoltageControl = new VoltageOut(0.0);
-  private VoltageOut spindexerVoltageControl = new VoltageOut(0.0);
-  private VelocityVoltage uptakeVelocityControl = new VelocityVoltage(0.0);
-  private VelocityVoltage spindexerVelocityControl = new VelocityVoltage(0.0);
+  private VoltageOut uptakeVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VoltageOut spindexerVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VelocityVoltage uptakeVelocityControl = new VelocityVoltage(0.0).withEnableFOC(false);
+  private VelocityVoltage spindexerVelocityControl = new VelocityVoltage(0.0).withEnableFOC(false);
 
   // DataLog
   private final DataLog log = DataLogManager.getLog();
