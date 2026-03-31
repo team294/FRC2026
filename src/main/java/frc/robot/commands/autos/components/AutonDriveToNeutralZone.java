@@ -15,11 +15,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotDimensions;
 import frc.robot.Constants.StopType;
+import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.IntakeSequence;
@@ -40,7 +42,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonDriveToNeutralZone extends SequentialCommandGroup {
   /** Drive to the neutral zone (can only do under the trench), finishing in position to start collecting balls */
-  public AutonDriveToNeutralZone(ShootPreloadType shootPreload, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+  public AutonDriveToNeutralZone(ReturnToAllianceType returnToAllianceZone, ShootPreloadType shootPreload, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     Trajectory<SwerveSample> trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchToCollectStart);
     addCommands(
       new DataLogMessage(false, "AutonDriveToNeutralZone: start"),
@@ -58,7 +60,11 @@ public class AutonDriveToNeutralZone extends SequentialCommandGroup {
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),  // race with intake command
         sequence(
           new WaitCommand(1.0),
-          new IntakeSequence(intake)
+          new IntakeSequence(intake),
+          either(
+            new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber), 
+            none(), 
+          () -> returnToAllianceZone == ReturnToAllianceType.kOverBump)
         )
       ),
       new DataLogMessage(false, "AutonDriveToNeutralZone: end")
