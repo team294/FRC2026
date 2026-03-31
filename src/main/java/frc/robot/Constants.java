@@ -598,8 +598,8 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double rollerCompensationVoltage = 12.0;
-    public static final double rollerIntakePercent = 0.72;   // TODO calibrate intake
-    public static final double rollerOuttakePercent = -0.72; // TODO calibrate intake
+    public static final double rollerIntakePercent = 0.87;                  // TODO calibrate intake
+    public static final double rollerOuttakePercent = -rollerIntakePercent; // TODO calibrate intake
 
     // Length of intake, in meters (from front edge of robot to where intake ends - ignore bumpers)
     public static final double intakeLength = Units.inchesToMeters(12.0);
