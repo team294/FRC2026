@@ -52,6 +52,7 @@ public class AutoSelection {
 		// RightSide_Preload_CenterCollect_UnderTrench_2Cycle("RightSide_Preload_CenterCollect_UnderTrench_2Cycle", 13),
 		// RightSide_CenterCollect_UnderTrench_Outpost("RightSide_CenterCollect_UnderTrench_Outpost", 14),
 		// RightSide_SideCollect_UnderTrench_Outpost("RightSide_SideCollect_UnderTrench_Outpost", 15),
+		RightSide_SideCollect_OverBump("RightSide_SideCollect_OverBump", 16),
 
 		// DriveForwardOneMeter("DriveForwardOneMeter", 101),
 		// DriveForwardTwoMeters("DriveForwardTwoMeters", 102),
@@ -74,96 +75,6 @@ public class AutoSelection {
 		}
 	}
 
-	// public enum StartPositionSelectionOption {
-	// 	NONE("None", null, -1),
-
-	// 	RIGHT("Right", RoutineSideType.kRightSide, 0),
-	// 	LEFT("Left", RoutineSideType.kLeftSide, 1);
-
-	// 	@SuppressWarnings({ "MemberName", "PMD.SingularField" })
-	// 	public final String name;
-	// 	public final int value;
-	// 	public final RoutineSideType type;
-
-	// 	StartPositionSelectionOption(String name, RoutineSideType type, int value) {
-	// 		this.name = name;
-	// 		this.type = type;
-	// 		this.value = value;
-	// 	}
-	// }
-
-	// public enum ShootPreloadSelectionOption {
-	// 	NONE("None", null, -1),
-
-	// 	SHOOT_PRELOAD("Shoot Preload", ShootPreloadType.kShootPreload, 0),
-	// 	DONT_SHOOT_PRELOAD("Don't Shoot Preload", ShootPreloadType.kDontShootPreload, 1);
-
-	// 	@SuppressWarnings({ "MemberName", "PMD.SingularField" })
-	// 	public final String name;
-	// 	public final int value;
-	// 	public final ShootPreloadType type;
-
-	// 	ShootPreloadSelectionOption(String name, ShootPreloadType type, int value) {
-	// 		this.name = name;
-	// 		this.type = type;
-	// 		this.value = value;
-	// 	}
-	// }
-
-	// public enum BallPickupPathSelectionOption {
-	// 	NONE("None", null, -1),
-
-	// 	CENTER("Pickup Through Center", BallPickupTrajType.kDriveThroughCenter, 0),
-	// 	SIDE("Pickup Closer To Hub", BallPickupTrajType.kDriveThroughSide, 1);
-
-	// 	@SuppressWarnings({ "MemberName", "PMD.SingularField" })
-	// 	public final String name;
-	// 	public final int value;
-	// 	public final BallPickupTrajType type;
-
-	// 	BallPickupPathSelectionOption(String name, BallPickupTrajType type, int value) {
-	// 		this.name = name;
-	// 		this.type = type;
-	// 		this.value = value;
-	// 	}
-	// }
-
-	// public enum ReturnToAllianceSelectionOption {
-	// 	NONE("None", null, -1),
-
-	// 	BUMP("Use Bump to Return to Alliance", ReturnToAllianceType.kOverBump, 0),
-	// 	TRENCH("Use Trench to Return to Alliance", ReturnToAllianceType.kUnderTrench, 1);
-
-	// 	@SuppressWarnings({ "MemberName", "PMD.SingularField" })
-	// 	public final String name;
-	// 	public final int value;
-	// 	public final ReturnToAllianceType type;
-
-	// 	ReturnToAllianceSelectionOption(String name, ReturnToAllianceType type, int value) {
-	// 		this.name = name;
-	// 		this.type = type;
-	// 		this.value = value;
-	// 	}
-	// }
-
-	// public enum NumCyclesSelectionOption {
-	// 	NONE("None", null, -1),
-
-	// 	ONE("Single cycle to center", AutoEndType.kOne, 0),
-	// 	TWO("Two cycles to center", AutoEndType.kTwo, 1);
-
-	// 	@SuppressWarnings({ "MemberName", "PMD.SingularField" })
-	// 	public final String name;
-	// 	public final int value;
-	// 	public final AutoEndType type;
-
-	// 	NumCyclesSelectionOption(String name, AutoEndType type, int value) {
-	// 		this.name = name;
-	// 		this.type = type;
-	// 		this.value = value;
-	// 	}
-	// }
-
 	private final AllianceSelection allianceSelection;
 	private final Field field;
 	private final TrajectoryCache trajectoryCache;
@@ -183,19 +94,7 @@ public class AutoSelection {
 	private double waitTime;
 	private Alliance alliance;
 
-	// private int startPosition;
-	// private int shootPreload;
-	// private int ballPickup;
-	// private int returnToAlliance;
-	// private int numCycles;
-
 	private SendableChooser<Integer> autoRoutineChooser = new SendableChooser<>();
-
-	// private SendableChooser<Integer> startPositionChooser = new SendableChooser<>();
-	// private SendableChooser<Integer> shootPreloadChooser = new SendableChooser<>();
-	// private SendableChooser<Integer> ballPickupPathChooser = new SendableChooser<>();
-	// private SendableChooser<Integer> returnToAllianceChooser = new SendableChooser<>();
-	// private SendableChooser<Integer> numCyclesChooser = new SendableChooser<>();
 
 	/**
 	 * Autoselection constructor for command group to set up autoPlan widget.
@@ -245,40 +144,8 @@ public class AutoSelection {
 			autoRoutineChooser.addOption(option.name, option.value);
 		}
 
-		// for (StartPositionSelectionOption option : StartPositionSelectionOption.values()) {
-		// 	if (option == StartPositionSelectionOption.NONE) continue;
-		// 	startPositionChooser.addOption(option.name, option.value);
-		// }
-
-		// for (ShootPreloadSelectionOption option : ShootPreloadSelectionOption.values()) {
-		// 	if (option == ShootPreloadSelectionOption.NONE) continue;
-		// 	shootPreloadChooser.addOption(option.name, option.value);
-		// }
-
-		// for (BallPickupPathSelectionOption option : BallPickupPathSelectionOption.values()) {
-		// 	if (option == BallPickupPathSelectionOption.NONE) continue;
-		// 	ballPickupPathChooser.addOption(option.name, option.value);
-		// }
-
-		// for (ReturnToAllianceSelectionOption option : ReturnToAllianceSelectionOption.values()) {
-		// 	if (option == ReturnToAllianceSelectionOption.NONE) continue;
-		// 	returnToAllianceChooser.addOption(option.name, option.value);
-		// }
-
-		// for (NumCyclesSelectionOption option : NumCyclesSelectionOption.values()) {
-		// 	if (option == NumCyclesSelectionOption.NONE) continue;
-		// 	numCyclesChooser.addOption(option.name, option.value);
-		// }
-
 		// Show auto selection widget on dashboard
 		SmartDashboard.putData("Autonomous routine", autoRoutineChooser);
-
-		// SmartDashboard.putData("Auto Start Position", startPositionChooser);
-		// SmartDashboard.putData("Auto Shoot Preload?", shootPreloadChooser);
-		// SmartDashboard.putData("Auto Ball Pickup Path", ballPickupPathChooser);
-		// SmartDashboard.putData("Auto Return Path", returnToAllianceChooser);
-		// SmartDashboard.putData("Auto Number of Cycles", numCyclesChooser);
-		
 
 		// Show auto parameters on dashboard
 		SmartDashboard.putNumber("Autonomous delay", 0);
@@ -301,12 +168,6 @@ public class AutoSelection {
 
 		// Get parameters from Shuffleboard
 		autoPlan = autoRoutineChooser.getSelected();
-		// startPosition = startPositionChooser.getSelected();
-		// shootPreload = shootPreloadChooser.getSelected();
-		// ballPickup = ballPickupPathChooser.getSelected();
-		// returnToAlliance = returnToAllianceChooser.getSelected();
-		// numCycles = numCyclesChooser.getSelected();
-
 		
 		RoutineSelectionOption autoSelectionOption = RoutineSelectionOption.NONE;
 		DataLogUtil.writeMessage(true, "AutoSelect, autoPlan =", autoPlan);
@@ -415,6 +276,19 @@ public class AutoSelection {
 											new WaitUntilCommand(() -> timer.get() >= 17.0)
 										),
 										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(true, TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
+										new InstantCommand(() -> timer.stop())
+									);
+		}
+
+		else if (autoPlan == RoutineSelectionOption.RightSide_SideCollect_OverBump.value) {
+			autoSelectionOption = RoutineSelectionOption.RightSide_SideCollect_OverBump; 
+			autonomousCommandMain = sequence(
+										new InstantCommand(() -> timer.restart()),
+										race(
+											new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
+											new WaitUntilCommand(() -> timer.get() >= 17.0)
+										),
+										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
 										new InstantCommand(() -> timer.stop())
 									);
 		}

@@ -67,16 +67,7 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
       
       // Whether we are going to do anything after the first cycle
       either(
-        // if we go over the bump, then drive back over the bump at the end of auto with 3 seconds to spare
         none(),
-        // either(
-        //   sequence(
-        //     new WaitUntilCommand(() -> timer.get() >= 17.0),
-        //     new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, alliance)
-        //   ),
-        //   none(), 
-        //   () -> returnToAllianceDirection == ReturnToAllianceType.kOverBump
-        // ),
         // If we are, check whether we are going to the neutral zone for a second cycle or going to the outpost/depot
         either(
           sequence( // Plz don't do this rn
