@@ -632,7 +632,7 @@ public final class Constants {
       LOWER_LIMIT(-87.4),   // CALIBRATED 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-87.0),        // CALIBRATED 3/29/26: -87.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
-      AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
+      AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
       START_CONFIG(40.5),  // CALIBRATED 3/29/26: 40.5
       UPPER_LIMIT(41.0);   // CALIBRATED 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
@@ -646,6 +646,7 @@ public final class Constants {
     public static final double reverseSpindexerSeconds = 0.294;
     public static final double noFuelSeconds = 0.687;
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
+    public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
 
     public static final class SpindexerConstants {
       public static final double compensationVoltage = 12.0;
