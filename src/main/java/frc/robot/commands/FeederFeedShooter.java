@@ -38,16 +38,20 @@ public class FeederFeedShooter extends Command {
 
     uptakeWithinTolerance = false;
     feeder.setUptakeVelocity(UptakeConstants.uptakeShootRPM);
+    timer.restart();  // start fuel tracking timer
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!uptakeWithinTolerance && Math.abs(feeder.getUptakeVelocityPIDError()) < FeederConstants.uptakeVelocityToleranceToStartSpindexer) {
-      uptakeWithinTolerance = true;
-      feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
-      timer.restart();  // start fuel tracking timer (should be running while spindexer is running)
-    } else if (uptakeWithinTolerance) {
+    if (!uptakeWithinTolerance) {
+      if (Math.abs(feeder.getUptakeVelocityPIDError()) > FeederConstants.uptakeVelocityToleranceToStartSpindexer) {
+        feeder.setSpindexerVelocity(feeder.getUptakeMotorVelocity() * FeederConstants.spindexderToUptakeRPMRatio);
+      } else {
+        uptakeWithinTolerance = true;
+        feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
+      }
+    } else {
 
       // time without Fuel is 0 if we have Fuel, so reset
       if (feeder.isDetected(0)) {  // check exit sensor b/c entry could have a Fuel while jammed 
