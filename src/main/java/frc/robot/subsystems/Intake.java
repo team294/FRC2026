@@ -134,7 +134,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the roller motor
     intakeRollerMotorConfig = new TalonFXConfiguration();
-    intakeRollerMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    intakeRollerMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     intakeRollerMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeRollerMotorConfig.Voltage.PeakForwardVoltage = IntakeConstants.rollerCompensationVoltage;
     intakeRollerMotorConfig.Voltage.PeakReverseVoltage = -IntakeConstants.rollerCompensationVoltage;
