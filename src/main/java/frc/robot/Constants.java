@@ -13,10 +13,7 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -632,8 +629,8 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-84.5),   // CALIBRATED 3/7/26: -84.5  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-84.0),        // CALIBRATED 3/19/26: -84.0
+      LOWER_LIMIT(-87.4),   // CALIBRATED 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-87.0),        // CALIBRATED 3/29/26: -87.0
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-30.0),  // CALIBRATED 3/19/26: -40.0
       START_CONFIG(40.5),  // CALIBRATED 3/29/26: 40.5
@@ -785,9 +782,9 @@ public final class Constants {
     public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
     public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
-    public static final double maxPercentOutput = 1.0;               // Absolute max percent out allowed for turret
-    public static final double maxManualPercentOutput = 0.5; // Max percent out allowed for manual turret movement when calibrated
-    public static final double maxUncalibratedPercentOutput = 0.1;   // Max percent out allowed for any turrent movement when uncalibrated
+    public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
+    public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
+    public static final double maxUncalibratedPercentOutput = 0.05;   // Max percent out allowed for any turrent movement when uncalibrated
 
     public static final double angleTolerance = 1.0;        // Angle tolerance for setting the turret angle, in degrees
 
@@ -800,7 +797,7 @@ public final class Constants {
 
     public static final double MMCruiseVelocity = 20.0; // CALIBRATED 3/17/26: 20.0
     public static final double MMAcceleration = 9.0;    // CALIBRATED 3/17/26: 9.0
-    public static final double MMJerk = 12.0;           // CALIBRATED 3/17/26: 12.0
+    public static final double MMJerk = 0.0;           // CALIBRATED 3/28/26: 0.0
 
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
