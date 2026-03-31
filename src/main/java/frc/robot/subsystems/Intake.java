@@ -82,9 +82,9 @@ public class Intake extends SubsystemBase implements Loggable{
   private final StatusSignal<Angle> intakeDeployCANcoderPosition;                 // CANcoder position, in CANcoder rotations
 
   // Motor control modes
-  private VoltageOut intakeRollerVoltageControl = new VoltageOut(0.0);
-  private VoltageOut intakeDeployVoltageControl = new VoltageOut(0.0);
-  private MotionMagicVoltage intakeDeployMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(true);
+  private VoltageOut intakeRollerVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VoltageOut intakeDeployVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private MotionMagicVoltage intakeDeployMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   // DataLog
   private final DataLog log = DataLogManager.getLog();

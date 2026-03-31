@@ -53,9 +53,9 @@ public class Turret extends SubsystemBase implements Loggable {
   private TalonFXConfiguration usingRotorEncoderConfig; // Configuration for reading the rotor encoder
   private TalonFXConfiguration usingRemoteEncoderConfig; // Configuration for reading a remote encoder (CANcoder)
 
-  private VoltageOut turretVoltageControl = new VoltageOut(0.0).withEnableFOC(true);
-  private PositionVoltage turretPositionControl = new PositionVoltage(0.0).withEnableFOC(true);
-  private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(true);
+  private VoltageOut turretVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private PositionVoltage turretPositionControl = new PositionVoltage(0.0).withEnableFOC(false);
+  private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   private boolean turretAutoAimEnabled = false;
 

@@ -42,8 +42,8 @@ public class SwerveModule {
   private final TalonFX driveMotor;
 	private final TalonFXConfigurator driveMotorConfigurator;
 	private TalonFXConfiguration driveMotorConfig;
-	private VoltageOut driveVoltageControl = new VoltageOut(0.0).withEnableFOC(true);
-  private VelocityVoltage driveVelocityControl = new VelocityVoltage(0.0).withEnableFOC(true);
+	private VoltageOut driveVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VelocityVoltage driveVelocityControl = new VelocityVoltage(0.0).withEnableFOC(false);
 
 	// Drive motor signals and sensors
 	private final StatusSignal<Voltage> driveMotorSupplyVoltage;			// Incoming bus voltage to motor controller, in volts
@@ -57,8 +57,8 @@ public class SwerveModule {
   private final TalonFX turningMotor;
 	private final TalonFXConfigurator turningMotorConfigurator;
 	private TalonFXConfiguration turningMotorConfig;
-	private VoltageOut turningVoltageControl = new VoltageOut(0.0);
-  private PositionVoltage turningPositionControl = new PositionVoltage(0.0);
+	private VoltageOut turningVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private PositionVoltage turningPositionControl = new PositionVoltage(0.0).withEnableFOC(false);
 
 	// Turning motor signals and sensors
 	private final StatusSignal<Temperature> turningMotorTemp;				    // Motor temperature, in degrees Celsius
