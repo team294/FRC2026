@@ -21,6 +21,9 @@ public class LEDEventUtil {
     REVERSE_INTAKING,
     PREPPING_SHOOTER,
     SHOOTER_READY,
+    FEEDING_SHOOTER,
+    LOWERING,
+    TRENCH_SAFE,
     NEUTRAL,
     ROBOT_DISABLED
   }
@@ -32,8 +35,11 @@ public class LEDEventUtil {
     prioritiesLEDStripEvents.put(LEDStripEvents.REVERSE_INTAKING, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
     prioritiesLEDStripEvents.put(LEDStripEvents.SHOOTER_READY, 3);
-    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 4);
-    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 5);
+    prioritiesLEDStripEvents.put(LEDStripEvents.FEEDING_SHOOTER, 4);
+    prioritiesLEDStripEvents.put(LEDStripEvents.LOWERING, 5);
+    prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 6);
+    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 7);
+    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 8);
   }
 
   /**
@@ -49,8 +55,12 @@ public class LEDEventUtil {
       return;
     }
 
+    // if previous was neutral or disabled, always update.
+    // if previous was lowering or displaying trench safety, always update.
+    // otherwise, if priority is lower than current state, do not update (ex: intaking while feeding shooter should display the latter)
     if (
       previousEventStrip != LEDStripEvents.NEUTRAL && previousEventStrip != LEDStripEvents.ROBOT_DISABLED
+      && previousEventStrip != LEDStripEvents.LOWERING && previousEventStrip != LEDStripEvents.TRENCH_SAFE 
       && getPriority(event) < getPriority(previousEventStrip)
     ) {
       DataLogUtil.writeMessage("LED Strip SendEvent: Event Priority Too Low");
@@ -77,6 +87,22 @@ public class LEDEventUtil {
         LED.dashboardColor = AnimationColor.SHOOTER_READY;
         led.animate(Animations.shooterReadySolidColor);
         DataLogUtil.writeMessage("LED Strip Shooter Ready");
+        break;
+      case FEEDING_SHOOTER:
+        LED.dashboardColor = AnimationColor.FEEDING_SHOOTER;
+        led.animate(Animations.feedingShooterAnimation);
+        DataLogUtil.writeMessage("LED Strip Feeding Shooter");
+        break;
+      case LOWERING:
+        LED.dashboardColor = AnimationColor.LOWERING;
+        led.animate(Animations.loweringAnimation);
+        DataLogUtil.writeMessage("LED Strip Lowering Climber/Hood");
+        break;
+      case TRENCH_SAFE:
+        LED.dashboardColor = AnimationColor.TRENCH_SAFE;
+        led.animate(Animations.trenchSafeSolidColor);
+        DataLogUtil.writeMessage("LED Strip Trench Safe");
+        break;
       case ROBOT_DISABLED:
         LED.dashboardColor = AnimationColor.NEUTRAL;
         CommandScheduler.getInstance().schedule(repeatedLEDAnimateRobotDisabled);

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.controls.ColorFlowAnimation;
 import com.ctre.phoenix6.controls.SingleFadeAnimation;
 import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
@@ -883,6 +882,10 @@ public final class Constants {
     REVERSE_INTAKING(128, 0, 128),     // Purple (strip reverse intaking)
     PREP_SHOOTER(240, 50, 0),          // Orange (strip prep shooter)
     SHOOTER_READY(19, 82, 18),         // Blue (strip shooter ready)
+    FEEDING_SHOOTER(19, 82, 18),       // Blue (feeding shooter)
+
+    LOWERING(255, 0, 0),               // Red (lowering climber and hood)
+    TRENCH_SAFE(0, 255, 0),            // Green (climber and hood at bottom, trench safe)
 
     DISABLED_BLUE(19, 82, 188),        // Blue   (disabled animation)
     DISABLED_ORANGE(240, 50, 0);       // Orange (disabled animation)
@@ -922,6 +925,10 @@ public final class Constants {
       private static final RGBWColor reverseIntakingColor = new RGBWColor(AnimationColor.REVERSE_INTAKING.r, AnimationColor.REVERSE_INTAKING.g, AnimationColor.REVERSE_INTAKING.b);
       private static final RGBWColor shooterPrepColor = new RGBWColor(AnimationColor.PREP_SHOOTER.r, AnimationColor.PREP_SHOOTER.g, AnimationColor.PREP_SHOOTER.b);
       private static final RGBWColor shooterReadyColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
+      private static final RGBWColor feedingShooterColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
+
+      private static final RGBWColor loweringColor = new RGBWColor(AnimationColor.LOWERING.r, AnimationColor.LOWERING.g, AnimationColor.LOWERING.b);
+      private static final RGBWColor trenchSafeColor = new RGBWColor(AnimationColor.TRENCH_SAFE.r, AnimationColor.TRENCH_SAFE.g, AnimationColor.TRENCH_SAFE.b);
     }
 
     public static final class Animations {
@@ -935,6 +942,10 @@ public final class Constants {
       public static final StrobeAnimation reverseIntakingAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.reverseIntakingColor);
       public static final StrobeAnimation shooterPrepAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.shooterPrepColor);
       public static final SolidColor shooterReadySolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.shooterReadyColor);
+      public static final StrobeAnimation feedingShooterAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.feedingShooterColor);
+
+      public static final StrobeAnimation loweringAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.loweringColor);
+      public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
     }
   }
 }

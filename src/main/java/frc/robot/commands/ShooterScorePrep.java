@@ -43,7 +43,7 @@ public class ShooterScorePrep extends Command {
 
   private final EndType type;
 
-  private boolean sentShooterReadyEvent;
+  private boolean ledSentShooterReadyEvent;
 
   /**
    * Sets the hood angle and shooter velocity for scoring.
@@ -187,7 +187,7 @@ public class ShooterScorePrep extends Command {
     shooter.setShooterVelocity(targetVelocity);
 
     LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
-    sentShooterReadyEvent = false;
+    ledSentShooterReadyEvent = false;
 
     toleranceCounter = 0;
     DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetHoodAngle, ", Velocity Setpoint =", targetVelocity,
@@ -232,10 +232,10 @@ public class ShooterScorePrep extends Command {
       shooter.setShooterVelocity(targetVelocity);
     }
 
-    if (!sentShooterReadyEvent && (shooter.isHoodAtGoalAngle() && shooter.isShooterAtGoalVelocity())) {
+    if (!ledSentShooterReadyEvent && (shooter.isHoodAtGoalAngle() && shooter.isShooterAtGoalVelocity())) {
 
       LEDEventUtil.sendEvent(LEDStripEvents.SHOOTER_READY);
-      sentShooterReadyEvent = true;
+      ledSentShooterReadyEvent = true;
     }
 
     // Call hoodPID every execute cycle, so that hood continues to run under PID control.

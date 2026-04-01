@@ -265,10 +265,7 @@ public class RobotContainer {
     xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
     xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
 
-    xbPOVLeft.onTrue(parallel(
-      new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter),
-      new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber)
-    ));
+    xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
 
     xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
     xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
@@ -291,7 +288,10 @@ public class RobotContainer {
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
     left[1].onTrue(new IntakeSequence(intake));
-    left[1].onFalse(new IntakeRollerStop(intake));
+    left[1].onFalse(parallel(
+      new IntakeRollerStop(intake),
+      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
+    ));
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
