@@ -269,7 +269,8 @@ public class RobotContainer {
     xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
     xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
     xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
-    xbB.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+
+    xbB.whileTrue(new SpindexerSetPercent(SpindexerConstants.spindexerReversePercent, false, feeder));
   }
 
   /**
