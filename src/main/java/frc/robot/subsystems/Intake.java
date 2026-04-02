@@ -82,9 +82,9 @@ public class Intake extends SubsystemBase implements Loggable{
   private final StatusSignal<Angle> intakeDeployCANcoderPosition;                 // CANcoder position, in CANcoder rotations
 
   // Motor control modes
-  private VoltageOut intakeRollerVoltageControl = new VoltageOut(0.0);
-  private VoltageOut intakeDeployVoltageControl = new VoltageOut(0.0);
-  private MotionMagicVoltage intakeDeployMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(true);
+  private VoltageOut intakeRollerVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private VoltageOut intakeDeployVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
+  private MotionMagicVoltage intakeDeployMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   // DataLog
   private final DataLog log = DataLogManager.getLog();
@@ -94,7 +94,7 @@ public class Intake extends SubsystemBase implements Loggable{
   private final DoubleLogEntry dLogRollerVoltage = new DoubleLogEntry(log, "/IntakeRoller/Voltage");
   private final DoubleLogEntry dLogDeployTemp = new DoubleLogEntry(log, "/IntakeDeploy/Temperature");
   private final DoubleLogEntry dLogDeployCurrent = new DoubleLogEntry(log, "/IntakeDeploy/Current");
-  private final DoubleLogEntry dLogDeployVelocity = new DoubleLogEntry(log, "/IntakeDeploy/Velocity");
+  private final DoubleLogEntry dLogDeployVelocity = new DoubleLogEntry(log, "/IntakeDeploy/VelocityRPS");
   private final DoubleLogEntry dLogDeployVoltage = new DoubleLogEntry(log, "/IntakeDeploy/Voltage");
   private final DoubleLogEntry dLogDeployPosition = new DoubleLogEntry(log, "/IntakeDeploy/Position");
 
@@ -134,7 +134,7 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Configure the roller motor
     intakeRollerMotorConfig = new TalonFXConfiguration();
-    intakeRollerMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    intakeRollerMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     intakeRollerMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeRollerMotorConfig.Voltage.PeakForwardVoltage = IntakeConstants.rollerCompensationVoltage;
     intakeRollerMotorConfig.Voltage.PeakReverseVoltage = -IntakeConstants.rollerCompensationVoltage;
@@ -208,6 +208,7 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorRotorConfig.Slot0.kG = 0.0;
     intakeDeployMotorRotorConfig.Slot0.kS = IntakeConstants.kS;
     intakeDeployMotorRotorConfig.Slot0.kV = IntakeConstants.kV;
+    intakeDeployMotorRotorConfig.Slot0.kA = IntakeConstants.kA;
 
     // Configure the CANcoder as a feedback source for the deploy motor
     // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio
@@ -223,6 +224,7 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorCANcoderConfig.Slot0.kG = 0.0;
     intakeDeployMotorCANcoderConfig.Slot0.kS = IntakeConstants.kS;
     intakeDeployMotorCANcoderConfig.Slot0.kV = IntakeConstants.kV;
+    intakeDeployMotorCANcoderConfig.Slot0.kA = IntakeConstants.kA;
 
     // Apply the configurations to the roller motor. This is a blocking call and will wait up to 200ms to apply.
     intakeRollerConfigurator.apply(intakeRollerMotorConfig);
@@ -463,11 +465,11 @@ public class Intake extends SubsystemBase implements Loggable{
 
   /**
    * Gets the velocity of the intakeDeployMotor.
-   * @return motor velocity, in RPM
+   * @return motor velocity, in RPS
    */
   public double getIntakeDeployVelocity() {
     intakeDeployEncoderVelocity.refresh();
-    return intakeDeployEncoderVelocity.getValueAsDouble() * 60.0;
+    return intakeDeployEncoderVelocity.getValueAsDouble();
   }
 
   /**

@@ -42,7 +42,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -120,6 +119,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private boolean xLocked = false;
   private boolean yLocked = false;
   private boolean turnLocked = false;
+
+  private boolean fineControl = false;
 
   /**
    * Creates the DriveTrain subsystem
@@ -466,10 +467,29 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     return turnLocked;
   }
 
+  /**
+   * Unlock joystick movement on all axes.
+   */
   public void unlockAll() {
     xLocked = false;
     yLocked = false;
     turnLocked = false;
+  }
+
+  /**
+   * Set fine control on joysticks. Enabled means robot will move slower, disabled means robot moves normally.
+   * @param enabled true = fine control, false = normal control
+   */
+  public void setFineControl(boolean enabled) {
+    fineControl = enabled;
+  }
+
+  /**
+   * Gets current fine control state.
+   * @return true = fine control, false = normal control
+   */
+  public boolean isFineControlEnabled() {
+    return fineControl;
   }
   
   /**
@@ -794,8 +814,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
           SmartDashboard.putNumber("Vision " + camera.getName() + " Y", camPose.estimatedPose.toPose2d().getY());
           SmartDashboard.putNumber("Vision " + camera.getName() + " rot", camPose.estimatedPose.toPose2d().getRotation().getDegrees());
 
-          // Only run camera updates for pose estimator if useVisionForOdometry is true
-          if (camResult.getBestTarget().getPoseAmbiguity() < 0.7 && camResult.hasTargets() && useVisionForOdometry && camResult.getBestTarget().getBestCameraToTarget().getX() < 3) {
+          // Only run camera updates for pose estimator if useVisionForOdometry is true, camera has target(s), and the targets are not ambiguous
+          if (useVisionForOdometry && camResult.hasTargets() && camResult.getBestTarget().getPoseAmbiguity() <= 0.3) {
             PhotonTrackedTarget bestTarget = camResult.getBestTarget();
             SmartDashboard.putNumber("Vision " + camera.getName() + " AprilTag", bestTarget.getFiducialId());
 
