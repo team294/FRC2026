@@ -25,6 +25,9 @@ public class LED extends SubsystemBase {
 
   // IMPORTANT: create an EmptyAnimation object for each slot that has an animation
   private final EmptyAnimation emptyAnimation0 = new EmptyAnimation(0);
+  private final EmptyAnimation emptyAnimation1 = new EmptyAnimation(1);
+  private final EmptyAnimation emptyAnimation2 = new EmptyAnimation(2);
+  private final EmptyAnimation emptyAnimation3 = new EmptyAnimation(3);
 
   public static AnimationColor dashboardColor = AnimationColor.NEUTRAL;
   private boolean lastStickyFaultPresentReading = false;
@@ -55,14 +58,25 @@ public class LED extends SubsystemBase {
   }
 
   /**
-   * Apply any animation to the LEDs.
+   * Apply any animation to the LEDs and only clear slot specified in parameters.
    * @param animation animation object (ex: SolidColor, StrobeAnimation, ColorFlowAnimation, etc.)
    */
   public void animate(ControlRequest animation) {
     candle.setControl(emptyAnimation0);
     candle.setControl(animation);
   }
-  
+
+  /**
+   * Clear all animations from the strips.
+   */
+  public void clearAllStripAnimations() {
+    // add an empty animation for every slot in use!
+    candle.setControl(emptyAnimation0);
+    candle.setControl(emptyAnimation1);
+    candle.setControl(emptyAnimation2);
+    candle.setControl(emptyAnimation3);
+  }
+
   @Override
   public void periodic() {
     if(DataLogUtil.isMyLogRotation(logRotationKey)) {

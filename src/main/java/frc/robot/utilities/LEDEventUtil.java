@@ -3,8 +3,8 @@ package frc.robot.utilities;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.AnimationColor;
 import frc.robot.Constants.LEDConstants.*;
 import frc.robot.subsystems.LED;
@@ -12,7 +12,7 @@ import frc.robot.subsystems.LED;
 
 public class LEDEventUtil {
   private static LED led;
-  private static RepeatCommand repeatedLEDAnimateRobotDisabled;
+  private static Command LEDAnimateRobotDisabled;
 
   private static LEDStripEvents previousEventStrip;
 
@@ -22,7 +22,7 @@ public class LEDEventUtil {
     PREPPING_SHOOTER,
     SHOOTER_READY,
     FEEDING_SHOOTER,
-    LOWERING,
+    CLIMBER_MOVING,
     TRENCH_SAFE,
     NEUTRAL,
     ROBOT_DISABLED
@@ -36,10 +36,10 @@ public class LEDEventUtil {
     prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
     prioritiesLEDStripEvents.put(LEDStripEvents.SHOOTER_READY, 3);
     prioritiesLEDStripEvents.put(LEDStripEvents.FEEDING_SHOOTER, 4);
-    prioritiesLEDStripEvents.put(LEDStripEvents.LOWERING, 5);
-    prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 6);
-    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 7);
-    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 8);
+    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING, 5);
+    prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 7);
+    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 8);
+    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 9);
   }
 
   /**
@@ -56,11 +56,11 @@ public class LEDEventUtil {
     }
 
     // if previous was neutral or disabled, always update.
-    // if previous was lowering or displaying trench safety, always update.
+    // if previous was lowering climber & hood, displaying trench safety, or climber moving (either direction) always update.
     // otherwise, if priority is lower than current state, do not update (ex: intaking while feeding shooter should display the latter)
     if (
       previousEventStrip != LEDStripEvents.NEUTRAL && previousEventStrip != LEDStripEvents.ROBOT_DISABLED
-      && previousEventStrip != LEDStripEvents.LOWERING && previousEventStrip != LEDStripEvents.TRENCH_SAFE 
+      && previousEventStrip != LEDStripEvents.CLIMBER_MOVING && previousEventStrip != LEDStripEvents.TRENCH_SAFE
       && getPriority(event) < getPriority(previousEventStrip)
     ) {
       DataLogUtil.writeMessage("LED Strip SendEvent: Event Priority Too Low");
@@ -93,10 +93,9 @@ public class LEDEventUtil {
         led.animate(Animations.feedingShooterAnimation);
         DataLogUtil.writeMessage("LED Strip Feeding Shooter");
         break;
-      case LOWERING:
-        LED.dashboardColor = AnimationColor.LOWERING;
-        led.animate(Animations.loweringAnimation);
-        DataLogUtil.writeMessage("LED Strip Lowering Climber/Hood");
+      case CLIMBER_MOVING:
+        led.animate(Animations.climberMovingAnimation);
+        DataLogUtil.writeMessage("LED Strip Climber Moving");
         break;
       case TRENCH_SAFE:
         LED.dashboardColor = AnimationColor.TRENCH_SAFE;
@@ -105,11 +104,12 @@ public class LEDEventUtil {
         break;
       case ROBOT_DISABLED:
         LED.dashboardColor = AnimationColor.NEUTRAL;
-        CommandScheduler.getInstance().schedule(repeatedLEDAnimateRobotDisabled);
+        CommandScheduler.getInstance().schedule(LEDAnimateRobotDisabled);
         DataLogUtil.writeMessage("LED Strip Robot Disabled");
         break;
       default:
         LED.dashboardColor = AnimationColor.NEUTRAL;
+        led.clearAllStripAnimations();
         led.animate(Animations.neutralSolidColor);
         DataLogUtil.writeMessage("LED Strip Neutral");
         break;
@@ -122,11 +122,11 @@ public class LEDEventUtil {
   /**
    * This method must be called once in RobotContainer
    * @param ledInstance LED subsystem
-   * @param disabledAnimation disabled animation to play on strips (repeated!)
+   * @param disabledAnimation disabled animation to play on strips
    */
-  public static void initialize(LED ledInstance, RepeatCommand disabledAnimation) {
+  public static void initialize(LED ledInstance, Command disabledAnimation) {
     led = ledInstance;
-    repeatedLEDAnimateRobotDisabled = disabledAnimation;
+    LEDAnimateRobotDisabled = disabledAnimation;
   }
 
   /**

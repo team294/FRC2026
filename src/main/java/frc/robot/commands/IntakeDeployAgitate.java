@@ -27,7 +27,7 @@ public class IntakeDeployAgitate extends Command {
   @Override
   public void initialize() {
     counter = 0;
-    intake.stopIntakeRoller();
+    intake.setIntakeRollerPercentOutput(IntakeConstants.rollerIntakePercent);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,6 +44,7 @@ public class IntakeDeployAgitate extends Command {
   @Override
   public void end(boolean interrupted) {
     intake.setIntakeDeployAngle(IntakeConstants.IntakeDeployAngle.INTAKE.value);
+    intake.stopIntakeRoller();
   }
 
   // Returns true when the command should end.

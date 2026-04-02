@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,7 +66,7 @@ public class RobotContainer {
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
-  private final RepeatCommand repeatedLEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led)).repeatedly();
+  private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -75,7 +74,7 @@ public class RobotContainer {
     SignalLogger.enableAutoLogging(false);
 
     // Start LEDEventUtil
-    LEDEventUtil.initialize(led, repeatedLEDAnimateRobotDisabled);
+    LEDEventUtil.initialize(led, LEDAnimateRobotDisabled);
 
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
@@ -180,7 +179,7 @@ public class RobotContainer {
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
     SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
@@ -267,10 +266,10 @@ public class RobotContainer {
 
     xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
 
-    xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
-    xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
-    xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
-    xbB.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter, turret));
+    xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    xbB.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
   }
 
   /**
@@ -446,7 +445,7 @@ public class RobotContainer {
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
-    CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
+    CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
     LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     // NOTE: Do not reset the gyro or encoder here!
@@ -473,7 +472,7 @@ public class RobotContainer {
 
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
-    CommandScheduler.getInstance().cancel(repeatedLEDAnimateRobotDisabled);
+    CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
     LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     teleopTimer.restart();

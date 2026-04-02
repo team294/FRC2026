@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -24,9 +26,10 @@ public class LowerHoodAndClimber extends SequentialCommandGroup {
   */
   public LowerHoodAndClimber(Shooter shooter, Climber climber) {
     addCommands(
-      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.LOWERING)),
-      new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber),
-      new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter),
+      parallel(
+        new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber),
+        new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter)
+      ),
       new WaitUntilCommand(() -> climber.isSideLimitReached(1, true) || climber.isSideLimitReached(2, true)),
       new InstantCommand(() -> LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.TRENCH_SAFE))
     );

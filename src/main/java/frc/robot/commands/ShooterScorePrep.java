@@ -257,6 +257,7 @@ public class ShooterScorePrep extends Command {
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");
+    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.
