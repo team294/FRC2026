@@ -9,9 +9,14 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.CoordType;
 import frc.robot.Constants.RobotDimensions;
+import frc.robot.Constants.StopType;
 import frc.robot.Constants.AutoConstants.AutoEndType;
 import frc.robot.Constants.AutoConstants.BallPickupTrajType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
@@ -19,6 +24,7 @@ import frc.robot.Constants.AutoConstants.RoutineSideType;
 import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveResetPose;
+import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.autos.components.AutonCollectBalls;
 import frc.robot.commands.autos.components.AutonReturnToAllianceAndShoot;
 import frc.robot.commands.autos.components.AutonDriveToNeutralZone;
@@ -40,8 +46,6 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 public class BuildAutonRoutine extends SequentialCommandGroup {
   /** Creates a new BuildAutoRoutine. */
   public BuildAutonRoutine(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTrajDirection, ReturnToAllianceType returnToAllianceDirection, AutoEndType autoEnd, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) { 
-    // Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber
-    // intake, feeder, turret, shooter, climber, 
     boolean leftSide = routineSide == RoutineSideType.kLeftSide;
     // Initial pose: if shooting preload = inital pose of first trajectory - robot length + front bumper thickness
     //           if not shooting preload = inital pose of first trajectory
@@ -57,8 +61,8 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
       new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
       // First cycle
       new DriveResetPose(initalRobotStartPose, false, driveTrain),
-      new AutonDriveToNeutralZone(shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
-      new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache),
+      new AutonDriveToNeutralZone(returnToAllianceDirection, shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+      new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache),
       new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       
       // Whether we are going to do anything after the first cycle

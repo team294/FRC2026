@@ -107,6 +107,12 @@ public class DriveWithJoysticksAdvanced extends Command {
     leftVelocity = (driveTrain.isYLocked()) ? 0.0 : (allianceSelection.getAlliance() == Alliance.Blue) ? -leftJoystick.getX() : leftJoystick.getX();
     turnRate = (driveTrain.isTurnLocked()) ? 0.0 : -rightJoystick.getX();
 
+    if (driveTrain.isFineControlEnabled()) {
+      fwdVelocity *= DriveConstants.fineControlRatio;
+      leftVelocity *= DriveConstants.fineControlRatio;
+      turnRate *= DriveConstants.fineControlRatio;
+    }
+
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
       SmartDashboard.putNumber("Joystick Left-Y", fwdVelocity);
       SmartDashboard.putNumber("Joystick Left-X", leftVelocity);

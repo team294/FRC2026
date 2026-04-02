@@ -14,13 +14,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants.BallPickupTrajType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.CoordType;
+import frc.robot.Constants.EndType;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.StopType;
+import frc.robot.commands.ClimberSetPercent;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.HoodSetAngle;
 import frc.robot.commands.IntakeRollerStop;
 import frc.robot.commands.sequences.IntakeSequence;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -35,7 +41,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonCollectBalls extends SequentialCommandGroup {
   /** Collects balls from the neutral zone, either closer to the center line or along the edge closer to the alliance zone. */
-  public AutonCollectBalls(BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
+  public AutonCollectBalls(BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
     Trajectory<SwerveSample> trajectory = driveThroughCenter == BallPickupTrajType.kDriveThroughCenter ? cache.getTrajectory(leftSide, TrajectoryName.CollectThroughCenter) : cache.getTrajectory(leftSide, TrajectoryName.CollectThroughSide);
     addCommands(
       new DataLogMessage(false, "AutonCollectBalls: start"),
@@ -43,6 +49,14 @@ public class AutonCollectBalls extends SequentialCommandGroup {
       parallel(  
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
         sequence(
+          either(
+            parallel(
+              new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber), 
+              new HoodSetAngle(ShooterConstants.hoodShootAngle, EndType.waitForSetPoint, shooter)
+            ),
+            none(), 
+            () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
+          ),
           new IntakeSequence(intake),
           new WaitCommand(1.0),
           new IntakeRollerStop(intake),
