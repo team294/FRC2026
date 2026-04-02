@@ -506,6 +506,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    */
   public double getFieldAccelerationY() {
     return getRobotAccelerationX() * Math.sin(Math.toRadians(getPoseAngle()) + getRobotAccelerationY() * Math.cos(Math.toRadians(getPoseAngle())));
+  }
+  
   /**
    * Set fine control on joysticks. Enabled means robot will move slower, disabled means robot moves normally.
    * @param enabled true = fine control, false = normal control
