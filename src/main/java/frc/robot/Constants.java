@@ -645,7 +645,7 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double reverseSpindexerSeconds = 0.294;
+    public static final double reverseSpindexerSeconds = 0.5;
     public static final double noFuelSeconds = 0.687;
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
