@@ -143,8 +143,8 @@ public class Turret extends SubsystemBase implements Loggable {
     // current is
     // limited to the lower limit in order to prevent the breakers from tripping
     usingRotorEncoderConfig.CurrentLimits.SupplyCurrentLimit = 60.0; // Upper limit for the current, in amps
-    usingRotorEncoderConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    usingRotorEncoderConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2; // Threshold time, in seconds
+    usingRotorEncoderConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
+    usingRotorEncoderConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1; // Threshold time, in seconds
     usingRotorEncoderConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     // Configure PID for MotionMagicVoltage control
@@ -184,8 +184,8 @@ public class Turret extends SubsystemBase implements Loggable {
     // current is
     // limited to the lower limit in order to prevent the breakers from tripping
     usingRemoteEncoderConfig.CurrentLimits.SupplyCurrentLimit = 60.0; // Upper limit for the current, in amps
-    usingRemoteEncoderConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    usingRemoteEncoderConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2; // Threshold time, in seconds
+    usingRemoteEncoderConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
+    usingRemoteEncoderConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1; // Threshold time, in seconds
     usingRemoteEncoderConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     // Configure PID for MotionMagicVoltage control

@@ -161,16 +161,16 @@ public class Intake extends SubsystemBase implements Loggable{
 
     // Prevent the breakers from tripping by limiting current if above the limit for the threshold time
     intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0;           // Upper limit for the current, in amps
-    intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0;      // Lower limit for the current, in amps
-    intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;        // Threshold time, in seconds
+    intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;      // Lower limit for the current, in amps
+    intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;        // Threshold time, in seconds
     intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;     // Enable the limit
     intakeDeployMotorRotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0;        // Upper limit for the current, in amps
-    intakeDeployMotorRotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0;   // Lower limit for the current, in amps
-    intakeDeployMotorRotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;     // Threshold time, in seconds
+    intakeDeployMotorRotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;   // Lower limit for the current, in amps
+    intakeDeployMotorRotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;     // Threshold time, in seconds
     intakeDeployMotorRotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;  // Enable the limit
     intakeDeployMotorCANcoderConfig.CurrentLimits.SupplyCurrentLimit = 60.0;        // Upper limit for the current, in amps
-    intakeDeployMotorCANcoderConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0;   // Lower limit for the current, in amps
-    intakeDeployMotorCANcoderConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;     // Threshold time, in seconds
+    intakeDeployMotorCANcoderConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;   // Lower limit for the current, in amps
+    intakeDeployMotorCANcoderConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;     // Threshold time, in seconds
     intakeDeployMotorCANcoderConfig.CurrentLimits.SupplyCurrentLimitEnable = true;  // Enable the limit
 
     // Configure the deploy motor CANcoder
