@@ -230,7 +230,7 @@ public class RobotContainer {
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
-    xbLT.onTrue(new IntakeSequence(intake));
+    xbLT.whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
     // Agitate while shooting
@@ -255,6 +255,7 @@ public class RobotContainer {
       new InstantCommand(() -> intake.setAgitateDuringFeed(false))
     ));
 
+    // manual intake deploy: up = in, down = out
     xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
 
     xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
