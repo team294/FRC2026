@@ -366,12 +366,13 @@ public class RobotContainer {
     coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
     coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.manualReverseShootRPM, VelocityType.runForever, shooter));
 
-    // Manually move climber up/down while held, stopping when released
-    coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
-    coP[16].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
+    // Manually move left climber up/down while held, stopping when released
+    coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
+    coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 1, climber));
 
-    // Manually calibrate climber, assuming it's at the lower limit
-    // coP[18].onTrue(new ClimberManualCalibration(climber));
+    // Manually move right climber up/down while held, stopping when released
+    coP[17].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 2, climber));
+    coP[18].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 2, climber));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
     coP[19].onTrue(new TurretManualCalibration(turret, true));
