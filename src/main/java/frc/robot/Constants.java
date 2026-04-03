@@ -613,7 +613,7 @@ public final class Constants {
     public static final double deploySetAngleTolerance = 3.0;             // TODO calibrate intake
 
     // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
-    public static double deployCANcoderOffsetAngle = -51.76; // CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
+    public static double deployCANcoderOffsetAngle = -70.76; // CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
