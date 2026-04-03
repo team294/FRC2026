@@ -24,7 +24,7 @@
     {"x":{"exp":"collectEnd.x", "val":6.61384868621826}, "y":{"exp":"collectEnd.y", "val":3.363587856292724}, "heading":{"exp":"collectEnd.heading", "val":-2.626272981131867}, "intervals":23, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
-    {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":false},
+    {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":4, "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"16.541 m", "val":16.541}, "h":{"exp":"8.0692 m", "val":8.0692}}}, "enabled":false},
     {"from":0, "to":4, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"maxVel", "val":2.0}}}, "enabled":true}],
   "targetDt":{
