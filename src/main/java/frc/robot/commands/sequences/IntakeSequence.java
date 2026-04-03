@@ -4,10 +4,12 @@
 
 package frc.robot.commands.sequences;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.*;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
+import frc.robot.utilities.LEDEventUtil;
 
 public class IntakeSequence extends SequentialCommandGroup {
   /**
@@ -17,7 +19,8 @@ public class IntakeSequence extends SequentialCommandGroup {
   public IntakeSequence(Intake intake) {
     addCommands(
       new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
-      new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake)
+      new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake),
+      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING))
     );
   }
 }
