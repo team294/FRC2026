@@ -715,7 +715,7 @@ public final class Constants {
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
     public static final double hoodErrorTolerance = 0.2; // to monitor for when to stop moving the hood actuators (deg error)
 
-    public static final double hoodMotorRatio2to1 = 1.10;     // CALIBRATED 3-28-2026.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
+    public static final double hoodMotorRatio2to1 = 1.0;     // CALIBRATED 3-28-2026 was 1.10.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     //public static final double hoodMaximumAngle = 45.0; // in degrees 
@@ -782,8 +782,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.8076;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = 0.7098; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
@@ -806,7 +806,7 @@ public final class Constants {
     
     public enum TurretAngle {
       LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(180.0);
+      UPPER_LIMIT(114.0); // was 180
 
       public final double value;
       TurretAngle(double angle) {
