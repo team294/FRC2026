@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A2";
+  public static final String bcrRobotCodeVersion = "A3";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -613,7 +613,7 @@ public final class Constants {
     public static final double deploySetAngleTolerance = 3.0;             // TODO calibrate intake
 
     // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
-    public static double deployCANcoderOffsetAngle = -68.2; // 109.64 CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
+    public static double deployCANcoderOffsetAngle = -54.9; // CALIBRATED: -54.9, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = -0.7405; // CALIBRATED: -0.7405
