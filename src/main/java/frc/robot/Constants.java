@@ -519,13 +519,14 @@ public final class Constants {
       }
     }
     
+    // goal field translations for turret target
     public static final Translation2d hubPositionBlue = new Translation2d(Units.inchesToMeters(182.11), width / 2.0);
     public static final Translation2d hubPositionRed = new Translation2d(length - Units.inchesToMeters(182.11), width / 2.0);
 
     public static final Translation2d leftPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0);
     public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
-    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
-    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
+    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width * 3.0 / 4.0);
+    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width / 4.0);
   }
 
   public static class VisionConstants {
