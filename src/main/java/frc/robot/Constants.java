@@ -949,6 +949,7 @@ public final class Constants {
       public static final StrobeAnimation feedingShooterAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.feedingShooterColor);
 
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
+      public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
     }
   }
