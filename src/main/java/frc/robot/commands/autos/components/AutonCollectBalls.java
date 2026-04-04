@@ -45,9 +45,8 @@ public class AutonCollectBalls extends SequentialCommandGroup {
   public AutonCollectBalls(BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache) {
     Trajectory<SwerveSample> trajectory = driveThroughCenter == BallPickupTrajType.kDriveThroughCenter ? cache.getTrajectory(leftSide, TrajectoryName.CollectThroughCenter) : cache.getTrajectory(leftSide, TrajectoryName.CollectThroughSide);
     addCommands(
-      new DataLogMessage(false, "AutonCollectBalls: start"),
-      
       parallel(  
+        new DataLogMessage(false, "AutonCollectBalls: start"),
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
         sequence(
           either(

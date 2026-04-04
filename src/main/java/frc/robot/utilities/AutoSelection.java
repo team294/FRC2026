@@ -24,6 +24,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 import frc.robot.commands.autos.*;
+import frc.robot.commands.sequences.IntakeSequence;
 
 
 /**
@@ -266,7 +267,10 @@ public class AutoSelection {
 											new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
 											new WaitUntilCommand(() -> timer.get() >= 17.0)
 										),
-										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(true, TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
+										parallel(
+											new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(true, TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
+											new IntakeSequence(intake)
+										),
 										new InstantCommand(() -> timer.stop())
 									);
 		}
@@ -279,7 +283,10 @@ public class AutoSelection {
 											new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
 											new WaitUntilCommand(() -> timer.get() >= 17.0)
 										),
-										new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
+										parallel(
+											new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.getTrajectory(TrajectoryName.DriveOverBump), driveTrain, allianceSelection),
+											new IntakeSequence(intake)
+										),
 										new InstantCommand(() -> timer.stop())
 									);
 		}
