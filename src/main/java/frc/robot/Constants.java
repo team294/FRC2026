@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A4";
+  public static final String bcrRobotCodeVersion = "A5";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -607,10 +607,10 @@ public final class Constants {
     public static final double deployDegreesPerRotation = 360.0;
     public static final double deploySensorToRotorRatio = 36.0 / 18.0;
     public static final double deployCompensationVoltage = 12.0;
-    public static final double deployMaxUncalibratedPercentOutput = 0.1;  // TODO calibrate intake
-    public static final double deployMaxManualPercentOutput = 0.05;       // TODO calibrate intake
-    public static final double deployMaxPercentOutput = 0.2;              // TODO calibrate intake
-    public static final double deploySetAngleTolerance = 3.0;             // TODO calibrate intake
+    public static final double deployMaxUncalibratedPercentOutput = 0.1;  
+    public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
+    public static final double deployMaxPercentOutput = 0.2;              
+    public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
     public static double deployCANcoderOffsetAngle = -54.9; // CALIBRATED: -54.9, 0 degrees is when orange arrow is straight up
@@ -618,7 +618,7 @@ public final class Constants {
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = -0.7405; // CALIBRATED: -0.7405
 
-    public static final double kP = 30.0;  // CALIBRATED: new 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kP = 150.0;  // CALIBRATED: AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
     public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
     public static final double kD = 0.2;   // CALIBRATED: new 0.2, old intake 0.4
     public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
@@ -631,12 +631,12 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-90.6),   // CALIBRATED 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-90.6),        // CALIBRATED 3/29/26: -87.0
+      LOWER_LIMIT(-89.1),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-89.1),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
-      START_CONFIG(39.4),  // CALIBRATED 3/29/26: 40.5
-      UPPER_LIMIT(39.9);   // CALIBRATED 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
+      START_CONFIG(36.5),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
+      UPPER_LIMIT(37.0);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;

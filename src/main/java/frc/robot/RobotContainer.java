@@ -264,7 +264,7 @@ public class RobotContainer {
     ));
 
     // manual intake deploy: up = in, down = out
-    xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
+    xbLJoystickTrigger.whileTrue(new IntakeDeployManualControl(xboxController, intake));
 
     xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));

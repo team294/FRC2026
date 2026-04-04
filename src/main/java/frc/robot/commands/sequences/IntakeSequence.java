@@ -18,10 +18,12 @@ public class IntakeSequence extends SequentialCommandGroup {
    */
   public IntakeSequence(Intake intake) {
     addCommands(
+      new DataLogMessage(false, "IntakeSequence: Start"),
       new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake).withTimeout(0.6),
       new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake),
       new InstantCommand(() -> LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING)),
-      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)
+      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
+      new DataLogMessage(false, "IntakeSequence: End")
     );
   }
 }
