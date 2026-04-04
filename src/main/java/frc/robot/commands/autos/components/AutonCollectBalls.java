@@ -57,9 +57,6 @@ public class AutonCollectBalls extends SequentialCommandGroup {
             none(), 
             () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
           ),
-          new IntakeSequence(intake),
-          new WaitCommand(1.0),
-          new IntakeRollerStop(intake),
           new IntakeSequence(intake)
         )
       ),
