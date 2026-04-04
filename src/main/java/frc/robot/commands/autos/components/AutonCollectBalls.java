@@ -24,6 +24,7 @@ import frc.robot.commands.ClimberSetPercent;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.HoodSetAngle;
+import frc.robot.commands.IntakeRollerSetPercent;
 import frc.robot.commands.IntakeRollerStop;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.subsystems.Climber;
@@ -57,6 +58,7 @@ public class AutonCollectBalls extends SequentialCommandGroup {
             none(), 
             () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
           ),
+          new IntakeRollerSetPercent(true, intake),
           new IntakeSequence(intake)
         )
       ),

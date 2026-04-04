@@ -21,6 +21,9 @@ import com.ctre.phoenix6.SignalLogger;
 import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -67,6 +70,11 @@ public class RobotContainer {
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
+
+  // DataLog
+  private final DataLog log = DataLogManager.getLog();
+  private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
+  private long heartBeat = 0;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -404,6 +412,9 @@ public class RobotContainer {
     allianceSelection.periodic();
     shiftHelper.periodic();
     autoSelection.periodic();
+
+    heartBeat++;
+    dLogRobotHeartBeat.append(heartBeat);
   }
 
   /**
