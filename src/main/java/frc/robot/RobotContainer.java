@@ -296,7 +296,7 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
-    left[1].onTrue(new IntakeSequence(intake));
+    left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     left[1].onFalse(parallel(
       new IntakeRollerStop(intake),
       new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
