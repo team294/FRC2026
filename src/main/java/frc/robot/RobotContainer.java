@@ -373,7 +373,7 @@ public class RobotContainer {
 
     // Manually spin shooter out/in while held, stopping when released
     coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
-    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.manualReverseShootRPM, VelocityType.runForever, shooter));
+    coP[14].whileTrue(new ShooterSetVelocity(2050, VelocityType.runForever, shooter));
 
     // Manually move left climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
