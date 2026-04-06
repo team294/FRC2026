@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A1";
+  public static final String bcrRobotCodeVersion = "A5";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -519,13 +519,14 @@ public final class Constants {
       }
     }
     
+    // goal field translations for turret target
     public static final Translation2d hubPositionBlue = new Translation2d(Units.inchesToMeters(182.11), width / 2.0);
     public static final Translation2d hubPositionRed = new Translation2d(length - Units.inchesToMeters(182.11), width / 2.0);
 
     public static final Translation2d leftPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0);
     public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
-    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
-    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
+    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width * 3.0 / 4.0);
+    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width / 4.0);
   }
 
   public static class VisionConstants {
@@ -607,18 +608,18 @@ public final class Constants {
     public static final double deployDegreesPerRotation = 360.0;
     public static final double deploySensorToRotorRatio = 36.0 / 18.0;
     public static final double deployCompensationVoltage = 12.0;
-    public static final double deployMaxUncalibratedPercentOutput = 0.1;  // TODO calibrate intake
-    public static final double deployMaxManualPercentOutput = 0.05;       // TODO calibrate intake
-    public static final double deployMaxPercentOutput = 0.2;              // TODO calibrate intake
-    public static final double deploySetAngleTolerance = 3.0;             // TODO calibrate intake
+    public static final double deployMaxUncalibratedPercentOutput = 0.1;  
+    public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
+    public static final double deployMaxPercentOutput = 0.2;              
+    public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
-    public static double deployCANcoderOffsetAngle = -51.76; // CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
+    public static double deployCANcoderOffsetAngle = -54.9 + 11; // CALIBRATED: -54.9, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
-    public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
+    public static final double deployCANcoderDiscontinuityPoint = -0.7405; // CALIBRATED: -0.7405
 
-    public static final double kP = 30.0;  // CALIBRATED: new 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kP = 150.0;  // CALIBRATED: AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
     public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
     public static final double kD = 0.2;   // CALIBRATED: new 0.2, old intake 0.4
     public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
@@ -631,12 +632,12 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-87.4),   // CALIBRATED 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-87.4),        // CALIBRATED 3/29/26: -87.0
+      LOWER_LIMIT(-89.1),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-89.1),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
-      START_CONFIG(40.5),  // CALIBRATED 3/29/26: 40.5
-      UPPER_LIMIT(41.0);   // CALIBRATED 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
+      START_CONFIG(36.5),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
+      UPPER_LIMIT(37.0);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
@@ -715,7 +716,7 @@ public final class Constants {
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
     public static final double hoodErrorTolerance = 0.2; // to monitor for when to stop moving the hood actuators (deg error)
 
-    public static final double hoodMotorRatio2to1 = 1.10;     // CALIBRATED 3-28-2026.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
+    public static final double hoodMotorRatio2to1 = 1.0;     // CALIBRATED 3-28-2026 was 1.10.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     //public static final double hoodMaximumAngle = 45.0; // in degrees 
@@ -782,8 +783,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.8076;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = 0.7098; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
@@ -806,7 +807,7 @@ public final class Constants {
     
     public enum TurretAngle {
       LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(180.0);
+      UPPER_LIMIT(114.0); // was 180
 
       public final double value;
       TurretAngle(double angle) {
@@ -949,6 +950,7 @@ public final class Constants {
       public static final StrobeAnimation feedingShooterAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.feedingShooterColor);
 
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
+      public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
     }
   }

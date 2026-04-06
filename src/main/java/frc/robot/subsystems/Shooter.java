@@ -190,8 +190,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     // If the current is above the supply current limit for the threshold time, the current is limited.
     // This is configured to prevent the breakers from tripping.
     shooterMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
-    shooterMotorConfiguration.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    shooterMotorConfiguration.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
+    shooterMotorConfiguration.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
+    shooterMotorConfiguration.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     shooterMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     // Set PID coefficients
@@ -229,8 +229,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     // If the current is above the supply current limit for the threshold time, the current is limited.
     // This is configured to prevent the breakers from tripping.
     hoodMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
-    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
+    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
+    hoodMotorConfiguration.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     hoodMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
        
     // Apply the configurations to the motor.

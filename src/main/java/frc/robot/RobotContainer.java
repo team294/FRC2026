@@ -21,6 +21,9 @@ import com.ctre.phoenix6.SignalLogger;
 import choreo.util.ChoreoAllianceFlipUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -67,6 +70,11 @@ public class RobotContainer {
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
+
+  // DataLog
+  private final DataLog log = DataLogManager.getLog();
+  private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
+  private long heartBeat = 0;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -230,7 +238,7 @@ public class RobotContainer {
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
-    xbLT.onTrue(new IntakeSequence(intake));
+    xbLT.whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
     // Agitate while shooting
@@ -255,7 +263,8 @@ public class RobotContainer {
       new InstantCommand(() -> intake.setAgitateDuringFeed(false))
     ));
 
-    xbLJoystickTrigger.onTrue(new IntakeDeployManualControl(xboxController, intake));
+    // manual intake deploy: up = in, down = out
+    xbLJoystickTrigger.whileTrue(new IntakeDeployManualControl(xboxController, intake));
 
     xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
@@ -287,7 +296,7 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
-    left[1].onTrue(new IntakeSequence(intake));
+    left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     left[1].onFalse(parallel(
       new IntakeRollerStop(intake),
       new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
@@ -364,14 +373,15 @@ public class RobotContainer {
 
     // Manually spin shooter out/in while held, stopping when released
     coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
-    coP[14].whileTrue(new ShooterSetVelocity(ShooterConstants.manualReverseShootRPM, VelocityType.runForever, shooter));
+    coP[14].whileTrue(new ShooterSetVelocity(2050, VelocityType.runForever, shooter));
 
-    // Manually move climber up/down while held, stopping when released
-    coP[15].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
-    coP[16].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
+    // Manually move left climber up/down while held, stopping when released
+    coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
+    coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 1, climber));
 
-    // Manually calibrate climber, assuming it's at the lower limit
-    // coP[18].onTrue(new ClimberManualCalibration(climber));
+    // Manually move right climber up/down while held, stopping when released
+    coP[17].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 2, climber));
+    coP[18].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 2, climber));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
     coP[19].onTrue(new TurretManualCalibration(turret, true));
@@ -402,6 +412,9 @@ public class RobotContainer {
     allianceSelection.periodic();
     shiftHelper.periodic();
     autoSelection.periodic();
+
+    heartBeat++;
+    dLogRobotHeartBeat.append(heartBeat);
   }
 
   /**

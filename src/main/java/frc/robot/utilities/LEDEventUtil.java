@@ -22,7 +22,8 @@ public class LEDEventUtil {
     PREPPING_SHOOTER,
     SHOOTER_READY,
     FEEDING_SHOOTER,
-    CLIMBER_MOVING,
+    CLIMBER_MOVING_UP,
+    CLIMBER_MOVING_DOWN,
     TRENCH_SAFE,
     NEUTRAL,
     ROBOT_DISABLED
@@ -36,7 +37,8 @@ public class LEDEventUtil {
     prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
     prioritiesLEDStripEvents.put(LEDStripEvents.SHOOTER_READY, 3);
     prioritiesLEDStripEvents.put(LEDStripEvents.FEEDING_SHOOTER, 4);
-    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING, 5);
+    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_UP, 5);
+    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_DOWN, 5);
     prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 7);
     prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 8);
     prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 9);
@@ -60,7 +62,7 @@ public class LEDEventUtil {
     // otherwise, if priority is lower than current state, do not update (ex: intaking while feeding shooter should display the latter)
     if (
       previousEventStrip != LEDStripEvents.NEUTRAL && previousEventStrip != LEDStripEvents.ROBOT_DISABLED
-      && previousEventStrip != LEDStripEvents.CLIMBER_MOVING && previousEventStrip != LEDStripEvents.TRENCH_SAFE
+      && previousEventStrip != LEDStripEvents.CLIMBER_MOVING_UP && previousEventStrip != LEDStripEvents.CLIMBER_MOVING_DOWN && previousEventStrip != LEDStripEvents.TRENCH_SAFE
       && getPriority(event) < getPriority(previousEventStrip)
     ) {
       DataLogUtil.writeMessage("LED Strip SendEvent: Event Priority Too Low");
@@ -93,9 +95,13 @@ public class LEDEventUtil {
         led.animate(Animations.feedingShooterAnimation);
         DataLogUtil.writeMessage("LED Strip Feeding Shooter");
         break;
-      case CLIMBER_MOVING:
+      case CLIMBER_MOVING_UP:
         led.animate(Animations.climberMovingAnimation);
-        DataLogUtil.writeMessage("LED Strip Climber Moving");
+        DataLogUtil.writeMessage("LED Strip Climber Moving Up");
+        break;
+      case CLIMBER_MOVING_DOWN:
+        led.animate(Animations.climberMovingDownAnimation);
+        DataLogUtil.writeMessage("LED Strip Climber Moving Down");
         break;
       case TRENCH_SAFE:
         LED.dashboardColor = AnimationColor.TRENCH_SAFE;

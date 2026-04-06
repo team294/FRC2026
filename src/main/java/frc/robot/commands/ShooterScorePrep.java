@@ -176,7 +176,7 @@ public class ShooterScorePrep extends Command {
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
-      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.rightPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.leftPassRed) {
         targetHoodAngle = ShooterConstants.hoodPassAngle;
       } else {
         targetHoodAngle = ShooterConstants.hoodShootAngle;
@@ -223,7 +223,7 @@ public class ShooterScorePrep extends Command {
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
-      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.rightPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.leftPassRed) {
         targetHoodAngle = ShooterConstants.hoodPassAngle;
       } else {
         targetHoodAngle = ShooterConstants.hoodShootAngle;
