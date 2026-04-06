@@ -110,8 +110,8 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
     climberLeftConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
-    climberLeftConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0; // Lower limit for the current, in amps
-    climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;   // Threshold time, in seconds
+    climberLeftConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
+    climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     climberRightConfig = new TalonFXConfiguration();
@@ -123,8 +123,8 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;
     climberRightConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3;
     climberRightConfig.CurrentLimits.SupplyCurrentLimit = 60.0;
-    climberRightConfig.CurrentLimits.SupplyCurrentLowerLimit = 35.0;
-    climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.2;
+    climberRightConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;
+    climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;
     climberRightConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     // Apply the configurations to the motors.

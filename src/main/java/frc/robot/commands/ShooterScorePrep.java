@@ -19,6 +19,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Field;
+import frc.robot.utilities.LEDEventUtil;
+import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 
 public class ShooterScorePrep extends Command {
   private final Shooter shooter;
@@ -40,6 +42,8 @@ public class ShooterScorePrep extends Command {
 
 
   private final EndType type;
+
+  private boolean ledSentShooterReadyEvent;
 
   /**
    * Sets the hood angle and shooter velocity for scoring.
@@ -172,7 +176,7 @@ public class ShooterScorePrep extends Command {
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
-      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.rightPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.leftPassRed) {
         targetHoodAngle = ShooterConstants.hoodPassAngle;
       } else {
         targetHoodAngle = ShooterConstants.hoodShootAngle;
@@ -182,6 +186,9 @@ public class ShooterScorePrep extends Command {
     shooter.setHoodAnglePID(targetHoodAngle);
     shooter.setShooterVelocity(targetVelocity);
 
+    LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
+    ledSentShooterReadyEvent = false;
+
     toleranceCounter = 0;
     DataLogUtil.writeMessage("ShooterScorePrep: Initialize, Angle Setpoint =", targetHoodAngle, ", Velocity Setpoint =", targetVelocity,
                              ", Self Calculate =", selfCalculate + ", type =", type + ", initial distance = " + distanceToTarget);
@@ -190,7 +197,6 @@ public class ShooterScorePrep extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     if (useGetter && type == EndType.runForever) {
       // Don't update angle from getter if type == waitForAngle, otherwise the getter could
       // change the angle a little and never settle on a value. Then the PID controller would
@@ -217,13 +223,19 @@ public class ShooterScorePrep extends Command {
       double calculatedVelocity = (ShooterConstants.shooterDistanceToRPMIntercept + (ShooterConstants.shooterDistanceToRPMSlope * distanceToTarget));
       targetVelocity = MathUtil.clamp(calculatedVelocity, 0, ShooterConstants.maxShootRPM);
       
-      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.leftPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.rightPassRed) {
+      if (goalTranslation2d == FieldConstants.leftPassBlue || goalTranslation2d == FieldConstants.rightPassRed || goalTranslation2d == FieldConstants.rightPassBlue || goalTranslation2d == FieldConstants.leftPassRed) {
         targetHoodAngle = ShooterConstants.hoodPassAngle;
       } else {
         targetHoodAngle = ShooterConstants.hoodShootAngle;
       }
 
       shooter.setShooterVelocity(targetVelocity);
+    }
+
+    if (!ledSentShooterReadyEvent && (shooter.isHoodAtGoalAngle() && shooter.isShooterAtGoalVelocity())) {
+
+      LEDEventUtil.sendEvent(LEDStripEvents.SHOOTER_READY);
+      ledSentShooterReadyEvent = true;
     }
 
     // Call hoodPID every execute cycle, so that hood continues to run under PID control.
@@ -245,6 +257,7 @@ public class ShooterScorePrep extends Command {
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");
+    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.
@@ -259,9 +272,9 @@ public class ShooterScorePrep extends Command {
         } else {
           toleranceCounter = 0;
         }
-          return toleranceCounter >= 5;
-        default:
-          return true;
+        return toleranceCounter >= 5;
+      default:
+        return true;
     }
   }
 }

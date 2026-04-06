@@ -472,6 +472,19 @@
               "red_start_time": 20,
               "yellow_start_time": 30
             }
+          },
+          {
+            "title": "LED State",
+            "x": 0.0,
+            "y": 896.0,
+            "width": 1664.0,
+            "height": 128.0,
+            "type": "Single Color View",
+            "properties": {
+              "topic": "/SmartDashboard/LED State",
+              "period": 0.06,
+              "data_type": "string"
+            }
           }
         ]
       }

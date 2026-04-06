@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.DataLogUtil;
+import frc.robot.utilities.LEDEventUtil;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
@@ -52,6 +53,8 @@ public class IntakeRollerSetPercent extends Command {
     if (fromElastic) this.percent = SmartDashboard.getNumber(INTAKE_ROLLER_CMD_SET_PERCENT_INPUT.value, 0.0);
     intake.setIntakeRollerPercentOutput(percent);
     DataLogUtil.writeMessage("IntakeRollerSetPercent: Init, Percent =", percent);
+
+    if (percent < 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -67,6 +70,8 @@ public class IntakeRollerSetPercent extends Command {
       intake.stopIntakeRoller();
       DataLogUtil.writeMessage("IntakeRollerSetPercent: End, Percent =", 0);
     }
+
+    if (percent < 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.
