@@ -85,6 +85,6 @@ public class Field {
         double offsetY = (0.5 * accelerationY * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
 
         // add to initial position to get final position
-        return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
+        return new Translation2d(staticTargetTranslation2d.getX() - offsetX, staticTargetTranslation2d.getY() - offsetY);
     }
 }
