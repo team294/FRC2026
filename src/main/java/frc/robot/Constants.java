@@ -5,10 +5,10 @@
 package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.controls.ColorFlowAnimation;
-import com.ctre.phoenix6.controls.SingleFadeAnimation;
+import com.ctre.phoenix6.controls.RainbowAnimation;
 import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
+import com.ctre.phoenix6.controls.TwinkleAnimation;
 import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A1";
+  public static final String bcrRobotCodeVersion = "A5";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -519,13 +519,14 @@ public final class Constants {
       }
     }
     
+    // goal field translations for turret target
     public static final Translation2d hubPositionBlue = new Translation2d(Units.inchesToMeters(182.11), width / 2.0);
     public static final Translation2d hubPositionRed = new Translation2d(length - Units.inchesToMeters(182.11), width / 2.0);
 
     public static final Translation2d leftPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width * 3.0 / 4.0);
     public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
-    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width / 4.0);
-    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11)) / 2.0, width * 3.0 / 4.0);
+    public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width * 3.0 / 4.0);
+    public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width / 4.0);
 
     // used for Shoot On The Move calculations to estimate how much time a ball will fly for
     public static final double timeOfFlightSlope = 0.214491;
@@ -601,7 +602,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double rollerCompensationVoltage = 12.0;
-    public static final double rollerIntakePercent = 0.95;
+    public static final double rollerIntakePercent = 1.0;
     public static final double rollerOuttakePercent = -rollerIntakePercent;
 
     // Length of intake, in meters (from front edge of robot to where intake ends - ignore bumpers)
@@ -611,18 +612,18 @@ public final class Constants {
     public static final double deployDegreesPerRotation = 360.0;
     public static final double deploySensorToRotorRatio = 36.0 / 18.0;
     public static final double deployCompensationVoltage = 12.0;
-    public static final double deployMaxUncalibratedPercentOutput = 0.1;  // TODO calibrate intake
-    public static final double deployMaxManualPercentOutput = 0.05;       // TODO calibrate intake
-    public static final double deployMaxPercentOutput = 0.2;              // TODO calibrate intake
-    public static final double deploySetAngleTolerance = 3.0;             // TODO calibrate intake
+    public static final double deployMaxUncalibratedPercentOutput = 0.1;  
+    public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
+    public static final double deployMaxPercentOutput = 0.2;              
+    public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
-    public static double deployCANcoderOffsetAngle = -51.76; // CALIBRATED: -51.76, 0 degrees is when orange arrow is straight up
+    public static double deployCANcoderOffsetAngle = -54.9 + 11; // CALIBRATED: -54.9, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
-    public static final double deployCANcoderDiscontinuityPoint = 0.18; // CALIBRATED: 0.18
+    public static final double deployCANcoderDiscontinuityPoint = -0.7405; // CALIBRATED: -0.7405
 
-    public static final double kP = 30.0;  // CALIBRATED: new 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kP = 150.0;  // CALIBRATED: AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
     public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
     public static final double kD = 0.2;   // CALIBRATED: new 0.2, old intake 0.4
     public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
@@ -630,17 +631,17 @@ public final class Constants {
     public static final double kV = 5.132;  // CALIBRATED: new 5.132, old intake 5.418 - kV, in Volts/(intake-rotations/sec)
     public static final double kA = 0.15;   // CALIBRATED: new 0.15, old intake 0.0 - kV, in Volts/(intake-rotations/sec2)
 
-    public static final double MMCruiseVelocity = 1.20;                   // CALIBRATED, Max velocity in mechanism rotations / second
+    public static final double MMCruiseVelocity = 0.8;                   // CALIBRATED, Max velocity in mechanism rotations / second
     public static final double MMAcceleration = MMCruiseVelocity / 0.15;  // CALIBRATED:  new /0.15, old intake /0.35, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-87.4),   // CALIBRATED 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-87.0),        // CALIBRATED 3/29/26: -87.0
+      LOWER_LIMIT(-89.1),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-89.1),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
-      START_CONFIG(40.5),  // CALIBRATED 3/29/26: 40.5
-      UPPER_LIMIT(41.0);   // CALIBRATED 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
+      START_CONFIG(36.5),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
+      UPPER_LIMIT(37.0);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
@@ -649,7 +650,7 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double reverseSpindexerSeconds = 0.294;
+    public static final double reverseSpindexerSeconds = 0.5;
     public static final double noFuelSeconds = 0.687;
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
@@ -719,7 +720,7 @@ public final class Constants {
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
     public static final double hoodErrorTolerance = 0.2; // to monitor for when to stop moving the hood actuators (deg error)
 
-    public static final double hoodMotorRatio2to1 = 1.10;     // CALIBRATED 3-28-2026.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
+    public static final double hoodMotorRatio2to1 = 1.0;     // CALIBRATED 3-28-2026 was 1.10.  Ratio of motor power to apply.   (motor1 power) = (motor2 power)*hoodMotorRatio2to1
 
     public static final double hoodMinimumAngle = 8.637; // in degrees
     //public static final double hoodMaximumAngle = 45.0; // in degrees 
@@ -786,8 +787,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoderBelt = 0.1052;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoderGear = -0.4818; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.8076;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = 0.7098; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
@@ -797,7 +798,7 @@ public final class Constants {
 
     public static final double kP = 90.0;  // CALIBRATED 3/17/26: 90.0
     public static final double kI = 0.0;   // CALIBRATED 3/17/26: 0.0
-    public static final double kD = 0.0;   // CALIBRATED 3/17/26: 0.0
+    public static final double kD = 0.03;   // CALIBRATED 3/17/26: 0.0
     public static final double kS = 0.275; // CALIBRATED 3/17/26: 0.275
     public static final double kV = 5.1;   // CALIBRATED 3/17/26: 5.1
     public static final double kA = 0.0;   // CALIBRATED 3/17/26: 0.0
@@ -810,7 +811,7 @@ public final class Constants {
     
     public enum TurretAngle {
       LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(180.0);
+      UPPER_LIMIT(114.0); // was 180
 
       public final double value;
       TurretAngle(double angle) {
@@ -883,12 +884,17 @@ public final class Constants {
     CANDLE_STICKY_FAULT(255, 0, 0),    // CANdle Red
 
     NEUTRAL(0, 0, 0),                  // Black  (strip neutral)
-    MATCH_COUNTDOWN(255, 0, 0),        // Red    (strip match countdown)
     INTAKING(255, 255, 0),             // Yellow (strip intaking)
     REVERSE_INTAKING(128, 0, 128),     // Purple (strip reverse intaking)
+    PREP_SHOOTER(255, 50, 0),          // Orange (strip prep shooter)
+    SHOOTER_READY(19, 82, 188),         // Blue (strip shooter ready)
+    FEEDING_SHOOTER(19, 82, 188),       // Blue (feeding shooter)
+
+    LOWERING(255, 0, 0),               // Red (lowering climber and hood)
+    TRENCH_SAFE(0, 255, 0),            // Green (climber and hood at bottom, trench safe)
 
     DISABLED_BLUE(19, 82, 188),        // Blue   (disabled animation)
-    DISABLED_ORANGE(240, 50, 0);       // Orange (disabled animation)
+    DISABLED_ORANGE(255, 50, 0);       // Orange (disabled animation)
 
     public final int r, g, b;
     AnimationColor(int r, int g, int b) {
@@ -901,8 +907,11 @@ public final class Constants {
   public static final class LEDConstants {
     public enum LEDSegments {
       CANdle(0, 7),
-      Strip(CANdle.endIndex + 1, (CANdle.endIndex + 1) + 35),
-      Full(CANdle.startIndex, Strip.endIndex);
+      Strip1(CANdle.endIndex + 1, (CANdle.endIndex + 1) + 14),
+      Strip2(Strip1.endIndex + 1, (Strip1.endIndex + 1) + 14),
+      Strip3(Strip2.endIndex + 1, (Strip2.endIndex + 1) + 14),
+      StripAll(Strip1.startIndex, Strip3.endIndex),
+      Full(CANdle.startIndex, Strip3.endIndex);
 
       public final int startIndex, endIndex;
       LEDSegments(int index, int count) {
@@ -917,22 +926,36 @@ public final class Constants {
 
       private static final RGBWColor disabledBlueColor = new RGBWColor(AnimationColor.DISABLED_BLUE.r, AnimationColor.DISABLED_BLUE.g, AnimationColor.DISABLED_BLUE.b);
       private static final RGBWColor disabledOrangeColor = new RGBWColor(AnimationColor.DISABLED_ORANGE.r, AnimationColor.DISABLED_ORANGE.g, AnimationColor.DISABLED_ORANGE.b);
-      private static final RGBWColor matchCountdownColor = new RGBWColor(AnimationColor.MATCH_COUNTDOWN.r, AnimationColor.MATCH_COUNTDOWN.g, AnimationColor.MATCH_COUNTDOWN.b);
       private static final RGBWColor neutralColor = new RGBWColor(AnimationColor.NEUTRAL.r, AnimationColor.NEUTRAL.g, AnimationColor.NEUTRAL.b);
       private static final RGBWColor intakingColor = new RGBWColor(AnimationColor.INTAKING.r, AnimationColor.INTAKING.g, AnimationColor.INTAKING.b);
       private static final RGBWColor reverseIntakingColor = new RGBWColor(AnimationColor.REVERSE_INTAKING.r, AnimationColor.REVERSE_INTAKING.g, AnimationColor.REVERSE_INTAKING.b);
+      private static final RGBWColor shooterPrepColor = new RGBWColor(AnimationColor.PREP_SHOOTER.r, AnimationColor.PREP_SHOOTER.g, AnimationColor.PREP_SHOOTER.b);
+      private static final RGBWColor shooterReadyColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
+      private static final RGBWColor feedingShooterColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
+
+      private static final RGBWColor trenchSafeColor = new RGBWColor(AnimationColor.TRENCH_SAFE.r, AnimationColor.TRENCH_SAFE.g, AnimationColor.TRENCH_SAFE.b);
     }
 
     public static final class Animations {
       public static final SolidColor CANdleNeutralAnimation = new SolidColor(LEDSegments.CANdle.startIndex, LEDSegments.CANdle.endIndex).withColor(AnimationRGBWColors.CANdleNeutralColor);
       public static final SolidColor CANdleStickyFaultAnimation = new SolidColor(LEDSegments.CANdle.startIndex, LEDSegments.CANdle.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
 
-      public static final SingleFadeAnimation disabledBlueAnimation = new SingleFadeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.disabledBlueColor).withFrameRate(100);
-      public static final SingleFadeAnimation disabledOrangeAnimation = new SingleFadeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.disabledOrangeColor).withFrameRate(100);
-      public static final ColorFlowAnimation matchCountdownAnimation = new ColorFlowAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.matchCountdownColor).withFrameRate((LEDSegments.Strip.endIndex - LEDSegments.Strip.startIndex + 1) / 10);
-      public static final SolidColor neutralSolidColor = new SolidColor(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.neutralColor);
-      public static final StrobeAnimation neutralAnimation = new StrobeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.intakingColor);
-      public static final StrobeAnimation reverseIntakingAnimation = new StrobeAnimation(LEDSegments.Strip.startIndex, LEDSegments.Strip.endIndex).withColor(AnimationRGBWColors.reverseIntakingColor);
+      public static final TwinkleAnimation disabledBlueAnimation1 = new TwinkleAnimation(LEDSegments.Strip1.startIndex, LEDSegments.Strip1.endIndex).withColor(AnimationRGBWColors.disabledBlueColor).withSlot(1).withMaxLEDsOnProportion(0.7);
+      public static final TwinkleAnimation disabledBlueAnimation2 = new TwinkleAnimation(LEDSegments.Strip2.startIndex, LEDSegments.Strip2.endIndex).withColor(AnimationRGBWColors.disabledBlueColor).withSlot(2).withMaxLEDsOnProportion(0.7);
+      public static final TwinkleAnimation disabledBlueAnimation3 = new TwinkleAnimation(LEDSegments.Strip3.startIndex, LEDSegments.Strip3.endIndex).withColor(AnimationRGBWColors.disabledBlueColor).withSlot(3).withMaxLEDsOnProportion(0.7);
+      public static final TwinkleAnimation disabledOrangeAnimation1 = new TwinkleAnimation(LEDSegments.Strip1.startIndex, LEDSegments.Strip1.endIndex).withColor(AnimationRGBWColors.disabledOrangeColor).withSlot(1).withMaxLEDsOnProportion(0.7);
+      public static final TwinkleAnimation disabledOrangeAnimation2 = new TwinkleAnimation(LEDSegments.Strip2.startIndex, LEDSegments.Strip2.endIndex).withColor(AnimationRGBWColors.disabledOrangeColor).withSlot(2).withMaxLEDsOnProportion(0.7);
+      public static final TwinkleAnimation disabledOrangeAnimation3 = new TwinkleAnimation(LEDSegments.Strip3.startIndex, LEDSegments.Strip3.endIndex).withColor(AnimationRGBWColors.disabledOrangeColor).withSlot(3).withMaxLEDsOnProportion(0.7);
+      public static final SolidColor neutralSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.neutralColor);
+      public static final StrobeAnimation neutralAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.intakingColor);
+      public static final StrobeAnimation reverseIntakingAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.reverseIntakingColor);
+      public static final StrobeAnimation shooterPrepAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.shooterPrepColor);
+      public static final SolidColor shooterReadySolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.shooterReadyColor);
+      public static final StrobeAnimation feedingShooterAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.feedingShooterColor);
+
+      public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
+      public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
+      public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
     }
   }
 }

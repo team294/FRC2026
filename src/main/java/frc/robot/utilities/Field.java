@@ -61,8 +61,8 @@ public class Field {
         } else {
             if (robotTranslation2d.getX() > FieldConstants.hubPositionRed.getX()) {return FieldConstants.hubPositionRed;}
             else {
-                if (robotTranslation2d.getY() < FieldConstants.leftPassRed.getY()) {return FieldConstants.leftPassRed;}
-                else {return FieldConstants.rightPassRed;}
+                if (robotTranslation2d.getY() < FieldConstants.rightPassRed.getY()) {return FieldConstants.rightPassRed;}
+                else {return FieldConstants.leftPassRed;}
             }
         }
     }

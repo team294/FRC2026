@@ -10,6 +10,7 @@ import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.subsystems.Feeder;
+import frc.robot.utilities.LEDEventUtil;
 
 public class FeederFeedShooter extends Command {
   private final Feeder feeder;
@@ -39,6 +40,8 @@ public class FeederFeedShooter extends Command {
     uptakeWithinTolerance = false;
     feeder.setUptakeVelocity(UptakeConstants.uptakeShootRPM);
     timer.restart();  // start fuel tracking timer
+
+    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.FEEDING_SHOOTER);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,6 +82,7 @@ public class FeederFeedShooter extends Command {
   public void end(boolean interrupted) {
     feeder.stopSpindexer();
     feeder.stopUptake();
+    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.

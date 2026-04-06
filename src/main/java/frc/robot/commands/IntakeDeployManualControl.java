@@ -48,7 +48,7 @@ public class IntakeDeployManualControl extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double intakePercent = xboxController.getLeftY();
+    double intakePercent = -xboxController.getLeftY();
     if ((Math.abs(intakePercent) < OIConstants.joystickDeadband)) intakePercent = 0;
 
     // Slow the control down

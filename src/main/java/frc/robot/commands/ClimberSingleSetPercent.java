@@ -21,7 +21,7 @@ public class ClimberSingleSetPercent extends Command {
   /**
    * Set one climber side percent using Elastic input.
    *
-   * @param side which climber side to control
+   * @param side which climber side to control 1 = left, 2 = right
    * @param climber Climber subsystem
    */
   public ClimberSingleSetPercent(int side, Climber climber) {
