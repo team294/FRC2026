@@ -6,6 +6,9 @@ package frc.robot.commands.autos.components;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import java.util.List;
+
+import choreo.trajectory.EventMarker;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -45,6 +48,14 @@ public class AutonDriveToNeutralZone extends SequentialCommandGroup {
   /** Drive to the neutral zone (can only do under the trench), finishing in position to start collecting balls */
   public AutonDriveToNeutralZone(ReturnToAllianceType returnToAllianceZone, ShootPreloadType shootPreload, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     Trajectory<SwerveSample> trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchToCollectStart);
+    List<EventMarker> trajectoryMarkers = trajectory.getEvents("DeployIntake");
+    double timeToDeploy;
+    if (trajectoryMarkers.size()>0) {
+      timeToDeploy = trajectoryMarkers.get(0).timestamp;
+    } else {
+      timeToDeploy = 1.0;
+    }
+
     addCommands(
       new DataLogMessage(false, "AutonDriveToNeutralZone: start"),
         // Whether or not we shoot the preload
@@ -57,17 +68,17 @@ public class AutonDriveToNeutralZone extends SequentialCommandGroup {
         none(),
         () -> shootPreload == ShootPreloadType.kShootPreload
       ),
-      race(
+      deadline(
         new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),  // race with intake command
         sequence(
-          new WaitCommand(1.0),
-          new IntakeSequence(intake),
+          new WaitCommand(timeToDeploy),
           either(
             parallel(
+              new IntakeSequence(intake),
               new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber), 
               new HoodSetAngle(ShooterConstants.hoodShootAngle, EndType.waitForSetPoint, shooter)
             ),
-            none(), 
+            new IntakeSequence(intake),
             () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
           )
         )
