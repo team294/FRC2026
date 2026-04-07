@@ -31,7 +31,7 @@ public class AutonScore extends SequentialCommandGroup {
       new DataLogMessage(false, "AutonScore: start"),
       parallel(
         new ShooterTurretScorePrepSequence(false, endType, turret, shooter, driveTrain, field),
-        new FeederIntakeFeedShooterSequence(feeder, intake, shooter),
+        new FeederIntakeFeedShooterSequence(true, feeder, intake, shooter),
         new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber)
         // TODO end condition for not seeing balls for extendend period of time? then put hood down
       )
