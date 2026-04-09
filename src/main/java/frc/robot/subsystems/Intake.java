@@ -108,8 +108,6 @@ public class Intake extends SubsystemBase implements Loggable{
   private double intakeRollerSetpointPercent;       // Current setpoint percent output for the roller motor
 
   private boolean shouldAgitateDuringFeed = true;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
-  private boolean preventRolling = false;
-  private boolean preventDeploying = false;
 
 
   public Intake(String subsystemName) {
@@ -306,11 +304,6 @@ public class Intake extends SubsystemBase implements Loggable{
    * @param percent output percent, -1.0 to 1.0 (positive = intake, negative = outtake)
    */
   public void setIntakeRollerPercentOutput(double percent) {
-    if (preventRolling) {
-      DataLogUtil.writeMessageEcho(subsystemName, ": setIntakeRollerPercentOutput", ", PREVENTED ROLLERS FROM TURNING ON");
-      return;
-    }
-
     intakeRollerMotor.setControl(intakeRollerVoltageControl.withOutput(percent * IntakeConstants.rollerCompensationVoltage));
     intakeRollerSetpointPercent = percent;
   
@@ -325,11 +318,6 @@ public class Intake extends SubsystemBase implements Loggable{
    * @param percent output percent, -1.0 to 1.0 (positive = deploy, negative = retract)
    */
   public void setIntakeDeployPercentOutput(double percent) {
-    if (preventDeploying) {
-      DataLogUtil.writeMessageEcho(subsystemName, ": setIntakeDeployPercentOutput", ", PREVENTED DEPLOYER FROM TURNING ON");
-      return;
-    }
-
     isIntakeDeployInPositionControl = false;
     intakeDeployMotor.setControl(intakeDeployVoltageControl.withOutput(percent * IntakeConstants.rollerCompensationVoltage));
     intakeDeploySetpointPercent = percent;
@@ -354,11 +342,6 @@ public class Intake extends SubsystemBase implements Loggable{
    * @param angle target angle, in degrees (0 = front plate level with bubble, positive = in, negative = out)
    */
   public void setIntakeDeployAngle(double angle) {
-    if (preventDeploying) {
-      DataLogUtil.writeMessageEcho(subsystemName, ": setIntakeDeployAngle", ", PREVENTED DEPLOYER FROM TURNING ON");
-      return;
-    }
-
     if (!isIntakeDeployCalibrated) {
       DataLogUtil.writeMessageEcho(
         subsystemName,
@@ -626,18 +609,14 @@ public class Intake extends SubsystemBase implements Loggable{
     double rollerAmps = getIntakeRollerAmps();
     double deployAmps = getIntakeDeployAmps();
 
-    if (!preventRolling && rollerAmps > 100) {
-      setIntakeRollerPercentOutput(0.0);
-      preventRolling = true;
-    } else if (preventRolling && rollerAmps <= 100) {
-      preventRolling = false;
+    if (rollerAmps > 100) {
+      setIntakeRollerPercentOutput(0);
+      DataLogUtil.writeMessageEcho(subsystemName, ": IntakeRoller", ", EXCEEDED MAX CURRENT");
     }
 
-    if (!preventDeploying && deployAmps > 100) {
-      setIntakeDeployPercentOutput(0.0);
-      preventDeploying = true;
-    } else if (preventDeploying && deployAmps <= 100) {
-      preventDeploying = false;
+    if (deployAmps > 100) {
+      setIntakeDeployPercentOutput(0);
+      DataLogUtil.writeMessageEcho(subsystemName, ": IntakeDeploy", ", EXCEEDED MAX CURRENT");
     }
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
@@ -657,9 +636,6 @@ public class Intake extends SubsystemBase implements Loggable{
       SmartDashboard.putNumber(INTAKE_ROLLER_RPM.value, getIntakeRollerVelocity());
 
       SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
-
-      SmartDashboard.putBoolean("Roller >100 Amps", preventRolling);
-      SmartDashboard.putBoolean("Deploy >100 Amps", preventDeploying);
     }
 
   }
