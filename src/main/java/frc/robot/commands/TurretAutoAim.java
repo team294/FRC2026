@@ -50,8 +50,10 @@ public class TurretAutoAim extends Command {
             field.getStaticShotTarget(robotPose2d.getTranslation()),
             turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
             driveTrain.getRobotSpeeds(),
-            driveTrain.getFieldAccelerationX(),
-            driveTrain.getFieldAccelerationY())
+            0, 0
+          )
+            // driveTrain.getFieldAccelerationX(),
+            // driveTrain.getFieldAccelerationY())
         )
       );
     }

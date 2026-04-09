@@ -482,8 +482,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    * @return forwards robot acceleration, in m/s^2
    */
   public double getRobotAccelerationX() {
-    return pigeon.getAccelerationX(true).getValueAsDouble() * Math.cos(DriveConstants.offsetAnglePigeon)
-      + pigeon.getAccelerationY(true).getValueAsDouble() * Math.sin(DriveConstants.offsetAnglePigeon);
+    return pigeon.getAccelerationX(true).getValueAsDouble() * 9.81 * Math.cos(DriveConstants.offsetAnglePigeon)
+      + pigeon.getAccelerationY(true).getValueAsDouble() * 9.81 * Math.sin(DriveConstants.offsetAnglePigeon);
   }
 
   /**
@@ -491,8 +491,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    * @return sideways robot acceleration, in m/s^2
    */
   public double getRobotAccelerationY() {
-    return -pigeon.getAccelerationX(true).getValueAsDouble() * Math.sin(DriveConstants.offsetAnglePigeon)
-      + pigeon.getAccelerationY(true).getValueAsDouble() * Math.cos(DriveConstants.offsetAnglePigeon);
+    return -pigeon.getAccelerationX(true).getValueAsDouble() * 9.81 * Math.sin(DriveConstants.offsetAnglePigeon)
+      + pigeon.getAccelerationY(true).getValueAsDouble() * 9.81 * Math.cos(DriveConstants.offsetAnglePigeon);
   }
 
   /**
