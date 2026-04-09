@@ -183,6 +183,7 @@ public final class Constants {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
+      FEED_SHOOTER_AGITATE_CMD_SEQUENCE("Feed Shooter Agitate Sequence"),
 
       // Stop Command
       INTAKE_CMD_STOP(intakeString + stopCmdString),
@@ -708,6 +709,8 @@ public final class Constants {
     // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
     public static final double shooterDistanceToRPMIntercept = 1270.76045; // CALIBRATED 3/28/26: 1270.76045
     public static final double shooterDistanceToRPMSlope = 466.41849; // CALIBRATED 3/28/26: 466.41849
+
+    public static final double shooterVelocityFromTrench = 2200; // calculated using above slope and intercept from estimated distance b/t turret and hub
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
