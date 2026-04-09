@@ -343,7 +343,7 @@ public final class Constants {
       TURRET_IS_CALIBRATED(turretString + " Calibrated?"),
 
       // Raw Rotations
-      INTAKE_DEPLOY_RAW_ROTATIONS(intakeDeployString + " Raw Rotations"),
+      INTAKE_DEPLOY_CANCODER_RAW_ROTATIONS(intakeDeployString + " CC Raw Rotations"),
       TURRET_CANCODER_BELT_RAW(turretString + " CANcoder Belt Raw"),
       TURRET_CANCODER_GEAR_RAW(turretString + " CANcoder Gear Raw"),
       TURRET_ENCODER_RAW(turretString + " Encoder Raw"),
@@ -608,22 +608,22 @@ public final class Constants {
 
     public static final double deployGearRatio = (52.0 / 12.0) * (36.0 / 18.0) * (64.0 / 24.0) * (36.0 / 18.0);    // CALIBRATED: (12.0 / 52.0) * (18.0 / 36.0) * (24.0 / 64.0) * (18.0 / 36.0)
     public static final double deployDegreesPerRotation = 360.0;
-    public static final double deploySensorToRotorRatio = 36.0 / 18.0;
+    public static final double deploySensorToMechanismRatio = 36.0 / 18.0;
     public static final double deployCompensationVoltage = 12.0;
     public static final double deployMaxUncalibratedPercentOutput = 0.1;  
     public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
     public static final double deployMaxPercentOutput = 0.2;              
     public static final double deploySetAngleTolerance = 3.0;             
 
-    // CANcoder raw angle in degrees when at 0 degrees. This should be updated in RobotPreferences, so it cannot be final.
-    public static double deployCANcoderOffsetAngle = -54.9 + 11; // CALIBRATED: -54.9, 0 degrees is when orange arrow is straight up
+    // CANcoder raw angle in degrees when at 0 degrees.
+    public static final double deployCANcoderOffsetAngle = 83.3;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
-    public static final double deployCANcoderDiscontinuityPoint = -0.7405; // CALIBRATED: -0.7405
+    public static final double deployCANcoderDiscontinuityPoint = 0.8095; // CALIBRATED 4/8: 0.8095
 
-    public static final double kP = 150.0;  // CALIBRATED: AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kP = 10.0;  // CALIBRATED: 4/8 - 10.0, AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
     public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
-    public static final double kD = 0.2;   // CALIBRATED: new 0.2, old intake 0.4
+    public static final double kD = 0.4;   // CALIBRATED: 4/8 - 10.0,   new 0.2, old intake 0.4
     public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
     public static final double kS = 0.195; // CALIBRATED: new 0.195, old intake 0.185 - kS, in Volts
     public static final double kV = 5.132;  // CALIBRATED: new 5.132, old intake 5.418 - kV, in Volts/(intake-rotations/sec)
@@ -634,12 +634,12 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-89.1),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
-      INTAKE(-89.1),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
+      LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
-      START_CONFIG(36.5),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
-      UPPER_LIMIT(37.0);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
+      START_CONFIG(36.4),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
+      UPPER_LIMIT(36.9);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;
@@ -785,8 +785,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoderBelt = 0.8076;  // CALIBRATED: 0.1052 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoderGear = 0.7098; // CALIBRATED: -0.4818 (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.9444;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = 0.5631;  // CALIBRATED: 0.5631 - (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
