@@ -807,7 +807,7 @@ public final class Constants {
     
     public enum TurretAngle {
       LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(114.0); // was 180
+      UPPER_LIMIT(180.0);
 
       public final double value;
       TurretAngle(double angle) {
