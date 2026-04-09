@@ -183,6 +183,7 @@ public final class Constants {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
+      FEED_SHOOTER_AGITATE_CMD_SEQUENCE("Feed Shooter Agitate Sequence"),
 
       // Stop Command
       INTAKE_CMD_STOP(intakeString + stopCmdString),
