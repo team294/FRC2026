@@ -18,6 +18,7 @@ public class TurretAutoAim extends Command {
   private final Field field;
 
   private Pose2d robotPose2d;
+  private double turretTargetAngle;
 
   /**
    * Calculate target turret angle for shooting depending on robot position on field
@@ -42,20 +43,27 @@ public class TurretAutoAim extends Command {
   public void execute() {
     robotPose2d = driveTrain.getPose();
 
+    if (turret.getShootOnTheMoveEnabled()) {
+      turretTargetAngle = turret.getAutoTargetAngleTurretRelative(
+                            robotPose2d, 
+                            field.getGhostShotTarget(
+                              field.getStaticShotTarget(robotPose2d.getTranslation()),
+                              turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
+                              driveTrain.getRobotSpeeds(),
+                              0, 0
+                            )
+                              // driveTrain.getFieldAccelerationX(),
+                              // driveTrain.getFieldAccelerationY())
+                          );
+    } else {
+      turretTargetAngle = turret.getAutoTargetAngleTurretRelative(
+                            robotPose2d, 
+                            field.getStaticShotTarget(robotPose2d.getTranslation())
+                          );
+    }
+
     if (turret.getAutoAimEnabled()) {
-      turret.setTurretAngle(
-        turret.getAutoTargetAngleTurretRelative(
-          robotPose2d, 
-          field.getGhostShotTarget(
-            field.getStaticShotTarget(robotPose2d.getTranslation()),
-            turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
-            driveTrain.getRobotSpeeds(),
-            0, 0
-          )
-            // driveTrain.getFieldAccelerationX(),
-            // driveTrain.getFieldAccelerationY())
-        )
-      );
+      turret.setTurretAngle(turretTargetAngle);
     }
 
     SmartDashboard.putNumber("Turret Distance To Blue Hub", turret.getTurretAbsolutePose(robotPose2d).getTranslation().getDistance(FieldConstants.hubPositionBlue));

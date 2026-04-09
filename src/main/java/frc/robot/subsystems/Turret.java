@@ -56,6 +56,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   private boolean turretAutoAimEnabled = false;   // TODO: true when calibrated
+  private boolean turretShootOnTheMove = false;
 
   // Create variables for the turret Kraken motor
   private final StatusSignal<Voltage> turretSupplyVoltage; // Incoming bus voltage to motor, in volts
@@ -526,6 +527,7 @@ public class Turret extends SubsystemBase implements Loggable {
     stopTurret();
     turretCalibrated = false;
     turretAutoAimEnabled = false;
+    turretShootOnTheMove = false;
 
     // If the turret goes uncalibrated, we still want to be able to manually drive it in order to recalibrate
     usingRemoteEncoderConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
@@ -711,6 +713,21 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public boolean getAutoAimEnabled() {
     return turretAutoAimEnabled;
+  }
+  
+  /**
+   * Toggle whether or not turret should be doing shoot on the move (only works if auto aim is enabled)
+   */
+  public void toggleShootOnTheMove() {
+    turretShootOnTheMove = !turretShootOnTheMove;
+  }
+
+  /** 
+   * Return current shoot on the move state
+   * @return true = shoot on the move (if auto aim enabled), false = no shoot on the move
+   */
+  public boolean getShootOnTheMoveEnabled() {
+    return turretShootOnTheMove;
   }
 
   /**
