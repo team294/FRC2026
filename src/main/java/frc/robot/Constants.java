@@ -621,13 +621,13 @@ public final class Constants {
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.8095; // CALIBRATED 4/8: 0.8095
 
-    public static final double kP = 30.0;  // TODO!!! UNCALIBRATED: 4/8 reset to 30.0, AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
-    public static final double kI = 0.0;   // TODO!!! UNCALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
-    public static final double kD = 0.2;   // TODO!!! UNCALIBRATED: new 0.2, old intake 0.4
-    public static final double kG = 0.26;  // TODO!!! UNCALIBRATED: 0.26, in Volts
-    public static final double kS = 0.195; // TODO!!! UNCALIBRATED: new 0.195, old intake 0.185 - kS, in Volts
-    public static final double kV = 5.132;  // TODO!!! UNCALIBRATED: new 5.132, old intake 5.418 - kV, in Volts/(intake-rotations/sec)
-    public static final double kA = 0.15;   // TODO!!! UNCALIBRATED: new 0.15, old intake 0.0 - kV, in Volts/(intake-rotations/sec2)
+    public static final double kP = 10.0;  // CALIBRATED: 4/8 - 10.0, AVDE after quals 150.0 was 30.0, old intake 10.0 - kP, in Volts/(intake-rotations-error)
+    public static final double kI = 0.0;   // CALIBRATED: new 0.0, old intake 0.8 (verified that 0.8 is a very slow correction in angle ~ 10 seconds)
+    public static final double kD = 0.4;   // CALIBRATED: 4/8 - 10.0,   new 0.2, old intake 0.4
+    public static final double kG = 0.26;  // CALIBRATED: 0.26, in Volts
+    public static final double kS = 0.195; // CALIBRATED: new 0.195, old intake 0.185 - kS, in Volts
+    public static final double kV = 5.132;  // CALIBRATED: new 5.132, old intake 5.418 - kV, in Volts/(intake-rotations/sec)
+    public static final double kA = 0.15;   // CALIBRATED: new 0.15, old intake 0.0 - kV, in Volts/(intake-rotations/sec2)
 
     public static final double MMCruiseVelocity = 0.8;                   // CALIBRATED, Max velocity in mechanism rotations / second
     public static final double MMAcceleration = MMCruiseVelocity / 0.15;  // CALIBRATED:  new /0.15, old intake /0.35, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
