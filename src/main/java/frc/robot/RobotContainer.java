@@ -16,6 +16,7 @@ import frc.robot.commands.sequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
+import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 
 import com.ctre.phoenix6.SignalLogger;
 import choreo.util.ChoreoAllianceFlipUtil;
@@ -138,6 +139,8 @@ public class RobotContainer {
     SmartDashboard.putData("Drive Turn Calibration", new DriveTurnCalibration(0.2, 5.0, 0.2 / 5.0, driveTrain));
     SmartDashboard.putData("Drive Percent Speed", new DrivePercentSpeed(driveTrain));
     SmartDashboard.putData("Drive Straight", new DriveStraight(false, false, true, driveTrain));
+    SmartDashboard.putData("Drive Traj 4m Relative", new DriveTrajectory(CoordType.kRelative, StopType.kBrake, 
+        trajectoryCache.getTrajectory(false, TrajectoryName.RelativeStraight4m), driveTrain, allianceSelection));
 
     // Vision
     SmartDashboard.putData("Vision Enable Odometry Updates", new VisionOdometryStateSet(true, driveTrain));
