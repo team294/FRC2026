@@ -43,19 +43,21 @@ public final class Constants {
     kAbsoluteResetPoseTol;  // Absolute field coordinates, reset robot pose if robot is not close to specified position
   }
 
-  // Options for driving stopping types
+  // Options for driving stopping types after Trajectories
   public enum StopType {
-    kNoStop,
-    kCoast,
-    kBrake;
+    kNoStop,    // Don't stop the drivetrain.  Continue the drivetrain motors in their current state (wheel orientation and velocity)
+    kCoast,     // Stop the drive motors and set the drivetrain to Coast mode
+    kBrake;     // Stop the drive motors and set the drivetrain to Brake mode
   }
 
+  // Options for how to end a command that sets a mechanism to a set point
   public static enum EndType {
     immediatelyEnd,
     waitForSetPoint,
     runForever
   }
 
+  // Options for how to end a command that sets a mechanism to a set velocity
   public enum VelocityType{
     immediatelyEnd,
     runForever, 
