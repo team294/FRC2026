@@ -254,7 +254,7 @@ public class RobotContainer {
 
     // manual setpoint for shooting when bot is at center of trench with turret facing hub
     xbRB.whileTrue(parallel(
-      new ShooterScorePrep(ShooterConstants.shooterVelocityFromDTrench, ShooterConstants.hoodShootAngle, EndType.runForever, shooter, turret, driveTrain, field),
+      new ShooterScorePrep(ShooterConstants.shooterVelocityFromTrench, ShooterConstants.hoodShootAngle, EndType.runForever, shooter, turret, driveTrain, field),
       new TurretSetAngle(0, EndType.runForever, turret)
     ));
 
