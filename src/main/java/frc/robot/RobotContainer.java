@@ -252,15 +252,10 @@ public class RobotContainer {
       new InstantCommand(() -> intake.setAgitateDuringFeed(false))
     ));
 
-    // Intake while shooting
+    // manual setpoint for shooting when bot is at center of trench with turret facing hub
     xbRB.whileTrue(parallel(
-      new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
-    ));
-    xbRB.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+      new ShooterScorePrep(ShooterConstants.shooterVelocityFromDTrench, ShooterConstants.hoodShootAngle, EndType.runForever, shooter, turret, driveTrain, field),
+      new TurretSetAngle(0, EndType.runForever, turret)
     ));
 
     // manual intake deploy: up = in, down = out
