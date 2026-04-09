@@ -273,6 +273,7 @@ public final class Constants {
       CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
       TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
       TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
+      TURRET_CMD_TOGGLE_SOTM(turretString + " Toggle SOTM"),
 
       // Calibrate Manual Command Input
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(intakeDeployString + calibrateManualCmdInputString + " (Degrees)"),
