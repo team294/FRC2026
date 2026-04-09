@@ -838,10 +838,12 @@ public final class Constants {
     public static final double interimThetaErrorDegrees = 2.0;        
     public static final double interimPositionErrorMeters = 0.20; // 8 inches
 
-    public static final double xError = 0.25;
-    public static final double yError = 0.25;
-    public static final double choreoMaxThetaErrorDegrees = 5;
-    public static final double endVelocityErrorDegrees = 0.75;
+    // Tolerances at end of trajectory for the CoreoFollower (DriveTrajectory) to end.
+    // Note that these only apply for trajectories that end with a Stop (velocity = 0) at the end of the trajectory.
+    public static final double xError = 0.25;     // in meters
+    public static final double yError = 0.25;     // in meters
+    public static final double choreoMaxThetaErrorDegrees = 5;    // in degrees
+    public static final double endVelocityError = 0.75;     // in m/sec
 
     // Feedback terms for holonomic drive controllers
 
