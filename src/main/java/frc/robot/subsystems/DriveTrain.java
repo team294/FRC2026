@@ -42,6 +42,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import static frc.robot.Constants.DriveConstants.*;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -477,19 +478,21 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Get forwards acceleration of robot (x) <b> in robot frame of reference </b>
+   * Get forwards acceleration of robot (x) <b> in ROBOT frame of reference </b>
    * @return forwards robot acceleration, in m/s^2
    */
   public double getRobotAccelerationX() {
-    return pigeon.getAccelerationX(true).getValueAsDouble() * Math.cos(Math.PI / 4.0) - pigeon.getAccelerationY(true).getValueAsDouble() * Math.sin(Math.PI / 4.0);
+    return pigeon.getAccelerationX(true).getValueAsDouble() * Math.cos(DriveConstants.offsetAnglePigeon)
+      + pigeon.getAccelerationY(true).getValueAsDouble() * Math.sin(DriveConstants.offsetAnglePigeon);
   }
 
   /**
-   * Get sideways acceleration of robot (y) <b> in robot frame of reference </b>
+   * Get sideways acceleration of robot (y) <b> in ROBOT frame of reference </b>
    * @return sideways robot acceleration, in m/s^2
    */
   public double getRobotAccelerationY() {
-    return pigeon.getAccelerationX(true).getValueAsDouble() * Math.sin(Math.PI / 4.0) + pigeon.getAccelerationY(true).getValueAsDouble() * Math.cos(Math.PI / 4.0);
+    return -pigeon.getAccelerationX(true).getValueAsDouble() * Math.sin(DriveConstants.offsetAnglePigeon)
+      + pigeon.getAccelerationY(true).getValueAsDouble() * Math.cos(DriveConstants.offsetAnglePigeon);
   }
 
   /**
@@ -505,7 +508,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    * @return y acceleration: positive is left from blue driver station POV, negative is right from blue driver station POV
    */
   public double getFieldAccelerationY() {
-    return getRobotAccelerationX() * Math.sin(Math.toRadians(getPoseAngle()) + getRobotAccelerationY() * Math.cos(Math.toRadians(getPoseAngle())));
+    return getRobotAccelerationX() * Math.sin(Math.toRadians(getPoseAngle())) + getRobotAccelerationY() * Math.cos(Math.toRadians(getPoseAngle()));
   }
   
   /**

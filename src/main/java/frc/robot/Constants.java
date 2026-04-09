@@ -480,6 +480,8 @@ public final class Constants {
     public static double offsetAngleBackLeftMotor = 0.175;
     public static double offsetAngleBackRightMotor = 151.611;
 
+    public static double offsetAnglePigeon = Math.PI / 4.0;  // in radians, pigeon rotation angle relative to front of robot (ccw+, cw-)
+
     // Theta kp value for joystick in rad/sec
     public static final double kPJoystickThetaController = 3;         // TODO CALIBRATE
 

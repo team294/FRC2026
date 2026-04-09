@@ -79,12 +79,14 @@ public class Field {
     public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds, double accelerationX, double accelerationY) {
         double estTimeOfFlight = turretTranslation2d.getDistance(staticTargetTranslation2d) * FieldConstants.timeOfFlightSlope + FieldConstants.timeOfFlightIntercept;
 
-        // final position = 0.5(acceleration)(time^2) + (velocity)(time) + (initial position)
-        // acceleration and velocity are done here
+        // We want to aim at where the target appears to be from the robot's estimated future position.
+        // During the time of flight, the robot moves by: 0.5(acceleration)(time^2) + (velocity)(time)
+        // This displacement is subtracted from the static target position because if the robot moves
+        // +1m left during flight, the target appears to shift -1m from the robot's POV so we have to aim 1m short
         double offsetX = (0.5 * accelerationX * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
         double offsetY = (0.5 * accelerationY * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
 
-        // add to initial position to get final position
+        // ghost target = static target - displacement
         return new Translation2d(staticTargetTranslation2d.getX() - offsetX, staticTargetTranslation2d.getY() - offsetY);
     }
 }
