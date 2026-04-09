@@ -8,10 +8,11 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.FeederFeedShooter;
-import frc.robot.commands.IntakeDeployAgitate;
+import frc.robot.commands.IntakeDeploySetPercent;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -39,7 +40,7 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
         new FeederFeedShooter(feeder),
         sequence(
           waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
-          either(new IntakeDeployAgitate(intake), new IntakeSequence(intake), () -> intake.getAgitateDuringFeed())
+          either(new IntakeDeploySetPercent(IntakeConstants.deployMaxDumpAgitatePercentOutput, false, intake), new IntakeSequence(intake), () -> intake.getAgitateDuringFeed())
         )
       ),
       new DataLogMessage(false, "FeederIntakeFeedShooterSequence: End")

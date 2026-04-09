@@ -244,7 +244,6 @@ public class RobotContainer {
     // Agitate while shooting
     xbRT.whileTrue(parallel(
       new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
-      new IntakeDeploySetPercent(IntakeConstants.deployMaxDumpAgitatePercentOutput, true, intake)
     ));
     xbRT.onFalse(parallel(
       new FeederStop(feeder),
