@@ -659,6 +659,7 @@ public class Intake extends SubsystemBase implements Loggable{
       SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
 
       SmartDashboard.putBoolean("Roller >100 Amps", preventRolling);
+      SmartDashboard.putBoolean("Deploy >100 Amps", preventDeploying);
     }
 
   }
