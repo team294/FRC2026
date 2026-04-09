@@ -217,7 +217,7 @@ public class ChoreoFollower extends Command {
         && Math.abs(MathBCR.normalizeAngle(poseCurr.getRotation().getDegrees()
             - finalPose.getRotation().getDegrees())) <= Constants.TrajectoryConstants.choreoMaxThetaErrorDegrees
         && Math.hypot(driveTrain.getChassisSpeeds().vxMetersPerSecond,
-            driveTrain.getChassisSpeeds().vyMetersPerSecond) <= Constants.TrajectoryConstants.endVelocityErrorDegrees)
+            driveTrain.getChassisSpeeds().vyMetersPerSecond) <= Constants.TrajectoryConstants.endVelocityError)
         ||
         timer.hasElapsed(trajectory.getTotalTime() + 0.7);
   }
