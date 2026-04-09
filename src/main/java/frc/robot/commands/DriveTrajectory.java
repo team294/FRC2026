@@ -34,12 +34,17 @@ public class DriveTrajectory extends SequentialCommandGroup {
    *      Blue drivers. The trajectory is automatically flipped for Red if the current AllianceSelection is Red. If the current robot odometry pose is "close"
    *      (within 0.5m and 15deg) to the first Pose2D in the trajectory, then the robot current pose is assumed to be correct and is not adjusted; if it is not close, then 
    *      the odometry pose robot is reset to the first Pose2D in the trajectory before running the trajectory.
-   * @param stopAtEnd  True = robot stops at end of trajectory, False = robot does not end stopped
-   * @param trajectory swerve sample choreo trajectory that will be run, Trajectory will be mirrored based on alliance
+   * @param stopType Specify behavior at the end of the trajectory
+   *  <p> kNoStop = Don't stop the drivetrain.  Continue the drivetrain motors in their current state (wheel orientation and velocity) when the trajectory ends.  Note that
+   *      this may not exactly match the end of the planned trajectory (just because the end of the trajectory is a stop point [zero velocity], that does not mean
+   *      that the robot will actually be stopped when this command ends).
+   *  <p>kCoast = Stop the drive motors and set the drivetrain to Coast mode
+   *  <p>kBrake = Stop the drive motors and set the drivetrain to Brake mode
+   * @param trajectory swerve sample Choreo trajectory that will be run, Trajectory will be mirrored based on alliance
    * @param driveTrain DriveTrain subsystem
    * @param alliance AllianceSelection utility
    */
-  public DriveTrajectory(CoordType trajectoryType, StopType stopAtEnd, Trajectory<SwerveSample> trajectory, DriveTrain driveTrain, AllianceSelection alliance) { 
+  public DriveTrajectory(CoordType trajectoryType, StopType stopType, Trajectory<SwerveSample> trajectory, DriveTrain driveTrain, AllianceSelection alliance) { 
     addCommands(new DataLogMessage(false, "DriveTrajectory: Init"));
 
     // Define the controller for robot rotation
@@ -92,12 +97,12 @@ public class DriveTrajectory extends SequentialCommandGroup {
     addCommands(ChoreoFollower);
     
     // Add any final commands, per the stopAtEnd
-    if (stopAtEnd == StopType.kBrake) {
+    if (stopType == StopType.kBrake) {
       addCommands(
         new DriveStop(driveTrain),
         new InstantCommand(() -> driveTrain.setDriveModeCoast(false))
       );
-    } else if (stopAtEnd == StopType.kCoast) {
+    } else if (stopType == StopType.kCoast) {
       addCommands(
         new DriveStop(driveTrain),
         new InstantCommand(() -> driveTrain.setDriveModeCoast(true))
