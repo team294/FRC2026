@@ -710,6 +710,8 @@ public final class Constants {
     public static final double shooterDistanceToRPMIntercept = 1270.76045; // CALIBRATED 3/28/26: 1270.76045
     public static final double shooterDistanceToRPMSlope = 466.41849; // CALIBRATED 3/28/26: 466.41849
 
+    public static final double shooterVelocityFromTrench = 2200; // calculated using above slope and intercept from estimated distance b/t turret and hub
+
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
     public static final double hoodPassAngle = 35.0;

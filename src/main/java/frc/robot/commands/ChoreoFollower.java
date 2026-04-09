@@ -38,6 +38,10 @@ public class ChoreoFollower extends Command {
   private BooleanSupplier mirrorTrajectory;
   private boolean mirrorTrajectoryThisInit;
   private DriveTrain driveTrain;
+
+  private boolean noTrajectory;     // Trajectory has no points
+  private Pose2d finalPose;         // Desired pose at end of trajectory
+  private double finalVelocity;     // Desired velocity at end of trajectory
   
   private final DataLog log = DataLogManager.getLog();
   private final StructLogEntry<Pose2d> dLogCurPose2D = StructLogEntry.create(log, "/DrivePathFollower/curPose2d", Pose2d.struct);
@@ -122,6 +126,14 @@ public class ChoreoFollower extends Command {
 
     mirrorTrajectoryThisInit = mirrorTrajectory.getAsBoolean();
 
+    Optional<SwerveSample> finalSampleOpt = trajectory.getFinalSample(mirrorTrajectoryThisInit);
+    noTrajectory = finalSampleOpt.isEmpty();
+    if (!noTrajectory) {
+      finalPose = finalSampleOpt.get().getPose();
+      finalVelocity = Math.hypot( finalSampleOpt.get().getChassisSpeeds().vxMetersPerSecond,
+        finalSampleOpt.get().getChassisSpeeds().vyMetersPerSecond);
+    }
+
     DataLogUtil.writeMessage("ChoreoFollower:  Init, Is Flipped =", mirrorTrajectoryThisInit);
     dLogTrajType.append("ChoreoFollower");
     rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -194,24 +206,22 @@ public class ChoreoFollower extends Command {
   public void end(boolean interrupted) {
     // driveTrain.enableFastLogging(false);
     timer.stop();
-    DataLogUtil.writeMessage("ChoreoFollower:  End");
+    DataLogUtil.writeMessage("ChoreoFollower:  End, interrupted =", interrupted);
     dLogTrajType.append("None");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Optional<Pose2d> finalPoseOpt = trajectory.getFinalPose(mirrorTrajectoryThisInit);
-
-    if (finalPoseOpt.isEmpty()){
-      DataLogUtil.writeMessage("ChoreoFollower: IsFinished. No final Pose exists");
-      return true;
-    }
-
-    Pose2d finalPose = finalPoseOpt.get();
     Pose2d poseCurr = poseSupplier.get();
 
-    return (timer.hasElapsed(trajectory.getTotalTime())
+    return (
+        // Stop if there is no trajectory
+        noTrajectory
+        ||
+        // Stop if we are past the end of the trajectory *and* the PID controllers have pulled
+        // the robot within tolerance of the final point of the trajctory
+        timer.hasElapsed(trajectory.getTotalTime())
         && Math.abs(finalPose.getX() - poseCurr.getX()) <= Constants.TrajectoryConstants.xError
         && Math.abs(finalPose.getY() - poseCurr.getY()) <= Constants.TrajectoryConstants.yError
         && Math.abs(MathBCR.normalizeAngle(poseCurr.getRotation().getDegrees()
@@ -219,6 +229,12 @@ public class ChoreoFollower extends Command {
         && Math.hypot(driveTrain.getChassisSpeeds().vxMetersPerSecond,
             driveTrain.getChassisSpeeds().vyMetersPerSecond) <= Constants.TrajectoryConstants.endVelocityError)
         ||
+        // If final point of the trajctory has a non-zero velocity,
+        // then stop immediately at the end of the trajectory
+        timer.hasElapsed(trajectory.getTotalTime())
+        && finalVelocity > 0.01
+        ||
+        // Stop if we are more than 0.7sec past the end of the trajectory
         timer.hasElapsed(trajectory.getTotalTime() + 0.7);
   }
 }
