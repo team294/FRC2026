@@ -213,8 +213,8 @@ public class Intake extends SubsystemBase implements Loggable{
     // When using the CANcoder, SensorToMechanismRatio = 1.0 and RotorToSensorRatio = gear ratio
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     intakeDeployMotorCANcoderConfig.Feedback.FeedbackRemoteSensorID = Ports.CANIntakeDeployEncoder;
-    intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = IntakeConstants.deploySensorToRotorRatio; // 18 : 36 gear ratio on competition robot (reduction)
-    intakeDeployMotorCANcoderConfig.Feedback.RotorToSensorRatio = IntakeConstants.deployGearRatio * (1.0 / IntakeConstants.deploySensorToRotorRatio);
+    intakeDeployMotorCANcoderConfig.Feedback.SensorToMechanismRatio = IntakeConstants.deploySensorToMechanismRatio; // 18 : 36 gear ratio on competition robot (reduction)
+    intakeDeployMotorCANcoderConfig.Feedback.RotorToSensorRatio = IntakeConstants.deployGearRatio * (1.0 / IntakeConstants.deploySensorToMechanismRatio);
     intakeDeployMotorCANcoderConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     intakeDeployMotorCANcoderConfig.Slot0.kP = IntakeConstants.kP;
@@ -627,7 +627,7 @@ public class Intake extends SubsystemBase implements Loggable{
       SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
       SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
       SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
-      SmartDashboard.putNumber(INTAKE_DEPLOY_RAW_ROTATIONS.value, getIntakeDeployRotorEncoderRotationsRaw());
+      SmartDashboard.putNumber(INTAKE_DEPLOY_CANCODER_RAW_ROTATIONS.value, getIntakeDeployCANcoderRotationsRaw());
       SmartDashboard.putNumber(INTAKE_DEPLOY_ANGLE.value, getIntakeDeployAngle());
       SmartDashboard.putNumber(INTAKE_DEPLOY_TARGET_ANGLE.value, getIntakeDeployTargetAngle());
 
