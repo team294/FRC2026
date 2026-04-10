@@ -424,6 +424,8 @@ public class RobotContainer {
     shiftHelper.periodic();
     autoSelection.periodic();
 
+    SmartDashboard.putBoolean("Trench Safe", intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench());
+
     heartBeat++;
     dLogRobotHeartBeat.append(heartBeat);
   }
