@@ -565,9 +565,16 @@ public final class Constants {
       kDontShootPreload
     }
 
+    /**
+     * What path to take when picking up balls
+     * <p> kDriveThroughCenter closer to center line
+     * <p> kDriveThroughSide closer to alliance zone
+     * <p> kBumpSecondSwipe starts from and ends in the choreo ShootBump position
+     */
     public enum BallPickupTrajType {
       kDriveThroughCenter, // riskier
       kDriveThroughSide,   // avoid getting our autos messed up if colliding
+      kBumpSecondSwipe 
     }
 
     /**

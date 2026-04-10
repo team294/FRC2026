@@ -42,8 +42,18 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
   /** Creates a new AutonDriveToNeutralAndCollectBalls. */
-  public AutonDriveToNeutralAndCollectBalls(ShootPreloadType shootPreload, BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
-    Trajectory<SwerveSample> trajectory = driveThroughCenter == BallPickupTrajType.kDriveThroughCenter ? cache.getTrajectory(leftSide, TrajectoryName.StartTrenchCenterCollectBalls) : cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+  public AutonDriveToNeutralAndCollectBalls(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTraj, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+    Trajectory<SwerveSample> trajectory;
+    switch (ballPickupTraj) {
+      case kDriveThroughSide: 
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+      case kDriveThroughCenter:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchCenterCollectBalls);
+      case kBumpSecondSwipe:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.BumpSecondSweep);
+      default:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+    }
 
     addCommands(
       new DataLogMessage(false, "AutonDriveToNeutralAndCollectBalls: start"),
