@@ -14,6 +14,7 @@ import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.FeederFeedShooter;
+import frc.robot.commands.IntakeDeployAgitate;
 import frc.robot.commands.IntakeDeploySetPercent;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -24,14 +25,21 @@ import frc.robot.utilities.DataLogUtil;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
+
+  public enum AgitateType {
+    NONE,
+    DUMP,
+    BOUNCE
+  }
+
   /**
    * Starts feeding the shooter, and waits a bit until some balls have fed through until agitating balls with intake
-   * @param agitate true = agitate intake (movement up & down while feeding), false = don't (no movement)
+   * @param agitateType NONE - don't agitate, DUMP - slow inwards until setpoint in Constants, BOUNCE - up and down really fast
    * @param feeder Feeder feeder subsystem
    * @param intake Intake intake subsystem
    * @param shooter Shooter shooter subsystem
    */
-  public FeederIntakeFeedShooterSequence(boolean agitate, Feeder feeder, Intake intake, Shooter shooter) {
+  public FeederIntakeFeedShooterSequence(AgitateType agitateType, Feeder feeder, Intake intake, Shooter shooter) {
     addCommands(
       // Ensure that all necessary subsystmes are in place
       new DataLogMessage(false, "FeederIntakeFeedShooterSequence: Init"),
@@ -45,11 +53,17 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
           waitUntil(() -> (feeder.getUptakeVelocityPIDError() < FeederConstants.uptakeVelocityToleranceToStartSpindexer)),
           either(
             parallel(
-              new IntakeDeploySetPercent(IntakeConstants.deployMaxDumpAgitatePercentOutput, false, intake).until(() -> intake.getIntakeDeployAngle() >= IntakeDeployAngle.AGITATE_FINISH.value),
+              new IntakeDeploySetPercent(IntakeConstants.deployMaxDumpAgitatePercentOutput, false, intake).until(() -> intake.getIntakeDeployAngle() >= IntakeDeployAngle.AGITATE_DUMP_FINISH.value),
               new InstantCommand(() -> intake.setIntakeRollerPercentOutput(IntakeConstants.rollerIntakePercent))
             ),
-            new IntakeSequence(intake),
-            () -> agitate
+            either(
+              parallel(
+                new IntakeDeployAgitate(intake),
+                new InstantCommand(() -> intake.setIntakeRollerPercentOutput(IntakeConstants.rollerIntakePercent))
+              ),
+              new IntakeSequence(intake),
+              () -> agitateType == AgitateType.BOUNCE),
+            () -> agitateType == AgitateType.DUMP
           )
         )
       ),
