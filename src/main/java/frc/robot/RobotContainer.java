@@ -11,11 +11,14 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
+import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
+import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 
 import com.ctre.phoenix6.SignalLogger;
 import choreo.util.ChoreoAllianceFlipUtil;
@@ -138,6 +141,8 @@ public class RobotContainer {
     SmartDashboard.putData("Drive Turn Calibration", new DriveTurnCalibration(0.2, 5.0, 0.2 / 5.0, driveTrain));
     SmartDashboard.putData("Drive Percent Speed", new DrivePercentSpeed(driveTrain));
     SmartDashboard.putData("Drive Straight", new DriveStraight(false, false, true, driveTrain));
+    SmartDashboard.putData("Drive Traj 4m Relative", new DriveTrajectory(CoordType.kRelative, StopType.kBrake, 
+        trajectoryCache.getTrajectory(false, TrajectoryName.RelativeStraight4m), driveTrain, allianceSelection));
 
     // Vision
     SmartDashboard.putData("Vision Enable Odometry Updates", new VisionOdometryStateSet(true, driveTrain));
@@ -187,7 +192,9 @@ public class RobotContainer {
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
     SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
@@ -241,26 +248,15 @@ public class RobotContainer {
     xbLT.whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
-    // Agitate while shooting
-    xbRT.whileTrue(parallel(
-      new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(true))
-    ));
-    xbRT.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
-    ));
+    // while held, prep Shooter & Hood for scoring or passing (depending on position on field). stops shooter motor when released
+    xbRT.whileTrue(new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
-    // Intake while shooting
+    xbRT.onFalse(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
+
+    // manual setpoint for shooting when bot is at center of trench with turret facing hub
     xbRB.whileTrue(parallel(
-      new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
-    ));
-    xbRB.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+      new ShooterScorePrep(ShooterConstants.shooterVelocityFromTrench, ShooterConstants.hoodShootAngle, EndType.runForever, shooter, turret, driveTrain, field),
+      new TurretSetAngle(0, EndType.runForever, turret)
     ));
 
     // manual intake deploy: up = in, down = out
@@ -275,11 +271,30 @@ public class RobotContainer {
 
     xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
 
-    xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
-    xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
-    xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    // feed shooter with bounce agitation
+    xbA.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
+    
+    // feed shooter without agitation
+    xbB.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
 
-    xbB.whileTrue(new SpindexerSetPercent(SpindexerConstants.spindexerReversePercent, false, feeder));
+    // feed shooter with dump agitation
+    xbY.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
+
+    // reset intake if agitated, stop rollers and spindexer/uptake in both cases
+    xbA.onFalse(parallel(
+      new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
+      new InstantCommand(() -> intake.stopIntakeRoller()),
+      new FeederStop(feeder)
+    ));
+    xbB.onFalse(parallel(
+      new IntakeRollerStop(intake),
+      new FeederStop(feeder)
+    ));
+    xbY.onFalse(parallel(
+      new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
+      new InstantCommand(() -> intake.stopIntakeRoller()),
+      new FeederStop(feeder)
+    ));
   }
 
   /**
