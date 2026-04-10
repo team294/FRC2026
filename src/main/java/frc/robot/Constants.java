@@ -615,7 +615,7 @@ public final class Constants {
     public static final double deployMaxUncalibratedPercentOutput = 0.1;  
     public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
     public static final double deployMaxPercentOutput = 0.2;              
-    public static final double deployMaxDumpAgitatePercentOutput = 0.1;
+    public static final double deployMaxDumpAgitatePercentOutput = 0.08;
     public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees.
