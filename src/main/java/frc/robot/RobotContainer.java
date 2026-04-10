@@ -74,6 +74,8 @@ public class RobotContainer {
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
 
+  private boolean trenchSafe = false;
+
   // DataLog
   private final DataLog log = DataLogManager.getLog();
   private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
@@ -312,10 +314,7 @@ public class RobotContainer {
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
     left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
-    left[1].onFalse(parallel(
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
-    ));
+    left[1].onFalse(new IntakeRollerStop(intake));   // new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL))
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
@@ -512,5 +511,12 @@ public class RobotContainer {
    * Method called once every scheduler cycle when teleop mode is initialized/enabled.
    */
   public void teleopPeriodic() {
+    if (!trenchSafe && (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench())) {
+      trenchSafe = true;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else if (trenchSafe && (!intake.isIntakeDeploySafeForTrench() || !shooter.isHoodSafeForTrench() || !climber.isSafeForTrench())) {
+      trenchSafe = false;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
   }
 }

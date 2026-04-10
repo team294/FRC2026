@@ -14,17 +14,18 @@ public class LEDEventUtil {
   private static LED led;
   private static Command LEDAnimateRobotDisabled;
 
-  private static LEDStripEvents previousEventStrip;
+  // private static LEDStripEvents previousEventStrip;
 
   public enum LEDStripEvents {
-    INTAKING,
-    REVERSE_INTAKING,
-    PREPPING_SHOOTER,
-    SHOOTER_READY,
-    FEEDING_SHOOTER,
-    CLIMBER_MOVING_UP,
-    CLIMBER_MOVING_DOWN,
+    // INTAKING,
+    // REVERSE_INTAKING,
+    // PREPPING_SHOOTER,
+    // SHOOTER_READY,
+    // FEEDING_SHOOTER,
+    // CLIMBER_MOVING_UP,
+    // CLIMBER_MOVING_DOWN,
     TRENCH_SAFE,
+    TRENCH_UNSAFE,
     NEUTRAL,
     ROBOT_DISABLED
   }
@@ -32,20 +33,23 @@ public class LEDEventUtil {
   private static final Map<LEDStripEvents, Integer> prioritiesLEDStripEvents = new HashMap<>();
   
   static {
-    prioritiesLEDStripEvents.put(LEDStripEvents.INTAKING, 1);
-    prioritiesLEDStripEvents.put(LEDStripEvents.REVERSE_INTAKING, 1);
-    prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
-    prioritiesLEDStripEvents.put(LEDStripEvents.SHOOTER_READY, 3);
-    prioritiesLEDStripEvents.put(LEDStripEvents.FEEDING_SHOOTER, 4);
-    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_UP, 5);
-    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_DOWN, 5);
-    prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 7);
-    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 8);
-    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 9);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.INTAKING, 1);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.REVERSE_INTAKING, 1);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.PREPPING_SHOOTER, 2);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.SHOOTER_READY, 3);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.FEEDING_SHOOTER, 4);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_UP, 5);
+    // prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_DOWN, 5);
+    prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 1);
+    prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_UNSAFE, 1);
+    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 2);
+    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 2);
   }
 
   /**
    * Sends an event to the LED Strips and update the LEDs if necessary.
+   * For the trench safe/unsafe only configuration, does not check priority
+   * as these events should always override each other and both should override disabled.
    * @param event StripEvent event happening
    */
   public static void sendEvent(LEDStripEvents event) {
@@ -60,53 +64,58 @@ public class LEDEventUtil {
     // if previous was neutral or disabled, always update.
     // if previous was lowering climber & hood, displaying trench safety, or climber moving (either direction) always update.
     // otherwise, if priority is lower than current state, do not update (ex: intaking while feeding shooter should display the latter)
-    if (
-      previousEventStrip != LEDStripEvents.NEUTRAL && previousEventStrip != LEDStripEvents.ROBOT_DISABLED
-      && previousEventStrip != LEDStripEvents.CLIMBER_MOVING_UP && previousEventStrip != LEDStripEvents.CLIMBER_MOVING_DOWN && previousEventStrip != LEDStripEvents.TRENCH_SAFE
-      && getPriority(event) < getPriority(previousEventStrip)
-    ) {
-      DataLogUtil.writeMessage("LED Strip SendEvent: Event Priority Too Low");
-      return;
-    }
+    // if (
+    //   previousEventStrip != LEDStripEvents.NEUTRAL && previousEventStrip != LEDStripEvents.ROBOT_DISABLED
+    //   && previousEventStrip != LEDStripEvents.CLIMBER_MOVING_UP && previousEventStrip != LEDStripEvents.CLIMBER_MOVING_DOWN && previousEventStrip != LEDStripEvents.TRENCH_SAFE
+    //   && getPriority(event) < getPriority(previousEventStrip)
+    // ) {
+    //   DataLogUtil.writeMessage("LED Strip SendEvent: Event Priority Too Low");
+    //   return;
+    // }
 
     switch (event) {
-      case INTAKING:
-        LED.dashboardColor = AnimationColor.INTAKING;
-        led.animate(Animations.neutralAnimation);
-        DataLogUtil.writeMessage("LED Strip Intaking");
-        break;
-      case REVERSE_INTAKING:
-        LED.dashboardColor = AnimationColor.REVERSE_INTAKING;
-        led.animate(Animations.reverseIntakingAnimation);
-        DataLogUtil.writeMessage("LED Strip Reverse Intaking");
-        break;
-      case PREPPING_SHOOTER:
-        LED.dashboardColor = AnimationColor.PREP_SHOOTER;
-        led.animate(Animations.shooterPrepAnimation);
-        DataLogUtil.writeMessage("LED Strip Prep Shooter");
-        break;
-      case SHOOTER_READY:
-        LED.dashboardColor = AnimationColor.SHOOTER_READY;
-        led.animate(Animations.shooterReadySolidColor);
-        DataLogUtil.writeMessage("LED Strip Shooter Ready");
-        break;
-      case FEEDING_SHOOTER:
-        LED.dashboardColor = AnimationColor.FEEDING_SHOOTER;
-        led.animate(Animations.feedingShooterAnimation);
-        DataLogUtil.writeMessage("LED Strip Feeding Shooter");
-        break;
-      case CLIMBER_MOVING_UP:
-        led.animate(Animations.climberMovingAnimation);
-        DataLogUtil.writeMessage("LED Strip Climber Moving Up");
-        break;
-      case CLIMBER_MOVING_DOWN:
-        led.animate(Animations.climberMovingDownAnimation);
-        DataLogUtil.writeMessage("LED Strip Climber Moving Down");
-        break;
+      // case INTAKING:
+      //   LED.dashboardColor = AnimationColor.INTAKING;
+      //   led.animate(Animations.neutralAnimation);
+      //   DataLogUtil.writeMessage("LED Strip Intaking");
+      //   break;
+      // case REVERSE_INTAKING:
+      //   LED.dashboardColor = AnimationColor.REVERSE_INTAKING;
+      //   led.animate(Animations.reverseIntakingAnimation);
+      //   DataLogUtil.writeMessage("LED Strip Reverse Intaking");
+      //   break;
+      // case PREPPING_SHOOTER:
+      //   LED.dashboardColor = AnimationColor.PREP_SHOOTER;
+      //   led.animate(Animations.shooterPrepAnimation);
+      //   DataLogUtil.writeMessage("LED Strip Prep Shooter");
+      //   break;
+      // case SHOOTER_READY:
+      //   LED.dashboardColor = AnimationColor.SHOOTER_READY;
+      //   led.animate(Animations.shooterReadySolidColor);
+      //   DataLogUtil.writeMessage("LED Strip Shooter Ready");
+      //   break;
+      // case FEEDING_SHOOTER:
+      //   LED.dashboardColor = AnimationColor.FEEDING_SHOOTER;
+      //   led.animate(Animations.feedingShooterAnimation);
+      //   DataLogUtil.writeMessage("LED Strip Feeding Shooter");
+      //   break;
+      // case CLIMBER_MOVING_UP:
+      //   led.animate(Animations.climberMovingAnimation);
+      //   DataLogUtil.writeMessage("LED Strip Climber Moving Up");
+      //   break;
+      // case CLIMBER_MOVING_DOWN:
+      //   led.animate(Animations.climberMovingDownAnimation);
+      //   DataLogUtil.writeMessage("LED Strip Climber Moving Down");
+      //   break;
       case TRENCH_SAFE:
         LED.dashboardColor = AnimationColor.TRENCH_SAFE;
         led.animate(Animations.trenchSafeSolidColor);
         DataLogUtil.writeMessage("LED Strip Trench Safe");
+        break;
+      case TRENCH_UNSAFE:
+        LED.dashboardColor = AnimationColor.TRENCH_UNSAFE;
+        led.animate(Animations.trenchUnsafeSolidColor);
+        DataLogUtil.writeMessage("LED Strip Trench Unsafe");
         break;
       case ROBOT_DISABLED:
         LED.dashboardColor = AnimationColor.NEUTRAL;
@@ -122,7 +131,7 @@ public class LEDEventUtil {
     }
 
     // Update previous event since the LEDs were updated
-    previousEventStrip = event;
+    // previousEventStrip = event;
   }
 
   /**
@@ -140,7 +149,7 @@ public class LEDEventUtil {
    * @param event LEDStripEvents event
    * @return priority level integer (higher value = higher priority), default is -1
    */
-  private static int getPriority(LEDStripEvents event) {
-    return event != null ? prioritiesLEDStripEvents.getOrDefault(event, -1) : -1;
-  }
+  // private static int getPriority(LEDStripEvents event) {
+  //   return event != null ? prioritiesLEDStripEvents.getOrDefault(event, -1) : -1;
+  // }
 }
