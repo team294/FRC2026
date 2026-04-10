@@ -32,7 +32,8 @@ import frc.robot.Constants.FieldConstants;
         StartTrenchToCollectStart("StartTrenchToCollectStart"),
         ShootTrenchToOutpost("shootTrenchToOutpost"),
         ShootTrenchToDepot("ShootTrenchToDepot"),
-    
+        StartTrenchCenterCollectBalls("StartTrenchCenterCollectBalls"),
+        StartTrenchSideCollectBalls("StartTrenchSideCollectBalls"),
         Relative4mRotate180("Relative4mRotate180"),
         RelativeArcLeft("RelativeArcLeft"),
         RelativeStraight4m("RelativeStraight4m"),
