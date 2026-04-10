@@ -17,6 +17,7 @@ import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.ClimberSetPercent;
@@ -71,6 +72,7 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
       deadline(
         new DriveTrajectory(CoordType.kAbsolute, StopType.kNoStop, trajectory, driveTrain, alliance),  // race with intake command
         sequence(
+          new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake),
           new WaitCommand(1.0),
           either(
             parallel(
