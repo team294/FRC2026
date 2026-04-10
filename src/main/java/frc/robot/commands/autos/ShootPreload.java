@@ -31,7 +31,20 @@ import frc.robot.utilities.Field;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootPreload extends SequentialCommandGroup {
-  /** Starts with front bumpers on the start line, facing away from drivers. Shoots preload then does nothing else */
+/**
+ * Starts with back bumpers on the start line, with intake facing towards the driver station. 
+ * If moving back, then moves backwards one meter. Shoots preload then does nothing else. 
+ * @param endType end type for autonomous scoring
+ * @param moveBack whether to move back or not. true = moves back one meter, false = doesn't move back
+ * @param intake Intake subsystem
+ * @param feeder Feeder subsystem
+ * @param turret Turret subsystem
+ * @param shooter Shooter subsystem
+ * @param climber Climber subsystem
+ * @param driveTrain DriveTrain subsystem
+ * @param field Field utility
+ * @param allianceSelection AllianceSelection utility
+ */
   public ShootPreload(EndType endType, boolean moveBack, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field, AllianceSelection allianceSelection) { 
     addCommands(
       new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
@@ -39,7 +52,7 @@ public class ShootPreload extends SequentialCommandGroup {
         sequence(
           new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
           either(
-            new DriveToPose(CoordType.kRelative, new Pose2d(-2, 0, Rotation2d.kZero), driveTrain),
+            new DriveToPose(CoordType.kRelative, new Pose2d(1, 0, Rotation2d.kZero), driveTrain),
             none(),
             () -> moveBack
           ),
