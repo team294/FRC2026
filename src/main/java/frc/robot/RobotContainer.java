@@ -319,8 +319,7 @@ public class RobotContainer {
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    right[1].onTrue(new DriveTrainSetFineControl(true, driveTrain));
-    right[1].onFalse(new DriveTrainSetFineControl(false, driveTrain));
+    right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
