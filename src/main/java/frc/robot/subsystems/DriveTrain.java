@@ -347,6 +347,30 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Sets the facing of a wheel (direction the wheel is pointing).
+   * <p><b>NOTE:</b> This sets the absolute facing. It does <b>not</b> turn the wheels to 
+   * the "optimized" facing +/-180 degrees if that is closer.
+   * @param wheel wheel to set angle of - 0 = front left, 1 = front right, 2 = back left, 3 = back right
+   * @param angle desired wheel facing relative to front of chassis, in degrees, -180 to +180 (positive = left, negative = right, 0 = facing front of robot)
+   */
+  public void setWheelFacing(int wheel, double angle) {
+    switch (wheel) {
+      case 0:
+        swerveFrontLeft.setWheelFacing(angle);
+        break;
+      case 1:
+        swerveFrontRight.setWheelFacing(angle);
+        break;
+      case 2:
+        swerveBackLeft.setWheelFacing(angle);
+        break;
+      case 3:
+        swerveBackRight.setWheelFacing(angle);
+        break;
+    }
+  }
+
+  /**
    * Stops all of the drive and turning motors.
    */
   public void stopMotors() {

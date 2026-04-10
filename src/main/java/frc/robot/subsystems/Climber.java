@@ -243,6 +243,16 @@ public class Climber extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Returns if the climber is in trench configuration
+   * Sometimes only one limit triggers when all the way down, 
+   * so we just check if either limit is triggered
+   * @return true = climber is all the way down, false = climber isn't all the way down.
+   */
+  public boolean isSafeForTrench() {
+    return !lowerLimitLeft.get() || !lowerLimitRight.get();
+  }
+
+  /**
    * Checks if the provided side is physically at a limit.
    *
    * @param side 1 = left, 2 = right

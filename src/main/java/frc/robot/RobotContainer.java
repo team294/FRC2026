@@ -74,6 +74,8 @@ public class RobotContainer {
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
 
+  private boolean trenchSafe = false;
+
   // DataLog
   private final DataLog log = DataLogManager.getLog();
   private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
@@ -245,6 +247,15 @@ public class RobotContainer {
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
+    // Spin uptake then spindexer away from shooter while held, stop when released
+    xbX.onTrue(
+      sequence(
+        new UptakeSetVelocity(-UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(-SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
+    xbX.onFalse(new FeederStop(feeder));
+
     xbLT.whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
@@ -312,15 +323,11 @@ public class RobotContainer {
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
     left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
-    left[1].onFalse(parallel(
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
-    ));
+    left[1].onFalse(new IntakeRollerStop(intake));   // new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL))
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    right[1].onTrue(new DriveTrainSetFineControl(true, driveTrain));
-    right[1].onFalse(new DriveTrainSetFineControl(false, driveTrain));
+    right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
@@ -428,6 +435,8 @@ public class RobotContainer {
     shiftHelper.periodic();
     autoSelection.periodic();
 
+    SmartDashboard.putBoolean("Trench Safe", intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench());
+
     heartBeat++;
     dLogRobotHeartBeat.append(heartBeat);
   }
@@ -511,5 +520,12 @@ public class RobotContainer {
    * Method called once every scheduler cycle when teleop mode is initialized/enabled.
    */
   public void teleopPeriodic() {
+    if (!trenchSafe && (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench())) {
+      trenchSafe = true;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else if (trenchSafe && (!intake.isIntakeDeploySafeForTrench() || !shooter.isHoodSafeForTrench() || !climber.isSafeForTrench())) {
+      trenchSafe = false;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
   }
 }
