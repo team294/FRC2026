@@ -26,6 +26,7 @@ import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveResetPose;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.autos.components.AutonCollectBalls;
+import frc.robot.commands.autos.components.AutonDriveToNeutralAndCollectBalls;
 import frc.robot.commands.autos.components.AutonReturnToAllianceAndShoot;
 import frc.robot.commands.autos.components.AutonDriveToNeutralZone;
 import frc.robot.commands.autos.components.AutonOutpostOrDepotAndScore;
@@ -61,8 +62,9 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
       new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
       // First cycle
       new DriveResetPose(initalRobotStartPose, false, driveTrain),
-      new AutonDriveToNeutralZone(returnToAllianceDirection, shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
-      new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache),
+      new AutonDriveToNeutralAndCollectBalls(shootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+      // new AutonDriveToNeutralZone(returnToAllianceDirection, shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+      // new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache),
       new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       
       // Whether we are going to do anything after the first cycle
