@@ -24,11 +24,12 @@ import frc.robot.utilities.DataLogUtil;
 public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
   /**
    * Starts feeding the shooter, and waits a bit until some balls have fed through until agitating balls with intake
+   * @param agitate true = agitate intake (movement up & down while feeding), false = don't (no movement)
    * @param feeder Feeder feeder subsystem
    * @param intake Intake intake subsystem
    * @param shooter Shooter shooter subsystem
    */
-  public FeederIntakeFeedShooterSequence(Feeder feeder, Intake intake, Shooter shooter) {
+  public FeederIntakeFeedShooterSequence(boolean agitate, Feeder feeder, Intake intake, Shooter shooter) {
     addCommands(
       // Ensure that all necessary subsystmes are in place
       new DataLogMessage(false, "FeederIntakeFeedShooterSequence: Init"),
