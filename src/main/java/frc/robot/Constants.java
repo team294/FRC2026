@@ -900,6 +900,7 @@ public final class Constants {
 
     LOWERING(255, 0, 0),               // Red (lowering climber and hood)
     TRENCH_SAFE(0, 255, 0),            // Green (climber and hood at bottom, trench safe)
+    TRENCH_UNSAFE(255, 0, 0),          // Red (climber and hood NOT at bottom, trench UNSAFE)
 
     DISABLED_BLUE(19, 82, 188),        // Blue   (disabled animation)
     DISABLED_ORANGE(255, 50, 0);       // Orange (disabled animation)
@@ -942,6 +943,7 @@ public final class Constants {
       private static final RGBWColor feedingShooterColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
 
       private static final RGBWColor trenchSafeColor = new RGBWColor(AnimationColor.TRENCH_SAFE.r, AnimationColor.TRENCH_SAFE.g, AnimationColor.TRENCH_SAFE.b);
+      private static final RGBWColor trenchUnsafeColor = new RGBWColor(AnimationColor.TRENCH_UNSAFE.r, AnimationColor.TRENCH_UNSAFE.g, AnimationColor.TRENCH_UNSAFE.b);
     }
 
     public static final class Animations {
@@ -964,6 +966,7 @@ public final class Constants {
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
+      public static final SolidColor trenchUnsafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchUnsafeColor);
     }
   }
 }

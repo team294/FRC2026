@@ -54,7 +54,7 @@ public class IntakeRollerSetPercent extends Command {
     intake.setIntakeRollerPercentOutput(percent);
     DataLogUtil.writeMessage("IntakeRollerSetPercent: Init, Percent =", percent);
 
-    if (percent < 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
+    // if (percent < 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -71,7 +71,7 @@ public class IntakeRollerSetPercent extends Command {
       DataLogUtil.writeMessage("IntakeRollerSetPercent: End, Percent =", 0);
     }
 
-    if (percent < 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    // if (percent < 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.

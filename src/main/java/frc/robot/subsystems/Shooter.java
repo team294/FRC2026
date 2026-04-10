@@ -538,7 +538,8 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return true = in tolerance, false = not in trench configuration.
    */
   public boolean isHoodSafeForTrench() {
-    return Math.abs(getHoodAngle() - ShooterConstants.hoodMinimumAngle) < ShooterConstants.hoodAngleErrorTolerance;
+    return Math.abs(getHoodAngle(1) - ShooterConstants.hoodMinimumAngle) < ShooterConstants.hoodAngleErrorTolerance
+      && Math.abs(getHoodAngle(2) - ShooterConstants.hoodMinimumAngle) < ShooterConstants.hoodAngleErrorTolerance;
   }
 
   // *****  Information methods *****

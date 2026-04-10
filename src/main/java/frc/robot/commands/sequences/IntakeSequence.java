@@ -21,7 +21,7 @@ public class IntakeSequence extends SequentialCommandGroup {
       new DataLogMessage(false, "IntakeSequence: Start"),
       new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake).withTimeout(0.6),
       new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake),
-      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING)),
+      // new InstantCommand(() -> LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING)),
       new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
       new DataLogMessage(false, "IntakeSequence: End")
     );
