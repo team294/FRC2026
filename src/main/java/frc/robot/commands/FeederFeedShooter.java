@@ -41,7 +41,7 @@ public class FeederFeedShooter extends Command {
     feeder.setUptakeVelocity(UptakeConstants.uptakeShootRPM);
     timer.restart();  // start fuel tracking timer
 
-    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.FEEDING_SHOOTER);
+    // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.FEEDING_SHOOTER);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -82,7 +82,7 @@ public class FeederFeedShooter extends Command {
   public void end(boolean interrupted) {
     feeder.stopSpindexer();
     feeder.stopUptake();
-    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.

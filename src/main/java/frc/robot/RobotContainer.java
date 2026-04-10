@@ -74,6 +74,8 @@ public class RobotContainer {
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
 
+  private boolean trenchSafe;
+
   // DataLog
   private final DataLog log = DataLogManager.getLog();
   private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
@@ -509,5 +511,12 @@ public class RobotContainer {
    * Method called once every scheduler cycle when teleop mode is initialized/enabled.
    */
   public void teleopPeriodic() {
+    if (!trenchSafe && (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench())) {
+      trenchSafe = true;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else if (trenchSafe && (!intake.isIntakeDeploySafeForTrench() || !shooter.isHoodSafeForTrench() || !climber.isSafeForTrench())) {
+      trenchSafe = false;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
   }
 }
