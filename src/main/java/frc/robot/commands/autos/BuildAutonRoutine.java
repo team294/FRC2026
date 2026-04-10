@@ -72,11 +72,12 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
         none(), 
         // If we are, check whether we are going to the neutral zone for a second cycle or going to the outpost/depot
         either(
-          sequence( // Plz don't do this rn
+          sequence(
+            new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
             // new AutonDriveToNeutralZone(ShootPreloadType.kDontShootPreload, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache, field),
             // // keep ball pickup trajectory same as first cycle for now
             // new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache),
-            // new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, true, intake, feeder, turret, shooter, driveTrain, alliance, cache, field)
+            new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, true, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field)
           ), 
           new AutonOutpostOrDepotAndScore(routineSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
           () -> autoEnd == AutoEndType.kSecondCycle 
