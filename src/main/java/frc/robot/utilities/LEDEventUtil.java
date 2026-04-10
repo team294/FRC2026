@@ -26,7 +26,7 @@ public class LEDEventUtil {
     // CLIMBER_MOVING_DOWN,
     TRENCH_SAFE,
     TRENCH_UNSAFE,
-    // NEUTRAL,
+    NEUTRAL,
     ROBOT_DISABLED
   }
 
@@ -42,8 +42,8 @@ public class LEDEventUtil {
     // prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_DOWN, 5);
     prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_UNSAFE, 1);
-    // prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 8);
-    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 3);
+    prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 2);
+    prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 2);
   }
 
   /**
@@ -122,12 +122,12 @@ public class LEDEventUtil {
         CommandScheduler.getInstance().schedule(LEDAnimateRobotDisabled);
         DataLogUtil.writeMessage("LED Strip Robot Disabled");
         break;
-      // default:
-      //   LED.dashboardColor = AnimationColor.NEUTRAL;
-      //   led.clearAllStripAnimations();
-      //   led.animate(Animations.neutralSolidColor);
-      //   DataLogUtil.writeMessage("LED Strip Neutral");
-      //   break;
+      default:
+        LED.dashboardColor = AnimationColor.NEUTRAL;
+        led.clearAllStripAnimations();
+        led.animate(Animations.neutralSolidColor);
+        DataLogUtil.writeMessage("LED Strip Neutral");
+        break;
     }
 
     // Update previous event since the LEDs were updated

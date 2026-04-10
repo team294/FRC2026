@@ -74,7 +74,7 @@ public class RobotContainer {
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
 
-  private boolean trenchSafe;
+  private boolean trenchSafe = false;
 
   // DataLog
   private final DataLog log = DataLogManager.getLog();
@@ -475,7 +475,7 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
@@ -502,7 +502,7 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     teleopTimer.restart();
   }
