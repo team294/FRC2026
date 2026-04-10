@@ -107,9 +107,6 @@ public class Intake extends SubsystemBase implements Loggable{
   private double intakeDeploySetpointPercent;       // Current setpoint percent output for the deploy motor
   private double intakeRollerSetpointPercent;       // Current setpoint percent output for the roller motor
 
-  private boolean shouldAgitateDuringFeed = true;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
-
-
   public Intake(String subsystemName) {
     this.subsystemName = subsystemName;
     logRotationKey = DataLogUtil.allocateLogRotation();
@@ -558,14 +555,6 @@ public class Intake extends SubsystemBase implements Loggable{
     }
   }
 
-  public boolean getAgitateDuringFeed() {
-    return shouldAgitateDuringFeed;
-  }
-
-  public void setAgitateDuringFeed(boolean agitate) {
-    shouldAgitateDuringFeed = agitate;
-  }
-
   /**
    * Gets the name of the subsystem.
    * @return the subsystem name
@@ -634,8 +623,6 @@ public class Intake extends SubsystemBase implements Loggable{
       SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
       SmartDashboard.putNumber(INTAKE_ROLLER_CURRENT.value, rollerAmps);
       SmartDashboard.putNumber(INTAKE_ROLLER_RPM.value, getIntakeRollerVelocity());
-
-      SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
     }
 
   }

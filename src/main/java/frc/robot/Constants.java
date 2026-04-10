@@ -183,7 +183,8 @@ public final class Constants {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
-      FEED_SHOOTER_AGITATE_CMD_SEQUENCE("Feed Shooter Agitate Sequence"),
+      FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE("Feed Shooter Bounce Agitate Sequence"),
+      FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE("Feed Shooter Dump Agitate Sequence"),
 
       // Stop Command
       INTAKE_CMD_STOP(intakeString + stopCmdString),
@@ -621,6 +622,7 @@ public final class Constants {
     public static final double deployMaxUncalibratedPercentOutput = 0.1;  
     public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
     public static final double deployMaxPercentOutput = 0.2;              
+    public static final double deployMaxDumpAgitatePercentOutput = 0.08;
     public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees.
@@ -646,6 +648,7 @@ public final class Constants {
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
+      AGITATE_DUMP_FINISH(-18.0),  // CALIBRATED 4/9: -18.0
       START_CONFIG(36.4),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
       UPPER_LIMIT(36.9);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 

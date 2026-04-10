@@ -13,6 +13,7 @@ import frc.robot.commands.ClimberSetPercent;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence;
 import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
+import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -31,7 +32,7 @@ public class AutonScore extends SequentialCommandGroup {
       new DataLogMessage(false, "AutonScore: start"),
       parallel(
         new ShooterTurretScorePrepSequence(false, endType, turret, shooter, driveTrain, field),
-        new FeederIntakeFeedShooterSequence(true, feeder, intake, shooter),
+        new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter),
         new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber)
         // TODO end condition for not seeing balls for extendend period of time? then put hood down
       )
