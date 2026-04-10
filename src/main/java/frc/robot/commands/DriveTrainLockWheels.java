@@ -22,6 +22,8 @@ public class DriveTrainLockWheels extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    driveTrain.setDriveMotorsOutput(0.0);
+
     driveTrain.setWheelFacing(0, 45);
     driveTrain.setWheelFacing(1, -45);
     driveTrain.setWheelFacing(2, -45);
