@@ -437,6 +437,15 @@ public class Intake extends SubsystemBase implements Loggable{
   }
 
   /**
+   * Returns if the intake deploy is within safe angles for going under the trench
+   * @return true = intake deploy is within safe angles, false = intake deploy isoutside of safe angles
+   */
+  public boolean isIntakeDeploySafeForTrench() {
+    return getIntakeDeployAngle() < IntakeConstants.IntakeDeployAngle.TRENCH_ALLOWED_LOWER.value || 
+    getIntakeDeployAngle() > IntakeConstants.IntakeDeployAngle.TRENCH_ALLOWED_UPPER.value;
+  }
+
+  /**
    * Gets the velocity of the intakeRollerMotor.
    * @return motor velocity, in RPM
    */

@@ -485,6 +485,23 @@
               "period": 0.06,
               "data_type": "string"
             }
+          },
+          {
+            "title": "Trench Safe",
+            "x": 1664.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 1024.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Trench Safe",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
           }
         ]
       }
@@ -1040,7 +1057,7 @@
                   "topic": "/SmartDashboard/DriveResetPose Angle",
                   "period": 0.06,
                   "data_type": "double",
-                  "show_submit_button": false
+                  "show_submit_button": true
                 }
               },
               {
@@ -1054,7 +1071,7 @@
                   "topic": "/SmartDashboard/DriveResetPose X",
                   "period": 0.06,
                   "data_type": "double",
-                  "show_submit_button": false
+                  "show_submit_button": true
                 }
               },
               {
@@ -1068,7 +1085,7 @@
                   "topic": "/SmartDashboard/DriveResetPose Y",
                   "period": 0.06,
                   "data_type": "double",
-                  "show_submit_button": false
+                  "show_submit_button": true
                 }
               },
               {

@@ -639,9 +639,11 @@ public final class Constants {
     public enum IntakeDeployAngle {
       LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
+      TRENCH_ALLOWED_LOWER(-70.0), // When the intake is below this angle it can fit under the trench
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
       AGITATE_DUMP_FINISH(-18.0),  // CALIBRATED 4/9: -18.0
+      TRENCH_ALLOWED_UPPER(30.0), // When the intake is above this angle, it can fit under the trench
       START_CONFIG(36.4),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
       UPPER_LIMIT(36.9);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
