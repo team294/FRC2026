@@ -11,13 +11,29 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.FieldConstants;
 
 /** BCR Field class (implementation in progress) */
 public class Field {
     private AllianceSelection allianceSelection;
     private AprilTagFieldLayout aprilTagFieldLayout;
+
+    private final DataLog log = DataLogManager.getLog();
+
+    private final DoubleLogEntry dLogStaticTargetX = new DoubleLogEntry(log, "/SOTM/StaticTargetX");
+    private final DoubleLogEntry dLogStaticTargetY = new DoubleLogEntry(log, "/SOTM/StaticTargetY");
+    private final DoubleLogEntry dLogGhostTargetX = new DoubleLogEntry(log, "/SOTM/GhostTargetX");
+    private final DoubleLogEntry dLogGhostTargetY = new DoubleLogEntry(log, "/SOTM/GhostTargetY");
+    private final DoubleLogEntry dLogFieldVx = new DoubleLogEntry(log, "/SOTM/FieldVx");
+    private final DoubleLogEntry dLogFieldVy = new DoubleLogEntry(log, "/SOTM/FieldVy");
+    private final DoubleLogEntry dLogOffsetX = new DoubleLogEntry(log, "/SOTM/OffsetX");
+    private final DoubleLogEntry dLogOffsetY = new DoubleLogEntry(log, "/SOTM/OffsetY");
+    private final DoubleLogEntry dLogToF = new DoubleLogEntry(log, "/SOTM/ToF");
 
     /**
      * Constructor for Field objects.
@@ -85,6 +101,18 @@ public class Field {
         // +1m left during flight, the target appears to shift -1m from the robot's POV so we have to aim 1m short
         double offsetX = (0.5 * accelerationX * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
         double offsetY = (0.5 * accelerationY * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
+
+        // logging to debug why SOTM is not working
+        long timeNow = RobotController.getFPGATime();
+        dLogStaticTargetX.append(staticTargetTranslation2d.getX(), timeNow);
+        dLogStaticTargetY.append(staticTargetTranslation2d.getY(), timeNow);
+        dLogGhostTargetX.append(staticTargetTranslation2d.getX() - offsetX, timeNow);
+        dLogGhostTargetY.append(staticTargetTranslation2d.getY() - offsetY, timeNow);
+        dLogFieldVx.append(robotFieldRelativeSpeeds.vxMetersPerSecond, timeNow);
+        dLogFieldVy.append(robotFieldRelativeSpeeds.vyMetersPerSecond, timeNow);
+        dLogOffsetX.append(offsetX, timeNow);
+        dLogOffsetY.append(offsetY, timeNow);
+        dLogToF.append(estTimeOfFlight, timeNow);
 
         // ghost target = static target - displacement
         return new Translation2d(staticTargetTranslation2d.getX() - offsetX, staticTargetTranslation2d.getY() - offsetY);

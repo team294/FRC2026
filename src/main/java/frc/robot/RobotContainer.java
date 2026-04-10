@@ -191,7 +191,7 @@ public class RobotContainer {
 
     // Toggle
 
-    SmartDashboard.putData(TURRET_CMD_TOGGLE_SOTM.value, new TurretToggleAutoAim(turret));
+    SmartDashboard.putData(TURRET_CMD_TOGGLE_SOTM.value, new TurretToggleShootOnTheMove(turret));
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
