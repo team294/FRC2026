@@ -312,10 +312,7 @@ public class RobotContainer {
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
     left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
-    left[1].onFalse(parallel(
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
-    ));
+    left[1].onFalse(new IntakeRollerStop(intake));   // new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL))
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
@@ -474,7 +471,7 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
@@ -501,7 +498,7 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    // LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
 
     teleopTimer.restart();
   }

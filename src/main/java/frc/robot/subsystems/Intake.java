@@ -36,7 +36,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.Ports;
 import frc.robot.utilities.DataLogUtil;
-import frc.robot.utilities.LEDEventUtil;
+// import frc.robot.utilities.LEDEventUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
@@ -305,9 +305,9 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeRollerSetpointPercent = percent;
   
     // Send an LED event based on whether the rollers are stopped/intaking/outtaking
-    if (percent == 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
-    else if (percent > 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING);
-    else LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
+    // if (percent == 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    // else if (percent > 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING);
+    // else LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
   }
 
   /**
