@@ -247,6 +247,15 @@ public class RobotContainer {
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
+    // Spin uptake then spindexer away from shooter while held, stop when released
+    xbX.onTrue(
+      sequence(
+        new UptakeSetVelocity(-UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(-SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
+    xbX.onFalse(new FeederStop(feeder));
+
     xbLT.whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
