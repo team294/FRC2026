@@ -264,7 +264,7 @@ public class RobotContainer {
     xbLB.onTrue(new IntakeRollerStop(intake));
 
     // while held, prep Shooter & Hood for scoring or passing (depending on position on field). stops shooter motor when released
-    xbRT.whileTrue(new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
+    xbRT.whileTrue(new ShooterScorePrep(true, EndType.runForever, shooter, turret, driveTrain, field));
 
     xbRT.onFalse(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
 
