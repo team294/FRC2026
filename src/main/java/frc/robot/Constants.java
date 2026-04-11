@@ -619,7 +619,7 @@ public final class Constants {
     public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees.
-    public static final double deployCANcoderOffsetAngle = 83.3;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
+    public static final double deployCANcoderOffsetAngle = 83.3 + 1.0;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.8095; // CALIBRATED 4/8: 0.8095
