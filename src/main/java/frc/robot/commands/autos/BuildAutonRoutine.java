@@ -65,7 +65,7 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
       new AutonDriveToNeutralAndCollectBalls(shootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       // new AutonDriveToNeutralZone(returnToAllianceDirection, shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       // new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache),
-      new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+      new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       
       // Whether we are going to do anything after the first cycle
       either(
@@ -73,11 +73,11 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
         // If we are, check whether we are going to the neutral zone for a second cycle or going to the outpost/depot
         either(
           sequence(
-            new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+            new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kBumpSecondSwipe, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
             // new AutonDriveToNeutralZone(ShootPreloadType.kDontShootPreload, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache, field),
             // // keep ball pickup trajectory same as first cycle for now
             // new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, driveTrain, alliance, cache),
-            new AutonReturnToAllianceAndShoot(returnToAllianceDirection, leftSide, true, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field)
+            new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, leftSide, true, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field)
           ), 
           new AutonOutpostOrDepotAndScore(routineSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
           () -> autoEnd == AutoEndType.kSecondCycle 
