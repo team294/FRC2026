@@ -52,8 +52,8 @@ public class ClimberSetPercent extends Command {
     climber.setClimberPercentOutput(percent);
     DataLogUtil.writeMessage("ClimberSetPercent: Init, Percent =", percent);
 
-    if (percent > 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.CLIMBER_MOVING_UP);
-    else LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.CLIMBER_MOVING_DOWN);
+    // if (percent > 0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.CLIMBER_MOVING_UP);
+    // else LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.CLIMBER_MOVING_DOWN);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -74,6 +74,6 @@ public class ClimberSetPercent extends Command {
     climber.stopClimberMotors();
     DataLogUtil.writeMessage("ClimberSetPercent: End, Interupted = ", interrupted);
 
-    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 }

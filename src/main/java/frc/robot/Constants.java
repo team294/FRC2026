@@ -646,9 +646,11 @@ public final class Constants {
     public enum IntakeDeployAngle {
       LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
+      TRENCH_ALLOWED_LOWER(-70.0), // When the intake is below this angle it can fit under the trench
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
       AGITATE_DUMP_FINISH(-18.0),  // CALIBRATED 4/9: -18.0
+      TRENCH_ALLOWED_UPPER(30.0), // When the intake is above this angle, it can fit under the trench
       START_CONFIG(36.4),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
       UPPER_LIMIT(36.9);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
@@ -660,7 +662,7 @@ public final class Constants {
 
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 0.687;
+    public static final double noFuelSeconds = 1.5; // was 0.687
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
 
@@ -905,6 +907,7 @@ public final class Constants {
 
     LOWERING(255, 0, 0),               // Red (lowering climber and hood)
     TRENCH_SAFE(0, 255, 0),            // Green (climber and hood at bottom, trench safe)
+    TRENCH_UNSAFE(255, 0, 0),          // Red (climber and hood NOT at bottom, trench UNSAFE)
 
     DISABLED_BLUE(19, 82, 188),        // Blue   (disabled animation)
     DISABLED_ORANGE(255, 50, 0);       // Orange (disabled animation)
@@ -947,6 +950,7 @@ public final class Constants {
       private static final RGBWColor feedingShooterColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
 
       private static final RGBWColor trenchSafeColor = new RGBWColor(AnimationColor.TRENCH_SAFE.r, AnimationColor.TRENCH_SAFE.g, AnimationColor.TRENCH_SAFE.b);
+      private static final RGBWColor trenchUnsafeColor = new RGBWColor(AnimationColor.TRENCH_UNSAFE.r, AnimationColor.TRENCH_UNSAFE.g, AnimationColor.TRENCH_UNSAFE.b);
     }
 
     public static final class Animations {
@@ -969,6 +973,7 @@ public final class Constants {
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
+      public static final SolidColor trenchUnsafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchUnsafeColor);
     }
   }
 }

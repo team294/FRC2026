@@ -189,7 +189,7 @@ public class ShooterScorePrep extends Command {
     shooter.setHoodAnglePID(targetHoodAngle);
     shooter.setShooterVelocity(targetVelocity);
 
-    LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
+    // LEDEventUtil.sendEvent(LEDStripEvents.PREPPING_SHOOTER);
     ledSentShooterReadyEvent = false;
 
     toleranceCounter = 0;
@@ -237,7 +237,7 @@ public class ShooterScorePrep extends Command {
 
     if (!ledSentShooterReadyEvent && (shooter.isHoodAtGoalAngle() && shooter.isShooterAtGoalVelocity())) {
 
-      LEDEventUtil.sendEvent(LEDStripEvents.SHOOTER_READY);
+      // LEDEventUtil.sendEvent(LEDStripEvents.SHOOTER_READY);
       ledSentShooterReadyEvent = true;
     }
 
@@ -260,7 +260,7 @@ public class ShooterScorePrep extends Command {
     }
 
     DataLogUtil.writeMessage("ShooterScorePrep: End");
-    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.
