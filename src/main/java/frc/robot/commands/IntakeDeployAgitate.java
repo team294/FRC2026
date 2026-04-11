@@ -28,6 +28,7 @@ public class IntakeDeployAgitate extends Command {
   public void initialize() {
     counter = 0;
     intake.setIntakeRollerPercentOutput(IntakeConstants.rollerIntakePercent);
+    intake.enableFastLogging(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,6 +46,7 @@ public class IntakeDeployAgitate extends Command {
   public void end(boolean interrupted) {
     intake.setIntakeDeployAngle(IntakeConstants.IntakeDeployAngle.INTAKE.value);
     intake.stopIntakeRoller();
+    intake.enableFastLogging(false);
   }
 
   // Returns true when the command should end.
