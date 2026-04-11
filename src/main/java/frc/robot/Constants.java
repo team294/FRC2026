@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A5";
+  public static final String bcrRobotCodeVersion = "A6";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -745,6 +745,14 @@ public final class Constants {
     public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
     public static final double hoodActuatorMaxExtensionLength = 9.750; // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
 
+    // To swap one of the hood actuators for a spare, update corresponding hoodNSlopePointAnalogVoltage and hoodNSlopePointExtensionLength
+    // Hood Spare SN005: 
+    //    Slope Point Analog Voltage = 2.725V
+    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 2.908in
+    // Hood Spare SN006: 
+    //    Slope Point Analog Voltage = 4.046V
+    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 3.124in
+
     public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
     public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
 
@@ -863,6 +871,7 @@ public final class Constants {
       public final double value;
       ClimberPosition(double value) { this.value = value; }
     }
+    public static final double maxPercentOutput = 0.45;
   }
 
   public static final class TrajectoryConstants {

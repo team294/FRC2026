@@ -97,6 +97,7 @@ public class Intake extends SubsystemBase implements Loggable{
   private final DoubleLogEntry dLogDeployVelocity = new DoubleLogEntry(log, "/IntakeDeploy/VelocityRPS");
   private final DoubleLogEntry dLogDeployVoltage = new DoubleLogEntry(log, "/IntakeDeploy/Voltage");
   private final DoubleLogEntry dLogDeployPosition = new DoubleLogEntry(log, "/IntakeDeploy/Position");
+  private final DoubleLogEntry dLogDeployTargetPosition = new DoubleLogEntry(log, "/IntakeDeploy/TargetPosition");
 
   private boolean isIntakeDeployCalibrated = false; // true = deploy motor is calibrated, false = not calibrated
   private boolean isIntakeDeployUsingCANcoder;      // true = deploy motor is using CANcoder, false = using rotor encoder
@@ -600,6 +601,7 @@ public class Intake extends SubsystemBase implements Loggable{
     dLogDeployCurrent.append(getIntakeDeployAmps(), timeNow);
     dLogDeployVelocity.append(getIntakeDeployVelocity(), timeNow);
     dLogDeployPosition.append(getIntakeDeployAngle(), timeNow);
+    dLogDeployTargetPosition.append(getIntakeDeployTargetAngle(), timeNow);
   }
 
   @Override

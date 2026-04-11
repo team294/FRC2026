@@ -32,15 +32,17 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
   /** Creates a new AutonDriveAndShoot. */
   public AutonReturnToAllianceAndShoot(ReturnToAllianceType returnToAllianceZone, boolean leftSide, boolean shoot, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     addCommands(
-      new DataLogMessage(false, "AutonDriveAndShoot: start"),
-      // intake off
-      either( // TODO replace diff trajectory with enhanced if statement?
-        new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootBump), driveTrain, alliance), 
-        sequence(
-          // make sure robot is in under-the trench-configuration. 
-          new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootTrench), driveTrain, alliance)
-        ),
-        () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
+      parallel(
+        new DataLogMessage(false, "AutonDriveAndShoot: start"),
+        // intake off
+        either( // TODO replace diff trajectory with enhanced if statement?
+          new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootBump), driveTrain, alliance), 
+          sequence(
+            // make sure robot is in under-the trench-configuration. 
+            new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootTrench), driveTrain, alliance)
+          ),
+          () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
+        )
       ),
       // Whether to stop and shoot or wait to shoot until at the outpost/feeder. This depends on whether we are going to the outpost and scoring from there or not
       either(
