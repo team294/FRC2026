@@ -832,11 +832,19 @@ public final class Constants {
     public static final int SIDE_LEFT = 1;
     public static final int SIDE_RIGHT = 2;
 
+    public static final double climberLeftGearRatio = 1.0;   // TODO CALIBRATE - gear ratio from left climber motor to mechanism
+    public static final double climberRightGearRatio = 1.0;  // TODO CALIBRATE - gear ratio from right climber motor to mechanism
+
+    public static final double climberLeftOffsetRotations = 0.0;   // TODO CALIBRATE - 1. set this to zero, 2. read value of left climber raw rotations, 3. put that value here
+    public static final double climberRightOffsetRotations = 0.0;  // TODO CALIBRATE - 1. set this to zero, 2. read value of right climber raw rotations, 3. put that value here
+
+    public static final double inchesPerEncoderRotation = 0.0;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
+
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
 
-    public static final double setPositionTolerance = 0.0; // TODO CALIBRATE: in inches, tolerance on set position
+    public static final double setPositionTolerance = 0.0; // TODO CALIBRATE: in inches, tolerance on position target
 
     public static final double kP = 0.0;   // TODO CALIBRATE
     public static final double kI = 0.0;   // TODO CALIBRATE
@@ -845,6 +853,7 @@ public final class Constants {
     public static final double kV = 0.0;   // TODO CALIBRATE
     public static final double kA = 0.0;   // TODO CALIBRATE
 
+    // TODO CALIBRATE
     public enum ClimberPosition {
       TRENCH_SAFE(0.0),
       LEGAL(6.0),

@@ -16,7 +16,7 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 public class ClimberSetPosition extends Command {
   private final Climber climber;
   private double targetPosition;
-  private boolean fromElastic;
+  private final boolean fromElastic;
 
   /**
    * Sets the target position for the Climber and attempts to move it to that position.
@@ -34,7 +34,7 @@ public class ClimberSetPosition extends Command {
 
   /**
    * Sets the target position for the Climber and attempts to move it to that position.
-   * This command ends when the position is within the tolerance degrees of the target/
+   * This command ends when the position is within tolerance of the target.
    * @param position target position, as a ClimberPosition enum (see ClimberConstants.ClimberPosition)
    * @param climber Climber subsystem
    */
@@ -48,7 +48,7 @@ public class ClimberSetPosition extends Command {
 
   /**
    * Sets the target position for the Climber FROM ELASTIC and attempts to move it to that position.
-   * This command ends when the position is within the tolerance degrees of the target.
+   * This command ends when the position is within tolerance of the target.
    * @param climber Climber subsystem
    */
   public ClimberSetPosition(Climber climber) {
@@ -57,15 +57,15 @@ public class ClimberSetPosition extends Command {
 
     addRequirements(climber);
 
-    if (SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT.value, -9999) == -9999) {
-      SmartDashboard.putNumber(INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT.value, ClimberPosition.TRENCH_SAFE.value);
+    if (SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, -9999) == -9999) {
+      SmartDashboard.putNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.TRENCH_SAFE.value);
     }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) this.targetPosition = SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_SET_ANGLE_INPUT.value, ClimberPosition.TRENCH_SAFE.value);
+    if (fromElastic) this.targetPosition = SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.TRENCH_SAFE.value);
     climber.setClimberPosition(targetPosition);
 
     climber.enableFastLogging(true);
@@ -80,13 +80,13 @@ public class ClimberSetPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     climber.enableFastLogging(false);
-    if (interrupted) DataLogUtil.writeMessage("ClimberSetPosition: Interrupted, Target =", targetPosition, ", Current =", climber.getClimberPosition());
-    else DataLogUtil.writeMessage("ClimberSetPosition: End, Target =", targetPosition, ", Current =", climber.getClimberPosition());
+    if (interrupted) DataLogUtil.writeMessage("ClimberSetPosition: Interrupted, Target =", targetPosition, ", Current =", climber.getClimberPositionInches());
+    else DataLogUtil.writeMessage("ClimberSetPosition: End, Target =", targetPosition, ", Current =", climber.getClimberPositionInches());
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(climber.getClimberPosition() - climber.getClimberTargetPosition()) < ClimberConstants.setPositionTolerance;
+    return Math.abs(climber.getClimberPositionInches() - climber.getClimberTargetPosition()) < ClimberConstants.setPositionTolerance;
   }
 }

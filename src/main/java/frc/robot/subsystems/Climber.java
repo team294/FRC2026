@@ -7,11 +7,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
@@ -23,11 +27,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
+import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
 
 public class Climber extends SubsystemBase implements Loggable {
@@ -57,15 +62,19 @@ public class Climber extends SubsystemBase implements Loggable {
   private final StatusSignal<Temperature> climberLeftTemp;                 // Motor temperature, in degrees Celsius
   private final StatusSignal<Current> climberLeftStatorCurrent;            // Motor stator current, in amps (positive = forward, negative = reverse)
   private final StatusSignal<Voltage> climberLeftVoltage;                  // Motor voltage, in volts
+  private final StatusSignal<Angle> climberLeftEncoderPosition;            // Encoder position, in pinion rotations
 
   // Status signals for the left climber motor
   private final StatusSignal<Temperature> climberRightTemp;                 // Motor temperature, in degrees Celsius
   private final StatusSignal<Current> climberRightStatorCurrent;            // Motor stator current, in amps (positive = forward, negative = reverse)
   private final StatusSignal<Voltage> climberRightVoltage;                  // Motor voltage, in volts
+  private final StatusSignal<Angle> climberRightEncoderPosition;            // Encoder position, in pinion rotations
 
   private VoltageOut climberVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
 
-    // DataLog entries
+  private final MotionMagicVoltage climberMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
+
+  // DataLog entries
   private final DataLog log = DataLogManager.getLog();
   private final DoubleLogEntry dLogClimberLeftTemp = new DoubleLogEntry(log, "/ClimberLeft/Temperature");
   private final DoubleLogEntry dLogClimberLeftCurrent = new DoubleLogEntry(log, "/ClimberLeft/Current");
@@ -78,13 +87,18 @@ public class Climber extends SubsystemBase implements Loggable {
   private double setpointPercentLeft;
   private double setpointPercentRight;
 
+  private double setpointPosition;
+  private boolean isClimberInPositionControl;
+  private double leftEncoderZero;
+  private double rightEncoderZero;
+
   // Sticky Faults
   private boolean climberLeftMissingStickyFault;
   private boolean climberRightMissingStickyFault;
-  private boolean climberLeftLowerLimitMissingStickyFault;
-  private boolean climberRightLowerLimitMissingStickyFault;
-  private boolean climberLeftUpperLimitMissingStickyFault;
-  private boolean climberRightUpperLimitMissingStickyFault;
+  // private boolean climberLeftLowerLimitMissingStickyFault;  TODO: we are unable to check if these are connected, should we keep this?
+  // private boolean climberRightLowerLimitMissingStickyFault; TODO: we are unable to check if these are connected, should we keep this?
+  // private boolean climberLeftUpperLimitMissingStickyFault;  TODO: we are unable to check if these are connected, should we keep this?
+  // private boolean climberRightUpperLimitMissingStickyFault; TODO: we are unable to check if these are connected, should we keep this?
 
   public Climber(String subsystemName) {
     this.subsystemName = subsystemName;
@@ -94,25 +108,32 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftTemp = climberLeftMotor.getDeviceTemp();
     climberLeftStatorCurrent = climberLeftMotor.getStatorCurrent();
     climberLeftVoltage = climberLeftMotor.getMotorVoltage();
+    climberLeftEncoderPosition = climberLeftMotor.getPosition();
 
     // Get status signals for left climber motor
     climberRightTemp = climberRightMotor.getDeviceTemp();
     climberRightStatorCurrent = climberRightMotor.getStatorCurrent();
     climberRightVoltage = climberRightMotor.getMotorVoltage();
+    climberRightEncoderPosition = climberRightMotor.getPosition();
 
     // Configure motors independently (they drive opposite physical directions).
     // Logical percent sign is consistent across both sides.
     climberLeftConfig = new TalonFXConfiguration();
     climberLeftConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     climberLeftConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    climberLeftConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
-    climberLeftConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
+    climberLeftConfig.Voltage.PeakForwardVoltage = ClimberConstants.compensationVoltage;
+    climberLeftConfig.Voltage.PeakReverseVoltage = -ClimberConstants.compensationVoltage;
     climberLeftConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
     climberLeftConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
     climberLeftConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
     climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    climberLeftConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    climberLeftConfig.Feedback.RotorToSensorRatio = 1.0;
+    climberLeftConfig.Feedback.SensorToMechanismRatio = ClimberConstants.climberLeftGearRatio;
+    climberLeftConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     climberLeftConfig.Slot0.kP = ClimberConstants.kP;
     climberLeftConfig.Slot0.kI = ClimberConstants.kI;
@@ -125,8 +146,8 @@ public class Climber extends SubsystemBase implements Loggable {
     // Requirement: right side should be counterclockwise_positive.
     climberRightConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     climberRightConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    climberRightConfig.Voltage.PeakForwardVoltage = UptakeConstants.compensationVoltage;
-    climberRightConfig.Voltage.PeakReverseVoltage = -UptakeConstants.compensationVoltage;
+    climberRightConfig.Voltage.PeakForwardVoltage = ClimberConstants.compensationVoltage;
+    climberRightConfig.Voltage.PeakReverseVoltage = -ClimberConstants.compensationVoltage;
     climberRightConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;
     climberRightConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3;
     climberRightConfig.CurrentLimits.SupplyCurrentLimit = 60.0;
@@ -134,12 +155,23 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;
     climberRightConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
+    climberRightConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    climberRightConfig.Feedback.RotorToSensorRatio = 1.0;
+    climberRightConfig.Feedback.SensorToMechanismRatio = ClimberConstants.climberRightGearRatio;
+    climberRightConfig.ClosedLoopGeneral.ContinuousWrap = false;
+
     climberRightConfig.Slot0.kP = ClimberConstants.kP;
     climberRightConfig.Slot0.kI = ClimberConstants.kI;
     climberRightConfig.Slot0.kD = ClimberConstants.kD;
     climberRightConfig.Slot0.kS = ClimberConstants.kS;
     climberRightConfig.Slot0.kV = ClimberConstants.kV;
     climberRightConfig.Slot0.kA = ClimberConstants.kA;
+
+    climberMMVoltageControl.Slot = 0;
+    climberMMVoltageControl.OverrideBrakeDurNeutral = true;
+
+    leftEncoderZero = ClimberConstants.climberLeftOffsetRotations;
+    rightEncoderZero = ClimberConstants.climberRightOffsetRotations;
 
     // Apply the configurations to the motors.
     // This is a blocking call and will wait up to 200ms to apply.
@@ -149,8 +181,6 @@ public class Climber extends SubsystemBase implements Loggable {
     Wait.waitTime(250);
 
     // Stop the climber motors
-    setpointPercentLeft = 0.0;
-    setpointPercentRight = 0.0;
     stopClimberMotors();
 
     // Prime the DataLog to reduce delay when first enabling the robot
@@ -174,6 +204,8 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param side which climber side to control
    */
   public void setClimberPercentOutput(double percent, int side) {
+    isClimberInPositionControl = false;
+
     if (side == ClimberConstants.SIDE_LEFT) {
       setpointPercentLeft = percent;
       climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
@@ -227,6 +259,91 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public double getClimberSetpointPercent(int side) {
     return side == ClimberConstants.SIDE_LEFT ? setpointPercentLeft : setpointPercentRight;
+  }
+
+  /**
+   * Convert inches into climber encoder rotations
+   * @param inches length (inches)
+   * @param side 1 = left, 2 = right
+   * @return encoder rotations with offset applied (fully lowered climber = 0 rotations)
+   */
+  private double convertClimberInchesToEncoderRotations(double inches, int side) {
+    if (side == ClimberConstants.SIDE_LEFT) {
+      return inches / ClimberConstants.inchesPerEncoderRotation + leftEncoderZero;
+    } else {
+      return inches / ClimberConstants.inchesPerEncoderRotation + rightEncoderZero;
+    }
+  }
+
+  /**
+   * Set position of both climber motors
+   * @param position position, in inches, to set climber to
+   */
+  public void setClimberPosition(double position) {
+    setpointPosition = MathUtil.clamp(position, ClimberPosition.TRENCH_SAFE.value, ClimberPosition.EXTENDED.value);
+
+    isClimberInPositionControl = true;
+
+    climberLeftMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition, 1)));
+    climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition, 2)));
+  }
+
+  /**
+   * Get position (in motor rotations) of climber, averaging left and right
+   * @return average position of climber
+   */
+  public double getClimberPositionRotationsRaw() {
+    return (getClimberPositionRotationsRaw(1) + getClimberPositionRotationsRaw(2)) / 2.0;
+  }
+
+  /**
+   * Get position (in motor rotations) of one side of the climber (left or right)
+   * @param side 1 = left, 2 = right
+   * @return position of specified side of climber
+   */
+  public double getClimberPositionRotationsRaw(int side) {
+    if (side == ClimberConstants.SIDE_LEFT) {
+      return climberLeftEncoderPosition.refresh().getValueAsDouble();
+    } else {
+      return climberRightEncoderPosition.refresh().getValueAsDouble();
+    }
+  }
+
+  /**
+   * Get position (in inches) of climber, averaging left and right
+   * @return average position of climber
+   */
+  public double getClimberPositionInches() {
+    return (getClimberPositionInches(1) + getClimberPositionInches(2)) / 2.0;
+  }
+
+  /**
+   * Get position (in inches) of one side of the climber (left or right)
+   * @param side 1 = left, 2 = right
+   * @return position of specified side of climber
+   */
+  public double getClimberPositionInches(int side) {
+    if (side == ClimberConstants.SIDE_LEFT) {
+      return (getClimberPositionRotationsRaw(1) - ClimberConstants.climberLeftOffsetRotations) * ClimberConstants.inchesPerEncoderRotation;
+    } else {
+      return (getClimberPositionRotationsRaw(2) - ClimberConstants.climberRightOffsetRotations) * ClimberConstants.inchesPerEncoderRotation;
+    }
+  }
+
+  /**
+   * Get current climber position setpoint
+   * @return climber position setpoint, in inches
+   */
+  public double getClimberTargetPosition() {
+    return setpointPosition;
+  }
+
+  /**
+   * Get whether or not climber is currently in position control
+   * @return true = in position control, false = in percent output control
+   */
+  public boolean isClimberInPositionControl() {
+    return isClimberInPositionControl;
   }
 
   /**
@@ -333,8 +450,26 @@ public class Climber extends SubsystemBase implements Loggable {
     }
   }
 
+  /**
+   * Checks for fault conditions and records stick faults if any exist.
+   */
   private void checkForFaultConditions() {
-    // TODO add fault conditions
+      // Resest sticky fault recording if the Sticky Faults were cleared
+      climberLeftMissingStickyFault = climberLeftMissingStickyFault && RobotPreferences.isStickyFaultActive();
+      climberRightMissingStickyFault = climberRightMissingStickyFault && RobotPreferences.isStickyFaultActive();
+
+      // If we haven't recorded the sticky fault yet, then check for fault conditions
+      if (!climberLeftMissingStickyFault && !climberLeftMotor.isConnected()) {
+        RobotPreferences.recordStickyFaults("Climber-LeftMotor");
+        DataLogUtil.writeMessageEcho("STICKY FAULT Climber: Climber Left Motor Missing");
+        climberLeftMissingStickyFault = true;
+      }
+
+      if (!climberRightMissingStickyFault && !climberRightMotor.isConnected()) {
+        RobotPreferences.recordStickyFaults("Climber-RightMotor");
+        DataLogUtil.writeMessageEcho("STICKY FAULT Climber: Climber Right Motor Missing");
+        climberRightMissingStickyFault = true;
+      }
   }
 
   @Override
