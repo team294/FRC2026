@@ -70,8 +70,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private final StatusSignal<Voltage> climberRightVoltage;                  // Motor voltage, in volts
   private final StatusSignal<Angle> climberRightEncoderPosition;            // Encoder position, in pinion rotations
 
-  private VoltageOut climberVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
-
+  private final VoltageOut climberVoltageControl = new VoltageOut(0.0).withEnableFOC(false);
   private final MotionMagicVoltage climberMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   // DataLog entries
@@ -89,8 +88,11 @@ public class Climber extends SubsystemBase implements Loggable {
 
   private double setpointPosition;
   private boolean isClimberInPositionControl;
+
   private double leftEncoderZero;
   private double rightEncoderZero;
+  private boolean climberCalibrated = false; // Default to climber being uncalibrated. Calibrate when climber is in the down position or
+                                            // "Calibrate Climber Zero" button on dashboard.
 
   // Sticky Faults
   private boolean climberLeftMissingStickyFault;
@@ -124,7 +126,7 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftConfig.Voltage.PeakForwardVoltage = ClimberConstants.compensationVoltage;
     climberLeftConfig.Voltage.PeakReverseVoltage = -ClimberConstants.compensationVoltage;
     climberLeftConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;     // Time from 0 to full power, in seconds
-    climberLeftConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3; // Time from 0 to full power, in seconds
+    climberLeftConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.0; // Time from 0 to full power, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
     climberLeftConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
     climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
@@ -149,7 +151,7 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.Voltage.PeakForwardVoltage = ClimberConstants.compensationVoltage;
     climberRightConfig.Voltage.PeakReverseVoltage = -ClimberConstants.compensationVoltage;
     climberRightConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.3;
-    climberRightConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3;
+    climberRightConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.0;
     climberRightConfig.CurrentLimits.SupplyCurrentLimit = 60.0;
     climberRightConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;
     climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;
@@ -170,8 +172,9 @@ public class Climber extends SubsystemBase implements Loggable {
     climberMMVoltageControl.Slot = 0;
     climberMMVoltageControl.OverrideBrakeDurNeutral = true;
 
-    leftEncoderZero = ClimberConstants.climberLeftOffsetRotations;
-    rightEncoderZero = ClimberConstants.climberRightOffsetRotations;
+    // TODO Calibrate encoder zeros when at lower limit sensor
+    // leftEncoderZero = ClimberConstants.climberLeftOffsetRotations;
+    // rightEncoderZero = ClimberConstants.climberRightOffsetRotations;
 
     // Apply the configurations to the motors.
     // This is a blocking call and will wait up to 200ms to apply.
@@ -262,20 +265,6 @@ public class Climber extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Convert inches into climber encoder rotations
-   * @param inches length (inches)
-   * @param side 1 = left, 2 = right
-   * @return encoder rotations with offset applied (fully lowered climber = 0 rotations)
-   */
-  private double convertClimberInchesToEncoderRotations(double inches, int side) {
-    if (side == ClimberConstants.SIDE_LEFT) {
-      return inches / ClimberConstants.inchesPerEncoderRotation + leftEncoderZero;
-    } else {
-      return inches / ClimberConstants.inchesPerEncoderRotation + rightEncoderZero;
-    }
-  }
-
-  /**
    * Set position of both climber motors
    * @param position position, in inches, to set climber to
    */
@@ -324,9 +313,23 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public double getClimberPositionInches(int side) {
     if (side == ClimberConstants.SIDE_LEFT) {
-      return (getClimberPositionRotationsRaw(1) - ClimberConstants.climberLeftOffsetRotations) * ClimberConstants.inchesPerEncoderRotation;
+      return (getClimberPositionRotationsRaw(1) - leftEncoderZero) * ClimberConstants.inchesPerEncoderRotation;
     } else {
-      return (getClimberPositionRotationsRaw(2) - ClimberConstants.climberRightOffsetRotations) * ClimberConstants.inchesPerEncoderRotation;
+      return (getClimberPositionRotationsRaw(2) - rightEncoderZero) * ClimberConstants.inchesPerEncoderRotation;
+    }
+  }
+
+  /**
+   * Convert inches into climber encoder rotations
+   * @param inches length (inches)
+   * @param side 1 = left, 2 = right
+   * @return encoder rotations with offset applied (fully lowered climber = 0 rotations)
+   */
+  private double convertClimberInchesToEncoderRotations(double inches, int side) {
+    if (side == ClimberConstants.SIDE_LEFT) {
+      return inches / ClimberConstants.inchesPerEncoderRotation + leftEncoderZero;
+    } else {
+      return inches / ClimberConstants.inchesPerEncoderRotation + rightEncoderZero;
     }
   }
 

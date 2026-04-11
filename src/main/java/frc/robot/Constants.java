@@ -851,6 +851,7 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
+    public static final double maxPercentOutput = 0.45;
 
     public static final double setPositionTolerance = 0.0; // TODO CALIBRATE: in inches, tolerance on position target
 
@@ -871,7 +872,6 @@ public final class Constants {
       public final double value;
       ClimberPosition(double value) { this.value = value; }
     }
-    public static final double maxPercentOutput = 0.45;
   }
 
   public static final class TrajectoryConstants {
