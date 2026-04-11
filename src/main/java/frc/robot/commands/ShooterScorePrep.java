@@ -30,7 +30,6 @@ public class ShooterScorePrep extends Command {
   private final Field field;
   private DoubleSupplier velocityGetter;
   private DoubleSupplier angleGetter;
-  private boolean shootOnTheMove;
   private Translation2d goalTranslation2d;
   private double targetVelocity;
   private double targetHoodAngle;
@@ -106,44 +105,25 @@ public class ShooterScorePrep extends Command {
    * @param driveTrain driveTrain subsystem
    * 
    */
-  public ShooterScorePrep(EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain, Field field) {
+  public ShooterScorePrep(boolean fromElastic, EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain, Field field) {
     this.driveTrain = driveTrain;
     this.shooter = shooter;
     this.turret = turret;
     this.field = field;
     this.type = type;
-    fromElastic = true;
-    
-    if (SmartDashboard.getNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, -9999.9) == -9999.9) {
+    this.fromElastic = fromElastic;
+
+    if (fromElastic) {
+      if (SmartDashboard.getNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, -9999.9) == -9999.9) {
       SmartDashboard.putNumber(ElasticKey.HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
-    }
+      }
 
-    if (SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, -9999.9) == -9999.9) {
-      SmartDashboard.putNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, 0);
+      if (SmartDashboard.getNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, -9999.9) == -9999.9) {
+        SmartDashboard.putNumber(ElasticKey.SHOOTER_CMD_SET_VELOCITY_INPUT.value, 0);
+      }
+    } else {
+      selfCalculate = true;
     }
-    addRequirements(shooter);
-  }
-
-  /**
-   * Calculates and sets the hood angle and shooter velocity for scoring, based on robot's distance from the nearest hub
-   * @param allianceSelection the robot's alliance (determines which hub is targeted)
-   * @param fromElastic boolean, true = reads values from elastic, false = calculates angle and velocity based on hub distance
-   * @param type
-   * <p> waitForSetPoint = command runs until shooter velocity and hood angle are within tolerance for 5 cycles, then command ends but leaves shooter and hood moving
-   * <p> runForever = command runs until interrupted, turn off hood and shooter motor when interrupted
-   * <p> endInstantly = command ends instantly
-   * @param driveTrain driveTrain subsystem
-   * @param shooter shooter subsystem
-   * 
-   */
-  public ShooterScorePrep(boolean shootOnTheMove, EndType type, Shooter shooter, Turret turret, DriveTrain driveTrain,  Field field) {
-    this.driveTrain = driveTrain;
-    this.shooter = shooter;
-    this.turret = turret;
-    this.field = field;
-    this.type = type;
-    this.shootOnTheMove = shootOnTheMove;
-    selfCalculate = true;
 
     addRequirements(shooter);
   }
@@ -167,7 +147,7 @@ public class ShooterScorePrep extends Command {
       Pose2d robotPose = driveTrain.getPose();
       Translation2d turretTranslation2d = turret.getTurretAbsolutePose(robotPose).getTranslation();
 
-      if (!shootOnTheMove) {
+      if (!turret.getShootOnTheMoveEnabled()) {
         goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
         goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(robotPose.getTranslation()), turretTranslation2d, driveTrain.getChassisSpeeds(), driveTrain.getFieldAccelerationX(), driveTrain.getFieldAccelerationY());
@@ -214,10 +194,13 @@ public class ShooterScorePrep extends Command {
 
     else if (selfCalculate) { 
       Translation2d turretTranslation2d = turret.getTurretAbsolutePose(driveTrain.getPose()).getTranslation();
-      if (!shootOnTheMove) {
+      if (!turret.getShootOnTheMoveEnabled()) {
         goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
-        // goalpose = shootonthemove
+        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(turretTranslation2d),
+                                                      turretTranslation2d,
+                                                      driveTrain.getRobotSpeeds(),
+                                                      0, 0);
       }
 
       distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);

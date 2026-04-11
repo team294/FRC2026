@@ -182,7 +182,7 @@ public class RobotContainer {
 
     // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(true, EndType.runForever, shooter, turret, driveTrain, field));
     SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
     // Calibration Ramp
@@ -201,7 +201,6 @@ public class RobotContainer {
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
     SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
     SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
-    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
@@ -264,7 +263,7 @@ public class RobotContainer {
     xbLB.onTrue(new IntakeRollerStop(intake));
 
     // while held, prep Shooter & Hood for scoring or passing (depending on position on field). stops shooter motor when released
-    xbRT.whileTrue(new ShooterScorePrep(true, EndType.runForever, shooter, turret, driveTrain, field));
+    xbRT.whileTrue(new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
     xbRT.onFalse(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
 
