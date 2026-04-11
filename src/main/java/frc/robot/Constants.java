@@ -832,11 +832,11 @@ public final class Constants {
     public static final int SIDE_LEFT = 1;
     public static final int SIDE_RIGHT = 2;
 
-    public static final double climberLeftGearRatio = 1.0;   // TODO CALIBRATE - gear ratio from left climber motor to mechanism
-    public static final double climberRightGearRatio = 1.0;  // TODO CALIBRATE - gear ratio from right climber motor to mechanism
+    public static final double climberLeftGearRatio = (5.0 / 1.0) * (9.0 / 1.0);   // gear ratio from left climber motor to mechanism TODO calibrate
+    public static final double climberRightGearRatio = (5.0 / 1.0) * (9.0 / 1.0);  // gear ratio from right climber motor to mechanism TODO calibrate
 
-    public static final double climberLeftOffsetRotations = 0.0;   // TODO CALIBRATE - 1. set this to zero, 2. read value of left climber raw rotations, 3. put that value here
-    public static final double climberRightOffsetRotations = 0.0;  // TODO CALIBRATE - 1. set this to zero, 2. read value of right climber raw rotations, 3. put that value here
+    public static final double climberLeftOffsetRotations = -0.00366;   // 1. set this to zero, 2. read value of left climber raw rotations, 3. put that value here TODO calibrate
+    public static final double climberRightOffsetRotations = 0.00830;   // 1. set this to zero, 2. read value of right climber raw rotations, 3. put that value here TODO calibrate
 
     public static final double inchesPerEncoderRotation = 0.0;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
 

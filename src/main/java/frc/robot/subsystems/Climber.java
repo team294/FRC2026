@@ -494,6 +494,11 @@ public class Climber extends SubsystemBase implements Loggable {
       SmartDashboard.putBoolean("Climber R UPPER", !upperLimitRight.get());
       SmartDashboard.putNumber("Climber L Temp", getClimberTemp(1));
       SmartDashboard.putNumber("Climber R Temp", getClimberTemp(2));
+      SmartDashboard.putNumber("Climber L Raw Rotations", getClimberPositionRotationsRaw(1));
+      SmartDashboard.putNumber("Climber R Raw Rotations", getClimberPositionRotationsRaw(2));
+      SmartDashboard.putNumber("Climber L Position", getClimberPositionInches(1));
+      SmartDashboard.putNumber("Climber R Position", getClimberPositionInches(2));
+      SmartDashboard.putNumber("Climber Position", getClimberPositionInches());
     }
   }
 }
