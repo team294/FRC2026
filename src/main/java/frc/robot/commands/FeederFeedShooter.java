@@ -39,6 +39,7 @@ public class FeederFeedShooter extends Command {
 
     uptakeWithinTolerance = false;
     feeder.setUptakeVelocity(UptakeConstants.uptakeShootRPM);
+    feeder.enableFastLogging(true);
     timer.restart();  // start fuel tracking timer
 
     // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.FEEDING_SHOOTER);
@@ -82,6 +83,7 @@ public class FeederFeedShooter extends Command {
   public void end(boolean interrupted) {
     feeder.stopSpindexer();
     feeder.stopUptake();
+    feeder.enableFastLogging(false);
     // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
