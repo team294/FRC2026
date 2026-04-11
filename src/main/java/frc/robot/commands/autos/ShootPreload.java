@@ -51,7 +51,7 @@ public class ShootPreload extends SequentialCommandGroup {
       either(
         sequence(
           either(
-            new DriveToPose(CoordType.kRelative, new Pose2d(1, 0, Rotation2d.kZero), driveTrain),
+            new DriveToPose(CoordType.kRelative, new Pose2d(-1, 0, Rotation2d.kZero), driveTrain),
             none(),
             () -> moveBack
           ),
