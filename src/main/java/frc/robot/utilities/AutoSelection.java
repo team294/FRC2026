@@ -36,6 +36,7 @@ public class AutoSelection {
 		NONE("None", -1),
 
 		ShootPreload("ShootPreload", 1),
+		BackUpAndShootPreload("BackUpAndShootPreload", 2),
 		// LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
 		// LeftSide_Preload_CenterCollect_UnderTrench("LeftSide_Preload_CenterCollect_UnderTrench", 2),
 		// LeftSide_CenterCollect_UnderTrench_2Cycle("LeftSide_CenterCollect_UnderTrench_2Cycle", 3),
@@ -181,13 +182,16 @@ public class AutoSelection {
 			autonomousCommandMain = new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain);
 		}
 
-		if (autoPlan == RoutineSelectionOption.ShootPreload.value) {
+		else if (autoPlan == RoutineSelectionOption.ShootPreload.value) {
 			// Starting position = facing drivers
 			autoSelectionOption = RoutineSelectionOption.ShootPreload;
-			autonomousCommandMain = sequence(
-											new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
-											new ShootPreload(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field)
-									);
+			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, false, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection);
+		}
+
+		else if (autoPlan == RoutineSelectionOption.BackUpAndShootPreload.value) {
+			// Starting position = facing drivers
+			autoSelectionOption = RoutineSelectionOption.BackUpAndShootPreload;
+			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, true, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection);
 		}
 
 		// else if (autoPlan == RoutineSelectionOption.DriveForwardOneMeter.value) {
