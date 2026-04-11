@@ -32,7 +32,7 @@ import frc.robot.utilities.Field;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootPreload extends SequentialCommandGroup {
 /**
- * Starts with back bumpers on the start line, with intake facing towards the driver station. 
+ * Starts with front bumpers on the start line, with intake facing away from the driver station. 
  * If moving back, then moves backwards one meter. Shoots preload then does nothing else. 
  * @param endType end type for autonomous scoring
  * @param moveBack whether to move back or not. true = moves back one meter, false = doesn't move back
@@ -47,7 +47,7 @@ public class ShootPreload extends SequentialCommandGroup {
  */
   public ShootPreload(EndType endType, boolean moveBack, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field, AllianceSelection allianceSelection) { 
     addCommands(
-      new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 0 : 180, false, driveTrain),
+      new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 180 : 0, false, driveTrain),
       either(
         sequence(
           new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
