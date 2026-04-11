@@ -50,12 +50,12 @@ public class ShootPreload extends SequentialCommandGroup {
       new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 180 : 0, false, driveTrain),
       either(
         sequence(
-          new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
           either(
             new DriveToPose(CoordType.kRelative, new Pose2d(1, 0, Rotation2d.kZero), driveTrain),
             none(),
             () -> moveBack
           ),
+          new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
           new AutonScore(endType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(8)
         ),
         none(),
