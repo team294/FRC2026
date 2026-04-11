@@ -836,12 +836,24 @@ public final class Constants {
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
 
+    public static final double setPositionTolerance = 0.0; // TODO CALIBRATE: in inches, tolerance on set position
+
     public static final double kP = 0.0;   // TODO CALIBRATE
     public static final double kI = 0.0;   // TODO CALIBRATE
     public static final double kD = 0.0;   // TODO CALIBRATE
     public static final double kS = 0.17;  // TODO CALIBRATE
     public static final double kV = 0.0;   // TODO CALIBRATE
     public static final double kA = 0.0;   // TODO CALIBRATE
+
+    public enum ClimberPosition {
+      TRENCH_SAFE(0.0),
+      LEGAL(6.0),
+      EXTENDED(8.0);
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final double value;
+      ClimberPosition(double value) { this.value = value; }
+    }
   }
 
   public static final class TrajectoryConstants {
