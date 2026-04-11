@@ -114,6 +114,13 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
+    climberLeftConfig.Slot0.kP = ClimberConstants.kP;
+    climberLeftConfig.Slot0.kI = ClimberConstants.kI;
+    climberLeftConfig.Slot0.kD = ClimberConstants.kD;
+    climberLeftConfig.Slot0.kS = ClimberConstants.kS;
+    climberLeftConfig.Slot0.kV = ClimberConstants.kV;
+    climberLeftConfig.Slot0.kA = ClimberConstants.kA;
+
     climberRightConfig = new TalonFXConfiguration();
     // Requirement: right side should be counterclockwise_positive.
     climberRightConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -126,6 +133,13 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;
     climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;
     climberRightConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    climberRightConfig.Slot0.kP = ClimberConstants.kP;
+    climberRightConfig.Slot0.kI = ClimberConstants.kI;
+    climberRightConfig.Slot0.kD = ClimberConstants.kD;
+    climberRightConfig.Slot0.kS = ClimberConstants.kS;
+    climberRightConfig.Slot0.kV = ClimberConstants.kV;
+    climberRightConfig.Slot0.kA = ClimberConstants.kA;
 
     // Apply the configurations to the motors.
     // This is a blocking call and will wait up to 200ms to apply.
