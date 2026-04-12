@@ -697,7 +697,7 @@ public final class Constants {
     public static final double manualReverseShootPercent = -0.1;
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
-    public static final double maxShootRPM = 3800;
+    public static final double maxShootRPM = 5000; // Was 3800
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
