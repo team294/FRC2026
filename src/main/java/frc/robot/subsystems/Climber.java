@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Ports;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.utilities.DataLogUtil;
@@ -132,6 +133,10 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     climberLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
+    // Turn off soft limits until encoder is calibrated
+    climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
     climberLeftConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     climberLeftConfig.Feedback.RotorToSensorRatio = 1.0;
     climberLeftConfig.Feedback.SensorToMechanismRatio = ClimberConstants.climberLeftGearRatio;
@@ -157,6 +162,10 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;
     climberRightConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
+    // Turn off soft limits until encoder is calibrated
+    climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
     climberRightConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     climberRightConfig.Feedback.RotorToSensorRatio = 1.0;
     climberRightConfig.Feedback.SensorToMechanismRatio = ClimberConstants.climberRightGearRatio;
@@ -168,6 +177,11 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.Slot0.kS = ClimberConstants.kS;
     climberRightConfig.Slot0.kV = ClimberConstants.kV;
     climberRightConfig.Slot0.kA = ClimberConstants.kA;
+
+    // Configure Magic Motion settings
+    climberRightConfig.MotionMagic.MotionMagicCruiseVelocity = TurretConstants.MMCruiseVelocity;
+    climberRightConfig.MotionMagic.MotionMagicAcceleration = TurretConstants.MMAcceleration;
+    climberRightConfig.MotionMagic.MotionMagicJerk = TurretConstants.MMJerk;
 
     climberMMVoltageControl.Slot = 0;
     climberMMVoltageControl.OverrideBrakeDurNeutral = true;
