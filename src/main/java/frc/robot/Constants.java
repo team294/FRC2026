@@ -848,14 +848,15 @@ public final class Constants {
     public static final double climberLeftOffsetRotations = -0.00366;   // 1. set this to zero, 2. read value of left climber raw rotations, 3. put that value here TODO calibrate
     public static final double climberRightOffsetRotations = 0.00830;   // 1. set this to zero, 2. read value of right climber raw rotations, 3. put that value here TODO calibrate
 
-    public static final double inchesPerEncoderRotation = 0.0;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
+    public static final double inchesPerEncoderRotation = 4.9153;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
 
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
     public static final double maxPercentOutput = 0.45;
+    public static final double maxUncalibratedPercentOutput = 0.1;
 
-    public static final double setPositionTolerance = 0.0; // TODO CALIBRATE: in inches, tolerance on position target
+    public static final double setPositionTolerance = 0.3; // TODO CALIBRATE: in inches, tolerance on position target
 
     public static final double kP = 0.0;   // TODO CALIBRATE
     public static final double kI = 0.0;   // TODO CALIBRATE
@@ -870,9 +871,9 @@ public final class Constants {
 
     // TODO CALIBRATE
     public enum ClimberPosition {
-      TRENCH_SAFE(0.0),
+      LOWER_LIMIT(0.0),
       LEGAL(6.0),
-      EXTENDED(8.0);
+      UPPER_LIMIT(7.5);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})
       public final double value;

@@ -206,7 +206,7 @@ public class RobotContainer {
     SmartDashboard.putData(CLIMBER_CMD_STOP_RIGHT.value, new ClimberSingleStop(ClimberConstants.SIDE_RIGHT, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_LEFT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_LEFT, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_RIGHT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_RIGHT, climber));
-    SmartDashboard.putData("Climber L Down", new ClimberSingleSetPercent(-0.1, ClimberConstants.SIDE_LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION.value, new ClimberSetPosition(climber));
 
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_BOTH.value, new HoodSetVoltage(shooter, 0));
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_LEFT.value, new HoodSetVoltage(shooter, 1));

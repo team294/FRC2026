@@ -58,14 +58,14 @@ public class ClimberSetPosition extends Command {
     addRequirements(climber);
 
     if (SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, -9999) == -9999) {
-      SmartDashboard.putNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.TRENCH_SAFE.value);
+      SmartDashboard.putNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.LOWER_LIMIT.value);
     }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) this.targetPosition = SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.TRENCH_SAFE.value);
+    if (fromElastic) this.targetPosition = SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.LOWER_LIMIT.value);
     climber.setClimberPosition(targetPosition);
 
     climber.enableFastLogging(true);
