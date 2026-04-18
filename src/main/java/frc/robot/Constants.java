@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A5";
+  public static final String bcrRobotCodeVersion = "A6";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -655,7 +655,7 @@ public final class Constants {
 
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 1.5; // was 0.687
+    public static final double noFuelSeconds = 1.0; // 1.0 changed for Q103, was 1.5 
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
 
@@ -697,7 +697,9 @@ public final class Constants {
     public static final double manualReverseShootPercent = -0.1;
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
-    public static final double maxShootRPM = 3800;
+    public static final double maxShootRPM = 5000; // Was 3800
+    public static final double maxShootWaitForRPM = 4000;     // Don't wait to reach target RPM if actual RPM is above this threshold.
+          // Reaching high shooter velocity takes too long, and shooter may not get there under high-current conditions or low battery.
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -843,6 +845,7 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
+    public static final double maxPercentOutput = 0.45;
   }
 
   public static final class TrajectoryConstants {

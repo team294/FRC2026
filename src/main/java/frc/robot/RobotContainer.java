@@ -80,6 +80,7 @@ public class RobotContainer {
   private final DataLog log = DataLogManager.getLog();
   private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
   private long heartBeat = 0;
+  private boolean dataLogIntialMessage = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -322,7 +323,7 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
-    left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
+    left[1].onTrue(new IntakeSequence(intake));
     left[1].onFalse(new IntakeRollerStop(intake));   // new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL))
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
@@ -447,6 +448,11 @@ public class RobotContainer {
   public void disabledInit() {
     // Do not log the word "Init" here, as it it affects the Excel macro
     DataLogUtil.writeMessageEcho("Disabled: Robot disabled");
+    
+    if (!dataLogIntialMessage) {
+      DataLogUtil.writeMessageEcho("RobotContainer: Disabled Initially, Version =", Constants.bcrRobotCodeVersion);
+      dataLogIntialMessage = true;
+    }
 
     driveTrain.stopMotors();             // SAFETY: Turn off any closed loop control that may be running, so the robot does not move when re-enabled
     feeder.stopUptake();
