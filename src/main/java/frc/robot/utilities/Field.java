@@ -95,12 +95,13 @@ public class Field {
     public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds, double accelerationX, double accelerationY) {
         double estTimeOfFlight = turretTranslation2d.getDistance(staticTargetTranslation2d) * FieldConstants.timeOfFlightSlope + FieldConstants.timeOfFlightIntercept;
 
-        // We want to aim at where the target appears to be from the robot's estimated future position.
-        // During the time of flight, the robot moves by: 0.5(acceleration)(time^2) + (velocity)(time)
+        // We want to aim to counteract the offset caused by the added velocity that the robot moving has on the ball.
+        // During the time of flight, the ball deflects from where we want it to be by the formula: velocity*time
+        // Acceleration does not matter since there is no forces acting on the ball in the horizontal plane other than negligible? air resistance 
         // This displacement is subtracted from the static target position because if the robot moves
         // +1m left during flight, the target appears to shift -1m from the robot's POV so we have to aim 1m short
-        double offsetX = (0.5 * accelerationX * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
-        double offsetY = (0.5 * accelerationY * estTimeOfFlight * estTimeOfFlight) + (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
+        double offsetX = (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
+        double offsetY = (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
 
         // logging to debug why SOTM is not working
         long timeNow = RobotController.getFPGATime();
