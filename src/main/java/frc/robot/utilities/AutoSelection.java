@@ -255,7 +255,7 @@ public class AutoSelection {
 
 		else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_UnderTrench.value) {
 			autoSelectionOption = RoutineSelectionOption.LeftSide_SideCollect_UnderTrench; 
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
+			autonomousCommandMain = new BuildSideAuton(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
 		}
 
 		// else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_OverBump_Depot.value) {
@@ -268,7 +268,7 @@ public class AutoSelection {
 			autonomousCommandMain = sequence(
 										new InstantCommand(() -> timer.restart()),
 										race(
-											new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
+											new BuildSideAuton(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
 											new WaitUntilCommand(() -> timer.get() >= 17.0)
 										),
 										parallel(
@@ -284,7 +284,7 @@ public class AutoSelection {
 			autonomousCommandMain = sequence(
 										new InstantCommand(() -> timer.restart()),
 										race(
-											new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
+											new BuildSideAuton(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field),
 											new WaitUntilCommand(() -> timer.get() >= 17.0)
 										),
 										parallel(
@@ -312,7 +312,7 @@ public class AutoSelection {
 
 		else if (autoPlan == RoutineSelectionOption.RightSide_SideCollect_UnderTrench.value) {
 			autoSelectionOption = RoutineSelectionOption.RightSide_SideCollect_UnderTrench; 
-			autonomousCommandMain = new BuildAutonRoutine(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
+			autonomousCommandMain = new BuildSideAuton(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kUnderTrench, AutoEndType.kNone, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field); // intake, feeder, turret, shooter, climber, 
 		}
 
 		// else if (autoPlan == RoutineSelectionOption.RightSide_Preload_CenterCollect_UnderTrench.value) {
