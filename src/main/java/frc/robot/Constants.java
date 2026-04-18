@@ -637,7 +637,7 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      LOWER_LIMIT(-92.0),   // CALIBRATED 4/17/26: -92.0     updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       TRENCH_ALLOWED_LOWER(-70.0), // When the intake is below this angle it can fit under the trench
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
@@ -655,7 +655,7 @@ public final class Constants {
 
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 1.5; // was 0.687
+    public static final double noFuelSeconds = 1.0; // 1.0 changed for Q103, was 1.5 
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
 
@@ -697,7 +697,9 @@ public final class Constants {
     public static final double manualReverseShootPercent = -0.1;
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
-    public static final double maxShootRPM = 3800;
+    public static final double maxShootRPM = 5000; // Was 3800
+    public static final double maxShootWaitForRPM = 4000;     // Don't wait to reach target RPM if actual RPM is above this threshold.
+          // Reaching high shooter velocity takes too long, and shooter may not get there under high-current conditions or low battery.
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 

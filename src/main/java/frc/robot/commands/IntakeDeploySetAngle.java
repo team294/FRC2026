@@ -81,7 +81,10 @@ public class IntakeDeploySetAngle extends Command {
   public void end(boolean interrupted) {
     intake.enableFastLogging(false);
     if (interrupted) DataLogUtil.writeMessage("IntakeDeploySetAngle: Interrupted, Target =", targetAngle, ", Current =", intake.getIntakeDeployAngle());
-    else DataLogUtil.writeMessage("IntakeDeploySetAngle: End, Target =", targetAngle, ", Current =", intake.getIntakeDeployAngle());
+    else {
+      DataLogUtil.writeMessage("IntakeDeploySetAngle: End, Target =", targetAngle, ", Current =", intake.getIntakeDeployAngle());
+      if (targetAngle == IntakeDeployAngle.INTAKE.value) intake.setIntakeDeployPercentOutput(0.0);
+    }
   }
 
   // Returns true when the command should end.
