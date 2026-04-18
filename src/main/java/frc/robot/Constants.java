@@ -842,13 +842,10 @@ public final class Constants {
     public static final int SIDE_LEFT = 1;
     public static final int SIDE_RIGHT = 2;
 
-    public static final double climberLeftGearRatio = (5.0 / 1.0) * (9.0 / 1.0);   // gear ratio from left climber motor to mechanism TODO calibrate
-    public static final double climberRightGearRatio = (5.0 / 1.0) * (9.0 / 1.0);  // gear ratio from right climber motor to mechanism TODO calibrate
+    public static final double climberLeftGearRatio = (5.0 / 1.0) * (9.0 / 1.0);   // gear ratio from left climber motor to mechanism
+    public static final double climberRightGearRatio = (5.0 / 1.0) * (9.0 / 1.0);  // gear ratio from right climber motor to mechanism
     public static final double climberDrumDiameter = 1.5; // in inches, physical drum is 1.375 inches, but layers of rope is 0.125 inches per layer
     // distance between limit switches is 8.25 inches
-
-    public static final double climberLeftOffsetRotations = -0.00366;   // 1. set this to zero, 2. read value of left climber raw rotations, 3. put that value here TODO calibrate
-    public static final double climberRightOffsetRotations = 0.00830;   // 1. set this to zero, 2. read value of right climber raw rotations, 3. put that value here TODO calibrate
 
     public static final double inchesPerEncoderRotation = 4.9153;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
 
@@ -860,7 +857,7 @@ public final class Constants {
 
     public static final double setPositionTolerance = 0.3; // TODO CALIBRATE: in inches, tolerance on position target
 
-    public static final double kP = 40.0;   // TODO CALIBRATE
+    public static final double kP = 90.0;   // TODO CALIBRATE
     public static final double kI = 0.0;   // TODO CALIBRATE
     public static final double kD = 0.0;   // TODO CALIBRATE
     public static final double kS = 0.17;  // TODO CALIBRATE
