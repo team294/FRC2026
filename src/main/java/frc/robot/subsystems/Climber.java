@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Ports;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.utilities.DataLogUtil;
@@ -149,6 +148,11 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftConfig.Slot0.kV = ClimberConstants.kV;
     climberLeftConfig.Slot0.kA = ClimberConstants.kA;
 
+    // Configure Magic Motion settings
+    climberLeftConfig.MotionMagic.MotionMagicCruiseVelocity = ClimberConstants.MMCruiseVelocity;
+    climberLeftConfig.MotionMagic.MotionMagicAcceleration = ClimberConstants.MMAcceleration;
+    climberLeftConfig.MotionMagic.MotionMagicJerk = ClimberConstants.MMJerk;
+
     climberRightConfig = new TalonFXConfiguration();
     // Requirement: right side should be counterclockwise_positive.
     climberRightConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -179,9 +183,9 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightConfig.Slot0.kA = ClimberConstants.kA;
 
     // Configure Magic Motion settings
-    climberRightConfig.MotionMagic.MotionMagicCruiseVelocity = TurretConstants.MMCruiseVelocity;
-    climberRightConfig.MotionMagic.MotionMagicAcceleration = TurretConstants.MMAcceleration;
-    climberRightConfig.MotionMagic.MotionMagicJerk = TurretConstants.MMJerk;
+    climberRightConfig.MotionMagic.MotionMagicCruiseVelocity = ClimberConstants.MMCruiseVelocity;
+    climberRightConfig.MotionMagic.MotionMagicAcceleration = ClimberConstants.MMAcceleration;
+    climberRightConfig.MotionMagic.MotionMagicJerk = ClimberConstants.MMJerk;
 
     climberMMVoltageControl.Slot = 0;
     climberMMVoltageControl.OverrideBrakeDurNeutral = true;
@@ -293,6 +297,10 @@ public class Climber extends SubsystemBase implements Loggable {
     setpointPosition = MathUtil.clamp(position, ClimberPosition.LOWER_LIMIT.value, ClimberPosition.UPPER_LIMIT.value);
 
     isClimberInPositionControl = true;
+
+    System.out.println("setpoint pos: " + setpointPosition);
+    System.out.println("rotation pos left: " + convertClimberInchesToEncoderRotations(setpointPosition, 1));
+    System.out.println("rotation pos right: " + convertClimberInchesToEncoderRotations(setpointPosition, 2));
 
     climberLeftMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition, 1)));
     climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition, 2)));

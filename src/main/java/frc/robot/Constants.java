@@ -858,16 +858,16 @@ public final class Constants {
 
     public static final double setPositionTolerance = 0.3; // TODO CALIBRATE: in inches, tolerance on position target
 
-    public static final double kP = 0.0;   // TODO CALIBRATE
+    public static final double kP = 40.0;   // TODO CALIBRATE
     public static final double kI = 0.0;   // TODO CALIBRATE
     public static final double kD = 0.0;   // TODO CALIBRATE
     public static final double kS = 0.17;  // TODO CALIBRATE
     public static final double kV = 0.0;   // TODO CALIBRATE
     public static final double kA = 0.0;   // TODO CALIBRATE
 
-    public static final double MMCruiseVelocity = 0.8;                    // TODO CALIBRATE, Max velocity in mechanism rotations / second
-    public static final double MMAcceleration = MMCruiseVelocity / 0.15;  // CALIBRATED:  new /0.15, old intake /0.35, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
-    public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
+    public static final double MMCruiseVelocity = 30.0;                  // TODO CALIBRATE: 4/17/2026 = 30.0, Max velocity in mechanism rotations / second
+    public static final double MMAcceleration = MMCruiseVelocity / 0.8;  // TODO CALIBRATE: 4/17/2026 = velocity/0.8, old /0.15, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
+    public static final double MMJerk = 0.0;                             // TODO CALIBRATE: 4/17/2026 = 0.0, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     // TODO CALIBRATE
     public enum ClimberPosition {
