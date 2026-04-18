@@ -282,8 +282,6 @@ public final class Constants {
       // Voltage
       HOOD_LEFT_VOLTAGE(hoodLeftString + " Voltage"),
       HOOD_RIGHT_VOLTAGE(hoodRightString + " Voltage"),
-      HOOD_LEFT_ANALOG_VOLTAGE(hoodLeftString + " Analog Voltage"),
-      HOOD_RIGHT_ANALOG_VOLTAGE(hoodRightString + " Analog Voltage"),
 
       // Current
       HOOD_LEFT_CURRENT(hoodLeftString + " Current"),
@@ -322,8 +320,6 @@ public final class Constants {
 
       // Position
       CLIMBER_POSITION(climberString + positionString),
-      HOOD_LEFT_LENGTH(hoodLeftString + " Extension Length (in)"),
-      HOOD_RIGHT_LENGTH(hoodRightString + " Extension Length (in)"),
       TURRET_ANGLE(turretString + angleString),
       TURRET_ADVANCED_ESTIMATION(turretString + " Advanced Estimation"),
       TURRET_CANCODER_BELT_ABS(turretString + " CANcoder Belt ABS"),
@@ -719,10 +715,14 @@ public final class Constants {
 
     public static final double shooterVelocityFromTrench = 2200; // calculated using above slope and intercept from estimated distance b/t turret and hub
 
-    // Hood Constants
+    // Hood Constants TODO CALIBRATE ALL
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
     public static final double hoodPassAngle = 35.0;
     public static final double hoodAngleErrorTolerance = 0.7;  // Angle tolerance in degrees
+    public static final double hoodDegreesPerRotation = 360.0;
+
+    public static final double hood1EncoderOffsetAngle = 0; // TODO Calibrate
+    public static final double hood2EncoderOffsetAngle = 0; // TODO Calibrate
 
     public static final double hoodVoltage = 12;
     public static final double hoodPIDErrorTolerance = 0.1; // tolerance to pass into the PID controller (deg error)
@@ -736,42 +736,18 @@ public final class Constants {
 
     public static final double hoodMaximumPercentOutput = 0.5;
 
-    public static final double hoodMinimumAnalogVoltage = 0;
-    //public static final double hood1MaximumAnalogVoltage = 4.92;
-    //public static final double hood2MaximumAnalogVoltage = 4.92;
-    public static final double hood1MaximumAnalogVoltage = 4.1; // 3.536
-    public static final double hood2MaximumAnalogVoltage = 4.1; // 4.018
-
-    //public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle)
-    //public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
-    public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
-    public static final double hoodActuatorMaxExtensionLength = 9.750; // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
-
-    // To swap one of the hood actuators for a spare, update corresponding hoodNSlopePointAnalogVoltage and hoodNSlopePointExtensionLength
-    // Hood Spare SN005: 
-    //    Slope Point Analog Voltage = 2.725V
-    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 2.908in
-    // Hood Spare SN006: 
-    //    Slope Point Analog Voltage = 4.046V
-    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 3.124in
-
-    public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
-    public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
-
-    public static final double hood1SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.172; // in inches, arbitrary extension length corresponding to hood1SlopePointAnalogVoltage
-    public static final double hood2SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.25; // in inches, arbitrary extension length corresponding to hood2SlopePointAnalogVoltage
+    public static final double hoodMinimumVoltage = 0;
+    public static final double hood1MaximumVoltage = 0.0; // TODO CALIBRATE
+    public static final double hood2MaximumVoltage = 0.0; // TODO CALIBRATE
 
     public static final double hoodToleranceFromTopOrBottom = 0.005;
 
-    public static final double hoodMinimumAnalogVoltageCutoff = hoodMinimumAnalogVoltage + hoodToleranceFromTopOrBottom;
-    public static final double hood1MaximumAnalogVoltageCutoff = hood1MaximumAnalogVoltage - hoodToleranceFromTopOrBottom;
-    public static final double hood2MaximumAnalogVoltageCutoff = hood2MaximumAnalogVoltage - hoodToleranceFromTopOrBottom;
+    public static final double hoodMinimumVoltageCutoff = hoodMinimumVoltage + hoodToleranceFromTopOrBottom;
+    public static final double hood1MaximumVoltageCutoff = hood1MaximumVoltage - hoodToleranceFromTopOrBottom;
+    public static final double hood2MaximumVoltageCutoff = hood2MaximumVoltage - hoodToleranceFromTopOrBottom;
 
     public static final double radius1 = 7.678; // the length of one side of the triangle formed with the linear actuator for the hood angle
     public static final double radius2 = 6.361; // the length of the other side of the triangle 
-
-    public static final double hood1VoltageToExtensionLengthSlope = (hood1SlopePointExtensionLength - hoodActuatorMinExtensionLength) / (hood1SlopePointAnalogVoltage - hoodMinimumAnalogVoltage);
-    public static final double hood2VoltageToExtensionLengthSlope = (hood2SlopePointExtensionLength - hoodActuatorMinExtensionLength) / (hood2SlopePointAnalogVoltage - hoodMinimumAnalogVoltage);
 
     public static final double hood1kP = 0.26;   //was 0.24 // volts / error in motor rps
     public static final double hood1kI = 0.0;
