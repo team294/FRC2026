@@ -386,6 +386,10 @@ public class RobotContainer {
       new DriveResetPose(0, false, driveTrain), 
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
+    // Prep climb when switch flipped forward, execute when switch flipped down.
+    coP[8].onTrue(new ClimbPrepSequence(climber, turret, intake));
+    coP[8].onFalse(new ClimbExecuteSequence(climber));
+
     // // Manually spin turret CW/CCW while held, stopping when released
     coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
     coP[10].whileTrue(new TurretSetPercent(turret, TurretConstants.maxManualPercentOutput));
