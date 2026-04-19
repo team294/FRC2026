@@ -206,7 +206,11 @@ public class ChoreoFollower extends Command {
       yFeedback = 0;
       rotationFeedback = 0;
     }
-    
+
+// TODO Re-enable feedback  (delete next 3 lines)
+    xFeedback = 0;
+    yFeedback = 0;
+    rotationFeedback = 0;
     outputChassisSpeed.accept(new ChassisSpeeds(xFF + xFeedback, yFF + yFeedback, rotationFF + rotationFeedback)); 
   }
 
