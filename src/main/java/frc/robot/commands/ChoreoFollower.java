@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.StopType;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.MathBCR;
@@ -38,6 +39,7 @@ public class ChoreoFollower extends Command {
   private BooleanSupplier mirrorTrajectory;
   private boolean mirrorTrajectoryThisInit;
   private DriveTrain driveTrain;
+  private final StopType stopType;
 
   private boolean noTrajectory;     // Trajectory has no points
   private Pose2d finalPose;         // Desired pose at end of trajectory
@@ -64,8 +66,13 @@ public class ChoreoFollower extends Command {
   /**
    * Choreo follower used to follow Choreo trajectories. 
    * This method takes in a choreo trajectory and follows the contents of that trajectory until the trajectory is finished.
-   * <p><b>NOTE:</b> This follower will *not* set the outputVolts to zero upon completion of the path.
-   * This is left to the user to do since it is not appropriate for paths with nonstationary endstates.
+   * @param stopType Specify behavior at the end of the trajectory
+   *  <p> kNoStop = Don't stop the drivetrain, don't reset Coast/Brake mode.
+   *      Continue the drivetrain motors in their current state (wheel orientation and velocity) when the trajectory ends.  Note that
+   *      this may not exactly match the end of the planned trajectory (just because the end of the trajectory is a stop point [zero velocity], that does not mean
+   *      that the robot will actually be stopped when this command ends).
+   *  <p>kCoast = Stop the drive motors and set the drivetrain to Coast mode
+   *  <p>kBrake = Stop the drive motors and set the drivetrain to Brake mode
    * @param trajectory Choreo trajectory to follow
    * @param xController trajectory PID X feedback controller
    * @param yController trajectory PID Y feedback controller 
@@ -76,9 +83,11 @@ public class ChoreoFollower extends Command {
    * internal robot odometry will remain the same, when false the trajectory will not be changed
    * @param driveTrain DriveTrain subsystem
    */
-  public ChoreoFollower(Trajectory<SwerveSample> trajectory, PIDController xController, PIDController yController,
+  public ChoreoFollower(StopType stopType, Trajectory<SwerveSample> trajectory, 
+      PIDController xController, PIDController yController,
       PIDController rotationController, Consumer<ChassisSpeeds> outputChassisSpeeds,
       Supplier<Pose2d> poseSupplier, BooleanSupplier mirrorTrajectory, DriveTrain driveTrain) {
+    this.stopType = stopType;
     this.trajectory = trajectory;
     this.xController = xController;
     this.yController = yController;
@@ -134,7 +143,7 @@ public class ChoreoFollower extends Command {
         finalSampleOpt.get().getChassisSpeeds().vyMetersPerSecond);
     }
 
-    DataLogUtil.writeMessage("ChoreoFollower:  Init, Is Flipped =", mirrorTrajectoryThisInit);
+    DataLogUtil.writeMessage("ChoreoFollower:  Init, Is Flipped =", mirrorTrajectoryThisInit, ", Stop Type =", stopType, ", Trajectory =", trajectory.name());
     dLogTrajType.append("ChoreoFollower");
     rotationController.enableContinuousInput(-Math.PI, Math.PI);
   }
@@ -206,6 +215,16 @@ public class ChoreoFollower extends Command {
   public void end(boolean interrupted) {
     // driveTrain.enableFastLogging(false);
     timer.stop();
+
+    // Add any final behavior, per the stopAtEnd
+    if (stopType == StopType.kBrake) {
+      driveTrain.stopMotors();
+      driveTrain.setDriveModeCoast(false);
+    } else if (stopType == StopType.kCoast) {
+      driveTrain.stopMotors();
+      driveTrain.setDriveModeCoast(true);
+    }
+
     DataLogUtil.writeMessage("ChoreoFollower:  End, interrupted =", interrupted);
     dLogTrajType.append("None");
   }

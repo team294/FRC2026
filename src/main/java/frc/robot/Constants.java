@@ -637,7 +637,7 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      LOWER_LIMIT(-92.0),   // CALIBRATED 4/17/26: -92.0     updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       TRENCH_ALLOWED_LOWER(-70.0), // When the intake is below this angle it can fit under the trench
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
