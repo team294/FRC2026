@@ -54,12 +54,10 @@ public class ShootPreload extends SequentialCommandGroup {
  * @param field Field utility
  * @param allianceSelection AllianceSelection utility
  */
-  public ShootPreload(EndType endType, boolean moveBack, boolean climb, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field, AllianceSelection allianceSelection, TrajectoryCache cache) { 
-    boolean leftSide = routineSide == RoutineSideType.kLeftSide;
-    
-    Trajectory<SwerveSample> trajectory = cache.getTrajectory(leftSide, TrajectoryName.CenterShootToClimb);
+  public ShootPreload(EndType endType, boolean moveBack, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field, AllianceSelection allianceSelection, TrajectoryCache cache) { 
+    // boolean leftSide = routineSide == RoutineSideType.kLeftSide;
+    // Trajectory<SwerveSample> trajectory = cache.getTrajectory(leftSide, TrajectoryName.CenterShootToClimb);
     addCommands(
-      new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 180 : 0, false, driveTrain),
       either(
         sequence(
           either(
@@ -68,12 +66,12 @@ public class ShootPreload extends SequentialCommandGroup {
             () -> moveBack
           ),
           new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
-          new AutonScore(endType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(8),
-          either(
-            new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, allianceSelection),
-            none(),
-            () -> climb
-          )
+          new AutonScore(endType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(8)
+          // either(
+          //   new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, allianceSelection),
+          //   none(),
+          //   () -> climb
+          // )
         ),
         none(),
         () -> intake.isIntakeDeployCalibrated()

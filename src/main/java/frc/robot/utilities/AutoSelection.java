@@ -35,10 +35,11 @@ public class AutoSelection {
 		// CUSTOM("Custom", -2),
 		NONE("None", -1),
 
-		ShootPreload("ShootPreload", 1),
-		BackUpAndShootPreload("BackUpAndShootPreload", 2),
-		RightSide_BackUpShootPreloadAndClimb("RightSide_BackUpShootPreloadAndClimb", 3),
-		LeftSide_BackUpShootPreloadAndClimb("LeftSide_BackUpShootPreloadAndClimb", 3),
+		ShootPreload("Center_ShootPreload", 1),
+		Center_ShootPreload_Climb("Center_ShootPreload_Climb", 2),
+		Center_CollectUnderTrench("Center_CollectUnderTrench", 3),
+		Center_CollectUnderTrench_Climb("Center_CollectUnderTrench_Climb", 4),
+
 		// LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
 		// LeftSide_Preload_CenterCollect_UnderTrench("LeftSide_Preload_CenterCollect_UnderTrench", 2),
 		// LeftSide_CenterCollect_UnderTrench_2Cycle("LeftSide_CenterCollect_UnderTrench_2Cycle", 3),
@@ -187,24 +188,30 @@ public class AutoSelection {
 		else if (autoPlan == RoutineSelectionOption.ShootPreload.value) {
 			// Starting position = facing drivers
 			autoSelectionOption = RoutineSelectionOption.ShootPreload;
-			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, false, false, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
+			autonomousCommandMain = sequence(
+										new DriveResetPose(allianceSelection.getAlliance() == Alliance.Red ? 180 : 0, false, driveTrain),
+										new ShootPreload(EndType.waitForSetPoint, false, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache)
+									);
+									
 		}
 
-		else if (autoPlan == RoutineSelectionOption.BackUpAndShootPreload.value) {
+		// else if (autoPlan == RoutineSelectionOption.Center_ShootPreload_Climb.value) {
+		// 	// Starting position = facing drivers
+		// 	autoSelectionOption = RoutineSelectionOption.Center_ShootPreload_Climb;
+		// 	autonomousCommandMain = new BuildCenterAuton(EndType.waitForSetPoint, false, true, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
+		// }
+
+		else if (autoPlan == RoutineSelectionOption.Center_CollectUnderTrench.value) {
 			// Starting position = facing drivers
-			autoSelectionOption = RoutineSelectionOption.BackUpAndShootPreload;
-			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, true, false, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
+			autoSelectionOption = RoutineSelectionOption.Center_CollectUnderTrench;
+			autonomousCommandMain = new BuildCenterAuton(EndType.waitForSetPoint, true, false, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
 		}
 
-		else if (autoPlan == RoutineSelectionOption.RightSide_BackUpShootPreloadAndClimb.value) {
-			autoSelectionOption = RoutineSelectionOption.RightSide_BackUpShootPreloadAndClimb;
-			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, true, true, RoutineSideType.kRightSide, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
-		}
-
-		else if (autoPlan == RoutineSelectionOption.LeftSide_BackUpShootPreloadAndClimb.value) {
-			autoSelectionOption = RoutineSelectionOption.LeftSide_BackUpShootPreloadAndClimb;
-			autonomousCommandMain = new ShootPreload(EndType.waitForSetPoint, true, true, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
-		}
+		// else if (autoPlan == RoutineSelectionOption.Center_CollectUnderTrench_Climb.value) {
+		// 	// Starting position = facing drivers
+		// 	autoSelectionOption = RoutineSelectionOption.Center_CollectUnderTrench_Climb;
+		// 	autonomousCommandMain = new BuildCenterAuton(EndType.waitForSetPoint, true, true, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
+		// }
 
 		// else if (autoPlan == RoutineSelectionOption.DriveForwardOneMeter.value) {
 		// 	autoSelectionOption = RoutineSelectionOption.DriveForwardOneMeter;

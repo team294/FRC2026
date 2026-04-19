@@ -4,16 +4,80 @@
 
 package frc.robot.commands.autos;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
+
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.AutoConstants.RoutineSideType;
+import frc.robot.Constants.CoordType;
+import frc.robot.Constants.EndType;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
+import frc.robot.Constants.StopType;
+import frc.robot.commands.DriveResetPose;
+import frc.robot.commands.DriveToPose;
+import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.IntakeDeploySetAngle;
+import frc.robot.commands.autos.components.AutonScore;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
+import frc.robot.utilities.AllianceSelection;
+import frc.robot.utilities.Field;
+import frc.robot.utilities.TrajectoryCache;
+import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BuildCenterAuton extends SequentialCommandGroup {
   /** Creates a new BuildCenterAuton. */
-  public BuildCenterAuton() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+  public BuildCenterAuton(EndType shootEndType, boolean collectBalls, boolean climb, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field, AllianceSelection alliance, TrajectoryCache cache) {
+    // boolean leftSide = routineSide == RoutineSideType.kLeftSide;
+    Trajectory<SwerveSample> driveToClimbTrajectory = collectBalls ? cache.getTrajectory(TrajectoryName.UnderTrenchToClimb_LabSafe) : cache.getTrajectory(TrajectoryName.CenterShootToClimb);
+    Trajectory<SwerveSample> collectTrajectory = cache.getTrajectory(TrajectoryName.CenterStartCollectUnderTower_LabSafe);
+    Pose2d initalPose2d = collectBalls ? collectTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get() : cache.getTrajectory(TrajectoryName.CenterShootToClimb).getInitialPose(alliance.getAlliance() == Alliance.Red).get().transformBy(new Transform2d(1.0, 0, Rotation2d.kZero));
+    addCommands(
+      new DriveResetPose(initalPose2d, true, driveTrain),
+      either(
+        sequence(
+          // Shooting balls -- either collecting under the trench first and then shooting or just shooting preloads
+          either(
+            sequence(
+              parallel(
+                new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, collectTrajectory, driveTrain, alliance),
+                sequence(
+                  new WaitCommand(1.0),
+                  new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake)
+                )
+              ),
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field)
+            ),
+            new ShootPreload(shootEndType, true, intake, feeder, turret, shooter, climber, driveTrain, field, alliance, cache),
+            () -> collectBalls
+          ),
+          // If we climb...
+          either(
+            sequence(
+              new IntakeDeploySetAngle(IntakeDeployAngle.START_CONFIG, intake),
+              new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance)
+              // new AutoClimbSequence()
+            ),
+            none(),
+            () -> climb
+          )
+        ),
+        none(),
+        () -> intake.isIntakeDeployCalibrated()
+      )
+    );
   }
 }
