@@ -490,7 +490,13 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    
+    led.clearAllStripAnimations();
+    if (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench()) {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
 
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
@@ -517,7 +523,13 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+
+    led.clearAllStripAnimations();
+    if (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench()) {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
 
     teleopTimer.restart();
   }
