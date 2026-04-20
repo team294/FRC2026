@@ -60,8 +60,8 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                   new WaitCommand(1.0),
                   new IntakeSequence(intake)
                 )
-              )
-              //new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field)
+              ),
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field)
             ),
             new ShootPreload(shootEndType, true, intake, feeder, turret, shooter, climber, driveTrain, field, alliance, cache),
             () -> collectBalls
