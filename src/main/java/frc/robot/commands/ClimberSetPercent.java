@@ -72,7 +72,7 @@ public class ClimberSetPercent extends Command {
   public void end(boolean interrupted) {
     // If we ended due to a limit (or interruption), ensure the climber motors are stopped.
     climber.stopClimberMotors();
-    DataLogUtil.writeMessage("ClimberSetPercent: End, Interupted = ", interrupted);
+    DataLogUtil.writeMessageEcho("ClimberSetPercent: End, Interupted = ", interrupted);
 
     // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }

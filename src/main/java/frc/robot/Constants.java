@@ -531,6 +531,15 @@ public final class Constants {
     public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
     public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width * 3.0 / 4.0);
     public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width / 4.0);
+
+    // tower lineup positions for climbing
+    public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
+    public static final Translation2d climbPrepBlue = new Translation2d(1.8, towerPositionBlue.getY());
+    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(6.58), towerPositionBlue.getY());
+
+    public static final Translation2d towerPositionRed = new Translation2d(length - towerPositionBlue.getX(), width - towerPositionBlue.getY());
+    public static final Translation2d climbPrepRed = new Translation2d(length - climbPrepBlue.getX(), width - climbPrepBlue.getY());
+    public static final Translation2d climbExecuteRed = new Translation2d(length - climbExecuteBlue.getX(), width - climbExecuteBlue.getY());
   }
 
   public static class VisionConstants {
@@ -854,7 +863,7 @@ public final class Constants {
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
     public static final double maxPercentOutput = 0.45;
-    public static final double maxUncalibratedPercentOutput = 0.1;
+    public static final double maxUncalibratedPercentOutput = 0.2;
 
     public static final double setPositionTolerance = 0.3; // TODO CALIBRATE: in inches, tolerance on position target
 

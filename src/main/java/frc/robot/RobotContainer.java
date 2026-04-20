@@ -387,7 +387,7 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
     // Prep climb when switch flipped forward, execute when switch flipped down.
-    coP[8].onTrue(new ClimbPrepSequence(climber, turret, intake));
+    coP[8].onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
     coP[8].onFalse(new ClimbExecuteSequence(climber));
 
     // // Manually spin turret CW/CCW while held, stopping when released

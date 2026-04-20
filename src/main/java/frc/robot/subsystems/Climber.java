@@ -90,7 +90,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private double setpointPercentRight;
 
   private double setpointPosition;
-  private boolean isClimberInPositionControl;
+  private boolean isClimberInPositionControl = false;
 
   private boolean climberCalibrated = false; // Default to climber being uncalibrated. Calibrate when left and right climbers are calibrated.
   private boolean climberLeftCalibrated = false;   // Default to being uncalibrated. Calibrate on boot if at lower limit, or recalibrate if "Climber Calibrate L Zero" command run.
@@ -233,6 +233,8 @@ public class Climber extends SubsystemBase implements Loggable {
   public void setClimberPercentOutput(double percent, int side) {
     isClimberInPositionControl = false;
 
+    // System.out.println("individual set pct, side = " + side + ", pct = " + percent);
+
     if (side == ClimberConstants.SIDE_LEFT) {
       setpointPercentLeft = percent;
       climberLeftMotor.setControl(climberVoltageControl.withOutput(percent * ClimberConstants.compensationVoltage));
@@ -299,6 +301,8 @@ public class Climber extends SubsystemBase implements Loggable {
 
       climberLeftMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
       climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
+    } else {
+      DataLogUtil.writeMessageEcho("Climber uncalibrated, position control aborted!");
     }
   }
 
@@ -440,77 +444,67 @@ public class Climber extends SubsystemBase implements Loggable {
   // ************ Encoder methods
 
   /**
-   * Checks if left climber is at its lower limit. If it is, zeroes the
+   * Assumes left climber is at its lower limit. Zeroes the
    * encoder and waits up to 200ms for the new setting to be applied.
    */
   private void checkAndZeroEncoderLeft() {
-    if (isSideLimitReached(ClimberConstants.SIDE_LEFT, true)) {
-      stopClimberMotor(ClimberConstants.SIDE_LEFT);
+    stopClimberMotor(ClimberConstants.SIDE_LEFT);
 
-      // leftEncoderZero = getClimberPositionRotationsRaw(ClimberConstants.SIDE_LEFT);
-      climberLeftMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
+    climberLeftMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
 
-      DataLogUtil.writeMessageEcho(subsystemName, "Left: checkAndZeroEncoder - success");
-    }
+    DataLogUtil.writeMessageEcho(subsystemName, "Left: checkAndZeroEncoder - success");
   }
 
   /**
-   * Checks if right climber is at its lower limit. If it is, zeroes the
+   * Assumes right climber is at its lower limit. Zeroes the
    * encoder and waits up to 200ms for the new setting to be applied.
    */
   private void checkAndZeroEncoderRight() {
-    if (isSideLimitReached(ClimberConstants.SIDE_RIGHT, true)) {
-      stopClimberMotor(ClimberConstants.SIDE_RIGHT);
+    stopClimberMotor(ClimberConstants.SIDE_RIGHT);
 
-      // rightEncoderZero = getClimberPositionRotationsRaw(ClimberConstants.SIDE_LEFT);
-      climberRightMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
+    climberRightMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
 
-      DataLogUtil.writeMessageEcho(subsystemName, "Right: checkAndZeroEncoder - success");
-    }
+    DataLogUtil.writeMessageEcho(subsystemName, "Right: checkAndZeroEncoder - success");
   }
 
   /**
-   * Checks if left climbers are at the lower limit. If it is, then zeros the encoder, enables soft limits,
-   * sets the climberLeftCalibrated flag, and waits up to 200ms for the new setting to be applied.
+   * Assumes right climber is at its lower limit. Zeros the encoder, enables soft limits,
+   * sets the climberRightCalibrated flag, and waits up to 200ms for the new setting to be applied.
    */
   private void checkAndCalibrateEncoderLeft() {
-    if (isSideLimitReached(ClimberConstants.SIDE_LEFT, true)) {
-      checkAndZeroEncoderLeft();
-      climberLeftCalibrated = true;
-  
-      // Set software limits after setting encoderZero
-      climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
-      climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
-      climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-      climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-      // Apply the configurations to left motor
-      // This is a blocking call and will wait up to 50ms-70ms for the config to apply
-      climberLeftConfigurator.apply(climberLeftConfig);
+    checkAndZeroEncoderLeft();
+    climberLeftCalibrated = true;
 
-      DataLogUtil.writeMessageEcho(subsystemName, ":  checkAndCalibrateEncoderLeft... Calibrated!");
-    }
+    // Set software limits after setting encoderZero
+    climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
+    climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
+    climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // Apply the configurations to left motor
+    // This is a blocking call and will wait up to 50ms-70ms for the config to apply
+    climberLeftConfigurator.apply(climberLeftConfig);
+
+    DataLogUtil.writeMessageEcho(subsystemName, ":  checkAndCalibrateEncoderLeft... Calibrated!");
   }
 
   /**
-   * Checks if right climbers are at the lower limit. If it is, then zeros the encoder, enables soft limits,
-   * sets the climberLeftCalibrated flag, and waits up to 200ms for the new setting to be applied.
+   * Assumes right climber is at its lower limit. Zeros the encoder, enables soft limits,
+   * sets the climberRightCalibrated flag, and waits up to 200ms for the new setting to be applied.
    */
   private void checkAndCalibrateEncoderRight() {
-    if (isSideLimitReached(ClimberConstants.SIDE_RIGHT, true)) {
-      checkAndZeroEncoderRight();
-      climberRightCalibrated = true;
+    checkAndZeroEncoderRight();
+    climberRightCalibrated = true;
 
-      // Set software limits after setting encoderZero
-      climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
-      climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
-      climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-      climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-      // Apply the configurations to right motor
-      // This is a blocking call and will wait up to 50ms-70ms for the config to apply
-      climberRightConfigurator.apply(climberRightConfig);
+    // Set software limits after setting encoderZero
+    climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
+    climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
+    climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // Apply the configurations to right motor
+    // This is a blocking call and will wait up to 50ms-70ms for the config to apply
+    climberRightConfigurator.apply(climberRightConfig);
 
-      DataLogUtil.writeMessageEcho(subsystemName, ":  checkAndCalibrateEncoderLeft... Calibrated!");
-    }
+    DataLogUtil.writeMessageEcho(subsystemName, ":  checkAndCalibrateEncoderRight... Calibrated!");
   }
 
   /**
@@ -583,11 +577,11 @@ public class Climber extends SubsystemBase implements Loggable {
     // - if trying to move up, stop moving (percent and position setpoints)
     if (isSideLimitReached(ClimberConstants.SIDE_LEFT, true)) {
       if (!climberLeftCalibrated) checkAndCalibrateEncoderLeft();
-      if (setpointPercentLeft < 0.0) stopClimberMotor(ClimberConstants.SIDE_LEFT);
-      if (setpointPosition < getClimberPositionInches(ClimberConstants.SIDE_LEFT)) stopClimberMotor(ClimberConstants.SIDE_LEFT);
+      if (!isClimberInPositionControl && setpointPercentLeft < 0.0) stopClimberMotor(ClimberConstants.SIDE_LEFT);
+      if (isClimberInPositionControl && setpointPosition < getClimberPositionInches(ClimberConstants.SIDE_LEFT)) stopClimberMotor(ClimberConstants.SIDE_LEFT);
     } else if (isSideLimitReached(ClimberConstants.SIDE_LEFT, false)) {
-      if (setpointPercentLeft > 0.0) stopClimberMotor(ClimberConstants.SIDE_LEFT);
-      if (setpointPosition > getClimberPositionInches(ClimberConstants.SIDE_LEFT)) stopClimberMotor(ClimberConstants.SIDE_LEFT);
+      if (!isClimberInPositionControl && setpointPercentLeft > 0.0) stopClimberMotor(ClimberConstants.SIDE_LEFT);
+      if (isClimberInPositionControl && setpointPosition > getClimberPositionInches(ClimberConstants.SIDE_LEFT)) stopClimberMotor(ClimberConstants.SIDE_LEFT);
     }
 
     // if at lower limit:
@@ -597,11 +591,11 @@ public class Climber extends SubsystemBase implements Loggable {
     // - if trying to move up, stop moving (percent and position setpoints)
     if (isSideLimitReached(ClimberConstants.SIDE_RIGHT, true)) {
       if (!climberRightCalibrated) checkAndCalibrateEncoderRight();
-      if (setpointPercentRight < 0.0) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
-      if (setpointPosition < getClimberPositionInches(ClimberConstants.SIDE_RIGHT)) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
-    } else if (isSideLimitReached(ClimberConstants.SIDE_RIGHT, true)) {
-      if (setpointPercentRight > 0.0) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
-      if (setpointPosition > getClimberPositionInches(ClimberConstants.SIDE_RIGHT)) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
+      if (!isClimberInPositionControl && setpointPercentRight < 0.0) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
+      if (isClimberInPositionControl && setpointPosition < getClimberPositionInches(ClimberConstants.SIDE_RIGHT)) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
+    } else if (isSideLimitReached(ClimberConstants.SIDE_RIGHT, false)) {
+      if (!isClimberInPositionControl && setpointPercentRight > 0.0) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
+      if (isClimberInPositionControl && setpointPosition > getClimberPositionInches(ClimberConstants.SIDE_RIGHT)) stopClimberMotor(ClimberConstants.SIDE_RIGHT);
     }
 
     // once both sides are calibrated, mark climber as calibrated
@@ -614,6 +608,9 @@ public class Climber extends SubsystemBase implements Loggable {
       SmartDashboard.putBoolean("Climber R LOWER", !lowerLimitRight.get());
       SmartDashboard.putBoolean("Climber L UPPER", !upperLimitLeft.get());
       SmartDashboard.putBoolean("Climber R UPPER", !upperLimitRight.get());
+      SmartDashboard.putBoolean("Climber Calibrated?", climberCalibrated);
+      SmartDashboard.putBoolean("Climber L Calibrated?", climberLeftCalibrated);
+      SmartDashboard.putBoolean("Climber R Calibrated?", climberRightCalibrated);
       SmartDashboard.putNumber("Climber L Temp", getClimberTemp(1));
       SmartDashboard.putNumber("Climber R Temp", getClimberTemp(2));
       SmartDashboard.putNumber("Climber L Raw Rotations", getClimberPositionRotationsRaw(1));

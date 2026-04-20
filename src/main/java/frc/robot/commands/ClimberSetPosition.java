@@ -65,7 +65,6 @@ public class ClimberSetPosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("climber set pos init");
     if (fromElastic) this.targetPosition = SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.LOWER_LIMIT.value);
     climber.setClimberPosition(targetPosition);
 
@@ -80,7 +79,6 @@ public class ClimberSetPosition extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("climber set pos end");
     climber.enableFastLogging(false);
     if (interrupted) DataLogUtil.writeMessage("ClimberSetPosition: Interrupted, Target =", targetPosition, ", Current =", climber.getClimberPositionInches());
     else DataLogUtil.writeMessage("ClimberSetPosition: End, Target =", targetPosition, ", Current =", climber.getClimberPositionInches());
