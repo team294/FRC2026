@@ -36,9 +36,9 @@ public class AutoSelection {
 		NONE("None", -1),
 
 		ShootPreload("Center_ShootPreload", 1),
-		Center_ShootPreload_Climb("Center_ShootPreload_Climb", 2),
-		Center_CollectUnderTrench("Center_CollectUnderTrench", 3),
-		Center_CollectUnderTrench_Climb("Center_CollectUnderTrench_Climb", 4),
+		// Center_ShootPreload_Climb("Center_ShootPreload_Climb", 2),
+		CenterFaceTower_CollectUnderTrench("CenterFaceTower_CollectUnderTrench", 3),
+		// Center_CollectUnderTrench_Climb("Center_CollectUnderTrench_Climb", 4),
 
 		// LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
 		// LeftSide_Preload_CenterCollect_UnderTrench("LeftSide_Preload_CenterCollect_UnderTrench", 2),
@@ -201,9 +201,9 @@ public class AutoSelection {
 		// 	autonomousCommandMain = new BuildCenterAuton(EndType.waitForSetPoint, false, true, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
 		// }
 
-		else if (autoPlan == RoutineSelectionOption.Center_CollectUnderTrench.value) {
+		else if (autoPlan == RoutineSelectionOption.CenterFaceTower_CollectUnderTrench.value) {
 			// Starting position = facing drivers
-			autoSelectionOption = RoutineSelectionOption.Center_CollectUnderTrench;
+			autoSelectionOption = RoutineSelectionOption.CenterFaceTower_CollectUnderTrench;
 			autonomousCommandMain = new BuildCenterAuton(EndType.waitForSetPoint, true, false, intake, feeder, turret, shooter, climber, driveTrain, field, allianceSelection, trajectoryCache);
 		}
 

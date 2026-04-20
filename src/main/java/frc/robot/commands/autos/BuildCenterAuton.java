@@ -23,7 +23,9 @@ import frc.robot.commands.DriveResetPose;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.IntakeDeploySetAngle;
+import frc.robot.commands.TurretToggleAutoAim;
 import frc.robot.commands.autos.components.AutonScore;
+import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -56,10 +58,10 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, collectTrajectory, driveTrain, alliance),
                 sequence(
                   new WaitCommand(1.0),
-                  new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake)
+                  new IntakeSequence(intake)
                 )
-              ),
-              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field)
+              )
+              //new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field)
             ),
             new ShootPreload(shootEndType, true, intake, feeder, turret, shooter, climber, driveTrain, field, alliance, cache),
             () -> collectBalls
