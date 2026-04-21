@@ -282,14 +282,14 @@ public class RobotContainer {
     // trench config
     xbPOVDown.onTrue(new LowerHoodAndClimber(shooter, climber));
     
-    // extended, fitting under tower
-    xbPOVUp.onTrue(new ClimberSetPosition(ClimberPosition.UNDER_TOWER, climber));
+    // "de-climb" (raise extensions fully to get off tower)
+    xbPOVUp.onTrue(new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber));
     
     // prep for climbing
     xbPOVLeft.onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
     
-    // "de-climb" (raise extensions fully to get off tower)
-    xbPOVRight.onTrue(new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber));
+    // extended, fitting under tower
+    xbPOVRight.onTrue(new ClimberSetPosition(ClimberPosition.UNDER_TOWER, climber));
 
 
     // feed shooter with bounce agitation
