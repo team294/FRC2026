@@ -9,6 +9,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import frc.robot.Constants.*;
+import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
@@ -277,8 +278,8 @@ public class RobotContainer {
     xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
-    xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
-    xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
+    xbPOVUp.onTrue(new ClimberSetPosition(ClimberPosition.UNDER_TOWER, climber));
+    xbPOVDown.onTrue(new ClimberSetPosition(ClimberPosition.LOWER_LIMIT, climber));
     xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
 
     xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));

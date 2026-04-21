@@ -300,7 +300,12 @@ public class Climber extends SubsystemBase implements Loggable {
       isClimberInPositionControl = true;
 
       climberLeftMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
-      climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
+
+      if (setpointPosition == ClimberPosition.UPPER_LIMIT.value) {
+        climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition + 0.5)));  // avoid right side's hook clipping rung
+      } else {
+        climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
+      }
     } else {
       DataLogUtil.writeMessageEcho("Climber uncalibrated, position control aborted!");
     }

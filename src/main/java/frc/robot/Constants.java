@@ -880,8 +880,8 @@ public final class Constants {
 
     public enum ClimberPosition {
       LOWER_LIMIT(0.0),
-      CLIMB(4.0), // TODO CALIBRATE: setpoint for climbing
-      LEGAL(6.0),
+      CLIMB(2.0),       // TODO CALIBRATE: setpoint for climbing
+      UNDER_TOWER(3.9), // TODO CALIBRATE: default setpoint for raised use during matches, still fits under tower rung
       UPPER_LIMIT(7.5);
 
       @SuppressWarnings({"MemberName", "PMD.SingularField"})

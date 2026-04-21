@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.ClimberSetPercent;
+import frc.robot.commands.ClimberSetPosition;
 import frc.robot.commands.HoodSetAngle;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
@@ -29,7 +29,7 @@ public class LowerHoodAndClimber extends SequentialCommandGroup {
   public LowerHoodAndClimber(Shooter shooter, Climber climber) {
     addCommands(
       parallel(
-        new ClimberSetPercent(-ClimberConstants.maxPercentOutput, climber),
+        new ClimberSetPosition(ClimberConstants.ClimberPosition.LOWER_LIMIT, climber),
         new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter)
       ),
       new WaitUntilCommand(() -> climber.isSideLimitReached(1, true) || climber.isSideLimitReached(2, true)),
