@@ -278,11 +278,19 @@ public class RobotContainer {
     xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
-    xbPOVUp.onTrue(new ClimberSetPosition(ClimberPosition.UNDER_TOWER, climber));
-    xbPOVDown.onTrue(new ClimberSetPosition(ClimberPosition.LOWER_LIMIT, climber));
-    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
 
-    xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
+    // trench config
+    xbPOVDown.onTrue(new LowerHoodAndClimber(shooter, climber));
+    
+    // extended, fitting under tower
+    xbPOVUp.onTrue(new ClimberSetPosition(ClimberPosition.UNDER_TOWER, climber));
+    
+    // prep for climbing
+    xbPOVLeft.onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
+    
+    // "de-climb" (raise extensions fully to get off tower)
+    xbPOVRight.onTrue(new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber));
+
 
     // feed shooter with bounce agitation
     xbA.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
@@ -387,9 +395,8 @@ public class RobotContainer {
       new DriveResetPose(0, false, driveTrain), 
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
-    // Prep climb when switch flipped forward, execute when switch flipped down.
-    coP[8].onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
-    coP[8].onFalse(new ClimbExecuteSequence(climber));
+    // execute climb when switch flipped forwards
+    coP[8].onTrue(new ClimbExecuteSequence(climber));
 
     // // Manually spin turret CW/CCW while held, stopping when released
     coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
@@ -399,9 +406,9 @@ public class RobotContainer {
     coP[11].whileTrue(new HoodSetPercent(false, ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
-    // Manually spin shooter out/in while held, stopping when released
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
-    coP[14].whileTrue(new ShooterSetVelocity(2050, VelocityType.runForever, shooter));
+    // Manually move both climbers up/down while held, stopping when released
+    coP[13].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
+    coP[14].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
 
     // Manually move left climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
