@@ -288,8 +288,8 @@ public class RobotContainer {
     // prep for climbing
     xbPOVLeft.onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
     
-    // extended, fitting under tower
-    xbPOVRight.onTrue(new ClimberSetPosition(ClimberPosition.UNDER_TOWER, climber));
+    // raise climb to be extended, but fitting under tower, and prep hood for shooting
+    xbPOVRight.onTrue(new RaiseHoodAndClimber(climber, shooter));
 
 
     // feed shooter with bounce agitation
