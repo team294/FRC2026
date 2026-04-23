@@ -478,6 +478,7 @@ public class RobotContainer {
     feeder.stopSpindexer();
     intake.stopIntakeDeploy();
     intake.stopIntakeRoller();
+    shooter.stopShooterMotor();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode
     driveTrain.setVisionForOdometryState(true);
 
