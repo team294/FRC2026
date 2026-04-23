@@ -31,7 +31,7 @@
     {"x":{"exp":"0.88 m", "val":0.88}, "y":{"exp":"6.45 m", "val":6.45}, "heading":{"exp":"-135 deg", "val":-2.356194490192345}, "intervals":20, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"0.88 m", "val":0.88}, "y":{"exp":"6 m", "val":6.0}, "heading":{"exp":"-135 deg", "val":-2.356194490192345}, "intervals":22, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"0.88 m", "val":0.88}, "y":{"exp":"5.5 m", "val":5.5}, "heading":{"exp":"-135 deg", "val":-2.356194490192345}, "intervals":25, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"0.88 m", "val":0.88}, "y":{"exp":"4.932070732116699 m", "val":4.932070732116699}, "heading":{"exp":"-135 deg", "val":-2.356194490192345}, "intervals":35, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"collectDepotEnd.x", "val":0.88}, "y":{"exp":"collectDepotEnd.y", "val":4.932070732116699}, "heading":{"exp":"collectDepotEnd.heading", "val":-2.356194490192345}, "intervals":35, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
