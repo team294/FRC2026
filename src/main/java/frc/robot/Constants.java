@@ -826,8 +826,8 @@ public final class Constants {
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
     public enum TurretAngle {
-      LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(114.0); // was 180
+      LOWER_LIMIT(-210.0),  // was -180, now -200
+      UPPER_LIMIT(150.0); // was 180 -> 114, now 150
 
       public final double value;
       TurretAngle(double angle) {
