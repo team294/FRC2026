@@ -547,9 +547,9 @@ public final class Constants {
     public static final String leftCameraName = "LeftCamera"; // this has to match the camera name in PhotonVision
     public static final String rightCameraName = "RightCamera"; // this has to match the camera name in PhotonVision
 
-    // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //    Was (0.5, 0.5, 1) previously   0.2, 0.2, 0.5)
+    // CALIBRATED for Worlds.  Previous values were fake values from PhotonVision example code.  Need to experiment and determine estimation noise on an actual robot.
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4);             //  (1.5, 1.5, 4) for Worlds.  Was (4, 4, 8) previously
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //   (0.1, 0.1, 0.25) for Worlds.  Was (0.5, 0.5, 1) previously
     public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
   }
 
