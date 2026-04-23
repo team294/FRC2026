@@ -63,7 +63,7 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
       either(
         sequence(
           // If shooting preload, starts with front of the robot on the start line (one robot's length back)
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(1.0),
+          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(2.0),
           new DriveToPose(CoordType.kAbsolute, trajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), driveTrain) // TODO would this make it stop? how to make it continously go into the trajectory? 
         ),
         none(),
