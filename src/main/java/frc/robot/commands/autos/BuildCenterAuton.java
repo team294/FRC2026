@@ -19,14 +19,10 @@ import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.StopType;
-import frc.robot.commands.DriveResetPose;
-import frc.robot.commands.DriveToPose;
-import frc.robot.commands.DriveTrajectory;
-import frc.robot.commands.IntakeDeploySetAngle;
-import frc.robot.commands.TurretToggleAutoAim;
-import frc.robot.commands.autos.components.AutonScore;
-import frc.robot.commands.sequences.IntakeSequence;
-import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
+import frc.robot.commands.*;
+import frc.robot.commands.sequences.*;
+import frc.robot.commands.autos.*;
+import frc.robot.commands.autos.components.*;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -69,7 +65,11 @@ public class BuildCenterAuton extends SequentialCommandGroup {
             new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field),
             new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance)
           ),
-          new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(5.0),
+          new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(7.0),
+          parallel(
+            new ShooterStop(shooter),
+            new FeederStop(feeder)
+          ),
           // If we climb...
           either(
             none(),// new AutomatedDriveAndClimbSequence()
