@@ -549,8 +549,8 @@ public final class Constants {
 
     // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    public static final double kTagDistanceConst = 0.033;
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //    Was (0.5, 0.5, 1) previously   0.2, 0.2, 0.5)
+    public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
   }
 
     public static class AutoConstants {
