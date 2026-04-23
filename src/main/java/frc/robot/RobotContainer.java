@@ -396,7 +396,7 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
     // execute climb when switch flipped forwards
-    coP[8].onTrue(new ClimbExecuteSequence(climber));
+    coP[8].onTrue(new ClimberSetPosition(ClimberPosition.CLIMB, climber));
 
     // // Manually spin turret CW/CCW while held, stopping when released
     coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
