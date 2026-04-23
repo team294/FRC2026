@@ -9,6 +9,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.Constants.CoordType;
@@ -20,6 +21,8 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.LEDEventUtil;
+import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 
 public class AutomatedDriveAndClimbSequence extends SequentialCommandGroup {
 
@@ -38,17 +41,17 @@ public class AutomatedDriveAndClimbSequence extends SequentialCommandGroup {
       parallel(
         new ClimbPrepSequence(climber, shooter, turret, intake),
         either(
-          new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0)), driveTrain),
+          new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.06, 1.0, driveTrain),
           new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), new Rotation2d(0)), driveTrain),
           () -> (alliance == Alliance.Blue)
         )
       ),
       either(
-        new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbExecuteBlue.getX(), FieldConstants.climbExecuteBlue.getY(), new Rotation2d(0)), driveTrain),
+        new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbExecuteBlue.getX(), FieldConstants.climbExecuteBlue.getY(), new Rotation2d(0)), 0.06, 1.0, driveTrain),
         new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbExecuteRed.getX(), FieldConstants.climbExecuteRed.getY(), new Rotation2d(0)), driveTrain),
         () -> (alliance == Alliance.Blue)
-      )//,
-      // new ClimberSetPosition(ClimberPosition.CLIMB, climber) TODO uncomment when driving and prepping work
+      ),
+      new ClimberSetPosition(ClimberPosition.CLIMB, climber).alongWith(new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.CLIMBING)))
     );
   }
 }

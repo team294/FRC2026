@@ -413,10 +413,12 @@ public class RobotContainer {
     coP[11].whileTrue(new HoodSetPercent(false, ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
-    // Manually move both climbers up/down while held, stopping when released
-    coP[13].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
-    coP[14].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
+    // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
+    coP[13].onTrue(new TurretManualCalibration(turret, true));
 
+    // Manually recalibrate intake deploy, assuming it's at intaking position
+    coP[14].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
+    
     // Manually move left climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
     coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 1, climber));
@@ -425,11 +427,9 @@ public class RobotContainer {
     coP[17].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 2, climber));
     coP[18].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 2, climber));
 
-    // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
-    coP[19].onTrue(new TurretManualCalibration(turret, true));
-
-    // Manually recalibrate intake deploy, assuming it's at intaking position
-    coP[20].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
+    // Manually move both climbers up/down while held, stopping when released
+    coP[19].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
+    coP[20].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
   }
 
   private void configureTriggers() {
