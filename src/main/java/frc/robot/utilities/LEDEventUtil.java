@@ -26,6 +26,7 @@ public class LEDEventUtil {
     // CLIMBER_MOVING_DOWN,
     TRENCH_SAFE,
     TRENCH_UNSAFE,
+    CLIMBING,
     NEUTRAL,
     ROBOT_DISABLED
   }
@@ -42,6 +43,7 @@ public class LEDEventUtil {
     // prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBER_MOVING_DOWN, 5);
     prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_SAFE, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.TRENCH_UNSAFE, 1);
+    prioritiesLEDStripEvents.put(LEDStripEvents.CLIMBING, 1);
     prioritiesLEDStripEvents.put(LEDStripEvents.NEUTRAL, 2);
     prioritiesLEDStripEvents.put(LEDStripEvents.ROBOT_DISABLED, 2);
   }
@@ -116,6 +118,11 @@ public class LEDEventUtil {
         LED.dashboardColor = AnimationColor.TRENCH_UNSAFE;
         led.animate(Animations.trenchUnsafeSolidColor);
         DataLogUtil.writeMessage("LED Strip Trench Unsafe");
+        break;
+      case CLIMBING:
+        LED.dashboardColor = AnimationColor.NEUTRAL;
+        led.animate(Animations.climbingAnimation);
+        DataLogUtil.writeMessage("LED Strip Climbing");
         break;
       case ROBOT_DISABLED:
         LED.dashboardColor = AnimationColor.NEUTRAL;

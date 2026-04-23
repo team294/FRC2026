@@ -10,8 +10,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.commands.ClimberSetPosition;
 import frc.robot.commands.DriveToPose;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -45,8 +47,8 @@ public class AutomatedDriveAndClimbSequence extends SequentialCommandGroup {
         new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbExecuteBlue.getX(), FieldConstants.climbExecuteBlue.getY(), new Rotation2d(0)), driveTrain),
         new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbExecuteRed.getX(), FieldConstants.climbExecuteRed.getY(), new Rotation2d(0)), driveTrain),
         () -> (alliance == Alliance.Blue)
-      ),
-      new ClimbExecuteSequence(climber)
+      )//,
+      // new ClimberSetPosition(ClimberPosition.CLIMB, climber) TODO uncomment when driving and prepping work
     );
   }
 }

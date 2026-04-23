@@ -535,7 +535,7 @@ public final class Constants {
     // tower lineup positions for climbing
     public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
     public static final Translation2d climbPrepBlue = new Translation2d(1.8, towerPositionBlue.getY());
-    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(6.58), towerPositionBlue.getY());
+    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() - Units.inchesToMeters(6.58), towerPositionBlue.getY());
 
     public static final Translation2d towerPositionRed = new Translation2d(length - towerPositionBlue.getX(), width - towerPositionBlue.getY());
     public static final Translation2d climbPrepRed = new Translation2d(length - climbPrepBlue.getX(), width - climbPrepBlue.getY());
@@ -1018,6 +1018,9 @@ public final class Constants {
 
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
+      
+      // 4/22/26: only used animations (aside from neutral and disabled)
+      public static final RainbowAnimation climbingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
       public static final SolidColor trenchUnsafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchUnsafeColor);
     }

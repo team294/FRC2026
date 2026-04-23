@@ -280,16 +280,22 @@ public class RobotContainer {
 
 
     // trench config
-    xbPOVDown.onTrue(new LowerHoodAndClimber(shooter, climber));
+    xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
     
     // "de-climb" (raise extensions fully to get off tower)
-    xbPOVUp.onTrue(new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber));
+    xbPOVDown.onTrue(new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber).andThen(
+        either(
+          new TurretToggleAutoAim(turret),
+          none(),
+          () -> !turret.getAutoAimEnabled()
+        )
+      ));
     
     // prep for climbing
     xbPOVRight.onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
     
     // raise climb to be extended, but fitting under tower, and prep hood for shooting
-    xbPOVLeft.onTrue(new RaiseHoodAndClimber(climber, shooter));
+    xbPOVUp.onTrue(new RaiseHoodAndClimber(climber, shooter));
 
 
     // feed shooter with bounce agitation
@@ -337,7 +343,8 @@ public class RobotContainer {
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
+    // right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
+    right[1].whileTrue(new AutomatedDriveAndClimbSequence(allianceSelection.getAlliance(), driveTrain, climber, shooter, turret, intake));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
@@ -396,7 +403,7 @@ public class RobotContainer {
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
     // execute climb when switch flipped forwards
-    coP[8].onTrue(new ClimberSetPosition(ClimberPosition.CLIMB, climber));
+    coP[8].onTrue(new ClimberSetPosition(ClimberPosition.CLIMB, climber).alongWith(new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.CLIMBING))));
 
     // // Manually spin turret CW/CCW while held, stopping when released
     coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));

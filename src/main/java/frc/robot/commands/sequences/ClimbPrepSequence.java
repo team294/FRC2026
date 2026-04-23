@@ -30,14 +30,14 @@ public class ClimbPrepSequence extends ParallelCommandGroup {
   public ClimbPrepSequence(Climber climber, Shooter shooter, Turret turret, Intake intake) {
     addCommands(
       new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber),
-      new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.runForever, shooter),
+      new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter),
       sequence(
         either(
           new TurretToggleAutoAim(turret),
           none(),
           () -> turret.getAutoAimEnabled()
         ),
-        new TurretSetAngle(TurretAngle.CLIMBING_SETPOINT.value, EndType.runForever, turret)
+        new TurretSetAngle(TurretAngle.CLIMBING_SETPOINT.value, EndType.waitForSetPoint, turret)
       ),
       new IntakeDeploySetAngle(IntakeDeployAngle.START_CONFIG, intake)
     );
