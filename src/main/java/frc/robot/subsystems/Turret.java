@@ -55,7 +55,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private PositionVoltage turretPositionControl = new PositionVoltage(0.0).withEnableFOC(false);
   private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
-  private boolean turretAutoAimEnabled = false;   // TODO: true when calibrated
+  private boolean turretAutoAimEnabled = false;
   private boolean turretShootOnTheMove = false;
 
   // Create variables for the turret Kraken motor

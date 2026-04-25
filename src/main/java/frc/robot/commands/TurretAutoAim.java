@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
@@ -42,12 +43,13 @@ public class TurretAutoAim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   public void execute() {
     robotPose2d = driveTrain.getPose();
+    Translation2d turretTranslation2d = turret.getTurretAbsolutePose(robotPose2d).getTranslation();
 
     if (turret.getShootOnTheMoveEnabled()) {
       turretTargetAngle = turret.getAutoTargetAngleTurretRelative(
                             robotPose2d, 
                             field.getGhostShotTarget(
-                              field.getStaticShotTarget(robotPose2d.getTranslation()),
+                              field.getStaticShotTarget(turretTranslation2d),
                               turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
                               driveTrain.getRobotSpeeds(),
                               0, 0
@@ -58,7 +60,7 @@ public class TurretAutoAim extends Command {
     } else {
       turretTargetAngle = turret.getAutoTargetAngleTurretRelative(
                             robotPose2d, 
-                            field.getStaticShotTarget(robotPose2d.getTranslation())
+                            field.getStaticShotTarget(turretTranslation2d)
                           );
     }
 

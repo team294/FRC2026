@@ -150,7 +150,7 @@ public class ShooterScorePrep extends Command {
       if (!turret.getShootOnTheMoveEnabled()) {
         goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
-        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(robotPose.getTranslation()), turretTranslation2d, driveTrain.getChassisSpeeds(), 0, 0);
+        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(turretTranslation2d), turretTranslation2d, driveTrain.getChassisSpeeds(), 0, 0);
       }
 
       distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);
