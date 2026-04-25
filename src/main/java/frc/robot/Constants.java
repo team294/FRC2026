@@ -531,6 +531,15 @@ public final class Constants {
     public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
     public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width * 3.0 / 4.0);
     public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width / 4.0);
+
+    // tower lineup positions for climbing
+    public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
+    public static final Translation2d climbPrepBlue = new Translation2d(1.8, towerPositionBlue.getY());
+    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(5.58), towerPositionBlue.getY());
+
+    public static final Translation2d towerPositionRed = new Translation2d(length - towerPositionBlue.getX(), width - towerPositionBlue.getY());
+    public static final Translation2d climbPrepRed = new Translation2d(length - climbPrepBlue.getX(), width - climbPrepBlue.getY());
+    public static final Translation2d climbExecuteRed = new Translation2d(length - climbExecuteBlue.getX(), width - climbExecuteBlue.getY());
   }
 
   public static class VisionConstants {
@@ -828,6 +837,7 @@ public final class Constants {
     public enum TurretAngle { 
       LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg). was -180
       LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
+      CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
       UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
       UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
 
@@ -844,10 +854,42 @@ public final class Constants {
     public static final int SIDE_LEFT = 1;
     public static final int SIDE_RIGHT = 2;
 
+    public static final double climberLeftGearRatio = (5.0 / 1.0) * (9.0 / 1.0);   // gear ratio from left climber motor to mechanism
+    public static final double climberRightGearRatio = (5.0 / 1.0) * (9.0 / 1.0);  // gear ratio from right climber motor to mechanism
+    public static final double climberDrumDiameter = 1.5; // in inches, physical drum is 1.375 inches, but layers of rope is 0.125 inches per layer
+    // distance between limit switches is 8.25 inches
+
+    public static final double inchesPerEncoderRotation = 4.9153;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
+
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
     public static final double maxPercentOutput = 0.45;
+    public static final double maxUncalibratedPercentOutput = 0.2;
+
+    public static final double setPositionTolerance = 0.3; // TODO CALIBRATE: in inches, tolerance on position target
+
+    public static final double kP = 90.0;  // TODO CALIBRATE 4/18/26: 90.0
+    public static final double kI = 0.0;   // TODO CALIBRATE 4/18/26: 0.0
+    public static final double kD = 0.0;   // TODO CALIBRATE 4/18/26: 0.0
+    public static final double kS = 0.17;  // TODO CALIBRATE 4/18/26: 0.17
+    public static final double kV = 0.0;   // TODO CALIBRATE 4/18/26: 0.0
+    public static final double kA = 0.0;   // TODO CALIBRATE 4/18/26: 0.0
+
+    public static final double MMCruiseVelocity = 30.0;                  // TODO CALIBRATE: 4/17/2026 = 30.0, Max velocity in mechanism rotations / second
+    public static final double MMAcceleration = MMCruiseVelocity / 0.8;  // TODO CALIBRATE: 4/17/2026 = velocity/0.8, old /0.15, Max acceleration in mechanism rotations / second^2 (MMVel / MMAccel = sec to full velocity)
+    public static final double MMJerk = 0.0;                             // TODO CALIBRATE: 4/17/2026 = 0.0, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
+
+    public enum ClimberPosition {
+      LOWER_LIMIT(0.0),
+      CLIMB(2.0),       // TODO CALIBRATE: setpoint for climbing
+      UNDER_TOWER(3.9), // TODO CALIBRATE: default setpoint for raised use during matches, still fits under tower rung
+      UPPER_LIMIT(7.5);
+
+      @SuppressWarnings({"MemberName", "PMD.SingularField"})
+      public final double value;
+      ClimberPosition(double value) { this.value = value; }
+    }
   }
 
   public static final class TrajectoryConstants {
@@ -978,6 +1020,9 @@ public final class Constants {
 
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
+      
+      // 4/22/26: only used animations (aside from neutral and disabled)
+      public static final RainbowAnimation climbingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
       public static final SolidColor trenchUnsafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchUnsafeColor);
     }
