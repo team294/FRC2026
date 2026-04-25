@@ -78,7 +78,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
           ),
           // If we climb...
           either(
-            none(), //new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
+            new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
             none(),
             () -> climb
           )

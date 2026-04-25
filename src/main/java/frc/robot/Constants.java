@@ -839,8 +839,8 @@ public final class Constants {
       LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
       CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
       UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
-      UPPER_LIMIT(140.0), // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
-      CLIMBING_SETPOINT(-117);
+      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
+
 
       public final double value;
       TurretAngle(double angle) {
