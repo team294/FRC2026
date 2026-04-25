@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CoordType;
@@ -56,8 +57,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
       either(
         sequence(
           // Shooting balls -- either collecting under the trench first and then shooting or just shooting preloads
-          parallel(
-            new TurretAutoAim(turret, driveTrain, field),
+          new ParallelDeadlineGroup(
             sequence(
               either(
                 parallel(
@@ -75,12 +75,13 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field),
                 new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance)
               ),
-              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(7.0),
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
               parallel(
                 new ShooterStop(shooter),
                 new FeederStop(feeder)
               )
-            )
+            ),
+            new TurretAutoAim(turret, driveTrain, field)
           ),
           // If we climb...
           either(

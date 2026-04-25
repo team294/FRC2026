@@ -542,7 +542,7 @@ public final class Constants {
     // tower lineup positions for climbing
     public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
     public static final Translation2d climbPrepBlue = new Translation2d(1.8, towerPositionBlue.getY());
-    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(5.58), towerPositionBlue.getY());
+    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(3.58), towerPositionBlue.getY() + Units.inchesToMeters(1.5));  // 4/25: X: Now 3.58, Was 5.58 inches  Y: Now +1.5in
 
     public static final Translation2d towerPositionRed = new Translation2d(length - towerPositionBlue.getX(), width - towerPositionBlue.getY());
     public static final Translation2d climbPrepRed = new Translation2d(length - climbPrepBlue.getX(), width - climbPrepBlue.getY());
