@@ -481,7 +481,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   /**
    * Estimate current hood angle based on one hood motor's current length.
-   * @param motorNumber hood # to estimate
+   * @param motorNumber hood motor # to estimate (1 = left, 2 = right)
    * @return estimated hood angle from specified motor's reading, in degrees
    */
   public double getHoodAngle(int motorNumber) {

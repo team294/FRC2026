@@ -771,11 +771,11 @@ public final class Constants {
     //    Slope Point Analog Voltage = 4.046V
     //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 3.124in
 
-    public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
-    public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
+    public static final double hood1SlopePointAnalogVoltage = 2.85; // 4/25 udated to 2.85 was 2.8.  analog voltage, arbitrary value to calculate extension slope 
+    public static final double hood2SlopePointAnalogVoltage = 2.44; // 4/25 udated to 2.44 was 4.04  analog voltage, arbitrary value to calculate extension slope
 
-    public static final double hood1SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.172; // in inches, arbitrary extension length corresponding to hood1SlopePointAnalogVoltage
-    public static final double hood2SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.25; // in inches, arbitrary extension length corresponding to hood2SlopePointAnalogVoltage
+    public static final double hood1SlopePointExtensionLength = hoodActuatorMinExtensionLength + 2.173; // 4/25 udated to 2.173 was 3.172.  in inches, arbitrary extension length corresponding to hood1SlopePointAnalogVoltage
+    public static final double hood2SlopePointExtensionLength = hoodActuatorMinExtensionLength + 1.900; // 4/25 udated to 1.900 was 3.25.  in inches, arbitrary extension length corresponding to hood2SlopePointAnalogVoltage
 
     public static final double hoodToleranceFromTopOrBottom = 0.005;
 
