@@ -15,8 +15,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -58,6 +56,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private MotionMagicVoltage turretMMVoltageControl = new MotionMagicVoltage(0.0).withEnableFOC(false);
 
   private boolean turretAutoAimEnabled = false;
+  private boolean turretShootOnTheMove = false;
 
   // Create variables for the turret Kraken motor
   private final StatusSignal<Voltage> turretSupplyVoltage; // Incoming bus voltage to motor, in volts
@@ -355,15 +354,6 @@ public class Turret extends SubsystemBase implements Loggable {
   /**
    * Sets the angle of the turret if the turret is calibrated.
    * 
-   * @param angle target angle, per TurretContstants.TurretAngle
-   */
-  public void setTurretAngle(TurretAngle angle) {
-    setTurretAngle(angle.value);
-  }
-
-  /**
-   * Sets the angle of the turret if the turret is calibrated.
-   * 
    * @param angle target angle, in degrees (0 = facing straight back out of robot,
    *              positive = counter clockwise, negative = clockwise)
    */
@@ -556,6 +546,7 @@ public class Turret extends SubsystemBase implements Loggable {
     stopTurret();
     turretCalibrated = false;
     turretAutoAimEnabled = false;
+    turretShootOnTheMove = false;
 
     // If the turret goes uncalibrated, we still want to be able to manually drive it in order to recalibrate
     usingRemoteEncoderConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
@@ -624,6 +615,7 @@ public class Turret extends SubsystemBase implements Loggable {
       turretMotorConfigurator.apply(usingRotorEncoderConfig);
     }
     turretAutoAimEnabled = true;
+    turretShootOnTheMove = true;
   }
 
   /**
@@ -751,6 +743,21 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public boolean getAutoAimEnabled() {
     return turretAutoAimEnabled;
+  }
+  
+  /**
+   * Toggle whether or not turret should be doing shoot on the move (only works if auto aim is enabled)
+   */
+  public void toggleShootOnTheMove() {
+    turretShootOnTheMove = !turretShootOnTheMove;
+  }
+
+  /** 
+   * Return current shoot on the move state
+   * @return true = shoot on the move (if auto aim enabled), false = no shoot on the move
+   */
+  public boolean getShootOnTheMoveEnabled() {
+    return turretShootOnTheMove;
   }
 
   /**

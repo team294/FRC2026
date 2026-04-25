@@ -184,7 +184,7 @@ public class RobotContainer {
 
     // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(true, EndType.runForever, shooter, turret, driveTrain, field));
     SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
     // Calibration Ramp
@@ -194,12 +194,15 @@ public class RobotContainer {
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_MANUAL.value, new TurretManualCalibration(turret, true));
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_AUTOMATIC.value, new TurretManualCalibration(turret, false));
 
+    // Toggle
+
+    SmartDashboard.putData(TURRET_CMD_TOGGLE_SOTM.value, new TurretToggleShootOnTheMove(turret));
+
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
     SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
     SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
-    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
@@ -343,9 +346,12 @@ public class RobotContainer {
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
+    // right[1].onTrue(new DriveTrainSetFineControl(true, driveTrain));
+    // right[1].onFalse(new DriveTrainSetFineControl(false, driveTrain));
     // right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
     right[1].whileTrue(new AutomatedDriveAndClimbSequence(allianceSelection.getAlliance(), driveTrain, climber, shooter, turret, intake));
 
+    // direction facing = new forward for joystick movement
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
 
