@@ -41,14 +41,14 @@ public class AutomatedDriveAndClimbSequence extends SequentialCommandGroup {
       parallel(
         new ClimbPrepSequence(climber, shooter, turret, intake),
         either(
-          new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.06, 1.0, driveTrain),
-          new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), new Rotation2d(0)), driveTrain),
+          new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
+          new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), new Rotation2d(0)), 0.07, 1.5, driveTrain),
           () -> (alliance == Alliance.Blue)
         )
       ),
       either(
-        new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbExecuteBlue.getX(), FieldConstants.climbExecuteBlue.getY(), new Rotation2d(0)), 0.06, 1.0, driveTrain),
-        new DriveToPose(CoordType.kAbsolute, new Pose2d(FieldConstants.climbExecuteRed.getX(), FieldConstants.climbExecuteRed.getY(), new Rotation2d(0)), driveTrain),
+        new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbExecuteBlue.getX(), FieldConstants.climbExecuteBlue.getY(), new Rotation2d(0)), 0.07, 1.0, driveTrain),
+        new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbExecuteRed.getX(), FieldConstants.climbExecuteRed.getY(), new Rotation2d(0)), 0.07, 1.0, driveTrain),
         () -> (alliance == Alliance.Blue)
       ),
       new ClimberSetPosition(ClimberPosition.CLIMB, climber).alongWith(new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.CLIMBING)))
