@@ -373,6 +373,11 @@ public class Turret extends SubsystemBase implements Loggable {
     }
   }
 
+  /**
+   * Normalizes the input angle so that it is between the minimum and maximum allowed angles of the turret
+   * @param angle input angle
+   * @return normalized input angle
+   */
   private double convertToTurretRange(double angle) {
     return MathUtil.inputModulus(angle, TurretAngle.LOWER_WRAP_POINT.value, TurretAngle.UPPER_WRAP_POINT.value);
   }
