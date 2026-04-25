@@ -4,7 +4,10 @@
 
 package frc.robot.commands.autos;
 
-import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static edu.wpi.first.wpilibj2.command.Commands.either;
+import static edu.wpi.first.wpilibj2.command.Commands.none;
+import static edu.wpi.first.wpilibj2.command.Commands.parallel;
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
 
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
@@ -14,15 +17,19 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.AutoConstants.RoutineSideType;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.StopType;
-import frc.robot.commands.*;
-import frc.robot.commands.sequences.*;
-import frc.robot.commands.autos.*;
-import frc.robot.commands.autos.components.*;
+import frc.robot.commands.DriveResetPose;
+import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.FeederStop;
+import frc.robot.commands.IntakeDeploySetAngle;
+import frc.robot.commands.ShooterStop;
+import frc.robot.commands.autos.components.AutonScore;
+import frc.robot.commands.sequences.AutomatedDriveAndClimbSequence;
+import frc.robot.commands.sequences.IntakeSequence;
+import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -72,7 +79,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
           ),
           // If we climb...
           either(
-            none(),// new AutomatedDriveAndClimbSequence()
+            new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
             none(),
             () -> climb
           )

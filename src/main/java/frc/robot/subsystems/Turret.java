@@ -104,6 +104,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private final BooleanLogEntry dLogTurretCalibrated = new BooleanLogEntry(log, "/Turret/Turret Calibrated?");
   private final BooleanLogEntry dLogCANcoderBeltConnected = new BooleanLogEntry(log, "/Turret/CANcoder Belt Connected?");
   private final BooleanLogEntry dLogCANcoderGearConnected = new BooleanLogEntry(log, "/Turret/CANcoder Gear Connected?");
+  private final BooleanLogEntry dLogTurretAutoAimEnabled = new BooleanLogEntry(log, "/Turret/Auto Aim Enabled?");
 
   private double turretZero = 0.0;  // offset of turret encoder (either internal motor encoder or calculated from belt encoder through gear ratio) to turret zero position, in turret degrees
 
@@ -769,6 +770,7 @@ public class Turret extends SubsystemBase implements Loggable {
       dLogTurretCalibrated.append(isTurretCalibrated(), timeNow);
       dLogCANcoderBeltConnected.append(isCANcoderConnected(1), timeNow);
       dLogCANcoderGearConnected.append(isCANcoderConnected(2), timeNow);
+      dLogTurretAutoAimEnabled.append(turretAutoAimEnabled, timeNow);
     }
   }
 
