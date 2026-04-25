@@ -98,6 +98,8 @@ public class DriveWithJoysticksAdvanced extends Command {
     }
 
     stopped = true; // Do not jitter when the robot is supposed to be still
+
+    DataLogUtil.writeMessage("DriveWithJoysticksAdvanced:  Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -207,6 +209,7 @@ public class DriveWithJoysticksAdvanced extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    DataLogUtil.writeMessage("DriveWithJoysticksAdvanced:  End, interrupted =", interrupted);
   }
 
   // Returns true when the command should end.
