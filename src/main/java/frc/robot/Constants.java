@@ -274,6 +274,7 @@ public final class Constants {
       CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
       TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
       TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
+      TURRET_CMD_TOGGLE_SOTM(turretString + " Toggle SOTM"),
 
       // Calibrate Manual Command Input
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT(intakeDeployString + calibrateManualCmdInputString + " (Degrees)"),
@@ -481,6 +482,8 @@ public final class Constants {
     public static double offsetAngleBackLeftMotor = 0.175;
     public static double offsetAngleBackRightMotor = 151.611;
 
+    public static double offsetAnglePigeon = Math.PI / 4.0;  // in radians, pigeon rotation angle relative to front of robot (ccw+, cw-)
+
     // Theta kp value for joystick in rad/sec
     public static final double kPJoystickThetaController = 3;         // TODO CALIBRATE
 
@@ -531,6 +534,10 @@ public final class Constants {
     public static final Translation2d rightPassBlue = new Translation2d(Units.inchesToMeters(182.11 / 2.0), width / 4.0);
     public static final Translation2d leftPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width * 3.0 / 4.0);
     public static final Translation2d rightPassRed = new Translation2d((length - Units.inchesToMeters(182.11 / 2.0)), width / 4.0);
+
+    // used for Shoot On The Move calculations to estimate how much time a ball will fly for
+    public static final double timeOfFlightSlope = 0.214491;
+    public static final double timeOfFlightIntercept = 0.491421;
 
     // tower lineup positions for climbing
     public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
@@ -706,8 +713,8 @@ public final class Constants {
     public static final double manualReverseShootPercent = -0.1;
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
-    public static final double maxShootRPM = 5000; // Was 3800
-    public static final double maxShootWaitForRPM = 4000;     // Don't wait to reach target RPM if actual RPM is above this threshold.
+    public static final double maxShootRPM = 4000; // Was 3800
+    public static final double maxShootWaitForRPM = 3800;     // Don't wait to reach target RPM if actual RPM is above this threshold.
           // Reaching high shooter velocity takes too long, and shooter may not get there under high-current conditions or low battery.
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
@@ -718,7 +725,7 @@ public final class Constants {
     public static final double ShooterkS = 0.224;  // CALIBRATED 3/13: 0.224 - volts to overcome static friction
     public static final double ShooterkV = 0.118;  // CALIBRATED 3/13: 0.118 volts / desired motor rps
     public static final double ShooterkA = 0;
-
+ 
     public static final double shooterVelocityErrorTolerance = 100;
 
     // coefficients for (shooter velocity) vs. (distance from hub) functions, used when auto aiming to score
@@ -764,11 +771,11 @@ public final class Constants {
     //    Slope Point Analog Voltage = 4.046V
     //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 3.124in
 
-    public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
-    public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
+    public static final double hood1SlopePointAnalogVoltage = 2.85; // 4/25 udated to 2.85 was 2.8.  analog voltage, arbitrary value to calculate extension slope 
+    public static final double hood2SlopePointAnalogVoltage = 2.44; // 4/25 udated to 2.44 was 4.04  analog voltage, arbitrary value to calculate extension slope
 
-    public static final double hood1SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.172; // in inches, arbitrary extension length corresponding to hood1SlopePointAnalogVoltage
-    public static final double hood2SlopePointExtensionLength = hoodActuatorMinExtensionLength + 3.25; // in inches, arbitrary extension length corresponding to hood2SlopePointAnalogVoltage
+    public static final double hood1SlopePointExtensionLength = hoodActuatorMinExtensionLength + 2.173; // 4/25 udated to 2.173 was 3.172.  in inches, arbitrary extension length corresponding to hood1SlopePointAnalogVoltage
+    public static final double hood2SlopePointExtensionLength = hoodActuatorMinExtensionLength + 1.900; // 4/25 udated to 1.900 was 3.25.  in inches, arbitrary extension length corresponding to hood2SlopePointAnalogVoltage
 
     public static final double hoodToleranceFromTopOrBottom = 0.005;
 
@@ -810,6 +817,8 @@ public final class Constants {
 
     public static final double gearEncoderToTurretRatio = TurretConstants.beltEncoderBeltTeeth / TurretConstants.turretBeltTeeth;
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
+    public static final double encoderCalculationWrapPoint = (TurretAngle.LOWER_LIMIT.value + 360.0 * TurretConstants.encoderCalculationCoefficient + TurretAngle.UPPER_LIMIT.value)/2.0;
+
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
     public static final double offsetAngleCANcoderBelt = 0.91845703;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
@@ -835,11 +844,11 @@ public final class Constants {
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
     public enum TurretAngle { 
-      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg). was -180
+      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg)  Must be negative. was -180
       LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
       CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
-      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
-      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
+      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret.  UPPER_WRAP_POINT MUST = LOWER_WRAP_POINT + 360!
+      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114.  UPPER_LIMIT-LOWER_LIMIT must be <= 385 deg [otherwise encoders could boot up to wrong angle]
 
 
       public final double value;
