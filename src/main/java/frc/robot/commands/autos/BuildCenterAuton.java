@@ -26,6 +26,7 @@ import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.IntakeDeploySetAngle;
 import frc.robot.commands.ShooterStop;
+import frc.robot.commands.TurretAutoAim;
 import frc.robot.commands.autos.components.AutonScore;
 import frc.robot.commands.sequences.AutomatedDriveAndClimbSequence;
 import frc.robot.commands.sequences.IntakeSequence;
@@ -55,26 +56,31 @@ public class BuildCenterAuton extends SequentialCommandGroup {
       either(
         sequence(
           // Shooting balls -- either collecting under the trench first and then shooting or just shooting preloads
-          either(
-            parallel(
-              new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, collectTrajectory, driveTrain, alliance),
-              sequence(
-                new WaitCommand(1.0),
-                new IntakeSequence(intake)
+          parallel(
+            new TurretAutoAim(turret, driveTrain, field),
+            sequence(
+              either(
+                parallel(
+                  new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, collectTrajectory, driveTrain, alliance),
+                  sequence(
+                    new WaitCommand(1.0),
+                    new IntakeSequence(intake)
+                  )
+                ),
+                none(), 
+                () -> collectBalls
+              ),
+              parallel(
+                new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake), // can i do this
+                new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field),
+                new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance)
+              ),
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(7.0),
+              parallel(
+                new ShooterStop(shooter),
+                new FeederStop(feeder)
               )
-            ),
-            none(), 
-            () -> collectBalls
-          ),
-          parallel(
-            new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake), // can i do this
-            new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field),
-            new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance)
-          ),
-          new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(7.0),
-          parallel(
-            new ShooterStop(shooter),
-            new FeederStop(feeder)
+            )
           ),
           // If we climb...
           either(
