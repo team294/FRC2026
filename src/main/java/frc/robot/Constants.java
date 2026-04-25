@@ -810,6 +810,8 @@ public final class Constants {
 
     public static final double gearEncoderToTurretRatio = TurretConstants.beltEncoderBeltTeeth / TurretConstants.turretBeltTeeth;
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
+    public static final double encoderCalculationWrapPoint = (TurretAngle.LOWER_LIMIT.value + 360.0 * TurretConstants.encoderCalculationCoefficient + TurretAngle.UPPER_LIMIT.value)/2.0;
+
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
     public static final double offsetAngleCANcoderBelt = 0.91845703;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
@@ -835,7 +837,7 @@ public final class Constants {
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
     public enum TurretAngle { 
-      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg). was -180
+      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg)  Must be negative. was -180
       LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
       CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
       UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
