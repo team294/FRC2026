@@ -582,6 +582,13 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param angle current angle the turret is physically at, in degrees
    */
   public void calibrateTurret(double angle) {
+    // Don't calibrate if the specified angle is outside of the Limit ranges
+    if (angle < TurretAngle.LOWER_LIMIT.value || angle > TurretAngle.UPPER_LIMIT.value) {
+      DataLogUtil.writeMessageEcho("Turret: NOT calibrated, input angle =", angle, 
+          ", Belt Encoder abs =", getCANcoderAbsRotationsRaw(1), ", Gear Encoder abs =", getCANcoderAbsRotationsRaw(2) );
+      return;
+    }
+
     stopTurret(); // Stop the motor so it does not jump to a new value
     turretZero = getTurretEncoderRotationsRaw() * TurretConstants.turretDegreesPerRotation - angle;
     turretCalibrated = true;
