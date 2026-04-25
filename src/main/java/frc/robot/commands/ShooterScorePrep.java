@@ -150,7 +150,7 @@ public class ShooterScorePrep extends Command {
       if (!turret.getShootOnTheMoveEnabled()) {
         goalTranslation2d = field.getStaticShotTarget(turretTranslation2d);
       } else {
-        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(turretTranslation2d), turretTranslation2d, driveTrain.getChassisSpeeds(), 0, 0);
+        goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(turretTranslation2d), turretTranslation2d, driveTrain.getChassisSpeeds());
       }
 
       distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);
@@ -199,8 +199,7 @@ public class ShooterScorePrep extends Command {
       } else {
         goalTranslation2d = field.getGhostShotTarget(field.getStaticShotTarget(turretTranslation2d),
                                                       turretTranslation2d,
-                                                      driveTrain.getRobotSpeeds(),
-                                                      0, 0);
+                                                      driveTrain.getRobotSpeeds());
       }
 
       distanceToTarget = goalTranslation2d.getDistance(turretTranslation2d);

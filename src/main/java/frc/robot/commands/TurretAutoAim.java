@@ -51,11 +51,8 @@ public class TurretAutoAim extends Command {
                             field.getGhostShotTarget(
                               field.getStaticShotTarget(turretTranslation2d),
                               turret.getTurretAbsolutePose(robotPose2d).getTranslation(),
-                              driveTrain.getRobotSpeeds(),
-                              0, 0
+                              driveTrain.getRobotSpeeds()
                             )
-                              // driveTrain.getFieldAccelerationX(),
-                              // driveTrain.getFieldAccelerationY())
                           );
     } else {
       turretTargetAngle = turret.getAutoTargetAngleTurretRelative(

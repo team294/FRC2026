@@ -504,40 +504,6 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Get forwards acceleration of robot (x) <b> in ROBOT frame of reference </b>
-   * @return forwards robot acceleration, in m/s^2
-   */
-  public double getRobotAccelerationX() {
-    return pigeon.getAccelerationX(true).getValueAsDouble() * 9.81 * Math.cos(DriveConstants.offsetAnglePigeon)
-      + pigeon.getAccelerationY(true).getValueAsDouble() * 9.81 * Math.sin(DriveConstants.offsetAnglePigeon);
-  }
-
-  /**
-   * Get sideways acceleration of robot (y) <b> in ROBOT frame of reference </b>
-   * @return sideways robot acceleration, in m/s^2
-   */
-  public double getRobotAccelerationY() {
-    return -pigeon.getAccelerationX(true).getValueAsDouble() * 9.81 * Math.sin(DriveConstants.offsetAnglePigeon)
-      + pigeon.getAccelerationY(true).getValueAsDouble() * 9.81 * Math.cos(DriveConstants.offsetAnglePigeon);
-  }
-
-  /**
-   * Get x acceleration of robot <b> in FIELD frame of reference </b>
-   * @return x acceleration: positive is away from blue driver station, negative is towards blue driver station
-   */
-  public double getFieldAccelerationX() {
-    return getRobotAccelerationX() * Math.cos(Math.toRadians(getPoseAngle())) - getRobotAccelerationY() * Math.sin(Math.toRadians(getPoseAngle()));
-  }
-
-  /**
-   * Get y acceleration of robot <b> in FIELD frame of reference </b>
-   * @return y acceleration: positive is left from blue driver station POV, negative is right from blue driver station POV
-   */
-  public double getFieldAccelerationY() {
-    return getRobotAccelerationX() * Math.sin(Math.toRadians(getPoseAngle())) + getRobotAccelerationY() * Math.cos(Math.toRadians(getPoseAngle()));
-  }
-  
-  /**
    * Set fine control on joysticks. Enabled means robot will move slower, disabled means robot moves normally.
    * @param enabled true = fine control, false = normal control
    */
@@ -741,12 +707,6 @@ public class DriveTrain extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Drive Odometry Theta", pose.getRotation().getDegrees());
 
       SmartDashboard.putBoolean("Vision Updating Odometry", useVisionForOdometry);
-
-      SmartDashboard.putNumber("Drive X Acceleration Robot", getRobotAccelerationX());
-      SmartDashboard.putNumber("Drive Y Acceleration Robot", getRobotAccelerationY());
-
-      SmartDashboard.putNumber("Drive X Acceleration Field", getFieldAccelerationX());
-      SmartDashboard.putNumber("Drive Y Acceleration Field", getFieldAccelerationY());
 
       // TODO This code creates errors after running for a few minutes. Need to debug.
       // SmartDashboard.putData("Swerve Drive", new Sendable() {

@@ -88,11 +88,9 @@ public class Field {
      * @param staticTargetTranslation2d Translation2d object of shot target
      * @param turretTranslation2d Translation2d object of turret (shooter)
      * @param robotFieldRelativeSpeeds <i>Field-relative</i> robot velocities
-     * @param accelerationX <i>Field-relative</i> robot acceleration in x-direction (away from Blue POV)
-     * @param accelerationY <i>Field-relative</i> robot acceleration in y-direction (left from Blue POV)
      * @return Translation2d object of "ghost" target to aim at
      */
-    public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds, double accelerationX, double accelerationY) {
+    public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
         double estTimeOfFlight = turretTranslation2d.getDistance(staticTargetTranslation2d) * FieldConstants.timeOfFlightSlope + FieldConstants.timeOfFlightIntercept;
 
         // We want to aim to counteract the offset caused by the added velocity that the robot moving has on the ball.
