@@ -47,7 +47,7 @@ public class AutonCollectBalls extends SequentialCommandGroup {
     addCommands(
       parallel(  
         new DataLogMessage(false, "AutonCollectBalls: start"),
-        new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
+        new DriveTrajectory(CoordType.kAbsolute, StopType.kNoStop, trajectory, driveTrain, alliance),
         sequence(
           either(
             parallel(

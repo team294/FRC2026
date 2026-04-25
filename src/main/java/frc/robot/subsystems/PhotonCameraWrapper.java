@@ -184,11 +184,12 @@ public class PhotonCameraWrapper extends SubsystemBase {
             // One or more tags visible, run the full heuristic.
             avgDist /= numTags;
             // Decrease std devs if multiple targets are visible
-            if (numTags > 1) estStdDevs = VisionConstants.kMultiTagStdDevs;
+            if (numTags > 1) estStdDevs = VisionConstants.kMultiTagStdDevs.times(1 + (avgDist * avgDist * VisionConstants.kTagDistanceConst));
             // Increase std devs based on (average) distance
             if (numTags == 1 && avgDist > 4)
                 estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-            else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist * VisionConstants.kTagDistanceConst));
+            else 
+                estStdDevs = estStdDevs.times(1 + (avgDist * avgDist * VisionConstants.kTagDistanceConst));
             curStdDevs = estStdDevs;
         }
     }

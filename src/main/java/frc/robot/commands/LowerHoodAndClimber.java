@@ -27,7 +27,7 @@ public class LowerHoodAndClimber extends SequentialCommandGroup {
   public LowerHoodAndClimber(Shooter shooter, Climber climber) {
     addCommands(
       parallel(
-        new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber),
+        new ClimberSetPercent(-ClimberConstants.maxPercentOutput, climber),
         new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter)
       ),
       new WaitUntilCommand(() -> climber.isSideLimitReached(1, true) || climber.isSideLimitReached(2, true)),

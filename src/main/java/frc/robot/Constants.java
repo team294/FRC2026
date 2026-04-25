@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A5";
+  public static final String bcrRobotCodeVersion = "A6";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -183,6 +183,8 @@ public final class Constants {
       INTAKING_CMD_SEQUENCE("Intake Sequence"),
       PREP_SHOOTER_CMD_SEQUENCE("Prep Shooter Sequence"),
       FEED_SHOOTER_CMD_SEQUENCE("Feed Shooter Sequence"),
+      FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE("Feed Shooter Bounce Agitate Sequence"),
+      FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE("Feed Shooter Dump Agitate Sequence"),
 
       // Stop Command
       INTAKE_CMD_STOP(intakeString + stopCmdString),
@@ -545,10 +547,10 @@ public final class Constants {
     public static final String leftCameraName = "LeftCamera"; // this has to match the camera name in PhotonVision
     public static final String rightCameraName = "RightCamera"; // this has to match the camera name in PhotonVision
 
-    // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    public static final double kTagDistanceConst = 0.033;
+    // CALIBRATED for Worlds.  Previous values were fake values from PhotonVision example code.  Need to experiment and determine estimation noise on an actual robot.
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4);             //  (1.5, 1.5, 4) for Worlds.  Was (4, 4, 8) previously
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //   (0.1, 0.1, 0.25) for Worlds.  Was (0.5, 0.5, 1) previously
+    public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
   }
 
     public static class AutoConstants {
@@ -613,10 +615,11 @@ public final class Constants {
     public static final double deployMaxUncalibratedPercentOutput = 0.1;  
     public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
     public static final double deployMaxPercentOutput = 0.2;              
+    public static final double deployMaxDumpAgitatePercentOutput = 0.08;
     public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees.
-    public static final double deployCANcoderOffsetAngle = 83.3;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
+    public static final double deployCANcoderOffsetAngle = 83.3 + 1.0;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.8095; // CALIBRATED 4/8: 0.8095
@@ -634,10 +637,13 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      LOWER_LIMIT(-92.0),   // CALIBRATED 4/17/26: -92.0     updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
+      TRENCH_ALLOWED_LOWER(-70.0), // When the intake is below this angle it can fit under the trench
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
       AGITATE_UPPER(-38.0),  // CALIBRATED 3/30/26: -38.0
+      AGITATE_DUMP_FINISH(-18.0),  // CALIBRATED 4/9: -18.0
+      TRENCH_ALLOWED_UPPER(30.0), // When the intake is above this angle, it can fit under the trench
       START_CONFIG(36.4),  // CALIBRATED updated AVDE after quals: 36.5 , 3/29/26: 40.5
       UPPER_LIMIT(36.9);   // CALIBRATED updated AVDE after quals: 37.0 , 3/29/26: 41.0   Upper limit is intake all the way in with fuel in the Spindexer
 
@@ -649,7 +655,7 @@ public final class Constants {
 
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 0.687;
+    public static final double noFuelSeconds = 1.0; // 1.0 changed for Q103, was 1.5 
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
 
@@ -691,7 +697,9 @@ public final class Constants {
     public static final double manualReverseShootPercent = -0.1;
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
-    public static final double maxShootRPM = 3800;
+    public static final double maxShootRPM = 5000; // Was 3800
+    public static final double maxShootWaitForRPM = 4000;     // Don't wait to reach target RPM if actual RPM is above this threshold.
+          // Reaching high shooter velocity takes too long, and shooter may not get there under high-current conditions or low battery.
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -708,6 +716,8 @@ public final class Constants {
     // Using a linear fit where x is distance (in meters) and returns shooter speed (in rpm)
     public static final double shooterDistanceToRPMIntercept = 1270.76045; // CALIBRATED 3/28/26: 1270.76045
     public static final double shooterDistanceToRPMSlope = 466.41849; // CALIBRATED 3/28/26: 466.41849
+
+    public static final double shooterVelocityFromTrench = 2200; // calculated using above slope and intercept from estimated distance b/t turret and hub
 
     // Hood Constants
     public static final double hoodShootAngle = 30.0; // fixed hood angle to shoot at
@@ -736,6 +746,14 @@ public final class Constants {
     //public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
     public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
     public static final double hoodActuatorMaxExtensionLength = 9.750; // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
+
+    // To swap one of the hood actuators for a spare, update corresponding hoodNSlopePointAnalogVoltage and hoodNSlopePointExtensionLength
+    // Hood Spare SN005: 
+    //    Slope Point Analog Voltage = 2.725V
+    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 2.908in
+    // Hood Spare SN006: 
+    //    Slope Point Analog Voltage = 4.046V
+    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 3.124in
 
     public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
     public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
@@ -785,8 +803,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoderBelt = 0.9444;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoderGear = 0.5631;  // CALIBRATED: 0.5631 - (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.91845703;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = 0.5351562;  // CALIBRATED: 0.5631 - (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
@@ -807,9 +825,11 @@ public final class Constants {
 
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
-    public enum TurretAngle {
-      LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(114.0); // was 180
+    public enum TurretAngle { 
+      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg). was -180
+      LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
+      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
+      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
 
       public final double value;
       TurretAngle(double angle) {
@@ -827,6 +847,7 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
+    public static final double maxPercentOutput = 0.45;
   }
 
   public static final class TrajectoryConstants {
@@ -892,6 +913,7 @@ public final class Constants {
 
     LOWERING(255, 0, 0),               // Red (lowering climber and hood)
     TRENCH_SAFE(0, 255, 0),            // Green (climber and hood at bottom, trench safe)
+    TRENCH_UNSAFE(255, 0, 0),          // Red (climber and hood NOT at bottom, trench UNSAFE)
 
     DISABLED_BLUE(19, 82, 188),        // Blue   (disabled animation)
     DISABLED_ORANGE(255, 50, 0);       // Orange (disabled animation)
@@ -934,6 +956,7 @@ public final class Constants {
       private static final RGBWColor feedingShooterColor = new RGBWColor(AnimationColor.SHOOTER_READY.r, AnimationColor.SHOOTER_READY.g, AnimationColor.SHOOTER_READY.b);
 
       private static final RGBWColor trenchSafeColor = new RGBWColor(AnimationColor.TRENCH_SAFE.r, AnimationColor.TRENCH_SAFE.g, AnimationColor.TRENCH_SAFE.b);
+      private static final RGBWColor trenchUnsafeColor = new RGBWColor(AnimationColor.TRENCH_UNSAFE.r, AnimationColor.TRENCH_UNSAFE.g, AnimationColor.TRENCH_UNSAFE.b);
     }
 
     public static final class Animations {
@@ -956,6 +979,7 @@ public final class Constants {
       public static final RainbowAnimation climberMovingAnimation = new RainbowAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex);
       public static final StrobeAnimation climberMovingDownAnimation = new StrobeAnimation(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.CANdleStickyFaultColor);
       public static final SolidColor trenchSafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchSafeColor);
+      public static final SolidColor trenchUnsafeSolidColor = new SolidColor(LEDSegments.StripAll.startIndex, LEDSegments.StripAll.endIndex).withColor(AnimationRGBWColors.trenchUnsafeColor);
     }
   }
 }

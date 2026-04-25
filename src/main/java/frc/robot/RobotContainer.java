@@ -11,8 +11,10 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 import frc.robot.Constants.*;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
+import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
+import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
@@ -72,10 +74,13 @@ public class RobotContainer {
   // the command is created here to be passed into LEDEventUtil's initialize method
   private final Command LEDAnimateRobotDisabled = (new LEDAnimateRobotDisabled(led));
 
+  private boolean trenchSafe = false;
+
   // DataLog
   private final DataLog log = DataLogManager.getLog();
   private final DoubleLogEntry dLogRobotHeartBeat = new DoubleLogEntry(log, "/RobotContainer/HeartBeat");
   private long heartBeat = 0;
+  private boolean dataLogIntialMessage = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -190,7 +195,9 @@ public class RobotContainer {
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
     SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
@@ -241,29 +248,27 @@ public class RobotContainer {
 
     // ex: xbA.onTrue(new command(param1, param2, etc));
 
+    // Spin uptake then spindexer away from shooter while held, stop when released
+    xbX.onTrue(
+      sequence(
+        new UptakeSetVelocity(-UptakeConstants.uptakeShootRPM, feeder),
+        new SpindexerSetVelocity(-SpindexerConstants.spindexerShootRPM, feeder)
+      )
+    );
+    xbX.onFalse(new FeederStop(feeder));
+
     xbLT.whileTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
     xbLB.onTrue(new IntakeRollerStop(intake));
 
-    // Agitate while shooting
-    xbRT.whileTrue(parallel(
-      new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(true))
-    ));
-    xbRT.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
-    ));
+    // while held, prep Shooter & Hood for scoring or passing (depending on position on field). stops shooter motor when released
+    xbRT.whileTrue(new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
-    // Intake while shooting
+    xbRT.onFalse(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
+
+    // manual setpoint for shooting when bot is at center of trench with turret facing hub
     xbRB.whileTrue(parallel(
-      new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
-    ));
-    xbRB.onFalse(parallel(
-      new FeederStop(feeder),
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> intake.setAgitateDuringFeed(false))
+      new ShooterScorePrep(ShooterConstants.shooterVelocityFromTrench, ShooterConstants.hoodShootAngle, EndType.runForever, shooter, turret, driveTrain, field),
+      new TurretSetAngle(0, EndType.runForever, turret)
     ));
 
     // manual intake deploy: up = in, down = out
@@ -278,11 +283,30 @@ public class RobotContainer {
 
     xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
 
-    xbY.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
-    xbX.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
-    xbA.whileTrue(new FeederIntakeFeedShooterSequence(feeder, intake, shooter));
+    // feed shooter with bounce agitation
+    xbA.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
+    
+    // feed shooter without agitation
+    xbB.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
 
-    xbB.whileTrue(new SpindexerSetPercent(SpindexerConstants.spindexerReversePercent, false, feeder));
+    // feed shooter with dump agitation
+    xbY.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
+
+    // reset intake if agitated, stop rollers and spindexer/uptake in both cases
+    xbA.onFalse(parallel(
+      new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
+      new InstantCommand(() -> intake.stopIntakeRoller()),
+      new FeederStop(feeder)
+    ));
+    xbB.onFalse(parallel(
+      new IntakeRollerStop(intake),
+      new FeederStop(feeder)
+    ));
+    xbY.onFalse(parallel(
+      new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake),
+      new InstantCommand(() -> intake.stopIntakeRoller()),
+      new FeederStop(feeder)
+    ));
   }
 
   /**
@@ -299,16 +323,12 @@ public class RobotContainer {
 
     // ex: left[1].onTrue(new command(param1, param2, etc));
 
-    left[1].onTrue(new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, false, intake));
-    left[1].onFalse(parallel(
-      new IntakeRollerStop(intake),
-      new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL)) 
-    ));
+    left[1].onTrue(new IntakeSequence(intake));
+    left[1].onFalse(new IntakeRollerStop(intake));   // new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL))
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    right[1].onTrue(new DriveTrainSetFineControl(true, driveTrain));
-    right[1].onFalse(new DriveTrainSetFineControl(false, driveTrain));
+    right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
 
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
@@ -416,6 +436,8 @@ public class RobotContainer {
     shiftHelper.periodic();
     autoSelection.periodic();
 
+    SmartDashboard.putBoolean("Trench Safe", intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench());
+
     heartBeat++;
     dLogRobotHeartBeat.append(heartBeat);
   }
@@ -426,12 +448,18 @@ public class RobotContainer {
   public void disabledInit() {
     // Do not log the word "Init" here, as it it affects the Excel macro
     DataLogUtil.writeMessageEcho("Disabled: Robot disabled");
+    
+    if (!dataLogIntialMessage) {
+      DataLogUtil.writeMessageEcho("RobotContainer: Disabled Initially, Version =", Constants.bcrRobotCodeVersion);
+      dataLogIntialMessage = true;
+    }
 
     driveTrain.stopMotors();             // SAFETY: Turn off any closed loop control that may be running, so the robot does not move when re-enabled
     feeder.stopUptake();
     feeder.stopSpindexer();
     intake.stopIntakeDeploy();
     intake.stopIntakeRoller();
+    shooter.stopShooterMotor();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode
     driveTrain.setVisionForOdometryState(true);
 
@@ -499,5 +527,12 @@ public class RobotContainer {
    * Method called once every scheduler cycle when teleop mode is initialized/enabled.
    */
   public void teleopPeriodic() {
+    if (!trenchSafe && (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench())) {
+      trenchSafe = true;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else if (trenchSafe && (!intake.isIntakeDeploySafeForTrench() || !shooter.isHoodSafeForTrench() || !climber.isSafeForTrench())) {
+      trenchSafe = false;
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
   }
 }

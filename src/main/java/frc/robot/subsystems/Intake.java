@@ -36,7 +36,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.Ports;
 import frc.robot.utilities.DataLogUtil;
-import frc.robot.utilities.LEDEventUtil;
+// import frc.robot.utilities.LEDEventUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
@@ -97,6 +97,7 @@ public class Intake extends SubsystemBase implements Loggable{
   private final DoubleLogEntry dLogDeployVelocity = new DoubleLogEntry(log, "/IntakeDeploy/VelocityRPS");
   private final DoubleLogEntry dLogDeployVoltage = new DoubleLogEntry(log, "/IntakeDeploy/Voltage");
   private final DoubleLogEntry dLogDeployPosition = new DoubleLogEntry(log, "/IntakeDeploy/Position");
+  private final DoubleLogEntry dLogDeployTargetPosition = new DoubleLogEntry(log, "/IntakeDeploy/TargetPosition");
 
   private boolean isIntakeDeployCalibrated = false; // true = deploy motor is calibrated, false = not calibrated
   private boolean isIntakeDeployUsingCANcoder;      // true = deploy motor is using CANcoder, false = using rotor encoder
@@ -106,10 +107,6 @@ public class Intake extends SubsystemBase implements Loggable{
   private double intakeDeploySafeSetpointAngle;     // Current setpoint angle for the deploy motor (position control), constrained by calibration and interlocks
   private double intakeDeploySetpointPercent;       // Current setpoint percent output for the deploy motor
   private double intakeRollerSetpointPercent;       // Current setpoint percent output for the roller motor
-
-  private boolean shouldAgitateDuringFeed = true;  // true = agitate the intake (raise/lower) when feeding, false = run the intake sequence
-  private boolean preventRolling = false;
-
 
   public Intake(String subsystemName) {
     this.subsystemName = subsystemName;
@@ -305,18 +302,13 @@ public class Intake extends SubsystemBase implements Loggable{
    * @param percent output percent, -1.0 to 1.0 (positive = intake, negative = outtake)
    */
   public void setIntakeRollerPercentOutput(double percent) {
-    if (preventRolling) {
-      DataLogUtil.writeMessageEcho(subsystemName, ": setIntakeRollerPercentOutput", ", PREVENTED ROLLERS FROM TURNING ON");
-      return;
-    }
-
     intakeRollerMotor.setControl(intakeRollerVoltageControl.withOutput(percent * IntakeConstants.rollerCompensationVoltage));
     intakeRollerSetpointPercent = percent;
   
     // Send an LED event based on whether the rollers are stopped/intaking/outtaking
-    if (percent == 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
-    else if (percent > 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING);
-    else LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
+    // if (percent == 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    // else if (percent > 0.0) LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.INTAKING);
+    // else LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.REVERSE_INTAKING);
   }
 
   /**
@@ -446,6 +438,15 @@ public class Intake extends SubsystemBase implements Loggable{
   }
 
   /**
+   * Returns if the intake deploy is within safe angles for going under the trench
+   * @return true = intake deploy is within safe angles, false = intake deploy isoutside of safe angles
+   */
+  public boolean isIntakeDeploySafeForTrench() {
+    return getIntakeDeployAngle() < IntakeConstants.IntakeDeployAngle.TRENCH_ALLOWED_LOWER.value || 
+    getIntakeDeployAngle() > IntakeConstants.IntakeDeployAngle.TRENCH_ALLOWED_UPPER.value;
+  }
+
+  /**
    * Gets the velocity of the intakeRollerMotor.
    * @return motor velocity, in RPM
    */
@@ -564,14 +565,6 @@ public class Intake extends SubsystemBase implements Loggable{
     }
   }
 
-  public boolean getAgitateDuringFeed() {
-    return shouldAgitateDuringFeed;
-  }
-
-  public void setAgitateDuringFeed(boolean agitate) {
-    shouldAgitateDuringFeed = agitate;
-  }
-
   /**
    * Gets the name of the subsystem.
    * @return the subsystem name
@@ -608,17 +601,22 @@ public class Intake extends SubsystemBase implements Loggable{
     dLogDeployCurrent.append(getIntakeDeployAmps(), timeNow);
     dLogDeployVelocity.append(getIntakeDeployVelocity(), timeNow);
     dLogDeployPosition.append(getIntakeDeployAngle(), timeNow);
+    dLogDeployTargetPosition.append(getIntakeDeployTargetAngle(), timeNow);
   }
 
   @Override
   public void periodic() {
     double rollerAmps = getIntakeRollerAmps();
+    double deployAmps = getIntakeDeployAmps();
 
-    if (!preventRolling && rollerAmps > 100) {
-      setIntakeRollerPercentOutput(0.0);
-      preventRolling = true;
-    } else if (preventRolling && rollerAmps <= 100) {
-      preventRolling = false;
+    if (rollerAmps > 100) {
+      setIntakeRollerPercentOutput(0);
+      DataLogUtil.writeMessageEcho(subsystemName, ": IntakeRoller", ", EXCEEDED MAX CURRENT");
+    }
+
+    if (deployAmps > 100) {
+      setIntakeDeployPercentOutput(0);
+      DataLogUtil.writeMessageEcho(subsystemName, ": IntakeDeploy", ", EXCEEDED MAX CURRENT");
     }
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
@@ -636,10 +634,6 @@ public class Intake extends SubsystemBase implements Loggable{
       SmartDashboard.putNumber(INTAKE_ROLLER_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());
       SmartDashboard.putNumber(INTAKE_ROLLER_CURRENT.value, rollerAmps);
       SmartDashboard.putNumber(INTAKE_ROLLER_RPM.value, getIntakeRollerVelocity());
-
-      SmartDashboard.putBoolean("Agitate During Feed", getAgitateDuringFeed());
-
-      SmartDashboard.putBoolean("Roller >100 Amps", preventRolling);
     }
 
   }

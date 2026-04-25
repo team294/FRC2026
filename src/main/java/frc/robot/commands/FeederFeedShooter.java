@@ -39,14 +39,22 @@ public class FeederFeedShooter extends Command {
 
     uptakeWithinTolerance = false;
     feeder.setUptakeVelocity(UptakeConstants.uptakeShootRPM);
+    feeder.enableFastLogging(true);
     timer.restart();  // start fuel tracking timer
 
-    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.FEEDING_SHOOTER);
+    // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.FEEDING_SHOOTER);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    // time without Fuel is 0 if we have Fuel, so reset
+    if (feeder.isDetected(0)) {  // check exit sensor b/c entry could have a Fuel while jammed 
+      timer.reset();
+    } 
+
+
     if (!uptakeWithinTolerance) {
       if (Math.abs(feeder.getUptakeVelocityPIDError()) > FeederConstants.uptakeVelocityToleranceToStartSpindexer) {
         feeder.setSpindexerVelocity(feeder.getUptakeMotorVelocity() * FeederConstants.spindexderToUptakeRPMRatio);
@@ -54,13 +62,8 @@ public class FeederFeedShooter extends Command {
         uptakeWithinTolerance = true;
         feeder.setSpindexerVelocity(SpindexerConstants.spindexerShootRPM);
       }
+
     } else {
-
-      // time without Fuel is 0 if we have Fuel, so reset
-      if (feeder.isDetected(0)) {  // check exit sensor b/c entry could have a Fuel while jammed 
-        timer.reset();
-      } 
-
       // forwards but no fuel? spin in reverse
       if (!reversed && timer.get() >= FeederConstants.noFuelSeconds) {
         feeder.setSpindexerPercentOutput(SpindexerConstants.spindexerReversePercent);
@@ -82,7 +85,8 @@ public class FeederFeedShooter extends Command {
   public void end(boolean interrupted) {
     feeder.stopSpindexer();
     feeder.stopUptake();
-    LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
+    feeder.enableFastLogging(false);
+    // LEDEventUtil.sendEvent(LEDEventUtil.LEDStripEvents.NEUTRAL);
   }
 
   // Returns true when the command should end.
