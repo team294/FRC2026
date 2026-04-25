@@ -350,7 +350,7 @@ public class Turret extends SubsystemBase implements Loggable {
   public void setTurretAngle(double angle) {
     if (turretCalibrated) {
       // Normalize angle
-      angle = Math.toDegrees(MathUtil.angleModulus(Math.toRadians(angle)));
+      angle = convertToTurretRange(angle);
 
 
       // Phoenix6 PositionVoltage control: Position is in rotor rotations
@@ -361,6 +361,15 @@ public class Turret extends SubsystemBase implements Loggable {
 
       targetAngle = angle;
     }
+  }
+
+  /**
+   * Normalizes the input angle so that it is between the minimum and maximum allowed angles of the turret
+   * @param angle input angle
+   * @return normalized input angle
+   */
+  private double convertToTurretRange(double angle) {
+    return MathUtil.inputModulus(angle, TurretAngle.LOWER_WRAP_POINT.value, TurretAngle.UPPER_WRAP_POINT.value);
   }
 
   /**
@@ -662,7 +671,7 @@ public class Turret extends SubsystemBase implements Loggable {
     double ret = robotRotation2d.getDegrees() + calcTurretAngleFromEncodersAdvanced() + 180.0;
 
     // make it wrap: (-180.0, 180.0)
-    ret = Math.toDegrees(MathUtil.angleModulus(Math.toRadians(ret)));
+    ret = convertToTurretRange(ret);
 
     return new Rotation2d(Math.toRadians(ret));
   }
@@ -697,7 +706,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @return target angle for turret to turn to
    */
   public double getAutoTargetAngleTurretRelative(Pose2d robotPose2d, Translation2d targetTranslation2d) {
-    return Math.toDegrees(MathUtil.angleModulus(Math.toRadians(getAutoTargetAngleAbsolute(robotPose2d, targetTranslation2d) - robotPose2d.getRotation().getDegrees())));
+    return convertToTurretRange(getAutoTargetAngleAbsolute(robotPose2d, targetTranslation2d) - robotPose2d.getRotation().getDegrees());
   }
 
   /**
