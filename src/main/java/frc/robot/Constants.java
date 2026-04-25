@@ -547,10 +547,10 @@ public final class Constants {
     public static final String leftCameraName = "LeftCamera"; // this has to match the camera name in PhotonVision
     public static final String rightCameraName = "RightCamera"; // this has to match the camera name in PhotonVision
 
-    // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    public static final double kTagDistanceConst = 0.033;
+    // CALIBRATED for Worlds.  Previous values were fake values from PhotonVision example code.  Need to experiment and determine estimation noise on an actual robot.
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4);             //  (1.5, 1.5, 4) for Worlds.  Was (4, 4, 8) previously
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //   (0.1, 0.1, 0.25) for Worlds.  Was (0.5, 0.5, 1) previously
+    public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
   }
 
     public static class AutoConstants {
@@ -803,8 +803,8 @@ public final class Constants {
     public static final double encoderCalculationCoefficient = gearEncoderToTurretRatio  /  (beltEncoderGearTeeth / gearEncoderGearTeeth - 1);
     public static final double turretDegreesPerRotation = 360.0;  // Turret degrees per rotation of the motor sensor.  The gear ratio is calculated in the motor configurator, so don't apply the gear ratio here.
 
-    public static final double offsetAngleCANcoderBelt = 0.9444;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
-    public static final double offsetAngleCANcoderGear = 0.5631;  // CALIBRATED: 0.5631 - (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderBelt = 0.91845703;  // CALIBRATED: 0.9444 - (1) set this value to 0.0.  (2) Read value of belt encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
+    public static final double offsetAngleCANcoderGear = 0.5351562;  // CALIBRATED: 0.5631 - (1) set this value to 0.0.  (2) Read value of gear encoder raw rotations when turret is at absolute zero (facing back of robot), and place that reading here.
 
     public static final double maxPercentOutput = 0.3;               // Absolute max percent out allowed for turret
     public static final double maxManualPercentOutput = 0.2; // Max percent out allowed for manual turret movement when calibrated
@@ -825,9 +825,11 @@ public final class Constants {
 
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
-    public enum TurretAngle {
-      LOWER_LIMIT(-180.0),
-      UPPER_LIMIT(114.0); // was 180
+    public enum TurretAngle { 
+      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg). was -180
+      LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
+      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
+      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
 
       public final double value;
       TurretAngle(double angle) {
