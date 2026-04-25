@@ -847,8 +847,8 @@ public final class Constants {
       LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg)  Must be negative. was -180
       LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
       CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
-      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret
-      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114
+      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret.  UPPER_WRAP_POINT MUST = LOWER_WRAP_POINT + 360!
+      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114.  UPPER_LIMIT-LOWER_LIMIT must be <= 385 deg [otherwise encoders could boot up to wrong angle]
 
       public final double value;
       TurretAngle(double angle) {
