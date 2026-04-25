@@ -714,7 +714,7 @@ public final class Constants {
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
     public static final double maxShootRPM = 4000; // Was 3800
-    public static final double maxShootWaitForRPM = 3500;     // Don't wait to reach target RPM if actual RPM is above this threshold.
+    public static final double maxShootWaitForRPM = 3800;     // Don't wait to reach target RPM if actual RPM is above this threshold.
           // Reaching high shooter velocity takes too long, and shooter may not get there under high-current conditions or low battery.
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel

@@ -648,6 +648,8 @@ public class Turret extends SubsystemBase implements Loggable {
    * Turret angle estimation for use on initial robot boot.
    * Calculate turret angle based on the raw readings of both encoders.
    * The output range of this calculation covers a range = 360*encoderCalculationCoefficient.
+   * <p> <b> THIS METHOD IS FOR TURRET CALIBRATION ONLY. </b> It is significantly inaccurate when the turret is turning.
+   * In general, use {@link #getTurretAngle()} to get the current turret angle when calibrated.
    * @return Turret angle, in degrees (range is centered on LOWER_LIMIT to UPPER_LIMIT)
    */
   public double calcTurretAngleFromEncodersBasic() {
@@ -673,9 +675,11 @@ public class Turret extends SubsystemBase implements Loggable {
    * Turret angle estimation for use on initial robot boot.
    * Calculate turret angle based on the raw reading of belt encoder, with correction for belt encoder wraps by using both encoders.
    * The output range of this calculation covers a range = 360*encoderCalculationCoefficient.
+   * <p> <b> THIS METHOD IS FOR TURRET CALIBRATION ONLY. </b> It is significantly inaccurate when the turret is turning.
+   * In general, use {@link #getTurretAngle()} to get the current turret angle when calibrated.
    * @return Turret angle, in degrees (range is centered on LOWER_LIMIT to UPPER_LIMIT)
    */
-  public double calcTurretAngleFromEncodersAdvanced() {
+  private double calcTurretAngleFromEncodersAdvanced() {
     double uncorrectedEncoderReading = cancoderRotationsToDegrees(getCANcoderAbsRotationsRaw(1)) * TurretConstants.gearEncoderToTurretRatio;
     
     return uncorrectedEncoderReading + 360.0 * TurretConstants.gearEncoderToTurretRatio * 
