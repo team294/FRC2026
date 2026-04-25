@@ -42,6 +42,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import static frc.robot.Constants.DriveConstants.*;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -87,8 +88,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogOdometryY = new DoubleLogEntry(log, "/DriveTrain/OdometryY");
   private final DoubleLogEntry dLogOdometryTheta = new DoubleLogEntry(log, "/DriveTrain/OdometryTheta");
   private final DoubleLogEntry dLogDriveSpeed = new DoubleLogEntry(log, "/DriveTrain/DriveSpeed");
-  private final DoubleLogEntry dLogDriveXVelocity = new DoubleLogEntry(log, "/DriveTrain/DriveXVelocity");
-  private final DoubleLogEntry dLogDriveYVelocity = new DoubleLogEntry(log, "/DriveTrain/DriveYVelocity");
+  private final DoubleLogEntry dLogFieldRelativeXVelocity = new DoubleLogEntry(log, "/DriveTrain/FieldRelativeXVelocity");
+  private final DoubleLogEntry dLogFieldRelativeYVelocity = new DoubleLogEntry(log, "/DriveTrain/FieldRelativeYVelocity");
+  private final DoubleLogEntry dLogRobotRelativeXVelocity = new DoubleLogEntry(log, "/DriveTrain/RobotRelativeXVelocity");
+  private final DoubleLogEntry dLogRobotRelativeYVelocity = new DoubleLogEntry(log, "/DriveTrain/RobotRelativeYVelocity");
   private final DoubleLogEntry dLogBusVoltage = new DoubleLogEntry(log, "/DriveTrain/BusVoltage");
   // Log entries for ChoreoFollower
   private final DoubleLogEntry dLogChoreoBusVoltage = new DoubleLogEntry(log, "/DrivePathFollower/BusVoltage");
@@ -744,7 +747,8 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    */
   public void updateDriveLog(boolean logWhenDisabled) {
     Pose2d pose = getPose();
-    ChassisSpeeds robotSpeeds = getRobotSpeeds();
+    ChassisSpeeds robotRelativeSpeeds = getChassisSpeeds();
+    ChassisSpeeds fieldRelativeSpeeds = getRobotSpeeds();
     long timeNow = RobotController.getFPGATime();
     
     if (logWhenDisabled  || !DriverStation.isDisabled()) {
@@ -757,8 +761,10 @@ public class DriveTrain extends SubsystemBase implements Loggable {
       dLogOdometryY.append(pose.getTranslation().getY(), timeNow);
       dLogOdometryTheta.append(pose.getRotation().getDegrees(), timeNow);
       dLogDriveSpeed.append(speedAvg, timeNow);
-      dLogDriveXVelocity.append(robotSpeeds.vxMetersPerSecond, timeNow);
-      dLogDriveYVelocity.append(robotSpeeds.vyMetersPerSecond, timeNow);
+      dLogFieldRelativeXVelocity.append(fieldRelativeSpeeds.vxMetersPerSecond, timeNow);
+      dLogFieldRelativeYVelocity.append(fieldRelativeSpeeds.vyMetersPerSecond, timeNow);
+      dLogRobotRelativeXVelocity.append(robotRelativeSpeeds.vxMetersPerSecond, timeNow);
+      dLogRobotRelativeYVelocity.append(robotRelativeSpeeds.vyMetersPerSecond, timeNow);
       dLogBusVoltage.append(swerveFrontLeft.getDriveBusVoltage(), timeNow);
 
       swerveFrontLeft.updateSwerveLog(timeNow);

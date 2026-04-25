@@ -9,6 +9,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import frc.robot.Constants.*;
+import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
@@ -183,7 +184,7 @@ public class RobotContainer {
 
     // Score Commands
 
-    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
+    SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Manual Input", new ShooterScorePrep(true, EndType.runForever, shooter, turret, driveTrain, field));
     SmartDashboard.putData(SHOOTER_CMD_SCORE_PREP.value + " Self-Calculate", new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
 
     // Calibration Ramp
@@ -193,12 +194,15 @@ public class RobotContainer {
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_MANUAL.value, new TurretManualCalibration(turret, true));
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_AUTOMATIC.value, new TurretManualCalibration(turret, false));
 
+    // Toggle
+
+    SmartDashboard.putData(TURRET_CMD_TOGGLE_SOTM.value, new TurretToggleShootOnTheMove(turret));
+
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
     SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
     SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
     SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
-    SmartDashboard.putData(PREP_SHOOTER_CMD_SEQUENCE.value, new ShooterScorePrep(EndType.runForever, shooter, turret, driveTrain, field));
 
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
@@ -207,7 +211,7 @@ public class RobotContainer {
     SmartDashboard.putData(CLIMBER_CMD_STOP_RIGHT.value, new ClimberSingleStop(ClimberConstants.SIDE_RIGHT, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_LEFT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_LEFT, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_RIGHT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_RIGHT, climber));
-    SmartDashboard.putData("Climber L Down", new ClimberSingleSetPercent(-0.1, ClimberConstants.SIDE_LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_POSITION.value, new ClimberSetPosition(climber));
 
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_BOTH.value, new HoodSetVoltage(shooter, 0));
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_LEFT.value, new HoodSetVoltage(shooter, 1));
@@ -277,11 +281,25 @@ public class RobotContainer {
     xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
-    xbPOVUp.whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
-    xbPOVDown.whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
-    xbPOVRight.onTrue(new HoodSetAngle(ShooterConstants.hoodMinimumAngle, EndType.waitForSetPoint, shooter));
 
+    // trench config
     xbPOVLeft.onTrue(new LowerHoodAndClimber(shooter, climber));
+    
+    // "de-climb" (raise extensions fully to get off tower)
+    xbPOVDown.onTrue(new ClimberSetPosition(ClimberPosition.UPPER_LIMIT, climber).andThen(
+        either(
+          new TurretToggleAutoAim(turret),
+          none(),
+          () -> !turret.getAutoAimEnabled()
+        )
+      ));
+    
+    // prep for climbing
+    xbPOVRight.onTrue(new ClimbPrepSequence(climber, shooter, turret, intake));
+    
+    // raise climb to be extended, but fitting under tower, and prep hood for shooting
+    xbPOVUp.onTrue(new RaiseHoodAndClimber(climber, shooter));
+
 
     // feed shooter with bounce agitation
     xbA.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
@@ -328,8 +346,12 @@ public class RobotContainer {
     
     left[2].whileTrue(new IntakeRollerSetPercent(-IntakeConstants.rollerIntakePercent, false, intake));
 
-    right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
+    // right[1].onTrue(new DriveTrainSetFineControl(true, driveTrain));
+    // right[1].onFalse(new DriveTrainSetFineControl(false, driveTrain));
+    // right[1].whileTrue(new DriveTrainLockWheels(driveTrain));
+    right[1].whileTrue(new AutomatedDriveAndClimbSequence(allianceSelection.getAlliance(), driveTrain, climber, shooter, turret, intake));
 
+    // direction facing = new forward for joystick movement
     right[2].onTrue(new DriveResetDriverAngle(driveTrain));
   }
 
@@ -386,6 +408,9 @@ public class RobotContainer {
       new DriveResetPose(0, false, driveTrain), 
       () -> allianceSelection.getAlliance() == Alliance.Red));
 
+    // execute climb when switch flipped forwards
+    coP[8].onTrue(new ClimberSetPosition(ClimberPosition.CLIMB, climber).alongWith(new InstantCommand(() -> LEDEventUtil.sendEvent(LEDStripEvents.CLIMBING))));
+
     // // Manually spin turret CW/CCW while held, stopping when released
     coP[9].whileTrue(new TurretSetPercent(turret, -TurretConstants.maxManualPercentOutput));
     coP[10].whileTrue(new TurretSetPercent(turret, TurretConstants.maxManualPercentOutput));
@@ -394,10 +419,12 @@ public class RobotContainer {
     coP[11].whileTrue(new HoodSetPercent(false, ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
-    // Manually spin shooter out/in while held, stopping when released
-    coP[13].whileTrue(new ShooterSetVelocity(ShooterConstants.manualShootRPM, VelocityType.runForever, shooter));
-    coP[14].whileTrue(new ShooterSetVelocity(2050, VelocityType.runForever, shooter));
+    // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
+    coP[13].onTrue(new TurretManualCalibration(turret, true));
 
+    // Manually recalibrate intake deploy, assuming it's at intaking position
+    coP[14].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
+    
     // Manually move left climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
     coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 1, climber));
@@ -406,11 +433,9 @@ public class RobotContainer {
     coP[17].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 2, climber));
     coP[18].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 2, climber));
 
-    // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
-    coP[19].onTrue(new TurretManualCalibration(turret, true));
-
-    // Manually recalibrate intake deploy, assuming it's at intaking position
-    coP[20].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
+    // Manually move both climbers up/down while held, stopping when released
+    coP[19].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
+    coP[20].whileTrue(new ClimberSetPercent(-ClimberConstants.maxManualPercentOutput, climber));
   }
 
   private void configureTriggers() {
@@ -491,7 +516,13 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+    
+    led.clearAllStripAnimations();
+    if (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench()) {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
 
     // NOTE: Do not reset the gyro or encoder here!
     // The first command in auto mode initializes before this code is run, and
@@ -518,7 +549,13 @@ public class RobotContainer {
     // we have to cancel this command to clear the disabled
     // animations off the LEDs because they're repeated forever
     CommandScheduler.getInstance().cancel(LEDAnimateRobotDisabled);
-    LEDEventUtil.sendEvent(LEDStripEvents.NEUTRAL);
+
+    led.clearAllStripAnimations();
+    if (intake.isIntakeDeploySafeForTrench() && shooter.isHoodSafeForTrench() && climber.isSafeForTrench()) {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_SAFE);
+    } else {
+      LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
+    }
 
     teleopTimer.restart();
   }
