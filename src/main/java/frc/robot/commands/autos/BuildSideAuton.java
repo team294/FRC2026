@@ -44,9 +44,9 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class BuildAutonRoutine extends SequentialCommandGroup {
+public class BuildSideAuton extends SequentialCommandGroup {
   /** Creates a new BuildAutoRoutine. */
-  public BuildAutonRoutine(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTrajDirection, ReturnToAllianceType returnToAllianceDirection, AutoEndType autoEnd, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) { 
+  public BuildSideAuton(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTrajDirection, ReturnToAllianceType returnToAllianceDirection, AutoEndType autoEnd, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) { 
     boolean leftSide = routineSide == RoutineSideType.kLeftSide;
     // Initial pose: if shooting preload = inital pose of first trajectory - robot length + front bumper thickness
     //           if not shooting preload = inital pose of first trajectory
@@ -59,9 +59,11 @@ public class BuildAutonRoutine extends SequentialCommandGroup {
     boolean shoot = autoEnd != AutoEndType.kOutpostOrDepot;
 
     addCommands(
-      new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
-      // First cycle
-      new DriveResetPose(initalRobotStartPose, false, driveTrain),
+      parallel(
+        new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
+        // First cycle
+        new DriveResetPose(initalRobotStartPose, false, driveTrain)
+      ),
       new AutonDriveToNeutralAndCollectBalls(shootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       // new AutonDriveToNeutralZone(returnToAllianceDirection, shootPreload, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       // new AutonCollectBalls(ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache),
