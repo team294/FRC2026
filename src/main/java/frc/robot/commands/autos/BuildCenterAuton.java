@@ -70,10 +70,10 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 none(), 
                 () -> collectBalls
               ),
-              parallel(
-                new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake), // can i do this
-                new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field),
-                new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance)
+              new ParallelDeadlineGroup(   // TODO TEST ME!  Changed from parallel to a deadline on DriveTrajectory.  Once in lab, intake didn't move all the way, so this parallel group never finished.
+                new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance),
+                new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake),
+                new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field)
               ),
               new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
               parallel(
