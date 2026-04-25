@@ -47,7 +47,6 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 public class BuildCenterAuton extends SequentialCommandGroup {
   /** Creates a new BuildCenterAuton. */
   public BuildCenterAuton(EndType shootEndType, boolean collectBalls, boolean climb, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, Field field, AllianceSelection alliance, TrajectoryCache cache) {
-    // boolean leftSide = routineSide == RoutineSideType.kLeftSide;
     Trajectory<SwerveSample> driveToClimbTrajectory = collectBalls ? cache.getTrajectory(TrajectoryName.CollectDepotToClimb_LabSafe) : cache.getTrajectory(TrajectoryName.CenterShootToClimb);
     Trajectory<SwerveSample> collectTrajectory = cache.getTrajectory(TrajectoryName.CenterStartCollectUnderTower_LabSafe);
     Pose2d initalPose2d = collectBalls ? collectTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get() : cache.getTrajectory(TrajectoryName.CenterShootToClimb).getInitialPose(alliance.getAlliance() == Alliance.Red).get().transformBy(new Transform2d(1.0, 0, Rotation2d.kZero));
@@ -64,7 +63,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 new IntakeSequence(intake)
               )
             ),
-            none(), //new ShootPreload(shootEndType, true, intake, feeder, turret, shooter, climber, driveTrain, field, alliance, cache), we only ever shoot from in front of tower
+            none(), 
             () -> collectBalls
           ),
           parallel(
@@ -79,7 +78,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
           ),
           // If we climb...
           either(
-            new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
+            none(), //new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
             none(),
             () -> climb
           )
