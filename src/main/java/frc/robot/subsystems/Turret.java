@@ -275,7 +275,17 @@ public class Turret extends SubsystemBase implements Loggable {
 
       // Record the missing encoders as a sticky fault
       RobotPreferences.recordStickyFaults("Turret-Encoders");
-      DataLogUtil.writeMessageEcho("Turret: Turret not calibrated");
+      DataLogUtil.writeMessageEcho("Turret: Turret not calibrated due to missing encoders");
+    }
+
+    // Check if turret limit range is wider than allowed for calibration
+    if ( TurretAngle.UPPER_LIMIT.value - TurretAngle.LOWER_LIMIT.value > 360.0*TurretConstants.encoderCalculationCoefficient 
+         || TurretAngle.LOWER_LIMIT.value > 0.0 ) {
+      turretCalibrated = false;
+
+      // Record the poor definition of LIMITS as a sticky fault
+      RobotPreferences.recordStickyFaults("Turret-Constants");
+      DataLogUtil.writeMessageEcho("Turret: Turret not calibrated due to error in TurretConstants");
     }
 
     stopTurret();
@@ -563,6 +573,13 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param angle current angle the turret is physically at, in degrees
    */
   public void calibrateTurret(double angle) {
+    // Don't calibrate if the specified angle is outside of the Limit ranges
+    if (angle < TurretAngle.LOWER_LIMIT.value || angle > TurretAngle.UPPER_LIMIT.value) {
+      DataLogUtil.writeMessageEcho("Turret: NOT calibrated, input angle =", angle, 
+          ", Belt Encoder abs =", getCANcoderAbsRotationsRaw(1), ", Gear Encoder abs =", getCANcoderAbsRotationsRaw(2) );
+      return;
+    }
+
     stopTurret(); // Stop the motor so it does not jump to a new value
     turretZero = getTurretEncoderRotationsRaw() * TurretConstants.turretDegreesPerRotation - angle;
     turretCalibrated = true;
@@ -630,7 +647,10 @@ public class Turret extends SubsystemBase implements Loggable {
   /**
    * Turret angle estimation for use on initial robot boot.
    * Calculate turret angle based on the raw readings of both encoders.
-   * @return Turret angle, in degrees (from -180*theoreticalCalculationCoefficient to +180*theoreticalCalculationCoefficient)
+   * The output range of this calculation covers a range = 360*encoderCalculationCoefficient.
+   * <p> <b> THIS METHOD IS FOR TURRET CALIBRATION ONLY. </b> It is significantly inaccurate when the turret is turning.
+   * In general, use {@link #getTurretAngle()} to get the current turret angle when calibrated.
+   * @return Turret angle, in degrees (range is centered on LOWER_LIMIT to UPPER_LIMIT)
    */
   public double calcTurretAngleFromEncodersBasic() {
     double enc1angle = cancoderRotationsToDegrees(getCANcoderAbsRotationsRaw(1));
@@ -642,8 +662,9 @@ public class Turret extends SubsystemBase implements Loggable {
       angle +=  360.0 * TurretConstants.encoderCalculationCoefficient;
     }
 
-    // Convert angle from (0, maxAngle) to (-maxAngle/2, +maxAngle/2)
-    if (angle > 180.0 * TurretConstants.encoderCalculationCoefficient) {
+    // Convert angle from (0, maxAngle) to the range that is centered on (LOWER_LIMIT, UPPER_LIMIT)
+    // Note that maxAngle = 360.0 * TurretConstants.encoderCalculationCoefficient
+    if (angle > TurretConstants.encoderCalculationWrapPoint ) {
       angle -= 360.0 * TurretConstants.encoderCalculationCoefficient;
     }
 
@@ -653,9 +674,12 @@ public class Turret extends SubsystemBase implements Loggable {
   /**
    * Turret angle estimation for use on initial robot boot.
    * Calculate turret angle based on the raw reading of belt encoder, with correction for belt encoder wraps by using both encoders.
-   * @return Turret angle, in degrees (from -180 * theoreticalCalculationCoefficient to +180 * theoreticalCalculationCoefficient)
+   * The output range of this calculation covers a range = 360*encoderCalculationCoefficient.
+   * <p> <b> THIS METHOD IS FOR TURRET CALIBRATION ONLY. </b> It is significantly inaccurate when the turret is turning.
+   * In general, use {@link #getTurretAngle()} to get the current turret angle when calibrated.
+   * @return Turret angle, in degrees (range is centered on LOWER_LIMIT to UPPER_LIMIT)
    */
-  public double calcTurretAngleFromEncodersAdvanced() {
+  private double calcTurretAngleFromEncodersAdvanced() {
     double uncorrectedEncoderReading = cancoderRotationsToDegrees(getCANcoderAbsRotationsRaw(1)) * TurretConstants.gearEncoderToTurretRatio;
     
     return uncorrectedEncoderReading + 360.0 * TurretConstants.gearEncoderToTurretRatio * 
@@ -669,7 +693,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * @return Turret absolute field angle, as a Rotation2d object.
    */
   private Rotation2d getTurretAbsoluteAngle(Rotation2d robotRotation2d) {
-    double ret = robotRotation2d.getDegrees() + calcTurretAngleFromEncodersAdvanced() + 180.0;
+    double ret = robotRotation2d.getDegrees() + getTurretAngle() + 180.0;
 
     // make it wrap: (-180.0, 180.0)
     ret = convertToTurretRange(ret);
