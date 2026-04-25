@@ -291,7 +291,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Gets the velocity of the Shooter wheel.
+   * Gets the velocity of the Shooter wheel using one motor.
    * @param motorNumber int which motor, 1 or 2, to get velocity for
    * @return wheel velocity, in RPM
    */

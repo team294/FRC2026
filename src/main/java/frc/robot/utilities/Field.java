@@ -10,6 +10,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 
@@ -64,5 +65,27 @@ public class Field {
                 else {return FieldConstants.leftPassRed;}
             }
         }
+    }
+
+    /**
+     * Get "ghost" target to use for aiming shots to account for robot acceleration and velocity
+     * @param staticTargetTranslation2d Translation2d object of shot target
+     * @param turretTranslation2d Translation2d object of turret (shooter)
+     * @param robotFieldRelativeSpeeds <i>Field-relative</i> robot velocities
+     * @return Translation2d object of "ghost" target to aim at
+     */
+    public Translation2d getGhostShotTarget(Translation2d staticTargetTranslation2d, Translation2d turretTranslation2d, ChassisSpeeds robotFieldRelativeSpeeds) {
+        double estTimeOfFlight = turretTranslation2d.getDistance(staticTargetTranslation2d) * FieldConstants.timeOfFlightSlope + FieldConstants.timeOfFlightIntercept;
+
+        // We want to aim to counteract the offset caused by the added velocity that the robot moving has on the ball.
+        // During the time of flight, the ball deflects from where we want it to be by the formula: velocity*time
+        // Acceleration does not matter since there is no forces acting on the ball in the horizontal plane other than negligible? air resistance 
+        // This displacement is subtracted from the static target position because if the robot moves
+        // +1m left during flight, the target appears to shift -1m from the robot's POV so we have to aim 1m short
+        double offsetX = (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
+        double offsetY = (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
+
+        // ghost target = static target + displacement
+        return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
     }
 }
