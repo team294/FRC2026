@@ -26,4 +26,10 @@ public class TurretToggleShootOnTheMove extends InstantCommand {
   public void initialize() {
     turret.toggleShootOnTheMove();
   }
+
+  // Returns whether the command should be able to run while the robot is disabled (default = false). 
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
+  }
 }

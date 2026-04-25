@@ -598,6 +598,7 @@ public class Turret extends SubsystemBase implements Loggable {
       turretMotorConfigurator.apply(usingRotorEncoderConfig);
     }
     turretAutoAimEnabled = true;
+    turretShootOnTheMove = true;
   }
 
   /**
