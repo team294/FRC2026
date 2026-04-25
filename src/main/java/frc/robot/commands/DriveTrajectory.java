@@ -45,8 +45,6 @@ public class DriveTrajectory extends SequentialCommandGroup {
    * @param alliance AllianceSelection utility
    */
   public DriveTrajectory(CoordType trajectoryType, StopType stopType, Trajectory<SwerveSample> trajectory, DriveTrain driveTrain, AllianceSelection alliance) { 
-    addCommands(new DataLogMessage(false, "DriveTrajectory: Init"));
-
     // Define the controller for robot rotation
     PIDController thetaController = new PIDController(Constants.TrajectoryConstants.kPThetaController, 0, 0);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -59,6 +57,7 @@ public class DriveTrajectory extends SequentialCommandGroup {
       addCommands(new InstantCommand(() -> initialPose = driveTrain.getPose()));
     
       ChoreoFollower = new ChoreoFollower(
+        stopType, 
         trajectory, 
         new PIDController(Constants.TrajectoryConstants.kPXController, 0.0, 0.0),
         new PIDController(Constants.TrajectoryConstants.kPYController, 0.0, 0.0), 
@@ -82,6 +81,7 @@ public class DriveTrajectory extends SequentialCommandGroup {
       }
 
       ChoreoFollower = new ChoreoFollower(
+        stopType,
         trajectory, 
         new PIDController(Constants.TrajectoryConstants.kPXController, 0.0, 0.0),
         new PIDController(Constants.TrajectoryConstants.kPYController, 0.0, 0.0), 
@@ -95,21 +95,5 @@ public class DriveTrajectory extends SequentialCommandGroup {
 
     // Next follow the trajectory
     addCommands(ChoreoFollower);
-    
-    // Add any final commands, per the stopAtEnd
-    if (stopType == StopType.kBrake) {
-      addCommands(
-        new DriveStop(driveTrain),
-        new InstantCommand(() -> driveTrain.setDriveModeCoast(false))
-      );
-    } else if (stopType == StopType.kCoast) {
-      addCommands(
-        new DriveStop(driveTrain),
-        new InstantCommand(() -> driveTrain.setDriveModeCoast(true))
-      );
-    }
-
-    // Log that the command completed
-    addCommands(new DataLogMessage(false, "DriveTrajectory: Finish"));
   }
 }

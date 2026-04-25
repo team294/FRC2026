@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A5";
+  public static final String bcrRobotCodeVersion = "A6";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -547,10 +547,10 @@ public final class Constants {
     public static final String leftCameraName = "LeftCamera"; // this has to match the camera name in PhotonVision
     public static final String rightCameraName = "RightCamera"; // this has to match the camera name in PhotonVision
 
-    // TODO CALIBRATE (Fake values from PhotonVision example code. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    public static final double kTagDistanceConst = 0.033;
+    // CALIBRATED for Worlds.  Previous values were fake values from PhotonVision example code.  Need to experiment and determine estimation noise on an actual robot.
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4);             //  (1.5, 1.5, 4) for Worlds.  Was (4, 4, 8) previously
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //   (0.1, 0.1, 0.25) for Worlds.  Was (0.5, 0.5, 1) previously
+    public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
   }
 
     public static class AutoConstants {
@@ -626,7 +626,7 @@ public final class Constants {
     public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees.
-    public static final double deployCANcoderOffsetAngle = 83.3;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
+    public static final double deployCANcoderOffsetAngle = 83.3 + 1.0;  // CALIBRATED 4/8: 83.3, 0 degrees is when orange arrow is straight up
 
     // Center of the region of unallowed motion. 1 makes absolute position unsigned [0, 1), 0.5 makes it signed [-0.5, 0.5), and 0 makes it always negative.
     public static final double deployCANcoderDiscontinuityPoint = 0.8095; // CALIBRATED 4/8: 0.8095
@@ -644,7 +644,7 @@ public final class Constants {
     public static final double MMJerk = MMAcceleration / 0.05;            // CALIBRATED, Max jerk in mechanism rotations / second^3 (MMAccel / MMJerk = sec to full acceleration)
 
     public enum IntakeDeployAngle {
-      LOWER_LIMIT(-92.0),   // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
+      LOWER_LIMIT(-92.0),   // CALIBRATED 4/17/26: -92.0     updated AVDE after quals: -89.1 , 3/29/26: -87.4  Lower limit is intake all the way down, hard stopped by the bumpers
       INTAKE(-91.0),        // CALIBRATED updated AVDE after quals: -89.1 , 3/29/26: -87.0%
       TRENCH_ALLOWED_LOWER(-70.0), // When the intake is below this angle it can fit under the trench
       AGITATE_LOWER(-70.0),  // CALIBRATED 3/19/26: -70.0
@@ -662,7 +662,7 @@ public final class Constants {
 
   public static final class FeederConstants {
     public static final double reverseSpindexerSeconds = 0.5;
-    public static final double noFuelSeconds = 1.5; // was 0.687
+    public static final double noFuelSeconds = 1.0; // 1.0 changed for Q103, was 1.5 
     public static final double uptakeVelocityToleranceToStartSpindexer = 50.0;  // in RPM
     public static final double spindexderToUptakeRPMRatio = 0.785;  // TODO CALIBRATE proportion that spindexer should be running at relative to uptake, in RPM. should be < 1.0
 
@@ -704,7 +704,9 @@ public final class Constants {
     public static final double manualReverseShootPercent = -0.1;
     public static final double manualShootRPM = 2500;
     public static final double manualReverseShootRPM = -manualShootRPM;
-    public static final double maxShootRPM = 3800;
+    public static final double maxShootRPM = 5000; // Was 3800
+    public static final double maxShootWaitForRPM = 4000;     // Don't wait to reach target RPM if actual RPM is above this threshold.
+          // Reaching high shooter velocity takes too long, and shooter may not get there under high-current conditions or low battery.
 
     public static final double gearRatio = (18.0 / 18.0); // CALIBRATED 3/13/26: (18:18) Turn ratio from the motor pinion to the shooter wheel
 
@@ -751,6 +753,14 @@ public final class Constants {
     //public static final double hoodActuatorMaxExtensionLength = 10.4965; // in inches, measured on physical part (center of bottom circle to center of top circle)
     public static final double hoodActuatorMinExtensionLength = 6.567;   // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
     public static final double hoodActuatorMaxExtensionLength = 9.750; // in inches, measured on physical part (center of bottom circle to center of top circle) Natalie Test
+
+    // To swap one of the hood actuators for a spare, update corresponding hoodNSlopePointAnalogVoltage and hoodNSlopePointExtensionLength
+    // Hood Spare SN005: 
+    //    Slope Point Analog Voltage = 2.725V
+    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 2.908in
+    // Hood Spare SN006: 
+    //    Slope Point Analog Voltage = 4.046V
+    //    Slope Point Extension Length = hoodActuatorMinExtensionLength + 3.124in
 
     public static final double hood1SlopePointAnalogVoltage = 2.8; // analog voltage, arbitrary value to calculate extension slope 
     public static final double hood2SlopePointAnalogVoltage = 4.04; // analog voltage, arbitrary value to calculate extension slope
@@ -842,6 +852,7 @@ public final class Constants {
     public static final double compensationVoltage = 12.0;
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
+    public static final double maxPercentOutput = 0.45;
   }
 
   public static final class TrajectoryConstants {

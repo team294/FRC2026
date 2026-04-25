@@ -59,9 +59,11 @@ public class BuildSideAuton extends SequentialCommandGroup {
     boolean shoot = autoEnd != AutoEndType.kOutpostOrDepot;
 
     addCommands(
-      new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
-      // First cycle
-      new DriveResetPose(initalRobotStartPose, false, driveTrain),
+      parallel(
+        new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
+        // First cycle
+        new DriveResetPose(initalRobotStartPose, false, driveTrain)
+      ),
       new AutonDriveToNeutralAndCollectBalls(shootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       

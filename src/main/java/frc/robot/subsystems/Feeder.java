@@ -243,6 +243,7 @@ public class Feeder extends SubsystemBase implements Loggable {
    */
   public void setUptakePercentOutput(double percent) {
     uptakeSetpointPercent = percent;
+    uptakeSetpointRPM = 0;
     uptakeMotor.setControl(uptakeVoltageControl.withOutput(percent * UptakeConstants.compensationVoltage));
   }
 
@@ -252,6 +253,7 @@ public class Feeder extends SubsystemBase implements Loggable {
    */
   public void setSpindexerPercentOutput(double percent) {
     spindexerSetpointPercent = percent;
+    spindexerSetpointRPM = 0;
     spindexerMotor.setControl(spindexerVoltageControl.withOutput(percent * SpindexerConstants.compensationVoltage));
   }
 
@@ -539,8 +541,11 @@ public class Feeder extends SubsystemBase implements Loggable {
     spindexerRPM = getSpindexerVelocity();
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      checkForFaultConditions();
       updateLog(false);
+    }
+
+    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+      checkForFaultConditions();
 
       SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());
       SmartDashboard.putNumber(UPTAKE_TARGET_RPM.value, uptakeSetpointRPM);
