@@ -271,7 +271,9 @@ public final class Constants {
 
       // Calibrate Manual Command
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(intakeDeployString + calibrateManualCmdString),
-      CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL_BOTH(climberString + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL_LEFT(climberString + " L" + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL_RIGHT(climberString + " R" + calibrateManualCmdString),
       TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
       TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
       TURRET_CMD_TOGGLE_SOTM(turretString + " Toggle SOTM"),

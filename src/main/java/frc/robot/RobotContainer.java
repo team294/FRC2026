@@ -193,6 +193,9 @@ public class RobotContainer {
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL.value, new IntakeDeployCalibrateManual(intake));
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_MANUAL.value, new TurretManualCalibration(turret, true));
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_AUTOMATIC.value, new TurretManualCalibration(turret, false));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_MANUAL_LEFT.value, new InstantCommand(() -> climber.calibrateEncoderLeft()));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_MANUAL_RIGHT.value, new InstantCommand(() -> climber.calibrateEncoderRight()));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_MANUAL_BOTH.value, new ClimberCalibrateManual(climber));
 
     // Toggle
 
