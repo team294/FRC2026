@@ -542,7 +542,7 @@ public final class Constants {
     // tower lineup positions for climbing
     public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
     public static final Translation2d climbPrepBlue = new Translation2d(1.8, towerPositionBlue.getY());
-    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(5.58), towerPositionBlue.getY());
+    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(3.58), towerPositionBlue.getY() + Units.inchesToMeters(1.5));  // 4/25: X: Now 3.58, Was 5.58 inches  Y: Now +1.5in
 
     public static final Translation2d towerPositionRed = new Translation2d(length - towerPositionBlue.getX(), width - towerPositionBlue.getY());
     public static final Translation2d climbPrepRed = new Translation2d(length - climbPrepBlue.getX(), width - climbPrepBlue.getY());
@@ -856,6 +856,7 @@ public final class Constants {
       CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
       UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret.  UPPER_WRAP_POINT MUST = LOWER_WRAP_POINT + 360!
       UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114.  UPPER_LIMIT-LOWER_LIMIT must be <= 385 deg [otherwise encoders could boot up to wrong angle]
+
 
       public final double value;
       TurretAngle(double angle) {

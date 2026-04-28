@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Field;
 
 public class TurretAutoAim extends Command {
@@ -38,6 +39,7 @@ public class TurretAutoAim extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DataLogUtil.writeMessage("TurretAutoAim:  Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -77,5 +79,6 @@ public class TurretAutoAim extends Command {
   // Called once the command ends or is interrupted.
   public void end(boolean interrupted) {
     turret.stopTurret();
+    DataLogUtil.writeMessage("TurretAutoAim:  End, interrupted =", interrupted);
   }
 }
