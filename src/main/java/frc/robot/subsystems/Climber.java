@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -81,15 +82,22 @@ public class Climber extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogClimberLeftTemp = new DoubleLogEntry(log, "/ClimberLeft/Temperature");
   private final DoubleLogEntry dLogClimberLeftCurrent = new DoubleLogEntry(log, "/ClimberLeft/Current");
   private final DoubleLogEntry dLogClimberLeftVoltage = new DoubleLogEntry(log, "/ClimberLeft/Voltage");
+  private final DoubleLogEntry dLogClimberLeftPosition = new DoubleLogEntry(log, "/ClimberLeft/Position");
   private final DoubleLogEntry dLogClimberRightTemp = new DoubleLogEntry(log, "/ClimberRight/Temperature");
   private final DoubleLogEntry dLogClimberRightCurrent = new DoubleLogEntry(log, "/ClimberRight/Current");
   private final DoubleLogEntry dLogClimberRightVoltage = new DoubleLogEntry(log, "/ClimberRight/Voltage");
+  private final DoubleLogEntry dLogClimberRightPosition = new DoubleLogEntry(log, "/ClimberRight/Position");
+
+  private final BooleanLogEntry dLogClimberLeftCalibrated = new BooleanLogEntry(log, "/ClimberLeft/isCalibrated");
+  private final BooleanLogEntry dLogClimberRightCalibrated = new BooleanLogEntry(log, "/ClimberRight/isCalibrated");
+
+  private final DoubleLogEntry dLogClimberTargetPosition = new DoubleLogEntry(log, "/Climber/TargetPosition");
 
   // Current setpoint percent output (logical percent; sign indicates direction)
-  private double setpointPercentLeft;
-  private double setpointPercentRight;
+  private double setpointPercentLeft = 0.0;
+  private double setpointPercentRight = 0.0;
 
-  private double setpointPosition;
+  private double setpointPosition = 0.0;
   private boolean isClimberInPositionControl = false;
 
   private boolean climberCalibrated = false; // Default to climber being uncalibrated. Calibrate when left and right climbers are calibrated.
@@ -540,9 +548,16 @@ public class Climber extends SubsystemBase implements Loggable {
       dLogClimberLeftTemp.append(getClimberTemp(1), timeNow);
       dLogClimberLeftCurrent.append(getClimberAmps(1), timeNow);
       dLogClimberLeftVoltage.append(getClimberVoltage(1), timeNow);
+      dLogClimberLeftPosition.append(getClimberPositionInches(ClimberConstants.SIDE_LEFT));
       dLogClimberRightTemp.append(getClimberTemp(2), timeNow);
       dLogClimberRightCurrent.append(getClimberAmps(2), timeNow);
       dLogClimberRightVoltage.append(getClimberVoltage(2), timeNow);
+      dLogClimberRightPosition.append(getClimberPositionInches(ClimberConstants.SIDE_RIGHT));
+
+      dLogClimberLeftCalibrated.append(climberLeftCalibrated);
+      dLogClimberRightCalibrated.append(climberRightCalibrated);
+
+      dLogClimberTargetPosition.append(setpointPosition);
     }
   }
 
