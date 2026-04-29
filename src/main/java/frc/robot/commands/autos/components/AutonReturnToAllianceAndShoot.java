@@ -6,6 +6,8 @@ package frc.robot.commands.autos.components;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CoordType;
@@ -31,18 +33,15 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
   /** Creates a new AutonDriveAndShoot. */
-  public AutonReturnToAllianceAndShoot(ReturnToAllianceType returnToAllianceZone, AutoEndType autoEnd, boolean leftSide, boolean shoot, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+  public AutonReturnToAllianceAndShoot(ReturnToAllianceType returnToAllianceZone, AutoEndType autoEnd, boolean isSecondCycle, boolean leftSide, boolean shoot, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+    Trajectory<SwerveSample> trajectory = returnToAllianceZone == ReturnToAllianceType.kOverBump ? cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootBump) : cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootTrench);
     addCommands(
       parallel(
         new DataLogMessage(false, "AutonDriveAndShoot: start"),
-        // intake off
-        either( // TODO replace diff trajectory with enhanced if statement?
-          new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootBump), driveTrain, alliance), 
-          sequence(
-            // make sure robot is in under-the trench-configuration. 
-            new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(leftSide, TrajectoryName.CollectEndToShootTrench), driveTrain, alliance)
-          ),
-          () -> returnToAllianceZone == ReturnToAllianceType.kOverBump
+        either(
+          none(),
+          new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectory, driveTrain, alliance),
+          () -> isSecondCycle // if it's the second cycle, we are already starting in the shoot position so no need to move
         )
       ),
       // Whether to stop and shoot or wait to shoot until at the outpost/feeder. This depends on whether we are going to the outpost and scoring from there or not

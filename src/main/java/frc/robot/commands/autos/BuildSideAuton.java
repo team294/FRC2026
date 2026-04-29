@@ -65,7 +65,7 @@ public class BuildSideAuton extends SequentialCommandGroup {
         new DriveResetPose(initalRobotStartPose, false, driveTrain)
       ),
       new AutonDriveToNeutralAndCollectBalls(shootPreload, ballPickupTrajDirection, returnToAllianceDirection, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
-      new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+      new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, false, leftSide, shoot, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       
       // Whether we are going to do anything after the first cycle
       either(
@@ -74,7 +74,7 @@ public class BuildSideAuton extends SequentialCommandGroup {
         either(
           sequence(
             new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kBumpSecondSwipe, ReturnToAllianceType.kOverBump, leftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
-            new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, leftSide, true, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field)
+            new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, true, leftSide, true, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field)
           ), 
           new AutonOutpostOrDepotAndScore(routineSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
           () -> autoEnd == AutoEndType.kSecondCycle 
