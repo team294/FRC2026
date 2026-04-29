@@ -31,7 +31,9 @@ import frc.robot.Constants.FieldConstants;
         BumpSecondSweep("BumpSecondSweep"),
         CenterStartCollectUnderTower_LabSafe("CenterStartCollectUnderTower_LabSafe"),
         CollectDepotToClimb_LabSafe("CollectDepotToClimb_LabSafe"),
+        CollectEndToEndFollower("CollectEndToEndFollower"),
         //StartBumpToCollectStart("StartBumpToCollectStart"),
+        
         StartTrenchToCollectStart("StartTrenchToCollectStart"),
         ShootTrenchToOutpost("shootTrenchToOutpost"),
         ShootTrenchToDepot("ShootTrenchToDepot"),
