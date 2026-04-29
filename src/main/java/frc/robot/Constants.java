@@ -861,10 +861,17 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    // Side convention for all climber side-specific commands/logic:
-    // 1 = left, 2 = right
-    public static final int SIDE_LEFT = 1;
-    public static final int SIDE_RIGHT = 2;
+    // Side specifier for all climber side-specific commands/logic:
+    public enum ClimberSide {
+      LEFT,
+      RIGHT;
+    }
+
+    // Limit switch specifier
+    public enum ClimberLimit {
+      LOWER,
+      UPPER;
+    }
 
     public static final double climberLeftGearRatio = (5.0 / 1.0) * (9.0 / 1.0);   // gear ratio from left climber motor to mechanism
     public static final double climberRightGearRatio = (5.0 / 1.0) * (9.0 / 1.0);  // gear ratio from right climber motor to mechanism
@@ -874,6 +881,7 @@ public final class Constants {
     public static final double inchesPerEncoderRotation = 4.9153;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
 
     public static final double compensationVoltage = 12.0;
+    public static final double rightVoltageRatio = 0.995;    // Voltage ratio to apply to right motor, so that left and right motors match velocity
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
     public static final double maxPercentOutput = 0.45;

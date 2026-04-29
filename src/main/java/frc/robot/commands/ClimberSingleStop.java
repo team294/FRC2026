@@ -4,13 +4,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimberConstants.ClimberSide;
 import frc.robot.subsystems.Climber;
 import frc.robot.utilities.DataLogUtil;
 
 public class ClimberSingleStop extends Command {
   private final Climber climber;
-  // Side convention: 1 = left, 2 = right
-  private final int side;
+  private final ClimberSide side;
 
   /**
    * Stop one climber side motor.
@@ -18,7 +18,7 @@ public class ClimberSingleStop extends Command {
    * @param side which climber side to stop
    * @param climber Climber subsystem
    */
-  public ClimberSingleStop(int side, Climber climber) {
+  public ClimberSingleStop(ClimberSide side, Climber climber) {
     this.climber = climber;
     this.side = side;
 
