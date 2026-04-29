@@ -76,7 +76,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake),
                 new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field)
               ),
-              parallel(
+              new ParallelDeadlineGroup(
                 new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
                 either(
                   new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),

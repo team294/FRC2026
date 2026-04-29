@@ -8,6 +8,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -38,14 +39,18 @@ public class AutomatedDriveAndClimbSequence extends SequentialCommandGroup {
   */
   public AutomatedDriveAndClimbSequence(Alliance alliance, DriveTrain driveTrain, Climber climber, Shooter shooter, Turret turret, Intake intake) {
     addCommands(
-      // parallel(
-        new ClimbPrepSequence(climber, shooter, turret, intake),
-        // either(
-        //   new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
-        //   new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), Rotation2d.k180deg), 0.07, 1.5, driveTrain),
-        //   () -> (alliance == Alliance.Blue)
-        // )
-      // ),
+      parallel(
+        new ClimbPrepSequence(climber, shooter, turret, intake), 
+        either(
+          either(
+            new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
+            new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), Rotation2d.k180deg), 0.07, 1.5, driveTrain),
+            () -> (alliance == Alliance.Blue)
+          ),
+          none(),
+          () -> DriverStation.isTeleop()
+        )
+      ),
       either(
         new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbExecuteBlue.getX(), FieldConstants.climbExecuteBlue.getY(), new Rotation2d(0)), 0.07, 1.0, driveTrain),
         new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbExecuteRed.getX(), FieldConstants.climbExecuteRed.getY(), Rotation2d.k180deg), 0.07, 1.0, driveTrain),
