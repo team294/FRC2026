@@ -21,7 +21,7 @@ public class ClimberSetPosition extends Command {
   /**
    * Sets the target position for the Climber and attempts to move it to that position.
    * This command ends when the position is within the tolerance of the target.
-   * @param position target position, in inches
+   * @param position target position, in inches from bottom
    * @param climber Climber subsystem
    */
   public ClimberSetPosition(double position, Climber climber) {
@@ -65,7 +65,7 @@ public class ClimberSetPosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromElastic) this.targetPosition = SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.LOWER_LIMIT.value);
+    if (fromElastic) targetPosition = SmartDashboard.getNumber(CLIMBER_CMD_SET_POSITION_INPUT.value, ClimberPosition.LOWER_LIMIT.value);
     climber.setClimberPosition(targetPosition);
 
     climber.enableFastLogging(true);

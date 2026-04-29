@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 import frc.robot.utilities.DataLogUtil;
-import frc.robot.utilities.LEDEventUtil;
 
 public class ClimberSetPercent extends Command {
   private final Climber climber;
@@ -18,7 +17,8 @@ public class ClimberSetPercent extends Command {
   private double percent;
 
   /**
-   * Set percent of climber motors (+ is up, - is down) with input from elastic
+   * Set percent of climber motors (+ is up, - is down) with input from elastic.  
+   * Command stops when the climber hits the limit switch.
    * @param climber Climber subsystem
    */
   public ClimberSetPercent(Climber climber) {
@@ -33,8 +33,9 @@ public class ClimberSetPercent extends Command {
   }
 
   /**
-   * Set percent of climber motors (+ is up, - is down)
-   * @param percent [-1.0, 1.0]
+   * Set percent of climber motors (+ is up, - is down).  Command stops when 
+   * the climber hits the limit switch.
+   * @param percent [-1.0, 1.0] (positive = up, negative = down)
    * @param climber Climber subsystem
    */
   public ClimberSetPercent(double percent, Climber climber) {

@@ -9,29 +9,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 import frc.robot.utilities.DataLogUtil;
-import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ClimberConstants.ClimberSide;
 
 public class ClimberSingleSetPercent extends Command {
   private final Climber climber;
-  // Side convention: 1 = left, 2 = right
-  private final int side;
+  private final ClimberSide side;
   private final boolean fromElastic;
   private double percent;
 
   /**
-   * Set one climber side percent using Elastic input.
+   * Set one climber side percent using Elastic input.  Command stops when 
+   * the climber side hits the limit switch.
    *
-   * @param side which climber side to control 1 = left, 2 = right
+   * @param side which climber side to control
    * @param climber Climber subsystem
    */
-  public ClimberSingleSetPercent(int side, Climber climber) {
+  public ClimberSingleSetPercent(ClimberSide side, Climber climber) {
     this.climber = climber;
     this.side = side;
     fromElastic = true;
     this.percent = 0.0;
 
     // Ensure Elastic input exists so SmartDashboard never returns the fallback.
-    String key = side == ClimberConstants.SIDE_LEFT
+    String key = side == ClimberSide.LEFT
         ? CLIMBER_CMD_SET_PERCENT_LEFT_INPUT.value
         : CLIMBER_CMD_SET_PERCENT_RIGHT_INPUT.value;
 
@@ -43,13 +43,14 @@ public class ClimberSingleSetPercent extends Command {
   }
 
   /**
-   * Set one climber side percent directly (non-Elastic).
+   * Set one climber side percent directly (non-Elastic).  Command stops when 
+   * the climber side hits the limit switch.
    *
-   * @param percent output percent, -1.0 to 1.0
+   * @param percent output percent, -1.0 to 1.0 (positive = up, negative = down)
    * @param side which climber side to control
    * @param climber Climber subsystem
    */
-  public ClimberSingleSetPercent(double percent, int side, Climber climber) {
+  public ClimberSingleSetPercent(double percent, ClimberSide side, Climber climber) {
     this.climber = climber;
     this.side = side;
     this.fromElastic = false;
@@ -61,7 +62,7 @@ public class ClimberSingleSetPercent extends Command {
   @Override
   public void initialize() {
     if (fromElastic) {
-      String key = side == ClimberConstants.SIDE_LEFT
+      String key = side == ClimberSide.LEFT
           ? CLIMBER_CMD_SET_PERCENT_LEFT_INPUT.value
           : CLIMBER_CMD_SET_PERCENT_RIGHT_INPUT.value;
       percent = SmartDashboard.getNumber(key, 0.0);
