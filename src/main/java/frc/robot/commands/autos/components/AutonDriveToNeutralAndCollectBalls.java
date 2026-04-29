@@ -48,12 +48,16 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
     switch (ballPickupTraj) {
       case kDriveThroughSide: 
         trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+        break;
       case kDriveThroughCenter:
         trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchCenterCollectBalls);
+        break;
       case kBumpSecondSwipe:
         trajectory = cache.getTrajectory(leftSide, TrajectoryName.BumpSecondSweep);
+        break;
       default:
         trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+        break;
     }
 
     addCommands(

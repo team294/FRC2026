@@ -60,7 +60,7 @@ public class BuildSideAuton extends SequentialCommandGroup {
 
     addCommands(
       parallel(
-        new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + "ballPickupPath = " + ballPickupTrajDirection + "returnToAlliancePath = " + returnToAllianceDirection + "autoEnd = " + autoEnd + "routineSide = " + routineSide),
+        new DataLogMessage(false, "BuildAutonRoutine: shootPreload = " + shootPreload + ", ballPickupPath = " + ballPickupTrajDirection + ", returnToAlliancePath = " + returnToAllianceDirection + ", autoEnd = " + autoEnd + ", routineSide = " + routineSide),
         // First cycle
         new DriveResetPose(initalRobotStartPose, false, driveTrain)
       ),
