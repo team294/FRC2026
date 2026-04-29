@@ -19,7 +19,7 @@
  },
  "params":{
   "waypoints":[
-    {"x":{"exp":"collectEnd.x", "val":6.5705389976501465}, "y":{"exp":"collectEnd.y", "val":3.097996950149536}, "heading":{"exp":"collectEnd.heading", "val":-2.626272981131867}, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"collectEnd.x", "val":6.5705389976501465}, "y":{"exp":"collectEnd.y", "val":3.097996950149536}, "heading":{"exp":"collectEnd.heading", "val":-2.339731529721614}, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"5.756289958953857 m", "val":5.756289958953857}, "y":{"exp":"2.486537456512451 m", "val":2.486537456512451}, "heading":{"exp":"-1.5656950473041886 rad", "val":-1.5656950473041886}, "intervals":39, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"shootBump.x", "val":2.6}, "y":{"exp":"shootBump.y", "val":2.5111160278320312}, "heading":{"exp":"shootBump.heading", "val":-1.5661052183457105}, "intervals":13, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
