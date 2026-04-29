@@ -106,6 +106,9 @@ public class Climber extends SubsystemBase implements Loggable {
   private boolean climberLeftCalibrated = false;   // Default to being uncalibrated. Calibrate on boot if at lower limit, or recalibrate if "Climber Calibrate L Zero" command run.
   private boolean climberRightCalibrated = false;  // Default to being uncalibrated. Calibrate on boot if at lower limit, or recalibrate if "Climber Calibrate R Zero" command run.
 
+  private double leftEncoderZero;
+  private double rightEncoderZero;
+
   // Sticky Faults
   private boolean climberLeftMissingStickyFault = false;
   private boolean climberRightMissingStickyFault = false;
@@ -282,12 +285,12 @@ public class Climber extends SubsystemBase implements Loggable {
       setpointPosition = MathUtil.clamp(position, ClimberPosition.LOWER_LIMIT.value, ClimberPosition.UPPER_LIMIT.value);
       isClimberInPositionControl = true;
 
-      climberLeftMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
+      climberLeftMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition) + leftEncoderZero));
 
       if (setpointPosition == ClimberPosition.UPPER_LIMIT.value) {
-        climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition + 0.5)));  // avoid right side's hook clipping rung
+        climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition + 0.5) + rightEncoderZero));  // avoid right side's hook clipping rung
       } else {
-        climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition)));
+        climberRightMotor.setControl(climberMMVoltageControl.withPosition(convertClimberInchesToEncoderRotations(setpointPosition) + rightEncoderZero));
       }
     } else {
       DataLogUtil.writeMessageEcho("Climber.SetClimberPosition:  Uncalibrated, position control aborted!");
@@ -309,8 +312,8 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public double getClimberPositionRotationsRaw(ClimberSide side) {
     return side == ClimberSide.LEFT
-      ? climberLeftEncoderPosition.refresh().getValueAsDouble() 
-      : climberRightEncoderPosition.refresh().getValueAsDouble();
+      ? climberLeftEncoderPosition.refresh().getValueAsDouble() - leftEncoderZero
+      : climberRightEncoderPosition.refresh().getValueAsDouble() - rightEncoderZero;
   }
 
   /**
@@ -443,7 +446,9 @@ public class Climber extends SubsystemBase implements Loggable {
   private void zeroEncoderLeft() {
     stopClimberMotor(ClimberSide.LEFT);
 
-    climberLeftMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
+    leftEncoderZero = 0.0;
+    leftEncoderZero = getClimberPositionRotationsRaw(ClimberSide.LEFT);
+    // climberLeftMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
 
     DataLogUtil.writeMessageEcho(subsystemName, "Left: ZeroEncoder - success");
   }
@@ -455,7 +460,9 @@ public class Climber extends SubsystemBase implements Loggable {
   private void zeroEncoderRight() {
     stopClimberMotor(ClimberSide.RIGHT);
 
-    climberRightMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
+    rightEncoderZero = 0.0;
+    rightEncoderZero = getClimberPositionRotationsRaw(ClimberSide.RIGHT);
+    // climberRightMotor.setPosition(ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation);
 
     DataLogUtil.writeMessageEcho(subsystemName, "Right: ZeroEncoder - success");
   }
@@ -469,8 +476,8 @@ public class Climber extends SubsystemBase implements Loggable {
     climberLeftCalibrated = true;
 
     // Set software limits after setting encoderZero
-    climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
-    climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
+    climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation + leftEncoderZero;
+    climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation + leftEncoderZero;
     climberLeftConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     climberLeftConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     // Apply the configurations to left motor
@@ -489,8 +496,8 @@ public class Climber extends SubsystemBase implements Loggable {
     climberRightCalibrated = true;
 
     // Set software limits after setting encoderZero
-    climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
-    climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation;
+    climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ClimberPosition.UPPER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation + rightEncoderZero;
+    climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ClimberPosition.LOWER_LIMIT.value / ClimberConstants.inchesPerEncoderRotation + rightEncoderZero;
     climberRightConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     climberRightConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     // Apply the configurations to right motor
