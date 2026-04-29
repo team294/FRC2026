@@ -100,6 +100,8 @@ public class Turret extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogTurretVelDPS = new DoubleLogEntry(log, "/Turret/Turret Velocity dps");
   private final DoubleLogEntry dLogTurretBasicEstimation = new DoubleLogEntry(log, "/Turret/Turret Basic Estimation");
   private final DoubleLogEntry dLogTurretAdvancedEstimation = new DoubleLogEntry(log, "/Turret/Turret Advanced Estimation");
+  private final DoubleLogEntry dLogTurretPoseX = new DoubleLogEntry(log, "/Turret/PoseX");
+  private final DoubleLogEntry dLogTurretPoseY = new DoubleLogEntry(log, "/Turret/PoseY");
   private final BooleanLogEntry dLogTurretCalibrated = new BooleanLogEntry(log, "/Turret/Turret Calibrated?");
   private final BooleanLogEntry dLogCANcoderBeltConnected = new BooleanLogEntry(log, "/Turret/CANcoder Belt Connected?");
   private final BooleanLogEntry dLogCANcoderGearConnected = new BooleanLogEntry(log, "/Turret/CANcoder Gear Connected?");
@@ -109,6 +111,8 @@ public class Turret extends SubsystemBase implements Loggable {
 
   private boolean turretCalibrated = false; // Default to turret being uncalibrated. Calibrate from robot preferences or
                                             // "Calibrate Turret Zero" button on dashboard.
+
+  private Pose2d turretPose;
 
   private double targetAngle; // Current turret target on position control on the motor (if in position mode)
   private boolean atGoalAngle = false;
@@ -709,10 +713,11 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public Pose2d getTurretAbsolutePose(Pose2d robotPose2d) {
     double robotRotRadians = robotPose2d.getRotation().getRadians();
-
-    return new Pose2d(robotPose2d.getX() + TurretConstants.turretOffset * Math.cos(robotRotRadians),
+    turretPose = new Pose2d(robotPose2d.getX() + TurretConstants.turretOffset * Math.cos(robotRotRadians),
                       robotPose2d.getY() + TurretConstants.turretOffset * Math.sin(robotRotRadians),
                       getTurretAbsoluteAngle(robotPose2d.getRotation()));
+
+    return turretPose;
   }
 
   /**
@@ -811,6 +816,8 @@ public class Turret extends SubsystemBase implements Loggable {
       dLogCANcoderBeltConnected.append(isCANcoderConnected(1), timeNow);
       dLogCANcoderGearConnected.append(isCANcoderConnected(2), timeNow);
       dLogTurretAutoAimEnabled.append(turretAutoAimEnabled, timeNow);
+      dLogTurretPoseX.append(turretPose.getX(), timeNow);
+      dLogTurretPoseY.append(turretPose.getY(), timeNow);
     }
   }
 

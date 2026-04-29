@@ -226,6 +226,11 @@ public class RobotContainer {
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
+
+    // SOTM Debug
+    SmartDashboard.putData("SOTM Test 20% Speed", new ShootOnTheMoveDebug(0.2, driveTrain, turret, shooter, feeder, intake, field));
+    SmartDashboard.putData("SOTM Test 40% Speed", new ShootOnTheMoveDebug(0.4, driveTrain, turret, shooter, feeder, intake, field));
+    SmartDashboard.putData("SOTM Test 60% Speed", new ShootOnTheMoveDebug(0.6, driveTrain, turret, shooter, feeder, intake, field));
   }
  
   /**

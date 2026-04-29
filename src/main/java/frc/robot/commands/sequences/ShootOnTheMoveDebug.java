@@ -7,26 +7,34 @@ package frc.robot.commands.sequences;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.DriveToPose;
+import frc.robot.Constants.EndType;
+import frc.robot.commands.DrivePercentSpeed;
+import frc.robot.commands.ShooterScorePrep;
+import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
+import frc.robot.utilities.Field;
 
 public class ShootOnTheMoveDebug extends SequentialCommandGroup {
 
   /**
-   * Moves the robot at specified x and y velocities while shooting to gather data for SOTM.
-   * Waits until velocities are hit to start shooting.
-   * @param xVelocity forwards/backwards velocity, in meters/second
-   * @param yVelocity left/right velocity, in meters/second
+   * Moves the robot 3.0meters right (RELATIVE TO ROBOT FACING) while shooting to gather data for SOTM.
+   * If the turret is facing the hub, the robot will move to the left; If the turret
+   * is facing the right side of the field, the robot will move toward the hub, etc.
+   * @param percentSpeed percent of max speed to drive at
    * @param driveTrain DriveTrain subsystem
    * @param shooter Shooter subsystem
   */
-  public ShootOnTheMoveDebug(double xVelocity, double yVelocity, DriveTrain driveTrain, Shooter shooter) {
+  public ShootOnTheMoveDebug(double percentSpeed, DriveTrain driveTrain, Turret turret, Shooter shooter, Feeder feeder, Intake intake, Field field) {
     addCommands(
-      // drive to pose w/ specific velocities
-      // waituntil those velocities are hit
-      // start shooting
-      // LOG EVERYTHING!!
+      new ShooterScorePrep(false, EndType.waitForSetPoint, shooter, turret, driveTrain, field),
+      race(
+        new DrivePercentSpeed(90.0, percentSpeed, 3.0, driveTrain),
+        new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter)
+      )
     );
   }
 }
