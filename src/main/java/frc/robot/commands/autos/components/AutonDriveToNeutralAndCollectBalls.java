@@ -17,6 +17,7 @@ import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.ClimberSetPercent;
@@ -42,8 +43,22 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
   /** Creates a new AutonDriveToNeutralAndCollectBalls. */
-  public AutonDriveToNeutralAndCollectBalls(ShootPreloadType shootPreload, BallPickupTrajType driveThroughCenter, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
-    Trajectory<SwerveSample> trajectory = driveThroughCenter == BallPickupTrajType.kDriveThroughCenter ? cache.getTrajectory(leftSide, TrajectoryName.StartTrenchCenterCollectBalls) : cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+  public AutonDriveToNeutralAndCollectBalls(ShootPreloadType shootPreload, BallPickupTrajType ballPickupTraj, ReturnToAllianceType returnToAllianceZone, boolean leftSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+    Trajectory<SwerveSample> trajectory;
+    switch (ballPickupTraj) {
+      case kDriveThroughSide: 
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+        break;
+      case kDriveThroughCenter:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchCenterCollectBalls);
+        break;
+      case kBumpSecondSwipe:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.BumpSecondSweep);
+        break;
+      default:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
+        break;
+    }
 
     addCommands(
       new DataLogMessage(false, "AutonDriveToNeutralAndCollectBalls: start"),
@@ -52,7 +67,7 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
       either(
         sequence(
           // If shooting preload, starts with front of the robot on the start line (one robot's length back)
-          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(1.0),
+          new AutonScore(EndType.waitForSetPoint, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(2.0),
           new DriveToPose(CoordType.kAbsolute, trajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), driveTrain) // TODO would this make it stop? how to make it continously go into the trajectory? 
         ),
         none(),
@@ -61,6 +76,7 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
       deadline(
         new DriveTrajectory(CoordType.kAbsolute, StopType.kNoStop, trajectory, driveTrain, alliance),  // race with intake command
         sequence(
+          new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake),
           new WaitCommand(1.0),
           either(
             parallel(
