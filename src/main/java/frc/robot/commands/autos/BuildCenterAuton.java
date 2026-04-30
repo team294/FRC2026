@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.StopType;
-import frc.robot.commands.DriveResetPose;
+import frc.robot.commands.*;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.IntakeDeploySetAngle;
@@ -75,7 +76,14 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake),
                 new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field)
               ),
-              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
+              parallel(
+                new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
+                either(
+                  new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
+                  new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), Rotation2d.k180deg), 0.07, 1.5, driveTrain),
+                  () -> (alliance.getAlliance() == Alliance.Blue)
+                )
+              ),
               parallel(
                 new ShooterStop(shooter),
                 new FeederStop(feeder)

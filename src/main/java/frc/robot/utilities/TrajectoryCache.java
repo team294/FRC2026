@@ -28,6 +28,7 @@ import frc.robot.Constants.FieldConstants;
         CollectThroughSide("collectThroughSide"),
         CollectEndToShootBump("collectEndToShootBump"),
         CollectEndToShootTrench("collectEndToShootTrench"),
+        BumpSecondSweep("BumpSecondSweep"),
         CenterStartCollectUnderTower_LabSafe("CenterStartCollectUnderTower_LabSafe"),
         CollectDepotToClimb_LabSafe("CollectDepotToClimb_LabSafe"),
         //StartBumpToCollectStart("StartBumpToCollectStart"),
@@ -43,6 +44,7 @@ import frc.robot.Constants.FieldConstants;
         RelativeCirclePath("RelativeCirclePath"),
         RelativeRotate180("RelativeRotate180"),
         AbsoluteDiagonalTest("AbsoluteDiagonalTest"),
+        
 
         DriveOverBump("DriveOverBump");
 
