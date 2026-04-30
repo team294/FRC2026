@@ -77,7 +77,7 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
         new DriveTrajectory(CoordType.kAbsolute, StopType.kNoStop, trajectory, driveTrain, alliance),  // race with intake command
         sequence(
           new IntakeRollerSetPercent(IntakeConstants.rollerIntakePercent, true, intake),
-          new WaitCommand(1.0),
+          new WaitCommand(0.55),  // C3 was 1.0
           either(
             parallel(
               new IntakeSequence(intake),
