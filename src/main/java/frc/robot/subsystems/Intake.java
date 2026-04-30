@@ -157,7 +157,7 @@ public class Intake extends SubsystemBase implements Loggable{
     intakeDeployMotorCANcoderConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.0;  // Time from 0 to full power, in seconds
 
     // Prevent the breakers from tripping by limiting current if above the limit for the threshold time
-    intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0;           // Upper limit for the current, in amps
+    intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLimit = 50.0;           // Upper limit for the current, in amps
     intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;      // Lower limit for the current, in amps
     intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;        // Threshold time, in seconds
     intakeRollerMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;     // Enable the limit

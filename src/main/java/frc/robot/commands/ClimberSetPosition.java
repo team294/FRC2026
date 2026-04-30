@@ -7,7 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ClimberConstants.ClimberLimit;
 import frc.robot.Constants.ClimberConstants.ClimberPosition;
+import frc.robot.Constants.ClimberConstants.ClimberSide;
 import frc.robot.subsystems.Climber;
 import frc.robot.utilities.DataLogUtil;
 
@@ -87,6 +89,15 @@ public class ClimberSetPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(climber.getClimberPositionInches() - climber.getClimberTargetPosition()) < ClimberConstants.setPositionTolerance;
+    return Math.abs(climber.getClimberPositionInches() - targetPosition) < ClimberConstants.setPositionTolerance
+      || // If we are going to UPPER_LIMIT, then stop based on value OR if the limit switch is triggered
+         (targetPosition >= ClimberPosition.UPPER_LIMIT.value - ClimberConstants.setPositionTolerance 
+          && ( climber.getClimberPositionInches(ClimberSide.LEFT) >= ClimberPosition.UPPER_LIMIT.value - ClimberConstants.setPositionTolerance
+               || climber.isSideLimitReached(ClimberSide.LEFT, ClimberLimit.UPPER)
+             )
+          && ( climber.getClimberPositionInches(ClimberSide.RIGHT) >= ClimberPosition.UPPER_LIMIT.value - ClimberConstants.setPositionTolerance
+               || climber.isSideLimitReached(ClimberSide.RIGHT, ClimberLimit.UPPER)
+             )
+         );
   }
 }

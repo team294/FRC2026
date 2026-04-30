@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A6";
+  public static final String bcrRobotCodeVersion = "C4";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -607,12 +607,12 @@ public final class Constants {
      * During autonomous, what to do at the end of the first cycle
      * <p> kNone: do nothing and end at shooting position
      * <p> kSecondCycle: go to the center again for a second cycle
-     * <p> kOutpostOrDepot: depending on the side of the auto routine, go to the outpost/depot and intake before shooting balls 
+     * <p> kSecondCycleLongerShot: shoot during the first cycle for longer
      */
     public enum AutoEndType {
       kNone,
       kSecondCycle,
-      kOutpostOrDepot
+      kSecondCycleLongerShot
     }
 
     /**

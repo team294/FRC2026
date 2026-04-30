@@ -424,11 +424,13 @@ public class RobotContainer {
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
-    coP[13].onTrue(new TurretManualCalibration(turret, true));
+    // coP[13].onTrue(new TurretManualCalibration(turret, true));
+    // Removed manual calibration from copanel so that they aren't hit accidentally during checkout
 
     // Manually recalibrate intake deploy, assuming it's at intaking position
-    coP[14].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
-    
+    // coP[14].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
+    // Removed manual calibration from copanel so that they aren't hit accidentally during checkout
+
     // Manually move left climber up/down while held, stopping when released
     coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, ClimberSide.LEFT, climber));
     coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput,ClimberSide.LEFT, climber));
