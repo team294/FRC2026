@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "C1";
+  public static final String bcrRobotCodeVersion = "C2";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -274,8 +274,8 @@ public final class Constants {
       CLIMBER_CMD_CALIBRATE_MANUAL_BOTH(climberString + calibrateManualCmdString),
       CLIMBER_CMD_CALIBRATE_MANUAL_LEFT(climberString + " L" + calibrateManualCmdString),
       CLIMBER_CMD_CALIBRATE_MANUAL_RIGHT(climberString + " R" + calibrateManualCmdString),
-      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
-      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
+      TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Manual"),
+      TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Automatic"),
       TURRET_CMD_TOGGLE_SOTM(turretString + " Toggle SOTM"),
 
       // Calibrate Manual Command Input
@@ -888,7 +888,7 @@ public final class Constants {
     public static final double inchesPerEncoderRotation = 4.9153;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
 
     public static final double compensationVoltage = 12.0;
-    public static final double rightVoltageRatio = 0.995;    // Voltage ratio to apply to right motor, so that left and right motors match velocity
+    public static final double rightVoltageRatio = 1.0;  // C2 changed to 1.0 was .995  // Voltage ratio to apply to right motor, so that left and right motors match velocity
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
     public static final double maxPercentOutput = 0.45;
