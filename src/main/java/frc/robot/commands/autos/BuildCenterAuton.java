@@ -60,6 +60,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
           // Shooting balls -- either collecting under the trench first and then shooting or just shooting preloads
           new ParallelDeadlineGroup(
             sequence(
+              // Drive to collect balls (if collectBalls = true)
               either(
                 parallel(
                   new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, collectTrajectory, driveTrain, alliance),
@@ -71,11 +72,15 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 none(), 
                 () -> collectBalls
               ),
-              new ParallelDeadlineGroup(   // TODO TEST ME!  Changed from parallel to a deadline on DriveTrajectory.  Once in lab, intake didn't move all the way, so this parallel group never finished.
+
+              // Drive to shooting position.  Prep in parallel (deadline - continue to next section when driving is complete)
+              new ParallelDeadlineGroup(
                 new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance),
                 new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake),
                 new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field)
               ),
+
+              // Score while adjusting robot location to prep-to-climb position
               new ParallelDeadlineGroup(
                 new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
                 either(
@@ -84,13 +89,18 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                   () -> (alliance.getAlliance() == Alliance.Blue)
                 )
               ),
+
+              // Stop shooting
               parallel(
                 new ShooterStop(shooter),
                 new FeederStop(feeder)
               )
             ),
+
+            // Turret auto aim is in parallel (deadlined) with everything above
             new TurretAutoAim(turret, driveTrain, field)
           ),
+
           // If we climb...
           either(
             new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
