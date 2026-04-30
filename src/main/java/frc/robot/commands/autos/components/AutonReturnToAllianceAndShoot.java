@@ -50,7 +50,7 @@ public class AutonReturnToAllianceAndShoot extends SequentialCommandGroup {
           // 3-28-2026:  Don changed from EndType.waitForSetPoint to EndType.runForever, which matches the teleop button
           either(
             new AutonScore(EndType.runForever, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(6.7), 
-            new AutonScore(EndType.runForever, intake, feeder, turret, shooter, climber, driveTrain, field), 
+            new AutonScore(EndType.runForever, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(10.0), 
             () -> autoEnd == AutoEndType.kSecondCycle)
            // shoot
         ),

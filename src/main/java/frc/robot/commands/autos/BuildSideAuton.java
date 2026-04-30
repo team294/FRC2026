@@ -56,7 +56,7 @@ public class BuildSideAuton extends SequentialCommandGroup {
                                 initialTrajectoryPose;
     
     // If we are ending auto by going to the outpost/depot, don't shoot until at the outpost/depot (minimize time wasted)
-    boolean shoot = autoEnd != AutoEndType.kOutpostOrDepot;
+    boolean shoot = true;
 
     addCommands(
       parallel(
@@ -77,7 +77,7 @@ public class BuildSideAuton extends SequentialCommandGroup {
             new AutonReturnToAllianceAndShoot(returnToAllianceDirection, autoEnd, true, leftSide, true, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field)
           ), 
           new AutonOutpostOrDepotAndScore(routineSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
-          () -> autoEnd == AutoEndType.kSecondCycle 
+          () -> autoEnd == AutoEndType.kSecondCycle || autoEnd == AutoEndType.kSecondCycleLongerShot
         ), 
         () -> autoEnd == AutoEndType.kNone
       )
