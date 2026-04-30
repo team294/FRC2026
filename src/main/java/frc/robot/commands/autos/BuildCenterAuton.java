@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.StopType;
-import frc.robot.commands.DriveResetPose;
+import frc.robot.commands.*;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.IntakeDeploySetAngle;
@@ -59,6 +60,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
           // Shooting balls -- either collecting under the trench first and then shooting or just shooting preloads
           new ParallelDeadlineGroup(
             sequence(
+              // Drive to collect balls (if collectBalls = true)
               either(
                 parallel(
                   new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, collectTrajectory, driveTrain, alliance),
@@ -70,19 +72,35 @@ public class BuildCenterAuton extends SequentialCommandGroup {
                 none(), 
                 () -> collectBalls
               ),
-              new ParallelDeadlineGroup(   // TODO TEST ME!  Changed from parallel to a deadline on DriveTrajectory.  Once in lab, intake didn't move all the way, so this parallel group never finished.
+
+              // Drive to shooting position.  Prep in parallel (deadline - continue to next section when driving is complete)
+              new ParallelDeadlineGroup(
                 new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, driveToClimbTrajectory, driveTrain, alliance),
                 new IntakeDeploySetAngle(IntakeDeployAngle.AGITATE_UPPER, intake),
                 new ShooterTurretScorePrepSequence(false, shootEndType, turret, shooter, driveTrain, field)
               ),
-              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
+
+              // Score while adjusting robot location to prep-to-climb position
+              new ParallelDeadlineGroup(
+                new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
+                either(
+                  new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
+                  new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), Rotation2d.k180deg), 0.07, 1.5, driveTrain),
+                  () -> (alliance.getAlliance() == Alliance.Blue)
+                )
+              ),
+
+              // Stop shooting
               parallel(
                 new ShooterStop(shooter),
                 new FeederStop(feeder)
               )
             ),
+
+            // Turret auto aim is in parallel (deadlined) with everything above
             new TurretAutoAim(turret, driveTrain, field)
           ),
+
           // If we climb...
           either(
             new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake),
