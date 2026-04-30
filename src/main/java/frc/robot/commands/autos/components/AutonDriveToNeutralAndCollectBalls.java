@@ -55,6 +55,9 @@ public class AutonDriveToNeutralAndCollectBalls extends SequentialCommandGroup {
       case kBumpSecondSwipe:
         trajectory = cache.getTrajectory(leftSide, TrajectoryName.BumpSecondSweep);
         break;
+      case kFollower:
+        trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartBehindTrenchSideCollectBallsFollower);
+        break;
       default:
         trajectory = cache.getTrajectory(leftSide, TrajectoryName.StartTrenchSideCollectBalls);
         break;

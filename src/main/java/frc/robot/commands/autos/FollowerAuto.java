@@ -4,6 +4,8 @@
 
 package frc.robot.commands.autos;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
+
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -19,6 +21,7 @@ import frc.robot.commands.DriveResetPose;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.autos.components.AutonDriveToNeutralAndCollectBalls;
 import frc.robot.commands.autos.components.AutonScore;
+import frc.robot.commands.sequences.AutomatedDriveAndClimbSequence;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Feeder;
@@ -35,14 +38,23 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class FollowerAuto extends SequentialCommandGroup {
   /** Creates a new FollowerAuto. */
-  public FollowerAuto(EndType shootEndType, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
+  public FollowerAuto(boolean climb, EndType shootEndType, RoutineSideType routineSide, Intake intake, Feeder feeder, Turret turret, Shooter shooter, Climber climber, DriveTrain driveTrain, AllianceSelection alliance, TrajectoryCache cache, Field field) {
     boolean isLeftSide = routineSide == RoutineSideType.kLeftSide;
-    Trajectory<SwerveSample> startTrajectory = cache.getTrajectory(isLeftSide, TrajectoryName.StartTrenchSideCollectBalls);
+    Trajectory<SwerveSample> startTrajectory = cache.getTrajectory(isLeftSide, TrajectoryName.StartBehindTrenchSideCollectBallsFollower);
     addCommands(
       new DriveResetPose(startTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), isScheduled(), driveTrain),
       new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, isLeftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
       new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(isLeftSide, TrajectoryName.CollectEndToEndFollower), driveTrain, alliance),
-      new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field)
+      either(
+        new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(6.7), 
+        new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field), 
+        () -> climb
+      ),
+      either(
+        new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake), 
+        none(), 
+        () -> climb
+      )
     );
   }
 }

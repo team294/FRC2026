@@ -32,6 +32,7 @@ import frc.robot.Constants.FieldConstants;
         CenterStartCollectUnderTower_LabSafe("CenterStartCollectUnderTower_LabSafe"),
         CollectDepotToClimb_LabSafe("CollectDepotToClimb_LabSafe"),
         CollectEndToEndFollower("CollectEndToEndFollower"),
+        StartBehindTrenchSideCollectBallsFollower("StartBehindTrenchSideCollectBallsFollower"),
         //StartBumpToCollectStart("StartBumpToCollectStart"),
         
         StartTrenchToCollectStart("StartTrenchToCollectStart"),

@@ -39,6 +39,7 @@ public class AutoSelection {
 		// Center_ShootPreload_Climb("Center_ShootPreload_Climb", 2),
 		Center_CollectUnderTrench("Center_CollectUnderTrench", 3),
 		Center_CollectUnderTrench_Climb("Center_CollectUnderTrench_Climb", 4),
+		LeftSideFollower("LeftSideFollower", 5),
 
 		// LeftSide_CenterCollect_UnderTrench("LeftSide_CenterCollect_UnderTrench", 1),
 		// LeftSide_Preload_CenterCollect_UnderTrench("LeftSide_Preload_CenterCollect_UnderTrench", 2),
@@ -287,6 +288,11 @@ public class AutoSelection {
 		else if (autoPlan == RoutineSelectionOption.LeftSide_SideCollect_OverBump.value) {
 			autoSelectionOption = RoutineSelectionOption.LeftSide_SideCollect_OverBump; 
 			autonomousCommandMain = new BuildSideAuton(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, AutoEndType.kSecondCycleLongerShot, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field);   
+		}
+
+		else if (autoPlan == RoutineSelectionOption.LeftSideFollower.value) {
+			autoSelectionOption = RoutineSelectionOption.LeftSideFollower; 
+			autonomousCommandMain = new FollowerAuto(false, EndType.runForever, RoutineSideType.kLeftSide, intake, feeder, turret, shooter, climber, driveTrain, allianceSelection, trajectoryCache, field);   
 		}
 
 		else if (autoPlan == RoutineSelectionOption.RightSide_SideCollect_OverBump.value) {
