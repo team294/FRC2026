@@ -193,11 +193,11 @@ public class Feeder extends SubsystemBase implements Loggable {
     spindexerConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.3;  // Time from 0 to full power, in seconds
 
     // Prevent the breakers from tripping by limiting current if above the limit for the threshold time
-    uptakeConfig.CurrentLimits.SupplyCurrentLimit = 60.0;           // Upper limit for the current, in amps
+    uptakeConfig.CurrentLimits.SupplyCurrentLimit = 45.0;           // Upper limit for the current, in amps
     uptakeConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;      // Lower limit for the current, in amps
     uptakeConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;        // Threshold time, in seconds
     uptakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;     // Enable the limit
-    spindexerConfig.CurrentLimits.SupplyCurrentLimit = 60.0;        // Upper limit for the current, in amps
+    spindexerConfig.CurrentLimits.SupplyCurrentLimit = 45.0;        // Upper limit for the current, in amps
     spindexerConfig.CurrentLimits.SupplyCurrentLowerLimit = 25.0;   // Lower limit for the current, in amps
     spindexerConfig.CurrentLimits.SupplyCurrentLowerTime = 0.1;     // Threshold time, in seconds
     spindexerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;  // Enable the limit
