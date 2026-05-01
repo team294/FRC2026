@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants.BallPickupTrajType;
 import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.Constants.AutoConstants.RoutineSideType;
@@ -24,6 +25,7 @@ import frc.robot.Constants.StopType;
 import frc.robot.commands.DriveResetPose;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.TurretAutoAim;
 import frc.robot.commands.autos.components.AutonDriveToNeutralAndCollectBalls;
 import frc.robot.commands.autos.components.AutonScore;
 import frc.robot.commands.sequences.AutomatedDriveAndClimbSequence;
@@ -47,23 +49,30 @@ public class FollowerAuto extends SequentialCommandGroup {
     boolean isLeftSide = routineSide == RoutineSideType.kLeftSide;
     Trajectory<SwerveSample> startTrajectory = cache.getTrajectory(isLeftSide, TrajectoryName.StartBehindTrenchSideCollectBallsFollower);
     addCommands(
-      new DriveResetPose(startTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), isScheduled(), driveTrain),
-      new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, isLeftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
-      new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(isLeftSide, TrajectoryName.CollectEndToEndFollower), driveTrain, alliance),
-
       new ParallelDeadlineGroup(
-        either(
-          new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
-          new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field),
-          () -> climb
+        sequence(
+          new DriveResetPose(startTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), isScheduled(), driveTrain),
+          new WaitCommand(3.0),
+          new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, isLeftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
+          new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(isLeftSide, TrajectoryName.CollectEndToEndFollower), driveTrain, alliance),
+
+          new ParallelDeadlineGroup(
+            either(
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(7.0),
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field),
+              () -> climb
+            ),
+            either(
+              new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
+              new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), Rotation2d.k180deg), 0.07, 1.5, driveTrain),
+              () -> (alliance.getAlliance() == Alliance.Blue)
+            )
+          )
         ),
-        either(
-          new DriveToPose(CoordType.kAbsolute, () -> (new Pose2d(FieldConstants.climbPrepBlue.getX(), FieldConstants.climbPrepBlue.getY(), new Rotation2d(0))), 0.07, 1.5, driveTrain),
-          new DriveToPose(CoordType.kAbsolute, () -> new Pose2d(FieldConstants.climbPrepRed.getX(), FieldConstants.climbPrepRed.getY(), Rotation2d.k180deg), 0.07, 1.5, driveTrain),
-          () -> (alliance.getAlliance() == Alliance.Blue)
-        )
+        // Turret auto aim is in parallel (deadlined) with everything above
+        new TurretAutoAim(turret, driveTrain, field)
       ),
-      
+
       either(
         new AutomatedDriveAndClimbSequence(alliance.getAlliance(), driveTrain, climber, shooter, turret, intake), 
         none(), 
