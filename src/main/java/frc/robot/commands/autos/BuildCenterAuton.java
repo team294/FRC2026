@@ -83,7 +83,7 @@ public class BuildCenterAuton extends SequentialCommandGroup {
               // Score while adjusting robot location to prep-to-climb position
               new ParallelDeadlineGroup(
                 either(
-                  new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(4.5),
+                  new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(3.5),
                   new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field),
                   () -> climb
                 ),
