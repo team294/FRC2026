@@ -18,9 +18,10 @@ import static frc.robot.utilities.StringUtil.*;
  */
 public class DataLogUtil {
 	// Options for logging when the robot is disabled
-	public enum LogWhenDisabled {
-		kSlow,    // Don't stop the drivetrain.  Continue the drivetrain motors in their current state (wheel orientation and velocity)
-		kNone;     // No logging
+	public enum RotationWhenDisabled {
+		kFast,	  	// Every 0.2 sec when robot is disabled
+		kSlow,     	// Every 2sec when robot is disabled
+		kNone;     	// No logging when robot is disabled
 	}
 
 	// Level of detail between 1-3, where 1 is the most detailed and 3 is the least detailed
