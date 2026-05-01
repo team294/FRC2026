@@ -792,7 +792,7 @@ public class DriveTrain extends SubsystemBase implements Loggable {
    * Checks for fault conditions and records stick faults if any exist.
    */
   private void checkForFaultConditions() {
-      // Resest recordedStickyFault if the Sticky Faults were cleared
+      // Reset recordedStickyFault if the Sticky Faults were cleared
       recordedStickyFault = recordedStickyFault && RobotPreferences.isStickyFaultActive();
 
       // If we haven't recorded a sticky fault yet, then check for fault conditions

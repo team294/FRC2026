@@ -40,6 +40,7 @@ public class PhotonCameraWrapper extends SubsystemBase {
   private final BooleanLogEntry dLogConnected;
   private final BooleanLogEntry dLogTagPresent;
   private boolean priorConnected, priorTagPresent;
+  private boolean recordedStickyFault = false;
 
 
   /**
@@ -109,17 +110,7 @@ public class PhotonCameraWrapper extends SubsystemBase {
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult latestResult) {
     long timeNow = RobotController.getFPGATime();
 
-    boolean isConnected = photonCamera.isConnected();
-    if (isConnected != priorConnected) {
-      // only write to datalog if this value has changed (saves space in the log)
-      dLogConnected.append(isConnected, timeNow);
-      SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), isConnected);
-      priorConnected = isConnected;
-      if (!isConnected) {
-        RobotPreferences.recordStickyFaults(cameraName);
-        DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
-      }
-    }
+    checkForFaultConditions();
 
     // New for 2026:
     Optional<EstimatedRobotPose> newPoseOptional = photonPoseEstimatorCamera.estimateCoprocMultiTagPose(latestResult);
@@ -195,6 +186,30 @@ public class PhotonCameraWrapper extends SubsystemBase {
     }
 
     return curStdDevs;
+  }
+
+  /**
+   * Checks for fault conditions and records stick faults if any exist.
+   */
+  private void checkForFaultConditions() {
+      // Reset recordedStickyFault if the Sticky Faults were cleared
+      recordedStickyFault = recordedStickyFault && RobotPreferences.isStickyFaultActive();
+
+      long timeNow = RobotController.getFPGATime();
+      boolean isConnected = photonCamera.isConnected();
+
+      if (!recordedStickyFault && !isConnected && timeNow*0.000001 > VisionConstants.stickyFaultCheckDelaySeconds) {
+        RobotPreferences.recordStickyFaults(cameraName);
+        DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
+        recordedStickyFault = true;
+      }
+
+      if (isConnected != priorConnected) {
+        // only write to datalog if this value has changed (saves space in the log)
+        dLogConnected.append(isConnected, timeNow);
+        SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), isConnected);
+        priorConnected = isConnected;
+      }
   }
 
   public void periodic() {
