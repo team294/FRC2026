@@ -9,6 +9,7 @@ package frc.robot.utilities;
 
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.utilities.StringUtil.*;
 
@@ -16,11 +17,18 @@ import static frc.robot.utilities.StringUtil.*;
  * A utility to write information to a file for loggin.
  */
 public class DataLogUtil {
+	// Options for logging when the robot is disabled
+	public enum LogWhenDisabled {
+		kSlow,    // Don't stop the drivetrain.  Continue the drivetrain motors in their current state (wheel orientation and velocity)
+		kNone;     // No logging
+	}
+
 	// Level of detail between 1-3, where 1 is the most detailed and 3 is the least detailed
 	private static int logLevel = 3;
     
   	// File logging rotation cycles, to spread out logging times between subsystems	
 	private static final int NUM_ROTATIONS = 10;
+	private static final int NUM_ROTATIONS_DISABLED = 100;
 	private static int rotationLastAllocated = NUM_ROTATIONS - 1;
 	private static int rotationCurrent = 0;	// Values = 0 ... NUM_ROTATIONS - 1
 
@@ -81,7 +89,8 @@ public class DataLogUtil {
 	 */
 	public static void advanceLogRotation() {
 		rotationCurrent++;
-		if (rotationCurrent >= NUM_ROTATIONS) rotationCurrent = 0;
+		if (rotationCurrent >= NUM_ROTATIONS && !DriverStation.isDisabled()) rotationCurrent = 0;
+		if (rotationCurrent >= NUM_ROTATIONS_DISABLED ) rotationCurrent = 0;
 
 		// if (logLevel == 3) {
 		// 	if (rotation >= 25) rotation = 0;

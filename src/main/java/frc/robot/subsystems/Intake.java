@@ -620,7 +620,7 @@ public class Intake extends SubsystemBase implements Loggable{
     }
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+      updateLog(true);
     }
 
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {
