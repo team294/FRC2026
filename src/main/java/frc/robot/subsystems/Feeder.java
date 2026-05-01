@@ -541,7 +541,7 @@ public class Feeder extends SubsystemBase implements Loggable {
     spindexerRPM = getSpindexerVelocity();
 
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+      updateLog(true);
     }
 
     if (DataLogUtil.isMyLogRotation(logRotationKey)) {

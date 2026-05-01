@@ -573,7 +573,7 @@ public class Climber extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+      updateLog(true);
     }
 
     // if at lower limit:

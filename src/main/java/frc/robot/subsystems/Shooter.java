@@ -643,7 +643,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
     if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+      updateLog(true);
     }
 
     // Stopping hood motion when at min/max extensions to prevent motor from dying
