@@ -21,10 +21,12 @@ import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.DriveResetPose;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.IntakeDeploySetAngle;
 import frc.robot.commands.TurretAutoAim;
 import frc.robot.commands.autos.components.AutonDriveToNeutralAndCollectBalls;
 import frc.robot.commands.autos.components.AutonScore;
@@ -52,13 +54,16 @@ public class FollowerAuto extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         sequence(
           new DriveResetPose(startTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), isScheduled(), driveTrain),
-          new WaitCommand(3.0),
+          parallel(
+            new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
+            new WaitCommand(3.0)
+          ),
           new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, isLeftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
           new DriveTrajectory(CoordType.kAbsolute, StopType.kBrake, cache.getTrajectory(isLeftSide, TrajectoryName.CollectEndToEndFollower), driveTrain, alliance),
 
           new ParallelDeadlineGroup(
             either(
-              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(7.0),
+              new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field).withTimeout(6.9),
               new AutonScore(shootEndType, intake, feeder, turret, shooter, climber, driveTrain, field),
               () -> climb
             ),
