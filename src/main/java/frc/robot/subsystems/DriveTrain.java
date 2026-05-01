@@ -48,6 +48,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveStop;
 import frc.robot.utilities.*;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 public class DriveTrain extends SubsystemBase implements Loggable {
   
@@ -680,11 +681,11 @@ public class DriveTrain extends SubsystemBase implements Loggable {
   public void periodic() {
     updateOdometry();
     
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
       updateDriveLog(false);
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       checkForFaultConditions();
 
       ChassisSpeeds robotSpeeds = getRobotSpeeds();

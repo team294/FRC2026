@@ -31,6 +31,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -88,6 +89,8 @@ public class RobotContainer {
   public RobotContainer() {
     DataLogUtil.writeMessageEcho("RobotContainer: Constructor, Version =", Constants.bcrRobotCodeVersion);
     SignalLogger.enableAutoLogging(false);
+
+    RobotController.setBrownoutVoltage(5.5);      // C5:  Reducing from default (6.3? V) to reduce brownouts
 
     // Start LEDEventUtil
     LEDEventUtil.initialize(led, LEDAnimateRobotDisabled);

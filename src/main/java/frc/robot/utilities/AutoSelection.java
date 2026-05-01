@@ -22,6 +22,7 @@ import frc.robot.Constants.AutoConstants.RoutineSideType;
 import frc.robot.Constants.AutoConstants.ShootPreloadType;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.sequences.IntakeSequence;
@@ -359,7 +360,7 @@ public class AutoSelection {
 	 * Runs once per scheduler cycle.
 	 */
 	public void periodic() {
-		if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+		if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
 			int  newAutoPlan = autoRoutineChooser.getSelected();
 			// int newStartPosition = startPositionChooser.getSelected(); 
 			// int newShootPreload =  shootPreloadChooser.getSelected();

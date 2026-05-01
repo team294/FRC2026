@@ -40,6 +40,7 @@ import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
@@ -619,11 +620,11 @@ public class Intake extends SubsystemBase implements Loggable{
       DataLogUtil.writeMessageEcho(subsystemName, ": IntakeDeploy", ", EXCEEDED MAX CURRENT");
     }
 
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
       updateLog(true);
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CANCODER_CONNECTED.value, isIntakeDeployCANcoderConnected());
       SmartDashboard.putBoolean(INTAKE_DEPLOY_IS_CALIBRATED.value, isIntakeDeployCalibrated());
       SmartDashboard.putNumber(INTAKE_DEPLOY_TEMP.value, intakeRollerTemp.refresh().getValueAsDouble());    
