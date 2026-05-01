@@ -58,8 +58,8 @@
      "val":3.744858503341675
     },
     "heading":{
-     "exp":"0 rad",
-     "val":0.0
+     "exp":"-30 deg",
+     "val":-0.5235987755982988
     }
    },
    "collectDepotEnd":{
