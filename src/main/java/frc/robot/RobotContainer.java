@@ -427,6 +427,8 @@ public class RobotContainer {
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
+    coP[13].onTrue(new HoodSetAngle(ShooterConstants.hoodShootAngle, EndType.waitForSetPoint, shooter));
+    coP[14].onTrue(new HoodSetAngle(ShooterConstants.hoodPassAngle, EndType.waitForSetPoint, shooter));
     // coP[13].onTrue(new TurretManualCalibration(turret, true));
     // Removed manual calibration from copanel so that they aren't hit accidentally during checkout
 
