@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "C6";
+  public static final String bcrRobotCodeVersion = "C7";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -569,6 +569,8 @@ public final class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4);             //  (1.5, 1.5, 4) for Worlds.  Was (4, 4, 8) previously
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //   (0.1, 0.1, 0.25) for Worlds.  Was (0.5, 0.5, 1) previously
     public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
+
+    public static final double stickyFaultCheckDelaySeconds = 30.0;
   }
 
     public static class AutoConstants {

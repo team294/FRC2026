@@ -12,6 +12,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -40,6 +41,9 @@ public class PhotonCameraWrapper extends SubsystemBase {
   private final BooleanLogEntry dLogConnected;
   private final BooleanLogEntry dLogTagPresent;
   private boolean priorConnected, priorTagPresent;
+  private boolean recordedStickyFault = false;
+
+  private Timer timeSinceStart = new Timer();
 
 
   /**
@@ -50,6 +54,9 @@ public class PhotonCameraWrapper extends SubsystemBase {
    */
   public PhotonCameraWrapper(Transform3d robotToCam, String cameraName, AprilTagFieldLayout aprilTagFieldLayout) {
     this.cameraName = cameraName;
+    timeSinceStart.reset();
+    timeSinceStart.start();
+
 
     dLogEstPose2D = StructLogEntry.create(log, StringUtil.buildString("/PhotonCameraWrapper/", cameraName, "/estPose2d"), Pose2d.struct);
     dLogConnected = new BooleanLogEntry(log, StringUtil.buildString("/PhotonCameraWrapper/", cameraName, "/Connected") );
@@ -109,17 +116,7 @@ public class PhotonCameraWrapper extends SubsystemBase {
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult latestResult) {
     long timeNow = RobotController.getFPGATime();
 
-    boolean isConnected = photonCamera.isConnected();
-    if (isConnected != priorConnected) {
-      // only write to datalog if this value has changed (saves space in the log)
-      dLogConnected.append(isConnected, timeNow);
-      SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), isConnected);
-      priorConnected = isConnected;
-      if (!isConnected) {
-        RobotPreferences.recordStickyFaults(cameraName);
-        DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
-      }
-    }
+    checkForFaultConditions();
 
     // New for 2026:
     Optional<EstimatedRobotPose> newPoseOptional = photonPoseEstimatorCamera.estimateCoprocMultiTagPose(latestResult);
@@ -195,6 +192,30 @@ public class PhotonCameraWrapper extends SubsystemBase {
     }
 
     return curStdDevs;
+  }
+
+  /**
+   * Checks for fault conditions and records stick faults if any exist.
+   */
+  private void checkForFaultConditions() {
+      // Reset recordedStickyFault if the Sticky Faults were cleared
+      recordedStickyFault = recordedStickyFault && RobotPreferences.isStickyFaultActive();
+
+      long timeNow = RobotController.getFPGATime();
+      boolean isConnected = photonCamera.isConnected();
+
+      if (!recordedStickyFault && !isConnected && timeSinceStart.hasElapsed(VisionConstants.stickyFaultCheckDelaySeconds)) {
+        RobotPreferences.recordStickyFaults(cameraName);
+        DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
+        recordedStickyFault = true;
+      }
+
+      if (isConnected != priorConnected) {
+        // only write to datalog if this value has changed (saves space in the log)
+        dLogConnected.append(isConnected, timeNow);
+        SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), isConnected);
+        priorConnected = isConnected;
+      }
   }
 
   public void periodic() {
