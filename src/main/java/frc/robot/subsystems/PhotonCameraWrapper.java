@@ -12,6 +12,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -42,6 +43,8 @@ public class PhotonCameraWrapper extends SubsystemBase {
   private boolean priorConnected, priorTagPresent;
   private boolean recordedStickyFault = false;
 
+  private Timer timeSinceStart = new Timer();
+
 
   /**
    * Creates a BCR wrapper for one PhotonVision camera.  Multiple PhotonCameraWrappers can be 
@@ -51,6 +54,9 @@ public class PhotonCameraWrapper extends SubsystemBase {
    */
   public PhotonCameraWrapper(Transform3d robotToCam, String cameraName, AprilTagFieldLayout aprilTagFieldLayout) {
     this.cameraName = cameraName;
+    timeSinceStart.reset();
+    timeSinceStart.start();
+
 
     dLogEstPose2D = StructLogEntry.create(log, StringUtil.buildString("/PhotonCameraWrapper/", cameraName, "/estPose2d"), Pose2d.struct);
     dLogConnected = new BooleanLogEntry(log, StringUtil.buildString("/PhotonCameraWrapper/", cameraName, "/Connected") );
@@ -198,7 +204,7 @@ public class PhotonCameraWrapper extends SubsystemBase {
       long timeNow = RobotController.getFPGATime();
       boolean isConnected = photonCamera.isConnected();
 
-      if (!recordedStickyFault && !isConnected && timeNow*0.000001 > VisionConstants.stickyFaultCheckDelaySeconds) {
+      if (!recordedStickyFault && !isConnected && timeSinceStart.hasElapsed(VisionConstants.stickyFaultCheckDelaySeconds)) {
         RobotPreferences.recordStickyFaults(cameraName);
         DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
         recordedStickyFault = true;
