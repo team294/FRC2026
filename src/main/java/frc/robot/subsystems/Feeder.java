@@ -38,6 +38,7 @@ import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 import frc.robot.utilities.Wait;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
@@ -540,11 +541,11 @@ public class Feeder extends SubsystemBase implements Loggable {
     uptakeRPM = getUptakeMotorVelocity();
     spindexerRPM = getSpindexerVelocity();
 
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
+      updateLog(true);
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       checkForFaultConditions();
 
       SmartDashboard.putNumber(UPTAKE_RPM.value, getUptakeMotorVelocity());

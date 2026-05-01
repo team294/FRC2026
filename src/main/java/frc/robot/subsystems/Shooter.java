@@ -40,6 +40,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
@@ -642,8 +643,8 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
+      updateLog(true);
     }
 
     // Stopping hood motion when at min/max extensions to prevent motor from dying
@@ -675,7 +676,7 @@ public class Shooter extends SubsystemBase implements Loggable {
       }
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       checkForFaultConditions();
 
       SmartDashboard.putNumber(SHOOTER_LEFT_TEMP.value, shooter1Temperature.refresh().getValueAsDouble());

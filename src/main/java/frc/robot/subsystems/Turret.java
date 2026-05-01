@@ -29,6 +29,7 @@ import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 import frc.robot.Constants.*;
 import frc.robot.Constants.TurretConstants.TurretAngle;
 
@@ -817,7 +818,7 @@ public class Turret extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       SmartDashboard.putBoolean(TURRET_IS_CANCODER_CONNECTED.value, areBothCANcodersConnected());
       SmartDashboard.putBoolean(TURRET_IS_CALIBRATED.value, turretCalibrated);
       SmartDashboard.putBoolean(TURRET_IS_USING_CANCODER.value, usingBeltEncoder);
@@ -834,7 +835,7 @@ public class Turret extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Turret Temp", turretTemp.refresh().getValueAsDouble());
     }
 
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
       updateTurretLog(false);
     }
 

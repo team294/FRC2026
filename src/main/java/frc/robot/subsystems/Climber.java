@@ -38,6 +38,7 @@ import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 public class Climber extends SubsystemBase implements Loggable {
   private int logRotationKey;           // Key to identify the log rotation
@@ -572,8 +573,8 @@ public class Climber extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
+      updateLog(true);
     }
 
     // if at lower limit:
@@ -609,7 +610,7 @@ public class Climber extends SubsystemBase implements Loggable {
       climberCalibrated = true;
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       checkForFaultConditions();
 
       SmartDashboard.putBoolean("Climber L LOWER", isSideLimitReached(ClimberSide.LEFT, ClimberLimit.LOWER));
