@@ -19,7 +19,7 @@ import static frc.robot.utilities.StringUtil.*;
 public class DataLogUtil {
 	// Options for logging when the robot is disabled
 	public enum RotationWhenDisabled {
-		kFast,	  	// Every 0.2 sec when robot is disabled
+		kNormal,	// Every 0.2 sec when robot is disabled
 		kSlow,     	// Every 2sec when robot is disabled
 		kNone;     	// No logging when robot is disabled
 	}
@@ -125,7 +125,17 @@ public class DataLogUtil {
 	 * @param logRotationKey Key from allocateLogRotation() to check
 	 * @return true = rotationKey is the current rotation, false = rotationKey is not the current rotation
 	 */
-	public static boolean isMyLogRotation(int logRotationKey) {
+	public static boolean isMyLogRotation(int logRotationKey, RotationWhenDisabled rotationWhenDisabled) {
+		if (DriverStation.isDisabled()) {
+			switch (rotationWhenDisabled) {
+				case kNone:
+					return false;
+				case kNormal:
+					return (logRotationKey == rotationCurrent%NUM_ROTATIONS);
+				case kSlow:
+					return (logRotationKey == rotationCurrent);
+			}
+		}
 		return (logRotationKey == rotationCurrent);
 	}
 
