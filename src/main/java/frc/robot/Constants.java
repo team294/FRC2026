@@ -588,11 +588,13 @@ public final class Constants {
      * <p> kDriveThroughCenter closer to center line
      * <p> kDriveThroughSide closer to alliance zone
      * <p> kBumpSecondSwipe starts from and ends in the choreo ShootBump position
+     * <p> kFollower same as kDriveThroughSide except starts on the other side of the trench starting line
      */
     public enum BallPickupTrajType {
       kDriveThroughCenter, // riskier
       kDriveThroughSide,   // avoid getting our autos messed up if colliding
-      kBumpSecondSwipe 
+      kBumpSecondSwipe,
+      kFollower
     }
 
     /**

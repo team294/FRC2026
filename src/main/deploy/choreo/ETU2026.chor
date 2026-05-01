@@ -4,6 +4,13 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "ballCollect":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1.9 m / s",
+     "val":1.9
+    }
+   },
    "maxVel":{
     "dimension":"LinVel",
     "var":{
