@@ -77,10 +77,7 @@ public class PhotonCameraWrapper extends SubsystemBase {
     priorConnected = photonCamera.isConnected();
     dLogConnected.append(priorConnected, timeNow);
     SmartDashboard.putBoolean(StringUtil.buildString("PhotonVision ", cameraName, " Connected"), priorConnected);
-    if (!priorConnected) {
-      RobotPreferences.recordStickyFaults(cameraName);
-      DataLogUtil.writeMessageEcho(StringUtil.buildString("STICKY FAULT ", cameraName));
-    }
+
     priorTagPresent = false;
     dLogTagPresent.append(priorTagPresent, timeNow);
 
