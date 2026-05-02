@@ -55,7 +55,10 @@ public class FollowerAuto extends SequentialCommandGroup {
         sequence(
           new DriveResetPose(startTrajectory.getInitialPose(alliance.getAlliance() == Alliance.Red).get(), isScheduled(), driveTrain),
           parallel(
-            new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake),
+            sequence(
+              new WaitCommand(1.0),
+              new IntakeDeploySetAngle(IntakeConstants.IntakeDeployAngle.INTAKE, intake)
+            ),
             new WaitCommand(3.0)
           ),
           new AutonDriveToNeutralAndCollectBalls(ShootPreloadType.kDontShootPreload, BallPickupTrajType.kDriveThroughSide, ReturnToAllianceType.kOverBump, isLeftSide, intake, feeder, turret, shooter, climber, driveTrain, alliance, cache, field),
