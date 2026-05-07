@@ -103,7 +103,7 @@ public class RobotContainer {
     // Set the Choreo trajectory flipper to the 2026 field orientation.
     // When the alliance is Red, Choreo will automatically flip Blue trajectories to Red.
     // All trajectories should be defined based on the Blue alliance perspective.
-    ChoreoAllianceFlipUtil.setYear(2026);
+    // ChoreoAllianceFlipUtil.setYear(2026);  TODO setYear doesn't exist?
 
     configureXboxButtons();     // configure Xbox controller
     configureJoystickButtons(); // configure joysticks
