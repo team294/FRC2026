@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -21,14 +20,13 @@ import frc.robot.utilities.StringUtil;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.Constants.SwerveConstants;
 
-public class SwerveModule extends SubsystemBase {
+public class SwerveModule {
   private static final String[] MODULE_NAMES = {"FL", "FR", "BL", "BR"};
 
   // AdvantageKit
   private final SwerveModuleIO io;
   private final SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
 
-  private final int index;
   private final String name; // "FL", "FR", "BL", "BR"
 
   // Drive FeedForward
@@ -51,7 +49,6 @@ public class SwerveModule extends SubsystemBase {
    */
   public SwerveModule(SwerveModuleIO io, int index, double kVm) {
     this.io = io;
-    this.index = index;
     this.name = (index >= 0 && index < MODULE_NAMES.length) ? MODULE_NAMES[index] : String.valueOf(index);
 
     driveFeedforward = new SimpleMotorFeedforward(
@@ -66,7 +63,7 @@ public class SwerveModule extends SubsystemBase {
    */
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Drive/Module" + index, inputs);
+    Logger.processInputs("DriveTrain/SwerveModule" + name, inputs);
 
     // Turn: IO runs PositionVoltage on the TalonFX. Re-sending every loop keeps the TalonFX setpoint fresh.
     io.setTurnPosition(setpoint.angle.getRadians());

@@ -38,6 +38,7 @@ public final class Constants {
   public static final String bcrRobotCodeVersion = "C7";
 
   // constants for AdvantageKit logging and replay
+  // ! before doing log replay, change simMode to Mode.REPLAY and make sure not to use the sim GUI
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 

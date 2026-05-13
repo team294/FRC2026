@@ -34,7 +34,7 @@ public class GyroIOSim implements GyroIO {
 
   /**
    * Updates the simulated gyro state from the drivetrain's simulated rotation rate.
-   * Call this every periodic loop from Drive.simulationPeriodic(), passing in the
+   * Call this every periodic loop from DriveTrain.simulationPeriodic(), passing in the
    * chassis angular velocity derived from the swerve drive simulation.
    *
    * @param rotationRateDegPerSec Chassis rotation rate in degrees/second (positive = counterclockwise)

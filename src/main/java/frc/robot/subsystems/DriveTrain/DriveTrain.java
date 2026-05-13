@@ -195,6 +195,17 @@ public class DriveTrain extends SubsystemBase implements Loggable {
         }
     }
 
+    @Override
+    public void simulationPeriodic() {
+        // figure out chassis rotation rate based on simulated module states
+        ChassisSpeeds simSpeeds = kDriveKinematics.toChassisSpeeds(getMeasuredStates());
+
+        // Feed rotation rate into the simulated gyro so yaw changes realistically
+        if (gyroIO instanceof GyroIOSim gyroSim) {
+            gyroSim.updateSimState(Math.toDegrees(simSpeeds.omegaRadiansPerSecond), SwerveConstants.dt);
+        }
+    }
+
 
     // Gyro methods
 
