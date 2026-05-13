@@ -15,7 +15,7 @@ import frc.robot.Constants.ElasticKeyConstants.ElasticKey;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.DataLogUtil;

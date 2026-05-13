@@ -6,12 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
 
 public class StopAllMotors extends ParallelCommandGroup {
-  /** Creates a new StopAllMotors. */
-  public StopAllMotors(DriveTrain driveTrain, Intake intake, Feeder feeder, Shooter shooter, Climber climber) {
+  /** Stop all motors of all subsystems
+   * @param drive drive subsystem
+   * @param intake intake subsystem
+   * @param feeder feeder subsystem
+   * @param shooter shooter subsystem
+   * @param climber climber subsystem
+   */
+  public StopAllMotors(DriveTrain drive, Intake intake, Feeder feeder, Shooter shooter, Climber climber) {
     addCommands(
-      new DriveStop(driveTrain),
+      new DriveStop(drive),
       new IntakeStop(intake),
       new FeederStop(feeder),
       new ShooterStop(shooter),

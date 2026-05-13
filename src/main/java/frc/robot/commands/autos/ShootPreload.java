@@ -26,7 +26,7 @@ import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.IntakeDeploySetAngle;
 import frc.robot.commands.autos.components.AutonScore;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;

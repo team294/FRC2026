@@ -18,7 +18,7 @@ import frc.robot.Constants.AutoConstants.ReturnToAllianceType;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;

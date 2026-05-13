@@ -98,7 +98,7 @@ public class PhotonCameraWrapper extends SubsystemBase {
    * target sort mode in the PhotonVision UI.
    * @return the best target of the pipeline result
    */
-  PhotonPipelineResult getLatestResult() {
+  public PhotonPipelineResult getLatestResult() {
     List<PhotonPipelineResult> results = photonCamera.getAllUnreadResults();
     return results.isEmpty() ? null : results.get(results.size()-1);
   }

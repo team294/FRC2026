@@ -7,14 +7,14 @@
 
 package frc.robot.utilities;
 
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.utilities.StringUtil.*;
 
+import org.littletonrobotics.junction.Logger;
+
 /**
- * A utility to write information to a file for loggin.
+ * A utility to write messages to a log file and keep track of log rotations.
  */
 public class DataLogUtil {
 	// Options for logging when the robot is disabled
@@ -33,15 +33,6 @@ public class DataLogUtil {
 	private static int rotationLastAllocated = NUM_ROTATIONS - 1;
 	private static int rotationCurrent = 0;	// Values = 0 ... NUM_ROTATIONS - 1
 
-	// DataLog entry to use for logging messages and events
-    private static final StringLogEntry dLogMessage = new StringLogEntry(DataLogManager.getLog(), "/DataLog/message");
-
-
-	/** Start data log manager with default directory location. */
-	public static void start() {
-	  DataLogManager.start();
-	}
-
 	/**
 	 * Writes a message to the log file. The message will be timestamped. Does not echo the message to the screen.
 	 * If more than one string or object is provided, then places one space between each item.
@@ -49,7 +40,7 @@ public class DataLogUtil {
 	 */
 	public static void writeMessage(Object... paramArray) {
 		// Write the message to the file
-		dLogMessage.append(buildStringWithDelimiter(" ", buildString((Object [])paramArray)));
+		Logger.recordOutput("message", buildStringWithDelimiter(" ", buildString((Object [])paramArray)));
 	}
 
 	/**

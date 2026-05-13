@@ -14,7 +14,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.RobotPreferences;
 
 /**
@@ -61,16 +60,13 @@ public class Robot extends LoggedRobot {
         Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
         Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
     } else {
-        setUseTiming(false); // Run as fast as possible
+        setUseTiming(false); // Run as fast as possible (does not affect data quality)
         String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
         Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }
 
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
-
-    // Start Datalogger first!
-    DataLogUtil.start();
 
     // Read robot Preferences from the RoboRIO to the Constants class.  Be sure to do this
     // before creating the robotContainer, so that all of the subsystems see the values

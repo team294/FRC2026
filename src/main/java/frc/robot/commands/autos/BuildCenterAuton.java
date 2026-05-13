@@ -34,7 +34,7 @@ import frc.robot.commands.sequences.AutomatedDriveAndClimbSequence;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.commands.sequences.ShooterTurretScorePrepSequence;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;

@@ -5,13 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.utilities.DataLogUtil;
 
 public class VisionOdometryStateSet extends InstantCommand {
   private final boolean enabled;
   private final DriveTrain driveTrain;
-  
 
   /**
    * Turns on or off vision updates for odometry.

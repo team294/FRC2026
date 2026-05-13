@@ -34,7 +34,7 @@
   {
     "name": "/Preferences/problemSubsystem",
     "type": "string",
-    "value": "",
+    "value": "LeftCamera, RightCamera, Turret-Encoders",
     "properties": {
       "persistent": true
     }
@@ -42,7 +42,7 @@
   {
     "name": "/Preferences/problemExists",
     "type": "boolean",
-    "value": false,
+    "value": true,
     "properties": {
       "persistent": true
     }

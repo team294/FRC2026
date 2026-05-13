@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.DriveTrain.DriveType;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
+import frc.robot.subsystems.DriveTrain.DriveTrain.DriveType;
 import frc.robot.utilities.AllianceSelection;
 
 public class DriveWithController extends Command {

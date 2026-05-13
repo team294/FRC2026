@@ -18,6 +18,13 @@ import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.DriveTrain.DriveTrain;
+import frc.robot.subsystems.DriveTrain.GyroIO;
+import frc.robot.subsystems.DriveTrain.GyroIOPigeon2;
+import frc.robot.subsystems.DriveTrain.GyroIOSim;
+import frc.robot.subsystems.DriveTrain.SwerveModuleIO;
+import frc.robot.subsystems.DriveTrain.SwerveModuleIOSim;
+import frc.robot.subsystems.DriveTrain.SwerveModuleIOTalonFX;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
@@ -55,7 +62,7 @@ public class RobotContainer {
   private final Field field = new Field(allianceSelection);
 
   // Define robot subsystems
-  private final DriveTrain driveTrain = new DriveTrain(allianceSelection, field);
+  private final DriveTrain driveTrain;
   private final Intake intake = new Intake("Intake");
   private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED");
   private final Feeder feeder = new Feeder("Feeder");
@@ -71,7 +78,7 @@ public class RobotContainer {
 
   // Define other utilities
   private final TrajectoryCache trajectoryCache = new TrajectoryCache();
-  private final AutoSelection autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, intake, feeder, turret, shooter, climber, driveTrain);
+  private final AutoSelection autoSelection; // instantiated later, after driveTrain
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
@@ -87,6 +94,60 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    switch (Constants.currentMode) {
+      case REAL:
+        driveTrain = new DriveTrain(
+          new GyroIOPigeon2(Ports.CANPigeonGyro),
+          new SwerveModuleIOTalonFX(
+            "FL", Ports.CANDriveFrontLeftMotor, Ports.CANDriveTurnFrontLeftMotor,
+            Ports.CANDriveTurnFrontLeftEncoder, false, false,
+            false, DriveConstants.offsetAngleFrontLeftMotor
+          ),
+          new SwerveModuleIOTalonFX(
+            "FR", Ports.CANDriveFrontRightMotor, Ports.CANDriveTurnFrontRightMotor,
+            Ports.CANDriveTurnFrontRightEncoder, false, false,
+            false, DriveConstants.offsetAngleFrontRightMotor
+          ),
+          new SwerveModuleIOTalonFX(
+            "BL", Ports.CANDriveBackLeftMotor, Ports.CANDriveTurnBackLeftMotor,
+            Ports.CANDriveTurnBackLeftEncoder, false, false,
+            false, DriveConstants.offsetAngleBackLeftMotor
+          ),
+          new SwerveModuleIOTalonFX(
+            "BR", Ports.CANDriveBackRightMotor, Ports.CANDriveTurnBackRightMotor,
+            Ports.CANDriveTurnBackRightEncoder, false, false,
+            false, DriveConstants.offsetAngleBackRightMotor
+          ),
+          allianceSelection, 
+          field
+        );
+        break;
+      case SIM:
+        driveTrain = new DriveTrain(
+          new GyroIOSim(),
+          new SwerveModuleIOSim(),
+          new SwerveModuleIOSim(),
+          new SwerveModuleIOSim(),
+          new SwerveModuleIOSim(),
+          allianceSelection,
+          field
+        );
+        break;
+      default:
+        driveTrain = new DriveTrain(
+          new GyroIO() {},
+          new SwerveModuleIO() {},
+          new SwerveModuleIO() {},
+          new SwerveModuleIO() {},
+          new SwerveModuleIO() {},
+          allianceSelection,
+          field
+        );
+    }
+
+    // Define autoSelection here because driveTrain must exist first
+    autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, intake, feeder, turret, shooter, climber, driveTrain);
+
     DataLogUtil.writeMessageEcho("RobotContainer: Constructor, Version =", Constants.bcrRobotCodeVersion);
     SignalLogger.enableAutoLogging(false);
 
@@ -165,7 +226,7 @@ public class RobotContainer {
     SmartDashboard.putData(FEEDER_CMD_STOP.value, new FeederStop(feeder));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
     SmartDashboard.putData(TURRET_CMD_STOP.value, new TurretStop(turret));
-    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
+    // SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter, climber)); TODO sim uncomment
 
     // Set Percent
     SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(false, intake));
@@ -285,7 +346,7 @@ public class RobotContainer {
     // manual intake deploy: up = in, down = out
     xbLJoystickTrigger.whileTrue(new IntakeDeployManualControl(xboxController, intake));
 
-    xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
+    // xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber)); TODO sim uncomment
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
 
