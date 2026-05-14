@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.TurretConstants;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 import frc.robot.utilities.DataLogUtil;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
@@ -113,7 +113,6 @@ public class TurretSetAngle extends Command {
       targetAngle = angleGetter.getAsDouble();
     }
 
-    turret.enableFastLogging(true);
     //SignalLogger.start();     // Uncomment for Phoenix logging
     turret.setTurretAngle(targetAngle);
     toleranceCounter = 0;
@@ -145,7 +144,6 @@ public class TurretSetAngle extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.enableFastLogging(false);
     // SignalLogger.stop();
     DataLogUtil.writeMessage("TurretSetAngle: End");
   }

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.DriveTrain.DriveTrain;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Field;
 

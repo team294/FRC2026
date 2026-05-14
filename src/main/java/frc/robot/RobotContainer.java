@@ -18,13 +18,8 @@ import frc.robot.commands.*;
 import frc.robot.commands.sequences.*;
 import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.DriveTrain.DriveTrain;
-import frc.robot.subsystems.DriveTrain.GyroIO;
-import frc.robot.subsystems.DriveTrain.GyroIOPigeon2;
-import frc.robot.subsystems.DriveTrain.GyroIOSim;
-import frc.robot.subsystems.DriveTrain.SwerveModuleIO;
-import frc.robot.subsystems.DriveTrain.SwerveModuleIOSim;
-import frc.robot.subsystems.DriveTrain.SwerveModuleIOTalonFX;
+import frc.robot.subsystems.DriveTrain.*;
+import frc.robot.subsystems.Turret.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
@@ -67,7 +62,7 @@ public class RobotContainer {
   private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED");
   private final Feeder feeder = new Feeder("Feeder");
   private final Shooter shooter = new Shooter("Shooter");
-  private final Turret turret = new Turret("Turret");
+  private final Turret turret;
   private final Climber climber = new Climber("Climber");
 
   // Define controllers
@@ -121,6 +116,9 @@ public class RobotContainer {
           allianceSelection, 
           field
         );
+
+        turret = new Turret(new TurretIOTalonFX(), "Turret");
+
         break;
       case SIM:
         driveTrain = new DriveTrain(
@@ -132,6 +130,9 @@ public class RobotContainer {
           allianceSelection,
           field
         );
+
+        turret = new Turret(new TurretIOSim(), "Turret");
+
         break;
       default:
         driveTrain = new DriveTrain(
@@ -143,6 +144,8 @@ public class RobotContainer {
           allianceSelection,
           field
         );
+
+        turret = new Turret(new TurretIO() {}, "Turret");
     }
 
     // Define autoSelection here because driveTrain must exist first
@@ -226,7 +229,7 @@ public class RobotContainer {
     SmartDashboard.putData(FEEDER_CMD_STOP.value, new FeederStop(feeder));
     SmartDashboard.putData(SHOOTER_CMD_STOP.value, new ShooterStop(shooter));
     SmartDashboard.putData(TURRET_CMD_STOP.value, new TurretStop(turret));
-    // SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter, climber)); TODO sim uncomment
+    SmartDashboard.putData(STOP_ALL_MOTORS.value, new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
 
     // Set Percent
     SmartDashboard.putData(INTAKE_ROLLER_CMD_SET_PERCENT.value, new IntakeRollerSetPercent(false, intake));
@@ -346,7 +349,7 @@ public class RobotContainer {
     // manual intake deploy: up = in, down = out
     xbLJoystickTrigger.whileTrue(new IntakeDeployManualControl(xboxController, intake));
 
-    // xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber)); TODO sim uncomment
+    xbBack.onTrue(new StopAllMotors(driveTrain, intake, feeder, shooter, climber));
     xbStart.onTrue(new TurretToggleAutoAim(turret));
 
 

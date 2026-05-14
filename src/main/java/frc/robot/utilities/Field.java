@@ -6,10 +6,14 @@ package frc.robot.utilities;
 
 import java.io.UncheckedIOException;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
@@ -18,6 +22,7 @@ import frc.robot.Constants.FieldConstants;
 public class Field {
     private AllianceSelection allianceSelection;
     private AprilTagFieldLayout aprilTagFieldLayout;
+    private Translation2d target;
 
     /**
      * Constructor for Field objects.
@@ -86,6 +91,8 @@ public class Field {
         double offsetY = (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
 
         // ghost target = static target + displacement
-        return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
+        target = new Translation2d(staticTargetTranslation2d.getX() - offsetX, staticTargetTranslation2d.getY() - offsetY);
+        Logger.recordOutput("Turret/AutoAim/GhostShotTargetPose", new Pose2d(target, new Rotation2d(0)));
+        return target;
     }
 }

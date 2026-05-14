@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 
 public class TurretManualCalibration extends InstantCommand {
   private final Turret turret;

@@ -4,26 +4,16 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 import frc.robot.utilities.DataLogUtil;
 
 public class TurretManualControl extends Command {
   private final Turret turret;
   private final CommandXboxController xboxController;
-
-  private final DataLog log = DataLogManager.getLog();
-  private long timeNow = 0;
-  
-  private final DoubleLogEntry dLogTurretAngle = new DoubleLogEntry(log, "TurretManualControl/Angle");
-  private final DoubleLogEntry dLogSetPercent = new DoubleLogEntry(log, "TurretManualControl/SetPercent");
 
   /**
    * Controls the turret using the Xbox controller joysticks.
@@ -52,10 +42,6 @@ public class TurretManualControl extends Command {
     // Slow the control down
     turretPercent *= TurretConstants.maxManualPercentOutput;
     turret.setTurretPercentOutput(turretPercent);
-
-    timeNow = RobotController.getFPGATime();
-    dLogTurretAngle.append(turret.getTurretAngle(), timeNow);
-    dLogSetPercent.append(turretPercent, timeNow);
   }
 
   // Called once the command ends or is interrupted.

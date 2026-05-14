@@ -16,7 +16,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 
 public class ClimbPrepSequence extends ParallelCommandGroup {
 

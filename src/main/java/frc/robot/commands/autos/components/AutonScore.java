@@ -19,7 +19,7 @@ import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 import frc.robot.utilities.Field;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
