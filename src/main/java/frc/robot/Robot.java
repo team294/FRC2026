@@ -56,23 +56,24 @@ public class Robot extends LoggedRobot {
 
     Logger.recordMetadata("FRC2026", "Start"); // Set a metadata value
 
-    if (isReal()) {
-      // real robot
-      Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    } else {
-      // simulation or replay
-      if (Constants.currentMode == Constants.Mode.SIM) {
-        // simulation
-        Logger.addDataReceiver(new WPILOGWriter()); // Log to project folder ("/logs")
-        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-      } else {
-        // replay
-        setUseTiming(false); // Run as fast as possible (does not affect data quality)
-        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay"))); // Save outputs to a new log
-      }
+    // determine what Logger is doing based on mode (real robot running, simulation, log replay)
+    switch (Constants.currentMode) {
+      case REAL:
+        // Running on a real robot, log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+      case SIM:
+        // Running a physics simulator, log to NetworkTables (connect in AdvantageScope with ctrl+shift+k)
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+      case REPLAY:
+        // Replaying a log, set up replay source
+        setUseTiming(false); // Run as fast as possible (does not affect quality)
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
     }
 
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
