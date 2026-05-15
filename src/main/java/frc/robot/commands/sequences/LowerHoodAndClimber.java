@@ -17,7 +17,7 @@ import frc.robot.Constants.ClimberConstants.ClimberSide;
 import frc.robot.commands.ClimberSetPosition;
 import frc.robot.commands.HoodSetAngle;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.utilities.LEDEventUtil;
 
 public class LowerHoodAndClimber extends SequentialCommandGroup {

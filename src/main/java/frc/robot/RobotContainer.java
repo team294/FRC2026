@@ -19,6 +19,7 @@ import frc.robot.commands.sequences.*;
 import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveTrain.*;
+import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.Turret.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
@@ -61,7 +62,7 @@ public class RobotContainer {
   private final Intake intake = new Intake("Intake");
   private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED");
   private final Feeder feeder = new Feeder("Feeder");
-  private final Shooter shooter = new Shooter("Shooter");
+  private final Shooter shooter;
   private final Turret turret;
   private final Climber climber = new Climber("Climber");
 
@@ -117,6 +118,8 @@ public class RobotContainer {
           field
         );
 
+        shooter = new Shooter(new ShooterIOTalonFX(), "Shooter");
+
         turret = new Turret(new TurretIOTalonFX(), "Turret");
 
         break;
@@ -131,6 +134,8 @@ public class RobotContainer {
           field
         );
 
+        shooter = new Shooter(new ShooterIOSim(), "Shooter");
+
         turret = new Turret(new TurretIOSim(), "Turret");
 
         break;
@@ -144,6 +149,8 @@ public class RobotContainer {
           allianceSelection,
           field
         );
+
+        shooter = new Shooter(new ShooterIO() {}, "Shooter");
 
         turret = new Turret(new TurretIO() {}, "Turret");
     }
@@ -175,9 +182,9 @@ public class RobotContainer {
     configureTriggers();
     configureElastic();
 
-    driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
+    // driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
     turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, field));
-    // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
+    driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
     // Set initial location to (0,0) and facing away from driver (regardless of alliance color).

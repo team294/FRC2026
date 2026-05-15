@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.EndType;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.utilities.DataLogUtil;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;

@@ -16,7 +16,7 @@ import frc.robot.Constants.EndType;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.DriveTrain.DriveTrain;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Field;

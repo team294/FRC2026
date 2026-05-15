@@ -24,6 +24,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveTrain.DriveTrain;
 import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
 import frc.robot.commands.autos.*;

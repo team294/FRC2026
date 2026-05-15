@@ -85,13 +85,13 @@ public class DriveTrain extends SubsystemBase implements Loggable {
     /**
      * Creates the Drive subsystem with AdvantageKit IO layers.
      *
-     * @param gyroIO            GyroIO implementation (real or sim)
-     * @param flModuleIO        Front Left SwerveModuleIO
-     * @param frModuleIO        Front Right SwerveModuleIO
-     * @param blModuleIO        Back Left SwerveModuleIO
-     * @param brModuleIO        Back Right SwerveModuleIO
+     * @param gyroIO GyroIO implementation (real or sim)
+     * @param flModuleIO Front Left SwerveModuleIO
+     * @param frModuleIO Front Right SwerveModuleIO
+     * @param blModuleIO Back Left SwerveModuleIO
+     * @param brModuleIO Back Right SwerveModuleIO
      * @param allianceSelection AllianceSelection utility
-     * @param field             Field utility to supply AprilTag layout
+     * @param field Field utility to supply AprilTag layout
      */
     public DriveTrain(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO,
                 SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,

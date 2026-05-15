@@ -240,7 +240,7 @@ public class Turret extends SubsystemBase {
         robotPose2d.getY() + TurretConstants.turretOffset * Math.sin(robotRotRadians),
         getTurretAbsoluteAngle(robotPose2d.getRotation()));
 
-    Logger.recordOutput("Turret/TurretPose", pose);  // log here to avoid passing in robot pose somewhere else
+    Logger.recordOutput(subsystemName + "/TurretPose", pose);  // log here to avoid passing in robot pose somewhere else
 
     return pose;
   }
@@ -332,12 +332,12 @@ public class Turret extends SubsystemBase {
     }
 
     // AdvantageKit output logging — every cycle.
-    Logger.recordOutput("Turret/TurretAngle", getTurretAngle());
-    Logger.recordOutput("Turret/TargetAngle", getCurrentTurretTarget());
-    Logger.recordOutput("Turret/TargetSet", targetAngle);
-    Logger.recordOutput("Turret/AtGoal", atGoalAngle);
-    Logger.recordOutput("Turret/AutoAimEnabled", turretAutoAimEnabled);
-    Logger.recordOutput("Turret/ShootOnTheMove", turretShootOnTheMove);
+    Logger.recordOutput(subsystemName + "/TurretAngle", getTurretAngle());
+    Logger.recordOutput(subsystemName + "/TargetAngle", getCurrentTurretTarget());
+    Logger.recordOutput(subsystemName + "/TargetSet", targetAngle);
+    Logger.recordOutput(subsystemName + "/AtGoal", atGoalAngle);
+    Logger.recordOutput(subsystemName + "/AutoAimEnabled", turretAutoAimEnabled);
+    Logger.recordOutput(subsystemName + "/ShootOnTheMove", turretShootOnTheMove);
 
     // Elastic / SmartDashboard — normal rotation
     if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {

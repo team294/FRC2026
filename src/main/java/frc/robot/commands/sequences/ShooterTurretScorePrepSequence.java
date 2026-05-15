@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.EndType;
 import frc.robot.commands.ShooterScorePrep;
 import frc.robot.subsystems.DriveTrain.DriveTrain;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.utilities.Field;
 
