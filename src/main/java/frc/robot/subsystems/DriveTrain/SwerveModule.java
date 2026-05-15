@@ -230,8 +230,6 @@ public class SwerveModule {
   public void stopMotors() {
     setDriveMotorVoltageOutput(0.0);  // also resets inVelocityMode + priorDriveVelocity
     setTurnMotorPercentOutput(0.0);
-    inVelocityMode = true;
-    priorDriveVelocity = 0.0;
   }
 
   // Encoder / sensor methods

@@ -20,14 +20,17 @@ public class TurretIOSim implements TurretIO {
       LinearSystemId.createDCMotorSystem(
           DCMotor.getKrakenX60(1),
           0.05,  // moment of inertia (kg·m²) — tune to match real robot feel
-          1.0 / TurretConstants.turretToMotorGearRatio),
+          TurretConstants.turretToMotorGearRatio),
       DCMotor.getKrakenX60(1));
 
-  // Position closed-loop (sim approximates MotionMagic with a software PID)
-  private final PIDController positionPID = new PIDController(
-      TurretConstants.kP,
-      TurretConstants.kI,
-      TurretConstants.kD);
+  // Position closed-loop (sim approximates MotionMagic with a software PID).
+  // These gains are independent of TurretConstants — those are tuned for
+  // MotionMagic on a real TalonFX and are not representative of a simulated PID.
+  private static final double SIM_kP = 0.8; // volts per degree of error
+  private static final double SIM_kI = 0.0; // shouldn't need
+  private static final double SIM_kD = 0.01; // volts per degree/sec of velocity
+  private static final double LOOP_PERIOD_SECS = 0.02;
+  private final PIDController positionPID = new PIDController(SIM_kP, SIM_kI, SIM_kD, LOOP_PERIOD_SECS);
 
   private double appliedVolts = 0.0;
   private boolean closedLoop = false;
@@ -36,7 +39,6 @@ public class TurretIOSim implements TurretIO {
   // Calibration state — sim starts calibrated at 0 degrees for simplicity
   private boolean isCalibrated = true;
 
-  private static final double LOOP_PERIOD_SECS = 0.02;
 
   public TurretIOSim() {
     // No continuous input: the turret does not wrap around
@@ -51,14 +53,13 @@ public class TurretIOSim implements TurretIO {
     // Run position closed-loop if active
     if (closedLoop && isCalibrated) {
       appliedVolts = MathUtil.clamp(
-          positionPID.calculate(
-              Math.toDegrees(turretSim.getAngularPositionRad()),
-              positionSetpointDeg),
-          -12.0, 12.0);
+        SIM_kP * (positionSetpointDeg - Math.toDegrees(turretSim.getAngularPositionRad()))
+        - SIM_kD * Math.toDegrees(turretSim.getAngularVelocityRadPerSec()),
+        -12.0, 12.0);
     }
 
     turretSim.setInputVoltage(appliedVolts);
-    turretSim.update(LOOP_PERIOD_SECS);
+    turretSim.update(positionPID.getPeriod());
 
     // Simulated devices are always "connected"
     inputs.motorConnected = true;
@@ -66,7 +67,7 @@ public class TurretIOSim implements TurretIO {
     inputs.gearEncoderConnected = true;
 
     inputs.isCalibrated = isCalibrated;
-    inputs.usingBeltEncoder = true;  // sim always uses the CANCoder, because it's "connected"
+    inputs.usingBeltEncoder = true;  // sim always uses the "ideal" encoder
     inputs.inPositionControl = closedLoop;
 
     double positionDeg = Math.toDegrees(turretSim.getAngularPositionRad());
@@ -76,6 +77,10 @@ public class TurretIOSim implements TurretIO {
     // Sim encoders report the same value as the turret position — no offset or backlash
     inputs.beltEncoderAbsPositionDeg = MathUtil.inputModulus(positionDeg, 0.0, 360.0);
     inputs.gearEncoderAbsPositionDeg = MathUtil.inputModulus(positionDeg, 0.0, 360.0);
+
+    // Continuous rotations: sim has no multi-turn drift, so just convert position directly
+    inputs.beltEncoderRawRotations = positionDeg / 360.0;
+    inputs.gearEncoderRawRotations = positionDeg / 360.0;
 
     inputs.appliedVolts = appliedVolts;
     inputs.statorCurrentAmps = Math.abs(turretSim.getCurrentDrawAmps());
@@ -94,7 +99,8 @@ public class TurretIOSim implements TurretIO {
   public void setPosition(double degrees) {
     if (!isCalibrated) return;
     closedLoop = true;
-    positionSetpointDeg = MathUtil.clamp(degrees, TurretAngle.LOWER_LIMIT.value, TurretAngle.UPPER_LIMIT.value);
+    positionSetpointDeg = MathUtil.clamp(degrees,
+        TurretAngle.LOWER_LIMIT.value, TurretAngle.UPPER_LIMIT.value);
   }
 
   @Override

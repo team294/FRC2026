@@ -297,6 +297,24 @@ public class RobotContainer {
 
     // Autos
     SmartDashboard.putData("Autonomous Run Auto Now", autoSelection.scheduleAutoCommand());
+
+
+    // TODO sim testing
+    // felt cute, might delete later
+    // reset pose in front of hub, turret facing hub for both alliances
+    SmartDashboard.putData("Reset Pose Alliance Hub",
+      either(
+        new DriveResetPose(new Pose2d(2.0, 4.0, new Rotation2d(Math.PI)), false, driveTrain),
+        new DriveResetPose(new Pose2d(FieldConstants.length - 2.0, 4.0, new Rotation2d(0.0)), false, driveTrain),
+        () -> allianceSelection.getAlliance() == Alliance.Blue
+      )
+    );
+    // auto aim toggle
+    SmartDashboard.putData("Turret Toggle Auto Aim", new TurretToggleAutoAim(turret));
+    
+    // drive left/right to test turret tracking
+    SmartDashboard.putData("Drive 2m Robot Left", new DriveToPose(CoordType.kRelative, new Pose2d(0.0, 2.0, new Rotation2d(0.0)), driveTrain));
+    SmartDashboard.putData("Drive 2m Robot Right", new DriveToPose(CoordType.kRelative, new Pose2d(0.0, -2.0, new Rotation2d(0.0)), driveTrain));
   }
  
   /**

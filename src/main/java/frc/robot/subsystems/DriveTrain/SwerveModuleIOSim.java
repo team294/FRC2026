@@ -15,11 +15,12 @@ import frc.robot.Constants.SwerveConstants;
 public class SwerveModuleIOSim implements SwerveModuleIO {
 
   // Drive simulation
-  // Models the drive motor + gearbox as a flywheel with moment of inertia derived from kV/kA.
+  // Moment of inertia derived from robot mass, wheel radius, and gear ratio:
+  // J = mass * wheelRadius² / gearRatio² = 52kg * 0.0508m² / 6.026² ≈ 0.0037 kg·m²
   private final DCMotorSim driveSim = new DCMotorSim(
       LinearSystemId.createDCMotorSystem(
           DCMotor.getKrakenX60(1),
-          0.025,  // moment of inertia (kg·m²) — tune to match real robot feel
+          0.0037,  // moment of inertia (kg·m²)
           SwerveConstants.kDriveGearRatio),
       DCMotor.getKrakenX60(1));
 
@@ -31,17 +32,16 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
           SwerveConstants.kTurningGearRatio),
       DCMotor.getKrakenX60(1));
 
-  // Turn position closed-loop (sim runs software PID since there's no TalonFX onboard PID)
-  private final PIDController turnPID = new PIDController(
-      SwerveConstants.turningMotorkP,
-      SwerveConstants.turningMotorkI,
-      SwerveConstants.turningMotorkD);
+  // Sim-specific gains, independent of SwerveConstants which are tuned for real TalonFX hardware.
+  // Turn: explicit PD using sim velocity directly to avoid jitter from differentiating position.
+  // Drive: P-only on velocity error; feedforward handles the bulk of the output.
+  //        kI omitted — integrator windup causes jitter with no anti-windup.
+  //        kD omitted — differentiating velocity = acceleration, which is noisy.
+  private static final double SIM_TURN_kP = 10.0;  // volts per radian of error
+  private static final double SIM_TURN_kD = 0.3;   // volts per (rad/s) of velocity
+  private static final double SIM_DRIVE_kP = 0.05; // volts per (rad/s) of velocity error
 
-  // Drive velocity closed-loop
-  private final PIDController drivePID = new PIDController(
-      SwerveConstants.driveMotorkP,
-      SwerveConstants.driveMotorkI,
-      SwerveConstants.driveMotorkD);
+  private final PIDController drivePID = new PIDController(SIM_DRIVE_kP, 0.0, 0.0);
 
   // Commanded voltages
   private double driveAppliedVolts = 0.0;
@@ -64,9 +64,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
 
   private static final double LOOP_PERIOD_SECS = 0.02;
 
-  public SwerveModuleIOSim() {
-    turnPID.enableContinuousInput(-Math.PI, Math.PI);
-  }
+  public SwerveModuleIOSim() {}
 
   // SwerveModuleIO
 
@@ -75,10 +73,15 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
    */
   @Override
   public void updateInputs(SwerveModuleIOInputs inputs) {
-    // Run turn closed-loop if active
+    // Run turn closed-loop if active.
+    // Explicit PD: P on position error, D directly on sim velocity to avoid jitter
+    // from PIDController differentiating position. MathUtil.angleModulus wraps the
+    // error to [-π, π], replacing what enableContinuousInput did on the old turnPID.
     if (turnClosedLoop) {
+      double positionError =
+          MathUtil.angleModulus(turnPositionSetpointRad - turnSim.getAngularPositionRad());
       turnAppliedVolts = MathUtil.clamp(
-          turnPID.calculate(turnSim.getAngularPositionRad(), turnPositionSetpointRad),
+          SIM_TURN_kP * positionError - SIM_TURN_kD * turnSim.getAngularVelocityRadPerSec(),
           -12.0, 12.0);
     }
 
