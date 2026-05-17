@@ -47,9 +47,9 @@ public class DriveWithController extends Command {
     leftVelocity = allianceSelection.getAlliance() == Alliance.Blue ? -xboxController.getLeftX() : xboxController.getLeftX();
     turnRate = -xboxController.getRightX();
 
-    fwdVelocity = (Math.abs(fwdVelocity) < OIConstants.joystickDeadband) ? 0 : scaleJoystick(fwdVelocity) * SwerveConstants.kMaxSpeedMetersPerSecond;
-    leftVelocity = (Math.abs(leftVelocity) < OIConstants.joystickDeadband) ? 0 : scaleJoystick(leftVelocity) * SwerveConstants.kMaxSpeedMetersPerSecond;
-    turnRate = (Math.abs(turnRate) < OIConstants.joystickDeadband) ? 0 : scaleTurn(turnRate) * SwerveConstants.kMaxTurningRadiansPerSecond;
+    fwdVelocity = (Math.abs(fwdVelocity) < OIConstants.controllerDeadband) ? 0 : scaleJoystick(fwdVelocity) * SwerveConstants.kMaxSpeedMetersPerSecond;
+    leftVelocity = (Math.abs(leftVelocity) < OIConstants.controllerDeadband) ? 0 : scaleJoystick(leftVelocity) * SwerveConstants.kMaxSpeedMetersPerSecond;
+    turnRate = (Math.abs(turnRate) < OIConstants.controllerDeadband) ? 0 : scaleTurn(turnRate) * SwerveConstants.kMaxTurningRadiansPerSecond;
     
     driveTrain.drive(fwdVelocity, leftVelocity, turnRate, DriveType.kDriverRelative, false);
   }

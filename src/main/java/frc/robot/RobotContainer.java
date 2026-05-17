@@ -111,9 +111,9 @@ public class RobotContainer {
     configureTriggers();
     configureElastic();
 
-    driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
+    // driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
     turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, field));
-    // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
+    driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
     // Set initial location to (0,0) and facing away from driver (regardless of alliance color).
