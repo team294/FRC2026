@@ -19,6 +19,7 @@ import frc.robot.commands.IntakeDeploySetPercent;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 import frc.robot.utilities.DataLogUtil;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -39,7 +40,7 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
    * @param intake Intake intake subsystem
    * @param shooter Shooter shooter subsystem
    */
-  public FeederIntakeFeedShooterSequence(AgitateType agitateType, Feeder feeder, Intake intake, Shooter shooter) {
+  public FeederIntakeFeedShooterSequence(AgitateType agitateType, Feeder feeder, Intake intake, Shooter shooter, Turret turret) {
     addCommands(
       // Ensure that all necessary subsystmes are in place
       new DataLogMessage(false, "FeederIntakeFeedShooterSequence: Init"),
@@ -47,7 +48,9 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
         waitUntil( () -> shooter.isShooterAtGoalVelocity() || Math.abs(shooter.getShooterVelocity())>ShooterConstants.maxShootWaitForRPM )
           .andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: ShooterAtGoal")),
         waitUntil(() -> shooter.isHoodAtGoalAngle() && shooter.getHoodAngleSetpoint() != ShooterConstants.hoodMinimumAngle)
-          .andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: HoodAtGoal"))
+          .andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: HoodAtGoal")),
+        waitUntil(() -> turret.isTurretAtGoalAngle())
+          .andThen(new DataLogMessage(false, "FeederIntakeFeedShooterSequence: TurretAtGoal"))
       ).handleInterrupt(() -> DataLogUtil.writeMessage("FeederIntakeFeedShooterSequence: Interrupted")),
       parallel(
         new FeederFeedShooter(feeder),

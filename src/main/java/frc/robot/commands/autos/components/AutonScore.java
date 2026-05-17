@@ -32,7 +32,7 @@ public class AutonScore extends SequentialCommandGroup {
       new DataLogMessage(false, "AutonScore: start"),
       parallel(
         new ShooterTurretScorePrepSequence(false, shooterEndType, turret, shooter, driveTrain, field),
-        new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter),
+        new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter, turret),
         new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber)
       )
     );

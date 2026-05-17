@@ -112,7 +112,6 @@ public class RobotContainer {
     configureElastic();
 
     driveTrain.setDefaultCommand(new DriveWithJoysticksAdvanced(leftJoystick, rightJoystick, allianceSelection, driveTrain));
-    turret.setDefaultCommand(new TurretAutoAim(turret, driveTrain, field));
     // driveTrain.setDefaultCommand(new DriveWithController(driveTrain, xboxController, allianceSelection));
 
     // Set initial robot position on field. This takes place a while after the drivetrain is created, so after any CANbus delays.
@@ -207,9 +206,9 @@ public class RobotContainer {
 
     // Sequences
     SmartDashboard.putData(INTAKING_CMD_SEQUENCE.value, new IntakeSequence(intake));
-    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
-    SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
-    SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
+    SmartDashboard.putData(FEED_SHOOTER_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter, turret));
+    SmartDashboard.putData(FEED_SHOOTER_BOUNCE_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter, turret));
+    SmartDashboard.putData(FEED_SHOOTER_DUMP_AGITATE_CMD_SEQUENCE.value, new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter, turret));
 
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
@@ -272,7 +271,12 @@ public class RobotContainer {
     xbLB.onTrue(new IntakeRollerStop(intake));
 
     // while held, prep Shooter & Hood for scoring or passing (depending on position on field). stops shooter motor when released
-    xbRT.whileTrue(new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field));
+    xbRT.whileTrue(
+      parallel(
+        new ShooterScorePrep(false, EndType.runForever, shooter, turret, driveTrain, field),
+        new TurretAutoAim(turret, driveTrain, field)
+      )
+    );
 
     xbRT.onFalse(new IntakeDeploySetAngle(IntakeDeployAngle.INTAKE, intake));
 
@@ -309,13 +313,13 @@ public class RobotContainer {
 
 
     // feed shooter with bounce agitation
-    xbA.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter));
+    xbA.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.BOUNCE, feeder, intake, shooter, turret));
     
     // feed shooter without agitation
-    xbB.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter));
+    xbB.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.NONE, feeder, intake, shooter, turret));
 
     // feed shooter with dump agitation
-    xbY.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter));
+    xbY.whileTrue(new FeederIntakeFeedShooterSequence(AgitateType.DUMP, feeder, intake, shooter, turret));
 
     // reset intake if agitated, stop rollers and spindexer/uptake in both cases
     xbA.onFalse(parallel(
