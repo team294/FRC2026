@@ -140,7 +140,10 @@ public class Turret extends SubsystemBase {
    */
   public void calibrateTurret(double angle) {
     io.calibrate(angle);
-    // After calibration, enable auto-aim if IO reports success
+    // Force an inputs refresh so isCalibrated reflects the result of calibrate()
+    // immediately, rather than waiting for the next periodic() call.
+    io.updateInputs(inputs);
+    Logger.processInputs("Turret", inputs);
     if (inputs.isCalibrated) {
       turretAutoAimEnabled = true;
       turretShootOnTheMove = true;
@@ -165,6 +168,9 @@ public class Turret extends SubsystemBase {
    */
   public void calibrateTurretAutomatic() {
     io.recalibrateAutomatic();
+    // Force an inputs refresh so isCalibrated reflects the result immediately.
+    io.updateInputs(inputs);
+    Logger.processInputs("Turret", inputs);
     if (inputs.isCalibrated) {
       turretAutoAimEnabled = true;
       turretShootOnTheMove = true;
@@ -241,7 +247,6 @@ public class Turret extends SubsystemBase {
         getTurretAbsoluteAngle(robotPose2d.getRotation()));
 
     Logger.recordOutput(subsystemName + "/TurretPose", pose);  // log here to avoid passing in robot pose somewhere else
-
     return pose;
   }
 
@@ -260,7 +265,7 @@ public class Turret extends SubsystemBase {
 
   /**
    * Computes the turret angle required to point at a field target, relative to turret zero.
-   * @param robotPose2d current robot pose
+   * @param robotPose2d        current robot pose
    * @param targetTranslation2d field position of the aiming target
    * @return turret-relative target angle, in degrees
    */
