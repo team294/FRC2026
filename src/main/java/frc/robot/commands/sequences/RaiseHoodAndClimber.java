@@ -11,7 +11,7 @@ import frc.robot.Constants.ClimberConstants.ClimberPosition;
 import frc.robot.commands.ClimberSetPosition;
 import frc.robot.commands.HoodSetAngle;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Shooter;
 
 public class RaiseHoodAndClimber extends ParallelCommandGroup {
 

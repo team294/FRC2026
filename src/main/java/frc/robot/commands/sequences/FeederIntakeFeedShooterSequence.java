@@ -18,7 +18,7 @@ import frc.robot.commands.IntakeDeployAgitate;
 import frc.robot.commands.IntakeDeploySetPercent;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.utilities.DataLogUtil;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

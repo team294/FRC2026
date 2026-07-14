@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.EndType;
 import frc.robot.commands.ShooterScorePrep;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.utilities.Field;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

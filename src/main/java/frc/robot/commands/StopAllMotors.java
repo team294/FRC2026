@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Shooter.Shooter;
 
 public class StopAllMotors extends ParallelCommandGroup {
   /** Creates a new StopAllMotors. */
