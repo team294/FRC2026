@@ -18,6 +18,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.utilities.DataLogUtil;
+import frc.robot.utilities.RobotPreferences;
 
 
 public class ShooterIOTalonFX implements ShooterIO {
@@ -44,11 +46,15 @@ public class ShooterIOTalonFX implements ShooterIO {
     
     private VoltageOut hood1VoltageControl = new VoltageOut(0.0).withEnableFOC(false);
     private VoltageOut hood2VoltageControl = new VoltageOut(0.0).withEnableFOC(false);
-    private double hoodAngleSetpoint;
     private double hood1VoltageSetpoint;
     private double hood2VoltageSetpoint;
-    private boolean hood1PositionControlOn = false;
-    private boolean hood2PositionControlOn = false;
+
+    // Sticky Faults
+    private boolean recordedShooterMotor1MissingStickyFault = false;
+    private boolean recordedShooterMotor2MissingStickyFault = false;
+
+    private boolean recordedHoodMotor1MissingStickyFault = false;
+    private boolean recordedHoodMotor2MissingStickyFault = false;
     
     
     public ShooterIOTalonFX() {
@@ -136,19 +142,64 @@ public class ShooterIOTalonFX implements ShooterIO {
         inputs.PositionRots2 = shooterMotor2.getPosition().getValueAsDouble() * ShooterConstants.gearRatio;
         inputs.SupplyVoltage2 = shooterMotor2.getSupplyCurrent().getValueAsDouble();
         
-        inputs.HoodAngle = getHoodAngle();
-        inputs.HoodAngle1 = getHoodAngle(1);
-        inputs.HoodAnalogVoltage1 = hoodMotor1.getAnalogVoltage().getValueAsDouble();
-        inputs.HoodAppliedVoltage1 = hoodMotor1.getMotorVoltage().getValueAsDouble();
-        inputs.HoodSupplyVoltage1 = hoodMotor1.getSupplyVoltage().getValueAsDouble();
-        inputs.HoodCurrent1 = hoodMotor1.getStatorCurrent().getValueAsDouble();
-        inputs.HoodVoltageSetpoint1 = hood1VoltageSetpoint;
-        inputs.HoodAngle2 = getHoodAngle(2);
-        inputs.HoodAnalogVoltage2 = hoodMotor1.getAnalogVoltage().getValueAsDouble();
-        inputs.HoodAppliedVoltage2 = hoodMotor1.getMotorVoltage().getValueAsDouble();
-        inputs.HoodSupplyVoltage2 = hoodMotor1.getSupplyVoltage().getValueAsDouble();
-        inputs.HoodCurrent2 = hoodMotor1.getStatorCurrent().getValueAsDouble();
-        inputs.HoodVoltageSetpoint2 = hood2VoltageSetpoint;
+        inputs.recordedShooterMotor1MissingStickyFault = recordedShooterMotor1MissingStickyFault;
+        inputs.recordedShooterMotor2MissingStickyFault = recordedShooterMotor2MissingStickyFault;
+    }
+    @Override
+    public void updateHoodInputs(HoodIOInputs inputs) {
+        inputs.Angle = getHoodAngle();
+        inputs.Angle1 = getHoodAngle(1);
+        inputs.AnalogVoltage1 = hoodMotor1.getAnalogVoltage().getValueAsDouble();
+        inputs.AppliedVoltage1 = hoodMotor1.getMotorVoltage().getValueAsDouble();
+        inputs.SupplyVoltage1 = hoodMotor1.getSupplyVoltage().getValueAsDouble();
+        inputs.Current1 = hoodMotor1.getStatorCurrent().getValueAsDouble();
+        inputs.VoltageSetpoint1 = hood1VoltageSetpoint;
+        inputs.Angle2 = getHoodAngle(2);
+        inputs.AnalogVoltage2 = hoodMotor1.getAnalogVoltage().getValueAsDouble();
+        inputs.AppliedVoltage2 = hoodMotor1.getMotorVoltage().getValueAsDouble();
+        inputs.SupplyVoltage2 = hoodMotor1.getSupplyVoltage().getValueAsDouble();
+        inputs.Current2 = hoodMotor1.getStatorCurrent().getValueAsDouble();
+        inputs.VoltageSetpoint2 = hood2VoltageSetpoint;
+
+        
+        inputs.recordedHoodMotor1MissingStickyFault = recordedHoodMotor1MissingStickyFault;
+        inputs.recordedHoodMotor2MissingStickyFault = recordedHoodMotor2MissingStickyFault;
+
+    }
+
+    @Override
+    public void checkForFaultConditions() {
+        // Reset recordedStickyFault booleans if the Sticky Faults were cleared
+        recordedShooterMotor1MissingStickyFault = recordedShooterMotor1MissingStickyFault && RobotPreferences.isStickyFaultActive();
+        recordedShooterMotor2MissingStickyFault = recordedShooterMotor2MissingStickyFault && RobotPreferences.isStickyFaultActive();
+        
+        recordedHoodMotor1MissingStickyFault = recordedHoodMotor1MissingStickyFault && RobotPreferences.isStickyFaultActive();
+        recordedHoodMotor2MissingStickyFault = recordedHoodMotor2MissingStickyFault && RobotPreferences.isStickyFaultActive();
+
+        // If we haven't recorded the sticky fault yet, then check fault condition
+        if(!recordedShooterMotor1MissingStickyFault && !shooterMotor1.isConnected()) {
+        RobotPreferences.recordStickyFaults("Shooter-Motor1");
+        DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Shooter Motor 1 Missing");
+        recordedShooterMotor1MissingStickyFault = true;
+        }
+
+        if(!recordedShooterMotor2MissingStickyFault && !shooterMotor2.isConnected()) {
+        RobotPreferences.recordStickyFaults("Shooter-Motor2");
+        DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Shooter Motor 2 Missing");
+        recordedShooterMotor2MissingStickyFault = true;
+        }
+
+        if(!recordedHoodMotor1MissingStickyFault && !hoodMotor1.isConnected()) {
+        RobotPreferences.recordStickyFaults("Hood-Motor1");
+        DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Hood Motor 1 Missing");
+        recordedHoodMotor1MissingStickyFault = true;
+        }
+
+        if(!recordedHoodMotor2MissingStickyFault && !hoodMotor2.isConnected()) {
+        RobotPreferences.recordStickyFaults("Hood-Motor2");
+        DataLogUtil.writeMessageEcho("STICKY FAULT Shooter: Hood Motor 2 Missing");
+        recordedHoodMotor2MissingStickyFault = true;
+        }
     }
 
     @Override
@@ -172,6 +223,34 @@ public class ShooterIOTalonFX implements ShooterIO {
     @Override
     public void stopShooterMotor() {
     setShooterPercentOutput(0);
+    }
+
+    @Override
+    public void setHoodVoltageBothMotors(double voltage) {
+        hood1VoltageSetpoint = voltage;
+        hood2VoltageSetpoint = voltage;
+        hoodMotor1.setControl(hood1VoltageControl.withOutput(voltage* ShooterConstants.hoodMotorRatio2to1));
+        hoodMotor2.setControl(hood2VoltageControl.withOutput(voltage));
+    }
+
+    @Override
+    public void setHoodVoltageOneMotor(double voltage, int motorNumber) {
+    if (motorNumber == 1) {
+      hoodMotor1.setControl(hood1VoltageControl.withOutput(voltage));
+      hood1VoltageSetpoint = voltage;
+      } else {
+      hoodMotor2.setControl(hood2VoltageControl.withOutput(voltage));
+      hood2VoltageSetpoint = voltage;
+        }
+    }
+    
+    @Override
+    public void setHoodSpeed(int motorNumber, double speed) {
+        if (motorNumber == 1) {
+            hoodMotor1.set(speed);
+        } else {
+            hoodMotor2.set(speed);
+        }
     }
 
     /**

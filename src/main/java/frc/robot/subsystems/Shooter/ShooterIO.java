@@ -17,37 +17,39 @@ public interface ShooterIO {
         public double PositionRots2 = 0.0;
         public double AppliedVolts2 = 0.0;
         public double SupplyVoltage2 = 0.0;
-
         public double VelocitySet = 0.0;
-
-        public double HoodAngle;
-        public double HoodAngle1;
-        public double HoodAnalogVoltage1;
-        public double HoodAppliedVoltage1;
-        public double HoodSupplyVoltage1;
-        public double HoodCurrent1;
-        public double HoodVoltageSetpoint1;
-        public double HoodAngle2;
-        public double HoodAnalogVoltage2;
-        public double HoodAppliedVoltage2;
-        public double HoodSupplyVoltage2;
-        public double HoodCurrent2;
-        public double HoodVoltageSetpoint2;
-
-        // Sticky Faults
-        public boolean recordedShooterMotor1MissingStickyFault;
-        public boolean recordedShooterMotor2MissingStickyFault;
-
-        public boolean recordedHoodMotor1MissingStickyFault;
-        public boolean recordedHoodMotor2MissingStickyFault;
-
+        public boolean recordedShooterMotor1MissingStickyFault = false;
+        public boolean recordedShooterMotor2MissingStickyFault = false;
+    }
+    @AutoLog
+    class HoodIOInputs {
+        public double Angle = 0.0;
+        public double Angle1 = 0.0;
+        public double AnalogVoltage1 = 0.0;
+        public double AppliedVoltage1 = 0.0;
+        public double SupplyVoltage1 = 0.0;
+        public double Current1 = 0.0;
+        public double VoltageSetpoint1 = 0.0;
+        public double Angle2 = 0.0;
+        public double AnalogVoltage2 = 0.0;
+        public double AppliedVoltage2 = 0.0;
+        public double SupplyVoltage2 = 0.0;
+        public double Current2 = 0.0;
+        public double VoltageSetpoint2 = 0.0;
+        public boolean recordedHoodMotor1MissingStickyFault = false;
+        public boolean recordedHoodMotor2MissingStickyFault = false;
     }
     default void updateInputs(ShooterIOInputs inputs) {}
+    default void updateHoodInputs(HoodIOInputs inputs) {}
     /**
      * Sets the percent output of the Shooter motor using voltage compensation.
      * @param percent output percent, -1.0 to 1.0 (positive = shoot direction, negative = reverse)
      */
     default public void setShooterPercentOutput(double percent) {}
+    /**
+     * Checks for fault conditions and records stick faults if any exist.
+     */
+    default public  void checkForFaultConditions() {}
     /**
      * Sets the velocity of the Shooter wheel using voltage compensation. 
      * @param velocityRPM the velocity, in rpm, to set the wheel to (positive = shoot, negative = reverse)
@@ -67,5 +69,9 @@ public interface ShooterIO {
      * @param voltage in volts [-12, 12]; positive is up and negative is down
      */
     default public void setHoodVoltageOneMotor(double voltage, int motorNumber) {}
+    /**
+     * Common interface for setting the speed of a motor controller.
+     * @param speed The speed to set. Value should be between -1.0 and 1.0. */
+    default public void setHoodSpeed(int motorNumber, double speed) {}
 }
 
