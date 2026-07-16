@@ -34,7 +34,9 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         io.checkForFaultConditions();
         io.updateInputs(inputs);
+        io.updateHoodInputs(hoodInputs);
         Logger.processInputs("Shooter", inputs);
+        Logger.processInputs("Hood", hoodInputs);
         // Stopping hood motion when at min/max extensions to prevent motor from dying
         if (hood1PositionControlOn) {
             if ((hoodInputs.AnalogVoltage1 < ShooterConstants.hoodMinimumAnalogVoltageCutoff && hoodAngleSetpoint <= ShooterConstants.hoodMinimumAngle + 0.01) 

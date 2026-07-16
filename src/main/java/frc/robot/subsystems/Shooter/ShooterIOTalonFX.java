@@ -134,14 +134,14 @@ public class ShooterIOTalonFX implements ShooterIO {
         inputs.CurrentAmps1 = shooterMotor1.getStatorCurrent().getValueAsDouble();
         inputs.VelocityRotPerMin1 = shooterMotor1.getVelocity().getValueAsDouble() * ShooterConstants.gearRatio * 60.0;
         inputs.PositionRots1 = shooterMotor1.getPosition().getValueAsDouble() * ShooterConstants.gearRatio;
-        inputs.SupplyVoltage1 = shooterMotor1.getSupplyCurrent().getValueAsDouble();
+        inputs.SupplyVoltage1 = shooterMotor1.getSupplyVoltage().getValueAsDouble();
     
         inputs.TempCelsius2 = shooterMotor2.getDeviceTemp().getValueAsDouble();
         inputs.AppliedVolts2 = shooterMotor2.getMotorVoltage().getValueAsDouble();
         inputs.CurrentAmps2 = shooterMotor2.getStatorCurrent().getValueAsDouble();
         inputs.VelocityRotPerMin2 = shooterMotor2.getVelocity().getValueAsDouble() * ShooterConstants.gearRatio * 60.0;
         inputs.PositionRots2 = shooterMotor2.getPosition().getValueAsDouble() * ShooterConstants.gearRatio;
-        inputs.SupplyVoltage2 = shooterMotor2.getSupplyCurrent().getValueAsDouble();
+        inputs.SupplyVoltage2 = shooterMotor2.getSupplyVoltage().getValueAsDouble();
         
         inputs.recordedShooterMotor1MissingStickyFault = recordedShooterMotor1MissingStickyFault;
         inputs.recordedShooterMotor2MissingStickyFault = recordedShooterMotor2MissingStickyFault;
@@ -156,10 +156,10 @@ public class ShooterIOTalonFX implements ShooterIO {
         inputs.Current1 = hoodMotor1.getStatorCurrent().getValueAsDouble();
         inputs.VoltageSetpoint1 = hood1VoltageSetpoint;
         inputs.Angle2 = getHoodAngle(2);
-        inputs.AnalogVoltage2 = hoodMotor1.getAnalogVoltage().getValueAsDouble();
-        inputs.AppliedVoltage2 = hoodMotor1.getMotorVoltage().getValueAsDouble();
-        inputs.SupplyVoltage2 = hoodMotor1.getSupplyVoltage().getValueAsDouble();
-        inputs.Current2 = hoodMotor1.getStatorCurrent().getValueAsDouble();
+        inputs.AnalogVoltage2 = hoodMotor2.getAnalogVoltage().getValueAsDouble();
+        inputs.AppliedVoltage2 = hoodMotor2.getMotorVoltage().getValueAsDouble();
+        inputs.SupplyVoltage2 = hoodMotor2.getSupplyVoltage().getValueAsDouble();
+        inputs.Current2 = hoodMotor2.getStatorCurrent().getValueAsDouble();
         inputs.VoltageSetpoint2 = hood2VoltageSetpoint;
 
         
