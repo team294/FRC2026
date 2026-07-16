@@ -15,7 +15,6 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.utilities.DataLogUtil;
@@ -128,6 +127,8 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
+        inputs.VelocitySet = shooterSetpointRPM;
+        inputs.ShooterVelocityControl = shooterVelocityControlOn;
         inputs.TempCelsius1 = shooterMotor1.getDeviceTemp().getValueAsDouble();
         inputs.AppliedVolts1 = shooterMotor1.getMotorVoltage().getValueAsDouble();
         inputs.CurrentAmps1 = shooterMotor1.getStatorCurrent().getValueAsDouble();

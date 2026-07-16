@@ -65,32 +65,30 @@ public class Shooter extends SubsystemBase {
         }
         Logger.recordOutput("Hood/PositionControlOn", hood2PositionControlOn);
     }
+
     /**
-     * Wrapper for IO method.
-     * Set the hood voltage to BOTH linear actuators
-     * @param voltage in volts [-12, 12]; positive is up and negative is down
-     */
-    public void setHoodVoltageBothMotors(double voltage) {
-        // Now need to set flag at subsystem level
-        hood1PositionControlOn = false;
-        hood2PositionControlOn = false;
-        io.setHoodVoltageBothMotors(voltage);
+     * Returns if shooter is within tolerance from the most recent goal velocity
+     * @return true = in tolerance, false = not at goal velocity.
+    */
+    public boolean isShooterAtGoalVelocity() {
+        return Math.abs(getShooterVelocityPIDError()) < ShooterConstants.shooterVelocityErrorTolerance && (inputs.VelocitySet != 0.0);
+    }
+    /**
+     * Gets the error of the PID for spindexerMotor velocity control.
+     * @return error, in RPM (positive = measured speed is too fast, negative = too slow)
+    */
+    public double getShooterVelocityPIDError() {
+        return getShooterVelocity() - inputs.VelocitySet;
     }
 
     /**
-    * Wrapper for IO method 
-    * Set the hood voltage to ONE linear actuator 
-    * @param voltage in volts [-12, 12]; positive is up and negative is down
-    */
-    public void setHoodVoltageOneMotor(double voltage, int motorNumber) {
-        // Set the flag to correct motor at subsystem level
-        if (motorNumber == 1) {
-            hood1PositionControlOn = false;
-        } else {
-            hood2PositionControlOn = false;
-        }
-        io.setHoodVoltageOneMotor(voltage, motorNumber);
+     * Gets the velocity of the shooter wheel, averaging the two motors.
+     * @return wheel velocity, in RPM
+     */
+    public double getShooterVelocity() {
+        return (inputs.VelocityRotPerMin1 + inputs.VelocityRotPerMin2) / 2.0;
     }
+    
 
     /**
    * Move both motors with simple PID controller.
@@ -118,7 +116,13 @@ public class Shooter extends SubsystemBase {
             io.setHoodSpeed(2 , hoodPct);
         }
     }
-
+    /**
+     * Returns the hood angle setpoint in degrees
+     * @return the hood angle setpoint in degrees
+    */
+    public double getHoodAngleSetpoint() {
+        return hoodAngleSetpoint;
+    }
     /**
      * Returns if hood is within tolerance from the most recent goal angle
      * @return true = in tolerance, false = not at goal angle.
@@ -144,5 +148,58 @@ public class Shooter extends SubsystemBase {
      */
     public String getName() {
         return subsystemName;
+    }
+
+    // **** IO Wrapper Methods *****
+    /**
+     * Sets the percent output of the Shooter motor using voltage compensation.
+     * @param percent output percent, -1.0 to 1.0 (positive = shoot direction, negative = reverse)
+     */
+    public void setShooterPercentOutput(double percent) {
+        io.setShooterPercentOutput(percent);
+    }
+    /**
+     * Sets the velocity of the Shooter wheel using voltage compensation. 
+     * @param velocityRPM the velocity, in rpm, to set the wheel to (positive = shoot, negative = reverse)
+     */
+    public void setShooterVelocity(double velocityRPM) {
+        io.setShooterVelocity(velocityRPM);
+    }
+    /**
+     * Stops the Shooter motor.
+     */
+    public void stopShooterMotor() {
+        io.stopShooterMotor();
+    }
+    /**
+     * Common interface for setting the speed of a motor controller.
+     * @param speed The speed to set. Value should be between -1.0 and 1.0. */
+    public void setHoodSpeed(int motorNumber, double speed) {
+        io.setHoodSpeed(motorNumber, speed);
+    }
+
+    /**
+     * Set the hood voltage to BOTH linear actuators
+     * @param voltage in volts [-12, 12]; positive is up and negative is down
+     */
+    public void setHoodVoltageBothMotors(double voltage) {
+        // Now need to set flag at subsystem level
+        hood1PositionControlOn = false;
+        hood2PositionControlOn = false;
+        io.setHoodVoltageBothMotors(voltage);
+    }
+
+    /**
+    * Set the hood voltage to ONE linear actuator 
+    * @param voltage in volts [-12, 12]; positive is up and negative is down
+    */
+    public void setHoodVoltageOneMotor(double voltage, int motorNumber) {
+        // Set the flag to correct motor at subsystem level
+        if (motorNumber == 1) {
+            hood1PositionControlOn = false;
+        } else {
+            hood2PositionControlOn = false;
+        }
+        io.setHoodVoltageOneMotor(voltage, motorNumber);
     }
 }

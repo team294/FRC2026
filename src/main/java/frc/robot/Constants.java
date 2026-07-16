@@ -23,6 +23,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.utilities.TrapezoidProfileBCR;
 
 /**
@@ -35,7 +36,18 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  */
 public final class Constants {
   public static final String bcrRobotCodeVersion = "C7";
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+  //public static final Mode currentMode = Mode.REPLAY; // toggle manually before running a replay
+  public enum Mode {
+    /** Running on a real robot. */
+    REAL,
 
+    /** Running a physics simulator. */
+    SIM,
+
+    /** Replaying from a log file. */
+    REPLAY
+  }
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
     kAbsolute,              // Absolute field coordinates, don't reset robot pose

@@ -18,6 +18,7 @@ public interface ShooterIO {
         public double AppliedVolts2 = 0.0;
         public double SupplyVoltage2 = 0.0;
         public double VelocitySet = 0.0;
+        public boolean ShooterVelocityControl = false;
         public boolean recordedShooterMotor1MissingStickyFault = false;
         public boolean recordedShooterMotor2MissingStickyFault = false;
     }

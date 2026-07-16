@@ -84,7 +84,7 @@ public class ShooterSetVelocity extends Command {
   @Override
   public void initialize() {
     if (type == VelocityType.waitForVelocity) {
-      shooter.enableFastLogging(true);
+      // shooter.enableFastLogging(true);
       //SignalLogger.start();     // Uncomment for Phoenix logging
     }
 
@@ -117,7 +117,7 @@ public class ShooterSetVelocity extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.enableFastLogging(false);
+    // shooter.enableFastLogging(false);
     SignalLogger.stop();
 
     if (type == VelocityType.runForever) {

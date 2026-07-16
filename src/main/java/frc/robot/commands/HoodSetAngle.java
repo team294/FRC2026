@@ -87,7 +87,7 @@ public class HoodSetAngle extends Command {
   @Override
   public void initialize() {
     if (type == EndType.waitForSetPoint) {
-      shooter.enableFastLogging(true);
+      // shooter.enableFastLogging(true);
     }
 
     if (fromElastic) targetAngle = SmartDashboard.getNumber(HOOD_CMD_SET_ANGLE_INPUT.value, ShooterConstants.hoodMinimumAngle);
@@ -122,7 +122,7 @@ public class HoodSetAngle extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.enableFastLogging(false);
+    // shooter.enableFastLogging(false);
 
     // Hood is no longer under PID control, so trun off motors
     shooter.setHoodVoltageBothMotors(0);

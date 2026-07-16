@@ -19,6 +19,8 @@ import frc.robot.commands.sequences.*;
 import frc.robot.commands.sequences.FeederIntakeFeedShooterSequence.AgitateType;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Shooter.ShooterIO;
+import frc.robot.subsystems.Shooter.ShooterIOTalonFX;
 import frc.robot.utilities.*;
 import frc.robot.utilities.LEDEventUtil.LEDStripEvents;
 import frc.robot.utilities.TrajectoryCache.TrajectoryName;
@@ -60,7 +62,7 @@ public class RobotContainer {
   private final Intake intake = new Intake("Intake");
   private final LED led = new LED(Ports.CANdle, Ports.CANbusMain, "LED");
   private final Feeder feeder = new Feeder("Feeder");
-  private final Shooter shooter = new Shooter("Shooter");
+  private final Shooter shooter;
   private final Turret turret = new Turret("Turret");
   private final Climber climber = new Climber("Climber");
 
@@ -72,7 +74,7 @@ public class RobotContainer {
 
   // Define other utilities
   private final TrajectoryCache trajectoryCache = new TrajectoryCache();
-  private final AutoSelection autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, intake, feeder, turret, shooter, climber, driveTrain);
+  private final AutoSelection autoSelection;
   
   // this command repeats until interrupted/cancelled (we cancel it in teleopInit() and autonomousInit()).
   // the command is created here to be passed into LEDEventUtil's initialize method
@@ -90,9 +92,11 @@ public class RobotContainer {
   public RobotContainer() {
     DataLogUtil.writeMessageEcho("RobotContainer: Constructor, Version =", Constants.bcrRobotCodeVersion);
     SignalLogger.enableAutoLogging(false);
-
     RobotController.setBrownoutVoltage(5.5);      // C5:  Reducing from default (6.3? V) to reduce brownouts
-
+    // Initialize shooter
+    shooter = new Shooter("Shooter", createShooterIO());
+    // Moved auto selection to constructor so shooter is initialized
+    autoSelection = new AutoSelection(rightJoystick, trajectoryCache, allianceSelection, field, intake, feeder, turret, shooter, climber, driveTrain);
     // Start LEDEventUtil
     LEDEventUtil.initialize(led, LEDAnimateRobotDisabled);
 
@@ -105,7 +109,6 @@ public class RobotContainer {
     // When the alliance is Red, Choreo will automatically flip Blue trajectories to Red.
     // All trajectories should be defined based on the Blue alliance perspective.
     ChoreoAllianceFlipUtil.setYear(2026);
-
     configureXboxButtons();     // configure Xbox controller
     configureJoystickButtons(); // configure joysticks
     configureCopanel();         // configure copanel
@@ -585,5 +588,19 @@ public class RobotContainer {
       trenchSafe = false;
       LEDEventUtil.sendEvent(LEDStripEvents.TRENCH_UNSAFE);
     }
+  }
+
+  /**
+   * Shooter subsystem switch
+   * Depending on Constants.currentMode, will initialize ROBOT, REPLAY or SIM IO
+   */
+    private static ShooterIO createShooterIO() {
+    return switch (Constants.currentMode) {
+      case REAL -> new ShooterIOTalonFX();
+      //** Sim IO not implemented */
+      //case SIM -> new ShooterIOSim();
+      //case REPLAY -> new ??() {};
+      default -> new ShooterIOTalonFX();
+    };
   }
 }
