@@ -9,6 +9,7 @@ package frc.robot.utilities;
 
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.utilities.StringUtil.*;
 
@@ -16,11 +17,19 @@ import static frc.robot.utilities.StringUtil.*;
  * A utility to write information to a file for loggin.
  */
 public class DataLogUtil {
+	// Options for logging when the robot is disabled
+	public enum RotationWhenDisabled {
+		kNormal,	// Every 0.2 sec when robot is disabled
+		kSlow,     	// Every 2sec when robot is disabled
+		kNone;     	// No logging when robot is disabled
+	}
+
 	// Level of detail between 1-3, where 1 is the most detailed and 3 is the least detailed
 	private static int logLevel = 3;
     
   	// File logging rotation cycles, to spread out logging times between subsystems	
 	private static final int NUM_ROTATIONS = 10;
+	private static final int NUM_ROTATIONS_DISABLED = 100;
 	private static int rotationLastAllocated = NUM_ROTATIONS - 1;
 	private static int rotationCurrent = 0;	// Values = 0 ... NUM_ROTATIONS - 1
 
@@ -81,7 +90,8 @@ public class DataLogUtil {
 	 */
 	public static void advanceLogRotation() {
 		rotationCurrent++;
-		if (rotationCurrent >= NUM_ROTATIONS) rotationCurrent = 0;
+		if (rotationCurrent >= NUM_ROTATIONS && !DriverStation.isDisabled()) rotationCurrent = 0;
+		if (rotationCurrent >= NUM_ROTATIONS_DISABLED ) rotationCurrent = 0;
 
 		// if (logLevel == 3) {
 		// 	if (rotation >= 25) rotation = 0;
@@ -115,7 +125,17 @@ public class DataLogUtil {
 	 * @param logRotationKey Key from allocateLogRotation() to check
 	 * @return true = rotationKey is the current rotation, false = rotationKey is not the current rotation
 	 */
-	public static boolean isMyLogRotation(int logRotationKey) {
+	public static boolean isMyLogRotation(int logRotationKey, RotationWhenDisabled rotationWhenDisabled) {
+		if (DriverStation.isDisabled()) {
+			switch (rotationWhenDisabled) {
+				case kNone:
+					return false;
+				case kNormal:
+					return (logRotationKey == rotationCurrent%NUM_ROTATIONS);
+				case kSlow:
+					return (logRotationKey == rotationCurrent);
+			}
+		}
 		return (logRotationKey == rotationCurrent);
 	}
 

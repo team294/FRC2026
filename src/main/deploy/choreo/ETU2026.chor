@@ -4,6 +4,13 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "ballCollect":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1.9 m / s",
+     "val":1.9
+    }
+   },
    "maxVel":{
     "dimension":"LinVel",
     "var":{
@@ -58,8 +65,8 @@
      "val":3.744858503341675
     },
     "heading":{
-     "exp":"0 rad",
-     "val":0.0
+     "exp":"-30 deg",
+     "val":-0.5235987755982988
     }
    },
    "collectDepotEnd":{
@@ -138,8 +145,8 @@
      "val":2.6
     },
     "y":{
-     "exp":"2.5111160278320312 m",
-     "val":2.5111160278320312
+     "exp":"2.663516032 m",
+     "val":2.663516032
     },
     "heading":{
      "exp":"-1.5661052183457105 rad",

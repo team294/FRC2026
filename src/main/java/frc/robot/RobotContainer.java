@@ -10,6 +10,7 @@ import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
 import frc.robot.Constants.*;
 import frc.robot.Constants.ClimberConstants.ClimberPosition;
+import frc.robot.Constants.ClimberConstants.ClimberSide;
 import frc.robot.Constants.FeederConstants.SpindexerConstants;
 import frc.robot.Constants.FeederConstants.UptakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
@@ -30,6 +31,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -87,6 +89,8 @@ public class RobotContainer {
   public RobotContainer() {
     DataLogUtil.writeMessageEcho("RobotContainer: Constructor, Version =", Constants.bcrRobotCodeVersion);
     SignalLogger.enableAutoLogging(false);
+
+    RobotController.setBrownoutVoltage(5.5);      // C5:  Reducing from default (6.3? V) to reduce brownouts
 
     // Start LEDEventUtil
     LEDEventUtil.initialize(led, LEDAnimateRobotDisabled);
@@ -193,6 +197,9 @@ public class RobotContainer {
     SmartDashboard.putData(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL.value, new IntakeDeployCalibrateManual(intake));
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_MANUAL.value, new TurretManualCalibration(turret, true));
     SmartDashboard.putData(TURRET_CMD_RECALIBRATE_AUTOMATIC.value, new TurretManualCalibration(turret, false));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_MANUAL_LEFT.value, new InstantCommand(() -> climber.calibrateEncoderLeft()));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_MANUAL_RIGHT.value, new InstantCommand(() -> climber.calibrateEncoderRight()));
+    SmartDashboard.putData(CLIMBER_CMD_CALIBRATE_MANUAL_BOTH.value, new ClimberCalibrateManual(climber));
 
     // Toggle
 
@@ -207,10 +214,10 @@ public class RobotContainer {
     // Climber
     SmartDashboard.putData(CLIMBER_CMD_STOP.value, new ClimberStop(climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT.value, new ClimberSetPercent(climber));
-    SmartDashboard.putData(CLIMBER_CMD_STOP_LEFT.value, new ClimberSingleStop(ClimberConstants.SIDE_LEFT, climber));
-    SmartDashboard.putData(CLIMBER_CMD_STOP_RIGHT.value, new ClimberSingleStop(ClimberConstants.SIDE_RIGHT, climber));
-    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_LEFT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_LEFT, climber));
-    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_RIGHT.value, new ClimberSingleSetPercent(ClimberConstants.SIDE_RIGHT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP_LEFT.value, new ClimberSingleStop(ClimberSide.LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_STOP_RIGHT.value, new ClimberSingleStop(ClimberSide.RIGHT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_LEFT.value, new ClimberSingleSetPercent(ClimberSide.LEFT, climber));
+    SmartDashboard.putData(CLIMBER_CMD_SET_PERCENT_RIGHT.value, new ClimberSingleSetPercent(ClimberSide.RIGHT, climber));
     SmartDashboard.putData(CLIMBER_CMD_SET_POSITION.value, new ClimberSetPosition(climber));
 
     SmartDashboard.putData(HOOD_CMD_SET_VOLTAGE_BOTH.value, new HoodSetVoltage(shooter, 0));
@@ -420,18 +427,22 @@ public class RobotContainer {
     coP[12].whileTrue(new HoodSetPercent(false, -ShooterConstants.hoodMaximumPercentOutput, shooter, 0));
 
     // // Manually recalibrate Turret, assuming it's facing straight out of back of robot
-    coP[13].onTrue(new TurretManualCalibration(turret, true));
+    coP[13].onTrue(new HoodSetAngle(ShooterConstants.hoodShootAngle, EndType.waitForSetPoint, shooter));
+    coP[14].onTrue(new HoodSetAngle(ShooterConstants.hoodPassAngle, EndType.waitForSetPoint, shooter));
+    // coP[13].onTrue(new TurretManualCalibration(turret, true));
+    // Removed manual calibration from copanel so that they aren't hit accidentally during checkout
 
     // Manually recalibrate intake deploy, assuming it's at intaking position
-    coP[14].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
-    
+    // coP[14].onTrue(new IntakeDeployCalibrateManual(IntakeConstants.IntakeDeployAngle.INTAKE.value, intake));
+    // Removed manual calibration from copanel so that they aren't hit accidentally during checkout
+
     // Manually move left climber up/down while held, stopping when released
-    coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 1, climber));
-    coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 1, climber));
+    coP[15].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, ClimberSide.LEFT, climber));
+    coP[16].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput,ClimberSide.LEFT, climber));
 
     // Manually move right climber up/down while held, stopping when released
-    coP[17].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, 2, climber));
-    coP[18].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, 2, climber));
+    coP[17].whileTrue(new ClimberSingleSetPercent(ClimberConstants.maxManualPercentOutput, ClimberSide.RIGHT, climber));
+    coP[18].whileTrue(new ClimberSingleSetPercent(-ClimberConstants.maxManualPercentOutput, ClimberSide.RIGHT, climber));
 
     // Manually move both climbers up/down while held, stopping when released
     coP[19].whileTrue(new ClimberSetPercent(ClimberConstants.maxManualPercentOutput, climber));
@@ -485,6 +496,8 @@ public class RobotContainer {
     intake.stopIntakeDeploy();
     intake.stopIntakeRoller();
     shooter.stopShooterMotor();
+    turret.stopTurret();
+    climber.stopClimberMotors();
     driveTrain.enableFastLogging(false); // Turn off fast logging, in case it was left on from auto mode
     driveTrain.setVisionForOdometryState(true);
 

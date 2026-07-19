@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 public class AllianceSelection {
   
@@ -84,7 +85,7 @@ public class AllianceSelection {
    * Runs once per scheduler cycle.
    */
   public void periodic() {
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       Alliance newAlliance = alliance;
 
       switch (allianceChooser.getSelected()) {

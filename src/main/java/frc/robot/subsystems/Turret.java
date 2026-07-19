@@ -29,6 +29,7 @@ import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.Wait;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 import frc.robot.Constants.*;
 import frc.robot.Constants.TurretConstants.TurretAngle;
 
@@ -103,6 +104,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private final BooleanLogEntry dLogTurretCalibrated = new BooleanLogEntry(log, "/Turret/Turret Calibrated?");
   private final BooleanLogEntry dLogCANcoderBeltConnected = new BooleanLogEntry(log, "/Turret/CANcoder Belt Connected?");
   private final BooleanLogEntry dLogCANcoderGearConnected = new BooleanLogEntry(log, "/Turret/CANcoder Gear Connected?");
+  private final BooleanLogEntry dLogTurretAutoAimEnabled = new BooleanLogEntry(log, "/Turret/Auto Aim Enabled?");
 
   private double turretZero = 0.0;  // offset of turret encoder (either internal motor encoder or calculated from belt encoder through gear ratio) to turret zero position, in turret degrees
 
@@ -809,13 +811,14 @@ public class Turret extends SubsystemBase implements Loggable {
       dLogTurretCalibrated.append(isTurretCalibrated(), timeNow);
       dLogCANcoderBeltConnected.append(isCANcoderConnected(1), timeNow);
       dLogCANcoderGearConnected.append(isCANcoderConnected(2), timeNow);
+      dLogTurretAutoAimEnabled.append(turretAutoAimEnabled, timeNow);
     }
   }
 
   @Override
   public void periodic() {
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       SmartDashboard.putBoolean(TURRET_IS_CANCODER_CONNECTED.value, areBothCANcodersConnected());
       SmartDashboard.putBoolean(TURRET_IS_CALIBRATED.value, turretCalibrated);
       SmartDashboard.putBoolean(TURRET_IS_USING_CANCODER.value, usingBeltEncoder);
@@ -832,7 +835,7 @@ public class Turret extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Turret Temp", turretTemp.refresh().getValueAsDouble());
     }
 
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
       updateTurretLog(false);
     }
 

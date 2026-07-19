@@ -34,7 +34,7 @@ import frc.robot.utilities.TrapezoidProfileBCR;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final String bcrRobotCodeVersion = "A6";
+  public static final String bcrRobotCodeVersion = "C7";
 
   public enum CoordType {
     kRelative,              // Relative to current robot location/facing
@@ -271,7 +271,9 @@ public final class Constants {
 
       // Calibrate Manual Command
       INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL(intakeDeployString + calibrateManualCmdString),
-      CLIMBER_CMD_CALIBRATE_MANUAL(climberString + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL_BOTH(climberString + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL_LEFT(climberString + " L" + calibrateManualCmdString),
+      CLIMBER_CMD_CALIBRATE_MANUAL_RIGHT(climberString + " R" + calibrateManualCmdString),
       TURRET_CMD_RECALIBRATE_MANUAL(turretString + calibrateManualCmdString + " Basic"),
       TURRET_CMD_RECALIBRATE_AUTOMATIC(turretString + calibrateManualCmdString + " Advanced"),
       TURRET_CMD_TOGGLE_SOTM(turretString + " Toggle SOTM"),
@@ -542,7 +544,7 @@ public final class Constants {
     // tower lineup positions for climbing
     public static final Translation2d towerPositionBlue = new Translation2d(Units.inchesToMeters(40.0), 3.7559);
     public static final Translation2d climbPrepBlue = new Translation2d(1.8, towerPositionBlue.getY());
-    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(5.58), towerPositionBlue.getY());
+    public static final Translation2d climbExecuteBlue = new Translation2d(towerPositionBlue.getX() + Units.inchesToMeters(3.58), towerPositionBlue.getY() + Units.inchesToMeters(1.5));  // 4/25: X: Now 3.58, Was 5.58 inches  Y: Now +1.5in
 
     public static final Translation2d towerPositionRed = new Translation2d(length - towerPositionBlue.getX(), width - towerPositionBlue.getY());
     public static final Translation2d climbPrepRed = new Translation2d(length - climbPrepBlue.getX(), width - climbPrepBlue.getY());
@@ -567,6 +569,8 @@ public final class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 4);             //  (1.5, 1.5, 4) for Worlds.  Was (4, 4, 8) previously
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.1, 0.25);       //   (0.1, 0.1, 0.25) for Worlds.  Was (0.5, 0.5, 1) previously
     public static final double kTagDistanceConst = 0.06;          // 0.06 for Worlds.  Was 0.033 previously
+
+    public static final double stickyFaultCheckDelaySeconds = 30.0;
   }
 
     public static class AutoConstants {
@@ -581,9 +585,18 @@ public final class Constants {
       kDontShootPreload
     }
 
+    /**
+     * What path to take when picking up balls
+     * <p> kDriveThroughCenter closer to center line
+     * <p> kDriveThroughSide closer to alliance zone
+     * <p> kBumpSecondSwipe starts from and ends in the choreo ShootBump position
+     * <p> kFollower same as kDriveThroughSide except starts on the other side of the trench starting line
+     */
     public enum BallPickupTrajType {
       kDriveThroughCenter, // riskier
       kDriveThroughSide,   // avoid getting our autos messed up if colliding
+      kBumpSecondSwipe,
+      kFollower
     }
 
     /**
@@ -598,12 +611,12 @@ public final class Constants {
      * During autonomous, what to do at the end of the first cycle
      * <p> kNone: do nothing and end at shooting position
      * <p> kSecondCycle: go to the center again for a second cycle
-     * <p> kOutpostOrDepot: depending on the side of the auto routine, go to the outpost/depot and intake before shooting balls 
+     * <p> kSecondCycleLongerShot: shoot during the first cycle for longer
      */
     public enum AutoEndType {
       kNone,
       kSecondCycle,
-      kOutpostOrDepot
+      kSecondCycleLongerShot
     }
 
     /**
@@ -631,7 +644,7 @@ public final class Constants {
     public static final double deployMaxUncalibratedPercentOutput = 0.1;  
     public static final double deployMaxManualPercentOutput = 0.1;       // Increased from 0.05 to 0.1 at 4/4 AVDE 
     public static final double deployMaxPercentOutput = 0.2;              
-    public static final double deployMaxDumpAgitatePercentOutput = 0.08;
+    public static final double deployMaxDumpAgitatePercentOutput = 0.16; // C6 Increased from 0.08 to 0.16
     public static final double deploySetAngleTolerance = 3.0;             
 
     // CANcoder raw angle in degrees when at 0 degrees.
@@ -844,11 +857,12 @@ public final class Constants {
     public static final double turretOffset = Units.inchesToMeters(-11.086); // Calibrated: 11.086 inches - straight line offset from center of robot to center of turret (in meters)
     
     public enum TurretAngle { 
-      LOWER_LIMIT(-245.0), // CALIBRATED: -245.0 (encoder wrapping limit is 385deg)  Must be negative. was -180
-      LOWER_WRAP_POINT(-225.0),  // CALIBRATED: -225.0, lower limit for wrapping turret
+      LOWER_LIMIT(-225.0), // CALIBRATED: -225.0 was -245.0 (encoder wrapping limit is 385deg)  Must be negative. was -180
+      LOWER_WRAP_POINT(-220.0),  // CALIBRATED: -220.0 was -225.0, lower limit for wrapping turret
       CLIMBING_SETPOINT(-117.0),   // turret angle for climbing (to avoid contant between tower rung and shooter)
-      UPPER_WRAP_POINT(135.0),  // CALIBRATED: 135.0, upper limit for wrapping turret.  UPPER_WRAP_POINT MUST = LOWER_WRAP_POINT + 360!
-      UPPER_LIMIT(140.0); // CALIBRATED: 140.0 was (encoder wrapping limit is 385deg). was 114.  UPPER_LIMIT-LOWER_LIMIT must be <= 385 deg [otherwise encoders could boot up to wrong angle]
+      UPPER_WRAP_POINT(140.0),  // CALIBRATED: 140 was 135.0, upper limit for wrapping turret.  UPPER_WRAP_POINT MUST = LOWER_WRAP_POINT + 360!
+      UPPER_LIMIT(145.0); // CALIBRATED: 145 was 140.0 was (encoder wrapping limit is 385deg). was 114.  UPPER_LIMIT-LOWER_LIMIT must be <= 385 deg [otherwise encoders could boot up to wrong angle]
+
 
       public final double value;
       TurretAngle(double angle) {
@@ -858,10 +872,17 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    // Side convention for all climber side-specific commands/logic:
-    // 1 = left, 2 = right
-    public static final int SIDE_LEFT = 1;
-    public static final int SIDE_RIGHT = 2;
+    // Side specifier for all climber side-specific commands/logic:
+    public enum ClimberSide {
+      LEFT,
+      RIGHT;
+    }
+
+    // Limit switch specifier
+    public enum ClimberLimit {
+      LOWER,
+      UPPER;
+    }
 
     public static final double climberLeftGearRatio = (5.0 / 1.0) * (9.0 / 1.0);   // gear ratio from left climber motor to mechanism
     public static final double climberRightGearRatio = (5.0 / 1.0) * (9.0 / 1.0);  // gear ratio from right climber motor to mechanism
@@ -871,6 +892,7 @@ public final class Constants {
     public static final double inchesPerEncoderRotation = 4.9153;  // TODO CALIBRATE - amount of inches climber physically moves for each climber motor encoder rotation
 
     public static final double compensationVoltage = 12.0;
+    public static final double rightVoltageRatio = 0.995;    // Voltage ratio to apply to right motor, so that left and right motors match velocity
 
     public static final double maxManualPercentOutput = 0.3; // TODO CALIBRATE
     public static final double maxPercentOutput = 0.45;

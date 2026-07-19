@@ -39,7 +39,7 @@ public class IntakeDeployCalibrateManual extends InstantCommand {
     addRequirements(intake);
 
     if (SmartDashboard.getNumber(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, -9999) == -9999) {
-      SmartDashboard.putNumber(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, IntakeDeployAngle.UPPER_LIMIT.value);
+      SmartDashboard.putNumber(INTAKE_DEPLOY_CMD_CALIBRATE_MANUAL_INPUT.value, IntakeDeployAngle.INTAKE.value);
     }
   }
 

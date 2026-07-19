@@ -23,6 +23,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.DriveTrain.DriveType;
 import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.DataLogUtil;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 import java.lang.Math;
 
@@ -98,6 +99,8 @@ public class DriveWithJoysticksAdvanced extends Command {
     }
 
     stopped = true; // Do not jitter when the robot is supposed to be still
+
+    DataLogUtil.writeMessage("DriveWithJoysticksAdvanced:  Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -113,7 +116,7 @@ public class DriveWithJoysticksAdvanced extends Command {
       turnRate *= DriveConstants.fineControlRatio;
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNone)) {
       SmartDashboard.putNumber("Joystick Left-Y", fwdVelocity);
       SmartDashboard.putNumber("Joystick Left-X", leftVelocity);
       SmartDashboard.putNumber("Joystick Right-X", turnRate);
@@ -169,7 +172,7 @@ public class DriveWithJoysticksAdvanced extends Command {
           }
         }
 
-        if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+        if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNone)) {
           SmartDashboard.putNumber("DriveWJAdv Goal Angle", Math.toDegrees(goalAngle));
           SmartDashboard.putNumber("DriveWJAdv Robot Angle", Math.toDegrees(curRobotAngle));
           SmartDashboard.putNumber("DriveWJAdv Angle Error", Math.toDegrees(angleError));
@@ -183,7 +186,7 @@ public class DriveWithJoysticksAdvanced extends Command {
 
     } else {
       // Uses the regular turnRate if the theta joystick is not in the deadband
-      if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+      if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNone)) {
         goalAngle = driveTrain.getPose().getRotation().getRadians();
       }
       
@@ -191,7 +194,7 @@ public class DriveWithJoysticksAdvanced extends Command {
       firstCorrecting = true;
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNone)) {
       long timeNow = RobotController.getFPGATime();
       dLogFwdVelo.append(fwdVelocity, timeNow);
       dLogLeftVelo.append(leftVelocity, timeNow);
@@ -207,6 +210,7 @@ public class DriveWithJoysticksAdvanced extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    DataLogUtil.writeMessage("DriveWithJoysticksAdvanced:  End, interrupted =", interrupted);
   }
 
   // Returns true when the command should end.

@@ -39,7 +39,7 @@ public class ClimbPrepSequence extends ParallelCommandGroup {
         ),
         new TurretSetAngle(TurretAngle.CLIMBING_SETPOINT.value, EndType.waitForSetPoint, turret)
       ),
-      new IntakeDeploySetAngle(IntakeDeployAngle.START_CONFIG, intake)
+      new IntakeDeploySetAngle(IntakeDeployAngle.START_CONFIG, intake).raceWith(waitUntil(() -> intake.getIntakeDeployAngle() >= 0.0))
     );
   }
 }

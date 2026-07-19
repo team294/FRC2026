@@ -40,6 +40,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.utilities.DataLogUtil;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.RobotPreferences;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 import static frc.robot.Constants.ElasticKeyConstants.ElasticKey.*;
 
@@ -189,7 +190,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     // If the current is above the supply current limit for the threshold time, the current is limited.
     // This is configured to prevent the breakers from tripping.
-    shooterMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60.0;      // Upper limit for the current, in amps
+    shooterMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 50.0;      // Upper limit for the current, in amps
     shooterMotorConfiguration.CurrentLimits.SupplyCurrentLowerLimit = 25.0; // Lower limit for the current, in amps
     shooterMotorConfiguration.CurrentLimits.SupplyCurrentLowerTime = 0.1;   // Threshold time, in seconds
     shooterMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -642,8 +643,8 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
-    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey)) {
-      updateLog(false);
+    if (fastLogging || DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kSlow)) {
+      updateLog(true);
     }
 
     // Stopping hood motion when at min/max extensions to prevent motor from dying
@@ -675,7 +676,7 @@ public class Shooter extends SubsystemBase implements Loggable {
       }
     }
 
-    if (DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if (DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       checkForFaultConditions();
 
       SmartDashboard.putNumber(SHOOTER_LEFT_TEMP.value, shooter1Temperature.refresh().getValueAsDouble());

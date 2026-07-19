@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import frc.robot.Constants.LEDConstants.Animations;
 import frc.robot.utilities.*;
+import frc.robot.utilities.DataLogUtil.RotationWhenDisabled;
 
 
 public class LED extends SubsystemBase {
@@ -79,7 +80,7 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(DataLogUtil.isMyLogRotation(logRotationKey)) {
+    if(DataLogUtil.isMyLogRotation(logRotationKey, RotationWhenDisabled.kNormal)) {
       // If there wasn't a sticky fault last loop but there is one now, 
       // send sticky fault present event and update last reading
       if (!lastStickyFaultPresentReading && RobotPreferences.isStickyFaultActive()) {
