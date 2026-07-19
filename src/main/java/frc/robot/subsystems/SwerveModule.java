@@ -88,6 +88,7 @@ public class SwerveModule {
   private final SimpleMotorFeedforward driveFeedforward;
   private double priorDriveVelocity = 0;  // Last requested drive speed (m/sec)
   private boolean inVelocityMode = true;  // true = last drive request was velocity control (or stopped), false = last drive request was direct non-zero voltage control
+  private double priorFF = 0;
 
   // Data logging variables
   private final DataLog log = DataLogManager.getLog();
@@ -102,6 +103,10 @@ public class SwerveModule {
   private final DoubleLogEntry dLogDriveDist;
   private final DoubleLogEntry dLogDriveSpeed;
   private final DoubleLogEntry dLogDriveCurrent;
+  private final DoubleLogEntry dLogDriveSetVolt;
+  private final DoubleLogEntry dLogDriveSetVel;
+  private final DoubleLogEntry dLogDriveMeasVolt;
+  private final DoubleLogEntry dLogDriveMeasVel;
 
 
   /**
@@ -236,6 +241,10 @@ public class SwerveModule {
     dLogDriveDist = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveDistMeters"));
     dLogDriveSpeed = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveSpeedMPS"));
     dLogDriveCurrent = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveCurrent"));
+    dLogDriveSetVolt = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveSetVolt"));
+    dLogDriveSetVel = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveSetVel"));
+    dLogDriveMeasVolt = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveMeasVolt"));
+    dLogDriveMeasVel = new DoubleLogEntry(log, StringUtil.buildString("/DriveTrain/Swerve", swName, "/DriveMeasVel"));
 
     // Prime the DataLog to reduce delay when first enabling the robot
     long timeNow = RobotController.getFPGATime();
@@ -403,6 +412,13 @@ public class SwerveModule {
    * @param isOpenLoop true = fixed drive percent output to approximate velocity, false = closed loop drive velocity control
    */
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+    // log data
+    long timeNow = RobotController.getFPGATime();
+    dLogDriveSetVolt.append(priorFF, timeNow);
+    dLogDriveSetVel.append(priorDriveVelocity, timeNow);
+    dLogDriveMeasVolt.append(getDriveOutputPercent()*getDriveBusVoltage(), timeNow);
+    dLogDriveMeasVel.append(getDriveEncoderVelocity(), timeNow);
+
     // Optimize the reference state to avoid spinning further than 90 degrees
     // Custom optimize command, since default WPILib optimize assumes continuous controller which CTRE is not
     desiredState = MathSwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getTurningEncoderDegrees()));
@@ -420,7 +436,8 @@ public class SwerveModule {
 
     // Set drive motor velocity or percent output
     if (isOpenLoop) {
-      setDriveMotorVoltageOutput(ff);
+//      setDriveMotorVoltageOutput(ff);             // DON'T DO THIS.  This method sets inVelocityMode to false
+      driveMotor.setControl(driveVoltageControl.withOutput(ff));
     } else {
       driveMotor.setControl(driveVelocityControl
         .withVelocity(calculateDriveEncoderVelocityRaw(desiredState.speedMetersPerSecond))
@@ -433,6 +450,7 @@ public class SwerveModule {
     // Save state for next call
     inVelocityMode = true;
     priorDriveVelocity = desiredState.speedMetersPerSecond;
+    priorFF = ff;
   }
 
   // ********** Encoder methods
