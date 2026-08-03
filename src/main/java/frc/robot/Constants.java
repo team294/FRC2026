@@ -451,14 +451,14 @@ public final class Constants {
     public static final double kVmBR = kVmBRrel / kVmAvg;
 
     public static final double dt = 0.02;               // Timestep for discretizing robot motion, in seconds.  Set this to the scheduler time period = 20ms.
-    public static final double kADrive = 0.0;  //0.3112;        // CALIBRATED (FOC off, robot 150xx lbs, 0.3112).  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
+    public static final double kADrive = 0.3112;        // CALIBRATED (FOC off, robot 150xx lbs, 0.3112).  In voltage per meters/second^2    2025: LAR was 0.2692 (FOC off), AVR was 0.2383 (FOC on)
     public static final double kADriveToPose = 0.050;   // CALIBRATED.  In time (seconds)
     public static final double kSDrive = 0.081;         // CALIBRATED (FOC off, 0.081).  In voltage    2025: LAR was 0.030 (FOC off), AVR was 0.141 (FOC on)
 
     // Minimum abs delta (in m/sec) between actual wheel velocity and desired wheel velocity for kADrive to be applied.
     // If the delta is less than this, then don't use kADrive. This prevents the drive motors from jittering.
     // Note that the swerve module kP in the velocity controller will still work to maintain the proper wheel speed.
-    public static final double velMinDeltaUsingkA = 0.3;
+    public static final double velMinDeltaUsingkA = 0.1;      // Don test.  Was 0.3, now 0.1
   }
 
   public static final class DriveConstants {
