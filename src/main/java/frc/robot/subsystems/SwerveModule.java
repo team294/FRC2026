@@ -420,7 +420,8 @@ public class SwerveModule {
 
     // Set drive motor velocity or percent output
     if (isOpenLoop) {
-      setDriveMotorVoltageOutput(ff);
+      // setDriveMotorVoltageOutput(ff);             // DON'T DO THIS.  This method sets inVelocityMode to false, which interferes with the if() statement above
+      driveMotor.setControl(driveVoltageControl.withOutput(ff));
     } else {
       driveMotor.setControl(driveVelocityControl
         .withVelocity(calculateDriveEncoderVelocityRaw(desiredState.speedMetersPerSecond))

@@ -206,7 +206,7 @@ public class ChoreoFollower extends Command {
       yFeedback = 0;
       rotationFeedback = 0;
     }
-    
+
     outputChassisSpeed.accept(new ChassisSpeeds(xFF + xFeedback, yFF + yFeedback, rotationFF + rotationFeedback)); 
   }
 
