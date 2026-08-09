@@ -14,7 +14,7 @@ import frc.robot.Constants.IntakeConstants.IntakeDeployAngle;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DataLogMessage;
 import frc.robot.commands.FeederFeedShooter;
-import frc.robot.commands.IntakeDeployAgitate;
+import frc.robot.commands.IntakeDeployAgitateOnce;
 import frc.robot.commands.IntakeDeploySetPercent;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -60,7 +60,7 @@ public class FeederIntakeFeedShooterSequence extends SequentialCommandGroup {
             ),
             either(
               parallel(
-                new IntakeDeployAgitate(intake),
+                new IntakeDeployAgitateOnce(intake),  // 8.9.26 - only agitate one time as per codriver request
                 new InstantCommand(() -> intake.setIntakeRollerPercentOutput(IntakeConstants.rollerIntakePercent))
               ),
               new IntakeSequence(intake),
