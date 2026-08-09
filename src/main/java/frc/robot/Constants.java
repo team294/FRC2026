@@ -950,12 +950,6 @@ public final class Constants {
     // Theta-velocity controller:  kp.  Units = (rad/sec of velocity) / (radians of angle error)
     public static final double kPThetaController = 3;
 
-    public static final TrajectoryConfig swerveTrajectoryConfig =         // TODO remove?  Is this old code that is no longer being used?
-          new TrajectoryConfig(
-                  SwerveConstants.kNominalSpeedMetersPerSecond,
-                  SwerveConstants.kNominalAccelerationMetersPerSecondSquare)
-              .setKinematics(DriveConstants.kDriveKinematics);
-
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
     new TrapezoidProfile.Constraints(

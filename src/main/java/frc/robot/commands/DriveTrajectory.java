@@ -64,7 +64,7 @@ public class DriveTrajectory extends SequentialCommandGroup {
         thetaController, 
         (speeds) -> {
           Translation2d rotated = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).rotateBy(initialPose.getRotation());
-          driveTrain.drive(rotated.getX(), rotated.getY(), speeds.omegaRadiansPerSecond, DriveType.kFieldRelative, false);  // TODO set OpenLoop back to false
+          driveTrain.drive(rotated.getX(), rotated.getY(), speeds.omegaRadiansPerSecond, DriveType.kFieldRelative, false);
         }, 
         // For relative trajectories, get the current pose relative to the initial robot Pose
         () -> driveTrain.getPose().relativeTo(initialPose), 
@@ -86,7 +86,7 @@ public class DriveTrajectory extends SequentialCommandGroup {
         new PIDController(Constants.TrajectoryConstants.kPXController, 0.0, 0.0),
         new PIDController(Constants.TrajectoryConstants.kPYController, 0.0, 0.0), 
         thetaController, 
-        (speeds) -> driveTrain.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, DriveType.kFieldRelative, false),   // TODO set OpenLoop back to false
+        (speeds) -> driveTrain.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, DriveType.kFieldRelative, false),
         driveTrain::getPose,
         () -> alliance.getAlliance() == Alliance.Red, 
         driveTrain
