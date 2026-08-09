@@ -458,7 +458,7 @@ public final class Constants {
     // Minimum abs delta (in m/sec) between actual wheel velocity and desired wheel velocity for kADrive to be applied.
     // If the delta is less than this, then don't use kADrive. This prevents the drive motors from jittering.
     // Note that the swerve module kP in the velocity controller will still work to maintain the proper wheel speed.
-    public static final double velMinDeltaUsingkA = 0.1;      // TODO Don test.  Was 0.3, now 0.1.   Try 0.05 to see if it jitters at rest or slow speed (delta=0.05 m/s for 20ms cycle -> min acceleration = 2.5 m/s^2)
+    public static final double velMinDeltaUsingkA = 0.05;      // CALIBRATED:  0.05.  During 2026 sea was 0.3, but did not follow trajectories perfectly.  (velocity minDelta=0.05 m/s for 20ms cycle -> kA is used if acceleration >= 2.5 m/s^2)
   }
 
   public static final class DriveConstants {
