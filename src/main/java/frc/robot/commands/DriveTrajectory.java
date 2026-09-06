@@ -86,7 +86,7 @@ public class DriveTrajectory extends SequentialCommandGroup {
         new PIDController(Constants.TrajectoryConstants.kPXController, 0.0, 0.0),
         new PIDController(Constants.TrajectoryConstants.kPYController, 0.0, 0.0), 
         thetaController, 
-        (speeds) -> driveTrain.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, DriveType.kFieldRelative, false), 
+        (speeds) -> driveTrain.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, DriveType.kFieldRelative, false),
         driveTrain::getPose,
         () -> alliance.getAlliance() == Alliance.Red, 
         driveTrain

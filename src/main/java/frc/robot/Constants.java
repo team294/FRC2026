@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -470,7 +469,8 @@ public final class Constants {
     // Minimum abs delta (in m/sec) between actual wheel velocity and desired wheel velocity for kADrive to be applied.
     // If the delta is less than this, then don't use kADrive. This prevents the drive motors from jittering.
     // Note that the swerve module kP in the velocity controller will still work to maintain the proper wheel speed.
-    public static final double velMinDeltaUsingkA = 0.3;
+    // velMinDeltaUsingkA=0.05 m/s for 20ms cycle -> kA is used if acceleration >= 2.5 m/s^2.
+    public static final double velMinDeltaUsingkA = 0.05;      // CALIBRATED:  0.05.  During 2026 sea was 0.3, but did not follow trajectories perfectly.  
   }
 
   public static final class DriveConstants {
@@ -961,12 +961,6 @@ public final class Constants {
 
     // Theta-velocity controller:  kp.  Units = (rad/sec of velocity) / (radians of angle error)
     public static final double kPThetaController = 3;
-
-    public static final TrajectoryConfig swerveTrajectoryConfig =
-          new TrajectoryConfig(
-                  SwerveConstants.kNominalSpeedMetersPerSecond,
-                  SwerveConstants.kNominalAccelerationMetersPerSecondSquare)
-              .setKinematics(DriveConstants.kDriveKinematics);
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
