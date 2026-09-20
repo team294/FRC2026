@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.*;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
@@ -100,6 +101,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private final DoubleLogEntry dLogTurretVelDPS = new DoubleLogEntry(log, "/Turret/Turret Velocity dps");
   private final DoubleLogEntry dLogTurretBasicEstimation = new DoubleLogEntry(log, "/Turret/Turret Basic Estimation");
   private final DoubleLogEntry dLogTurretAdvancedEstimation = new DoubleLogEntry(log, "/Turret/Turret Advanced Estimation");
+  private final StructLogEntry<Pose2d> dLogTurretPose2d = StructLogEntry.create(log, "/DrivePathFollower/TurretPose2d", Pose2d.struct);
   private final DoubleLogEntry dLogTurretPoseX = new DoubleLogEntry(log, "/Turret/PoseX");
   private final DoubleLogEntry dLogTurretPoseY = new DoubleLogEntry(log, "/Turret/PoseY");
   private final BooleanLogEntry dLogTurretCalibrated = new BooleanLogEntry(log, "/Turret/Turret Calibrated?");
@@ -799,6 +801,7 @@ public class Turret extends SubsystemBase implements Loggable {
     if (logWhenDisabled || !DriverStation.isDisabled()) {
       long timeNow = RobotController.getFPGATime();
 
+      dLogTurretPose2d.append(turretPose, timeNow);
       dLogTurretTemp.append(turretTemp.refresh().getValueAsDouble(), timeNow);
       dLogTurretPctOut.append(getTurretMotorPercentOutput(), timeNow);
       dLogTurretCurrent.append(turretStatorCurrent.refresh().getValueAsDouble(), timeNow);

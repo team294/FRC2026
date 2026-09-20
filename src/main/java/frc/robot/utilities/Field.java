@@ -9,15 +9,26 @@ import java.io.UncheckedIOException;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.FieldConstants;
 
 /** BCR Field class (implementation in progress) */
 public class Field {
     private AllianceSelection allianceSelection;
     private AprilTagFieldLayout aprilTagFieldLayout;
+    
+    // DataLog
+    private final DataLog log = DataLogManager.getLog();
+    private final StructLogEntry<Pose2d> dLogGhostTargetPose2d = StructLogEntry.create(log, "/Turret/GhostTargetPose2D", Pose2d.struct);
 
     /**
      * Constructor for Field objects.
@@ -85,7 +96,13 @@ public class Field {
         double offsetX = (robotFieldRelativeSpeeds.vxMetersPerSecond * estTimeOfFlight);
         double offsetY = (robotFieldRelativeSpeeds.vyMetersPerSecond * estTimeOfFlight);
 
+        Translation2d ghostTargetTranslation2d =  new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
+
+        // Log 
+        long timeNow = RobotController.getFPGATime();
+        dLogGhostTargetPose2d.append(new Pose2d(ghostTargetTranslation2d, Rotation2d.kZero), timeNow);
+
         // ghost target = static target + displacement
-        return new Translation2d(staticTargetTranslation2d.getX() + offsetX, staticTargetTranslation2d.getY() + offsetY);
+        return ghostTargetTranslation2d;
     }
 }
